@@ -7,8 +7,8 @@ set(SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 include(CheckIncludeFileCXX)
 message("bcrypt dir : ${bcrypt_SOURCE_DIR}")
 include(scripts/bcrypt.cmake)
-#include("J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake")
-set(CMAKE_TOOLCHAIN_FILE "J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake")
+include("J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake")
+
 # Gaboot
 message(STATUS "Gaboot")
 file(GLOB_RECURSE SRC_MAIN
