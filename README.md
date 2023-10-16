@@ -2,12 +2,12 @@
 
 <h1 align="center">Gaboot Api</h1>
 <p align="center">
-  <a href="https://github.com/skript023/Gottvergessen-Loader/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/skript023/Gottvergessen-Loader.svg?style=flat-square"/>
-   </a>
-  <a href="https://github.com/skript023/Gottvergessen-Loader/actions">
-      <img src="https://img.shields.io/github/workflow/status/skript023/Gottvergessen-Loader/CI/main?style=flat-square"/>
-   </a>
+    <!-- <a href="https://github.com/skript023/Gottvergessen-Loader/blob/main/LICENSE">
+        <img src="https://img.shields.io/github/license/skript023/Gottvergessen-Loader.svg?style=flat-square"/>
+    </a>
+    <a href="https://github.com/skript023/Gottvergessen-Loader/actions">
+        <img src="https://img.shields.io/github/workflow/status/skript023/Gottvergessen-Loader/CI/main?style=flat-square"/>
+    </a> -->
   <br>
 </p>
 
