@@ -86,13 +86,32 @@ namespace gaboot
         Json::Value json;
         std::string error;
 
-        const auto& body = *req->getJsonObject().get();
-            
-        Users user;
-        std::string fullname = body["fullname"].asString();
-        std::string username = body["username"].asString();
-        std::string password = body["password"].asString();
+        MultiPartParser fileUpload;
 
+        if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0) 
+        {
+            // The framework handles an exception by logging it, and
+            // by responding to the client with an HTTP 500 status code.
+            throw std::runtime_error("Something went wrong");
+	    }
+
+        auto &file = fileUpload.getFiles()[0];
+	    file.save();
+        
+        Json::Value data;
+        Users user;
+        auto parameters = fileUpload.getParameters();
+
+        for (auto param = parameters.rbegin(); param != parameters.rend(); ++param)
+        {
+            data[param->first] = param->second;
+        }
+        
+        std::string fullname = data["fullname"].asString();
+        std::string username = data["username"].asString();
+        std::string email    = data["email"].asString();
+        std::string password = data["password"].asString();
+        
         user.setFullname(fullname);
         user.setUsername(username);
         user.setPassword(bcrypt::generateHash(password));
@@ -100,6 +119,8 @@ namespace gaboot
         user.setRoleid(1);
         user.setCreatedat(trantor::Date::now());
         user.setUpdatedat(trantor::Date::now());
+        user.setImgpath(file.getFileName());
+        user.setImgthumbpath(file.getFileName());
 
         auto validate = Users::validateJsonForCreation(user.toJson(), error);
         
