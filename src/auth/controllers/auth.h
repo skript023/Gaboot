@@ -27,5 +27,21 @@ namespace gaboot
 		// void get(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, int p1, std::string p2);
 		// void your_method_name(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, double p1, int p2) const;
 		void login(HttpRequestPtr const& req, response_t&& callback);
+		void payment(HttpRequestPtr const& req, response_t&& callback)
+		{
+			std::string order_id;
+
+			nlohmann::json json = {
+				{
+					"transaction_detail", {
+						{"order_id", order_id}
+					}
+				}
+			};
+			
+			cpr::Url url = "https://app.sandbox.midtrans.com/snap/v1/transactions";
+
+			auto res = cpr::Post(url, cpr::Body(json.dump()));
+		}
 	};
 }

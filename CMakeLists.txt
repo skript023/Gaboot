@@ -8,6 +8,7 @@ include(CheckIncludeFileCXX)
 include("J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake")
 include(scripts/bcrypt.cmake)
 include(scripts/jwt.cmake)
+include(scripts/cpr.cmake)
 
 # Gaboot
 message(STATUS "Gaboot")
@@ -51,7 +52,7 @@ target_precompile_headers(Gaboot PRIVATE "${SRC_DIR}/pch.hpp")
 find_package(OpenSSL REQUIRED)
 find_package(Drogon CONFIG REQUIRED)
 
-target_link_libraries(Gaboot PRIVATE Drogon::Drogon bcrypt OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(Gaboot PRIVATE Drogon::Drogon bcrypt OpenSSL::SSL OpenSSL::Crypto cpr)
 
 # Warnings as errors
 set_property(TARGET Gaboot PROPERTY COMPILE_WARNING_AS_ERROR ON)

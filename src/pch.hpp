@@ -19,10 +19,11 @@
 #include <drogon/drogon.h>
 #include <nlohmann/json.hpp>
 #include <jwt-cpp/jwt.h>
-#include <jwt-cpp/traits/nlohmann-json/traits.h>
+#include <cpr/cpr.h>
 
 #include "util/gaboot.hpp"
 
+#include <jwt-cpp/traits/nlohmann-json/traits.h>
 #pragma warning(push)
 #pragma warning(disable:4996)
 #include <bcrypt.h>
