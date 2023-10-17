@@ -54,6 +54,5 @@ namespace gaboot
 
             callback(response);
         }
-        
     }
 }

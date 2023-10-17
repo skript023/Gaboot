@@ -9,11 +9,11 @@ namespace gaboot
 
         try
         {
-            auto users = db().findAll();
+            auto users = db().findFutureAll();
             
             Json::Value res(Json::arrayValue);
 
-            for (const auto& user : users) 
+            for (const auto& user : users.get()) 
             {
                 res.append(user.toJson());
             }
