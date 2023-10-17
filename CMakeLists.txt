@@ -6,8 +6,8 @@ set(SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 
 include(CheckIncludeFileCXX)
 include("J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake")
-include(scripts/nlohmann_json.cmake)
 include(scripts/bcrypt.cmake)
+include(scripts/jwt.cmake)
 
 # Gaboot
 message(STATUS "Gaboot")
@@ -40,19 +40,21 @@ source_group(TREE ${SRC_DIR} PREFIX "src" FILES ${SRC_MAIN})
 target_include_directories(Gaboot PRIVATE 
   ${SRC_DIR}
   ${DROGON_INCLUDE_DIRS}
-  ${JWT_CPP_INCLUDE_DIRS}
-  "${json_SOURCE_DIR}/single_include"
+  "${jwt_SOURCE_DIR}/include"
+  "${nlohmann_json_SOURCE_DIR}/single_include"
   "${bcrypt_SOURCE_DIR}/include"
+  ${openssl_INCLUDE_DIRS}
 )
-
 
 target_precompile_headers(Gaboot PRIVATE "${SRC_DIR}/pch.hpp")
 
+find_package(OpenSSL REQUIRED)
 find_package(Drogon CONFIG REQUIRED)
-target_link_libraries(Gaboot PRIVATE Drogon::Drogon bcrypt jwtcpp)
+
+target_link_libraries(Gaboot PRIVATE Drogon::Drogon bcrypt OpenSSL::SSL OpenSSL::Crypto)
 
 # Warnings as errors
-# set_property(TARGET Gaboot PROPERTY COMPILE_WARNING_AS_ERROR ON)
+set_property(TARGET Gaboot PROPERTY COMPILE_WARNING_AS_ERROR ON)
 target_sources(Gaboot PRIVATE ${SRC_MAIN})
 
 add_compile_definitions(Gaboot 

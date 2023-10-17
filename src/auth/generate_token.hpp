@@ -2,6 +2,7 @@
 
 namespace gaboot
 {
+    using traits = jwt::traits::nlohmann_json;
     class jwt_create
     {
     public:
@@ -10,19 +11,17 @@ namespace gaboot
         jwt_create(nlohmann::json json)
         {
             auto hour = std::chrono::system_clock::now() + std::chrono::hours(1);
-            std::string payload = json.dump();
 
-            m_token = jwt::create().
-                set_expires_at(hour).
-                set_payload_claim("access", jwt::claim(payload.begin(), payload.end())).
+            m_token = jwt::create<traits>().set_expires_at(hour).
+                set_payload_claim("access", jwt::basic_claim<traits>(json.dump())).
                 sign(jwt::algorithm::hs256{ SECRET });
         }
 
-        jwt::traits::kazuho_picojson::string_type get_token()
+        std::string get_token()
         {
             return m_token;
         }
     private:
-        jwt::traits::kazuho_picojson::string_type m_token;
+        std::string m_token;
     };
 }
