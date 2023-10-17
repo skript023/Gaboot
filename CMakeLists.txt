@@ -71,4 +71,6 @@ add_compile_definitions(Gaboot
   "NOMINMAX"
   "WIN32_LEAN_AND_MEAN"
 )
+
+# Add unit test build
 add_subdirectory(test)
