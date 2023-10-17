@@ -5,9 +5,9 @@ project(Gaboot CXX ASM_MASM)
 set(SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 
 include(CheckIncludeFileCXX)
-message("bcrypt dir : ${bcrypt_SOURCE_DIR}")
-include(scripts/bcrypt.cmake)
 include("J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake")
+include(scripts/nlohmann_json.cmake)
+include(scripts/bcrypt.cmake)
 
 # Gaboot
 message(STATUS "Gaboot")
@@ -38,24 +38,26 @@ set_property(TARGET Gaboot PROPERTY CXX_STANDARD 23) # 23 Because std::format is
 source_group(TREE ${SRC_DIR} PREFIX "src" FILES ${SRC_MAIN})
 
 target_include_directories(Gaboot PRIVATE 
-"${SRC_DIR}"
-"J:/database/Tools/vcpkg/installed/x64-windows/include"
-"${bcrypt_SOURCE_DIR}/include"
+  ${SRC_DIR}
+  ${DROGON_INCLUDE_DIRS}
+  ${JWT_CPP_INCLUDE_DIRS}
+  "${json_SOURCE_DIR}/single_include"
+  "${bcrypt_SOURCE_DIR}/include"
 )
 
 
 target_precompile_headers(Gaboot PRIVATE "${SRC_DIR}/pch.hpp")
 
 find_package(Drogon CONFIG REQUIRED)
-target_link_libraries(Gaboot PRIVATE Drogon::Drogon bcrypt)
+target_link_libraries(Gaboot PRIVATE Drogon::Drogon bcrypt jwtcpp)
 
 # Warnings as errors
-set_property(TARGET Gaboot PROPERTY COMPILE_WARNING_AS_ERROR ON)
+# set_property(TARGET Gaboot PROPERTY COMPILE_WARNING_AS_ERROR ON)
 target_sources(Gaboot PRIVATE ${SRC_MAIN})
 
 add_compile_definitions(Gaboot 
-"_CRT_SECURE_NO_WARNINGS"
-"NOMINMAX"
-"WIN32_LEAN_AND_MEAN"
+  "_CRT_SECURE_NO_WARNINGS"
+  "NOMINMAX"
+  "WIN32_LEAN_AND_MEAN"
 )
 add_subdirectory(test)
