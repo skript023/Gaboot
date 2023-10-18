@@ -9,7 +9,7 @@ include(CheckIncludeFileCXX)
 if("${CMAKE_MAKE_PROGRAM}" MATCHES "ninja")
     message("Ninja build system is being used.")
 else()
-    include("J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake")
+    include("D:/Coding/vcpkg/scripts/buildsystems/vcpkg.cmake")
     message("Ninja build system is not being used.")
 endif()
 

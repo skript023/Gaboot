@@ -148,8 +148,33 @@ namespace gaboot
     void user::update(HttpRequestPtr const& req, response_t&& callback, int64_t id)
     {
         Json::Value resp;
+        Json::Value data;
         
-        const auto& json = *req->getJsonObject().get();
+        MultiPartParser fileUpload;
+
+        if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0) 
+        {
+            // The framework handles an exception by logging it, and
+            // by responding to the client with an HTTP 500 status code.
+            throw std::runtime_error("Something went wrong");
+	    }
+
+        auto &file = fileUpload.getFiles()[0];
+	    file.save();
+
+        auto parameters = fileUpload.getParameters();
+
+        for (auto param = parameters.rbegin(); param != parameters.rend(); ++param)
+        {
+            if (param->first == "password")
+            {
+                data[param->first] = bcrypt::generateHash(param->second);
+            }
+            else
+            {
+                data[param->first] = param->second;
+            }
+        }
 
         auto args = Criteria(Users::Cols::_id, CompareOperator::EQ, id);
 
@@ -172,9 +197,9 @@ namespace gaboot
             // Loop through JSON members and update corresponding database columns
             for (const auto& [column, request] : columnMapping)
             {
-                if (json.isMember(request))
+                if (data.isMember(request))
                 {
-                    auto jsonValue = json[request];
+                    auto jsonValue = data[request];
                     if (!jsonValue.isNull())
                     {
                         db().updateBy(column, args, jsonValue.asString());
