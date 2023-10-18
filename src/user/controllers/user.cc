@@ -147,6 +147,89 @@ namespace gaboot
 
     void user::update(HttpRequestPtr const& req, response_t&& callback, int64_t id)
     {
+        Json::Value resp;
+        
+        const auto& json = *req->getJsonObject().get();
+
+        auto args = Criteria(Users::Cols::_id, CompareOperator::EQ, id);
+
+        std::map<Json::Value::Members, std::string> columnMapping = {
+            {{Users::Cols::_fullName}, "fullname"},
+            {{Users::Cols::_userName}, "username"},
+            {{Users::Cols::_password}, "password"},
+            {{Users::Cols::_imgPath}, "image_path"},
+            {{Users::Cols::_imgThumbPath}, "thumb_path"},
+            {{Users::Cols::_roleId}, "role_id"},
+            {{Users::Cols::_isActive}, "is_active"},
+        };
+
+        try
+        {
+            if (id == NULL)
+            {
+                throw std::runtime_error("Invalid parameters");
+            }
+            // Loop through JSON members and update corresponding database columns
+            for (const auto& [column, request] : columnMapping)
+            {
+                if (json.isMember(request))
+                {
+                    auto jsonValue = json[request];
+                    if (!jsonValue.isNull())
+                    {
+                        db().updateBy(column, args, jsonValue.asString());
+                        resp[request + "_updated"] = true;
+                    }
+                }
+            }
+
+            resp["message"] = "Update activity successful";
+            resp["success"] = true;
+
+            auto response = HttpResponse::newHttpJsonResponse(resp);
+            callback(response);
+        }
+        catch(const std::exception& e)
+        {
+            resp["message"] = std::format("Update activity failed, error caught on {}", e.what());
+            resp["success"] = false;
+            
+            auto response = HttpResponse::newHttpJsonResponse(resp);
+            response->setStatusCode(HttpStatusCode::k500InternalServerError);
+
+            callback(response);
+        }
+    }
+
+    void user::remove(HttpRequestPtr const& req, response_t&& callback, int64_t id)
+    {
+        Json::Value resp;
+        try
+        {
+            auto record = db().deleteFutureByPrimaryKey(id);
+
+            resp["message"] = "Delete user successfully";
+            resp["success"] = true;
+
+            auto response = HttpResponse::newHttpJsonResponse(resp);
+            callback(response);
+        }
+        catch(const std::exception& e)
+        {
+            resp["message"] = std::format("Failed delete user, error caught on {}", e.what());
+            resp["success"] = false;
+
+            auto& handler = app().setCustomErrorHandler([=](HttpStatusCode code) -> HttpResponsePtr
+            {
+                auto response = HttpResponse::newHttpJsonResponse(resp);
+                response->setStatusCode(code);
+
+                return response;
+            }).getCustomErrorHandler();
+
+            auto ex_code = handler(k400BadRequest);
+            callback(ex_code);
+        }
         
     }
 }

@@ -6,10 +6,10 @@ namespace gaboot
     void auth::login(HttpRequestPtr const& req, response_t&& callback)
     {
         Json::Value resp;
-        auto& json = *req->getJsonObject().get();
+        auto& json = req->getJsonObject();
 
-        std::string username = json["username"].asString();
-        std::string password = json["password"].asString();
+        std::string username = (*json)["username"].asString();
+        std::string password = (*json)["password"].asString();
 
         try
         {
