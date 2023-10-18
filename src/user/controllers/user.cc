@@ -148,52 +148,61 @@ namespace gaboot
     void user::update(HttpRequestPtr const& req, response_t&& callback, int64_t id)
     {
         Json::Value resp;
-        Json::Value data;
-        
-        MultiPartParser fileUpload;
-
-        if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0) 
-        {
-            // The framework handles an exception by logging it, and
-            // by responding to the client with an HTTP 500 status code.
-            throw std::runtime_error("Something went wrong");
-	    }
-
-        auto &file = fileUpload.getFiles()[0];
-	    file.save();
-
-        auto parameters = fileUpload.getParameters();
-
-        for (auto param = parameters.rbegin(); param != parameters.rend(); ++param)
-        {
-            if (param->first == "password")
-            {
-                data[param->first] = bcrypt::generateHash(param->second);
-            }
-            else
-            {
-                data[param->first] = param->second;
-            }
-        }
-
-        auto args = Criteria(Users::Cols::_id, CompareOperator::EQ, id);
-
-        std::map<Json::Value::Members, std::string> columnMapping = {
-            {{Users::Cols::_fullName}, "fullname"},
-            {{Users::Cols::_userName}, "username"},
-            {{Users::Cols::_password}, "password"},
-            {{Users::Cols::_imgPath}, "image_path"},
-            {{Users::Cols::_imgThumbPath}, "thumb_path"},
-            {{Users::Cols::_roleId}, "role_id"},
-            {{Users::Cols::_isActive}, "is_active"},
-        };
+        HttpResponsePtr response = HttpResponse::newHttpJsonResponse(resp);
 
         try
         {
+            Json::Value data;
+            
+            MultiPartParser fileUpload;
+
             if (id == NULL)
             {
+                response->setStatusCode(k400BadRequest);
+
                 throw std::runtime_error("Invalid parameters");
             }
+
+            if (fileUpload.parse(req) != 0) 
+            {
+                response->setStatusCode(k400BadRequest);
+
+                throw std::runtime_error("Something went wrong");
+            }
+
+            auto &file = fileUpload.getFiles()[0];
+
+            auto parameters = fileUpload.getParameters();
+
+            for (auto param = parameters.rbegin(); param != parameters.rend(); ++param)
+            {
+                if (param->first == "password")
+                {
+                    data[param->first] = bcrypt::generateHash(param->second);
+                }
+                else if (fileUpload.getFiles().size() == 0)
+                {
+                    data[param->first] = file.getFileName();
+                    file.save();
+                }
+                else
+                {
+                    data[param->first] = param->second;
+                }
+            }
+
+            auto args = Criteria(Users::Cols::_id, CompareOperator::EQ, id);
+
+            std::map<Json::Value::Members, std::string> columnMapping = {
+                {{Users::Cols::_fullName}, "fullname"},
+                {{Users::Cols::_userName}, "username"},
+                {{Users::Cols::_password}, "password"},
+                {{Users::Cols::_imgPath}, "image_path"},
+                {{Users::Cols::_imgThumbPath}, "thumb_path"},
+                {{Users::Cols::_roleId}, "role_id"},
+                {{Users::Cols::_isActive}, "is_active"},
+            };
+            
             // Loop through JSON members and update corresponding database columns
             for (const auto& [column, request] : columnMapping)
             {
@@ -211,7 +220,7 @@ namespace gaboot
             resp["message"] = "Update activity successful";
             resp["success"] = true;
 
-            auto response = HttpResponse::newHttpJsonResponse(resp);
+            response = HttpResponse::newHttpJsonResponse(resp);
             callback(response);
         }
         catch(const std::exception& e)
@@ -219,7 +228,7 @@ namespace gaboot
             resp["message"] = std::format("Update activity failed, error caught on {}", e.what());
             resp["success"] = false;
             
-            auto response = HttpResponse::newHttpJsonResponse(resp);
+            response = HttpResponse::newHttpJsonResponse(resp);
             response->setStatusCode(HttpStatusCode::k500InternalServerError);
 
             callback(response);
