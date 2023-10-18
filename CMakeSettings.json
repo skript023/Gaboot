@@ -3,7 +3,7 @@
     {
       "name": "x64-Release",
       "generator": "Ninja",
-      "configurationType": "RelWithDebInfo",
+      "configurationType": "Release",
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "cmakeCommandArgs": "",
@@ -11,6 +11,20 @@
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "cmakeToolchain": "J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake"
+    },
+    {
+      "name": "WSL-Clang-Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeExecutable": "cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "cmakeToolchain": "J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake",
+      "inheritEnvironments": [ "linux_x64" ],
+      "wslPath": "Ubuntu"
     }
   ]
 }

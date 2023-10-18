@@ -1,16 +1,21 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.19)
 
-project(Gaboot CXX ASM_MASM)
+project(Gaboot CXX)
 
 set(SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 
 include(CheckIncludeFileCXX)
 
-if("${CMAKE_MAKE_PROGRAM}" MATCHES "ninja")
-    message("Ninja build system is being used.")
-else()
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     include("J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake")
     message("Ninja build system is not being used.")
+else()
+    if("${CMAKE_MAKE_PROGRAM}" MATCHES "ninja")
+        message("Ninja build system is being used.")
+    else()
+        include("J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake")
+        message("Ninja build system is not being used.")
+    endif()
 endif()
 
 #include external dependencies
