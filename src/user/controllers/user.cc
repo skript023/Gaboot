@@ -229,7 +229,6 @@ namespace gaboot
             resp["success"] = false;
             
             response = HttpResponse::newHttpJsonResponse(resp);
-            response->setStatusCode(HttpStatusCode::k500InternalServerError);
 
             callback(response);
         }
