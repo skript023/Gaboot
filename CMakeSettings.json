@@ -11,7 +11,7 @@
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "cmakeToolchain": "J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake",
-      "intelliSenseMode": "windows-msvc-x64"
+      "intelliSenseMode": "windows-msvc-arm64"
     },
     {
       "name": "WSL-GCC-Release",

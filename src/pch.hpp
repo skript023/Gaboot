@@ -10,6 +10,7 @@
 #include <array>
 #include <chrono>
 #include <fstream>
+#include <optional>
 #include <functional>
 #include <filesystem>
 

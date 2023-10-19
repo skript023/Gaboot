@@ -33,9 +33,9 @@ namespace gaboot
 		// void get(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, int p1, std::string p2);
 		// void your_method_name(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, double p1, int p2) const;
 		void findAll(HttpRequestPtr const&, response_t&&);
-		void findOne(HttpRequestPtr const&, response_t&&, long long id);
+		void findOne(HttpRequestPtr const&, response_t&&, std::string&& id);
 		void create(HttpRequestPtr const&, response_t&&);
-		void update(HttpRequestPtr const&, response_t&&, long long id);
-		void remove(HttpRequestPtr const&, response_t&&, long long id);
+		void update(HttpRequestPtr const&, response_t&&, std::string&& id);
+		void remove(HttpRequestPtr const&, response_t&&, std::string&& id);
 	};
 }

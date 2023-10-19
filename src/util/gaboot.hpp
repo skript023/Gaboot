@@ -28,4 +28,11 @@ namespace gaboot::util
 
         return variables[key];
 	}
+
+    inline bool is_numeric(std::string const& str)
+    {
+        std::regex numberOnly("^[0-9]+$");
+
+        return std::regex_match(str, numberOnly);
+    }
 }

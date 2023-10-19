@@ -1,4 +1,5 @@
 #include "user.h"
+#include "util/exception.hpp"
 
 // Add definition of your processing function here
 namespace gaboot
@@ -10,6 +11,11 @@ namespace gaboot
         try
         {
             auto users = db().findFutureAll();
+
+            if (!users.valid() || users.get().empty())
+            {
+                throw  NotFoundException("No data retrieved");
+            }
             
             Json::Value res(Json::arrayValue);
 
@@ -25,34 +31,37 @@ namespace gaboot
             
             callback(response);
         }
-        catch(const std::exception& e)
+        catch (GabootException const& e)
         {
             json["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.what());
             json["success"] = false;
             json["data"] = Json::arrayValue;
 
-            const auto& func = [json](HttpStatusCode code) -> HttpResponsePtr
-            {
-                auto response = HttpResponse::newHttpJsonResponse(json);
-                response->setStatusCode(code);
+            auto response = HttpResponse::newHttpJsonResponse(json);
+            response->setStatusCode(e.get_code());
 
-                return response;
-            };
-
-            auto& handler = app().setCustomErrorHandler(func).getCustomErrorHandler();
-
-            callback(handler(HttpStatusCode::k404NotFound));
+            callback(response);
         }
-        
     }
 
-    void user::findOne(HttpRequestPtr const& req, response_t&& callback, long long id)
+    void user::findOne(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
     {
         Json::Value json;
 
         try
         {
-            auto user = db().findByPrimaryKey(id);
+            if (id.empty() || !util::is_numeric(id))
+            {
+                throw BadRequestException("null id");
+            }
+
+            auto user = db().findByPrimaryKey(stoll(id));
+
+            if (user.toJson().empty())
+            {
+                throw NotFoundException("0 data found");
+            }
+
             json["message"] = "Success retrieve user data";
             json["success"] = true;
             json["data"] = user.toJson();
@@ -61,23 +70,16 @@ namespace gaboot
             
             callback(response);
         }
-        catch(const std::exception& e)
+        catch(const GabootException& e)
         {
             json["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.what());
             json["success"] = false;
             json["data"] = {};
 
-            const auto& func = [json](HttpStatusCode code) -> HttpResponsePtr 
-            {
-                auto response = HttpResponse::newHttpJsonResponse(json);
-                response->setStatusCode(code);
+            auto response = HttpResponse::newHttpJsonResponse(json);
+            response->setStatusCode(e.get_code());
 
-                return response;
-            };
-
-            auto& handler = app().setCustomErrorHandler(func).getCustomErrorHandler();
-
-            callback(handler(HttpStatusCode::k404NotFound));
+            callback(response);
         }
     }
 
@@ -96,8 +98,7 @@ namespace gaboot
 	    }
 
         auto &file = fileUpload.getFiles()[0];
-	    file.save();
-        
+	    
         Json::Value data;
         Users user;
         auto parameters = fileUpload.getParameters();
@@ -131,6 +132,7 @@ namespace gaboot
             json["success"] = true;
 
             auto response = HttpResponse::newHttpJsonResponse(json);
+            file.save();
 
             callback(response);
         }
@@ -145,10 +147,9 @@ namespace gaboot
         }        
     }
 
-    void user::update(HttpRequestPtr const& req, response_t&& callback, long long id)
+    void user::update(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
     {
         Json::Value resp;
-        HttpResponsePtr response = HttpResponse::newHttpJsonResponse(resp);
 
         try
         {
@@ -156,23 +157,19 @@ namespace gaboot
             
             MultiPartParser fileUpload;
 
-            if (id == 0)
+            if (id.empty() || !util::is_numeric(id))
             {
-                response->setStatusCode(k400BadRequest);
-
-                throw std::runtime_error("Invalid parameters");
+                throw BadRequestException("Invalid parameters");
             }
 
             if (fileUpload.parse(req) != 0) 
             {
-                response->setStatusCode(k400BadRequest);
-
-                throw std::runtime_error("Something went wrong");
+                throw BadRequestException("Invalid request");
             }
 
             auto &file = fileUpload.getFiles()[0];
 
-            auto parameters = fileUpload.getParameters();
+            auto& parameters = fileUpload.getParameters();
 
             for (auto param = parameters.rbegin(); param != parameters.rend(); ++param)
             {
@@ -211,7 +208,7 @@ namespace gaboot
                     auto jsonValue = data[request];
                     if (!jsonValue.isNull())
                     {
-                        db().updateBy(column, args, jsonValue.asString());
+                        db().updateFutureBy(column, args, jsonValue.asString());
                         resp[request + "_updated"] = true;
                     }
                 }
@@ -220,26 +217,38 @@ namespace gaboot
             resp["message"] = "Update activity successful";
             resp["success"] = true;
 
-            response = HttpResponse::newHttpJsonResponse(resp);
+            auto response = HttpResponse::newHttpJsonResponse(resp);
             callback(response);
         }
-        catch(const std::exception& e)
+        catch(const GabootException& e)
         {
             resp["message"] = fmt::format("Update activity failed, error caught on {}", e.what());
             resp["success"] = false;
             
-            response = HttpResponse::newHttpJsonResponse(resp);
+            auto response = HttpResponse::newHttpJsonResponse(resp);
+            response->setStatusCode(e.get_code());
 
             callback(response);
         }
     }
 
-    void user::remove(HttpRequestPtr const& req, response_t&& callback, long long id)
+    void user::remove(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
     {
         Json::Value resp;
+
         try
         {
-            auto record = db().deleteFutureByPrimaryKey(id);
+            if (id.empty() || !util::is_numeric(id))
+            {
+                throw BadRequestException("Invalid parameters");
+            }
+
+            auto record = db().deleteFutureByPrimaryKey(stoll(id));
+
+            if (!record.valid())
+            {
+                throw NotFoundException("not found");
+            }
 
             resp["message"] = "Delete user successfully";
             resp["success"] = true;
@@ -247,21 +256,15 @@ namespace gaboot
             auto response = HttpResponse::newHttpJsonResponse(resp);
             callback(response);
         }
-        catch(const std::exception& e)
+        catch(const GabootException& e)
         {
             resp["message"] = fmt::format("Failed delete user, error caught on {}", e.what());
             resp["success"] = false;
 
-            auto& handler = app().setCustomErrorHandler([=](HttpStatusCode code) -> HttpResponsePtr
-            {
-                auto response = HttpResponse::newHttpJsonResponse(resp);
-                response->setStatusCode(code);
+            auto response = HttpResponse::newHttpJsonResponse(resp);
+            response->setStatusCode(e.get_code());
 
-                return response;
-            }).getCustomErrorHandler();
-
-            auto ex_code = handler(k400BadRequest);
-            callback(ex_code);
+            callback(response);
         }
         
     }

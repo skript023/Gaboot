@@ -1,10 +1,10 @@
-
+#include <pch.hpp>
 
 int main() 
 {
     //Set HTTP listener address and port
     LOG_INFO << "Starting C++ API...";
-    ADD_LISTENER("0.0.0.0", 8080);
+    ADD_LISTENER("127.0.0.1", 8088);
     LOG_INFO << "Listener initialized.";
     LOG_INFO << "Load configuration...";
     ADD_CONFIG("./config.json");
