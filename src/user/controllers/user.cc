@@ -27,7 +27,7 @@ namespace gaboot
         }
         catch(const std::exception& e)
         {
-            json["message"] = std::format("Cannot retrieve user data, error caught on {}", e.what());
+            json["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.what());
             json["success"] = false;
             json["data"] = Json::arrayValue;
 
@@ -63,7 +63,7 @@ namespace gaboot
         }
         catch(const std::exception& e)
         {
-            json["message"] = std::format("Cannot retrieve user data, error caught on {}", e.what());
+            json["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.what());
             json["success"] = false;
             json["data"] = {};
 
@@ -145,8 +145,124 @@ namespace gaboot
         }        
     }
 
-    void user::update(HttpRequestPtr const& req, response_t&& callback, int64_t id)
+    void user::update(HttpRequestPtr const& req, response_t&& callback, long long id)
     {
+        Json::Value resp;
+        HttpResponsePtr response = HttpResponse::newHttpJsonResponse(resp);
+
+        try
+        {
+            Json::Value data;
+            
+            MultiPartParser fileUpload;
+
+            if (id == 0)
+            {
+                response->setStatusCode(k400BadRequest);
+
+                throw std::runtime_error("Invalid parameters");
+            }
+
+            if (fileUpload.parse(req) != 0) 
+            {
+                response->setStatusCode(k400BadRequest);
+
+                throw std::runtime_error("Something went wrong");
+            }
+
+            auto &file = fileUpload.getFiles()[0];
+
+            auto parameters = fileUpload.getParameters();
+
+            for (auto param = parameters.rbegin(); param != parameters.rend(); ++param)
+            {
+                if (param->first == "password")
+                {
+                    data[param->first] = bcrypt::generateHash(param->second);
+                }
+                else if (fileUpload.getFiles().size() == 0)
+                {
+                    data[param->first] = file.getFileName();
+                    file.save();
+                }
+                else
+                {
+                    data[param->first] = param->second;
+                }
+            }
+
+            auto args = Criteria(Users::Cols::_id, CompareOperator::EQ, id);
+
+            std::map<Json::Value::Members, std::string> columnMapping = {
+                {{Users::Cols::_fullName}, "fullname"},
+                {{Users::Cols::_userName}, "username"},
+                {{Users::Cols::_password}, "password"},
+                {{Users::Cols::_imgPath}, "image_path"},
+                {{Users::Cols::_imgThumbPath}, "thumb_path"},
+                {{Users::Cols::_roleId}, "role_id"},
+                {{Users::Cols::_isActive}, "is_active"},
+            };
+            
+            // Loop through JSON members and update corresponding database columns
+            for (const auto& [column, request] : columnMapping)
+            {
+                if (data.isMember(request))
+                {
+                    auto jsonValue = data[request];
+                    if (!jsonValue.isNull())
+                    {
+                        db().updateBy(column, args, jsonValue.asString());
+                        resp[request + "_updated"] = true;
+                    }
+                }
+            }
+
+            resp["message"] = "Update activity successful";
+            resp["success"] = true;
+
+            response = HttpResponse::newHttpJsonResponse(resp);
+            callback(response);
+        }
+        catch(const std::exception& e)
+        {
+            resp["message"] = fmt::format("Update activity failed, error caught on {}", e.what());
+            resp["success"] = false;
+            
+            response = HttpResponse::newHttpJsonResponse(resp);
+
+            callback(response);
+        }
+    }
+
+    void user::remove(HttpRequestPtr const& req, response_t&& callback, long long id)
+    {
+        Json::Value resp;
+        try
+        {
+            auto record = db().deleteFutureByPrimaryKey(id);
+
+            resp["message"] = "Delete user successfully";
+            resp["success"] = true;
+
+            auto response = HttpResponse::newHttpJsonResponse(resp);
+            callback(response);
+        }
+        catch(const std::exception& e)
+        {
+            resp["message"] = fmt::format("Failed delete user, error caught on {}", e.what());
+            resp["success"] = false;
+
+            auto& handler = app().setCustomErrorHandler([=](HttpStatusCode code) -> HttpResponsePtr
+            {
+                auto response = HttpResponse::newHttpJsonResponse(resp);
+                response->setStatusCode(code);
+
+                return response;
+            }).getCustomErrorHandler();
+
+            auto ex_code = handler(k400BadRequest);
+            callback(ex_code);
+        }
         
     }
 }

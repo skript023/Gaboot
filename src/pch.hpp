@@ -3,19 +3,17 @@
 #define JWT_DISABLE_PICOJSON
 
 #include <iostream>
-#include <windows.h>
-#include <TlHelp32.h>
-
 #include <string>
 #include <thread>
 #include <stack>
 #include <regex>
 #include <array>
 #include <chrono>
-#include <xmemory>
 #include <fstream>
+#include <functional>
 #include <filesystem>
 
+#include <fmt/format.h>
 #include <drogon/drogon.h>
 #include <nlohmann/json.hpp>
 #include <jwt-cpp/jwt.h>
@@ -28,7 +26,6 @@
 #pragma warning(disable:4996)
 #include <bcrypt.h>
 #pragma warning(pop)
-
 
 #define ADD_LISTENER(IP, PORT) drogon::app().addListener(IP, PORT)
 #define ADD_CONFIG(JSON) drogon::app().loadConfigFile(JSON)

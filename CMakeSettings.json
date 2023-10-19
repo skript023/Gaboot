@@ -10,10 +10,11 @@
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "msvc_x64_x64" ],
-      "cmakeToolchain": "J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake"
+      "cmakeToolchain": "J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake",
+      "intelliSenseMode": "windows-msvc-x64"
     },
     {
-      "name": "WSL-Clang-Release",
+      "name": "WSL-GCC-Release",
       "generator": "Ninja",
       "configurationType": "Release",
       "buildRoot": "${projectDir}\\out\\build\\${name}",
@@ -24,7 +25,15 @@
       "ctestCommandArgs": "",
       "cmakeToolchain": "J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake",
       "inheritEnvironments": [ "linux_x64" ],
-      "wslPath": "Ubuntu"
+      "intelliSenseMode": "linux-gcc-x64",
+      "wslPath": "Ubuntu",
+      "variables": [
+        {
+          "name": "VCPKG_TARGET_TRIPLET",
+          "value": "x64-linux",
+          "type": "STRING"
+        }
+      ]
     }
   ]
 }

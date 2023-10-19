@@ -6,10 +6,10 @@ namespace gaboot
     void auth::login(HttpRequestPtr const& req, response_t&& callback)
     {
         Json::Value resp;
-        auto& json = *req->getJsonObject().get();
+        auto& json = req->getJsonObject();
 
-        std::string username = json["username"].asString();
-        std::string password = json["password"].asString();
+        std::string username = (*json)["username"].asString();
+        std::string password = (*json)["password"].asString();
 
         try
         {
@@ -35,7 +35,7 @@ namespace gaboot
             {
                 resp["message"] = "Login failed, credentials doesn't invalid";
                 resp["success"] = false;
-                resp["token"] = NULL;
+                resp["token"] = 0;
 
                 auto response = HttpResponse::newHttpJsonResponse(resp);
                 response->setStatusCode(HttpStatusCode::k400BadRequest);
@@ -47,7 +47,7 @@ namespace gaboot
         {
             resp["message"] = "Login failed, credentials doesn't invalid";
             resp["success"] = false;
-            resp["token"] = NULL;
+            resp["token"] = 0;
 
             auto response = HttpResponse::newHttpJsonResponse(resp);
             response->setStatusCode(HttpStatusCode::k400BadRequest);

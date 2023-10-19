@@ -10,4 +10,4 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(bcrypt)
 message("bcrypt module")
 
-set_property(TARGET bcrypt PROPERTY CXX_STANDARD 23)
+set_property(TARGET bcrypt PROPERTY CXX_STANDARD 17)
