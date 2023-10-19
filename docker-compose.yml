@@ -1,0 +1,8 @@
+version: "3.5"
+services:
+    gaboot-api:
+        build: .
+        container_name: gaboot-api-container
+        init: true
+        ports:
+            - 8080:8080

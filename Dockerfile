@@ -1,9 +1,11 @@
-FROM node
+FROM ubuntu:latest
 
-WORKDIR /
-EXPOSE 3000
+WORKDIR /app
 
-RUN npm i --silent
-RUN npm run build
+EXPOSE 8080
 
-ENTRYPOINT [ "node", "dist/main"]
+COPY out/build/WSL-GCC-Release/Gaboot ./
+
+COPY config.json ./
+
+CMD ["./Gaboot"]
