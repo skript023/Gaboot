@@ -1,7 +1,7 @@
 ﻿{
   "configurations": [
     {
-      "name": "x64-Release",
+      "name": "Windows-x64",
       "generator": "Ninja",
       "configurationType": "Release",
       "buildRoot": "${projectDir}\\out\\build\\${name}",
@@ -14,7 +14,7 @@
       "intelliSenseMode": "windows-msvc-arm64"
     },
     {
-      "name": "WSL-GCC-Release",
+      "name": "Linux-x64",
       "generator": "Ninja",
       "configurationType": "Release",
       "buildRoot": "${projectDir}\\out\\build\\${name}",

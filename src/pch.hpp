@@ -34,8 +34,8 @@
 #define SERVER_RUN drogon::app().run()
 
 #define DATABASE_CLIENT drogon::app().getDbClient()
-#define SECRET "BahasaAsu123"
-#define CLIENT_KEY "U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg="
+constexpr auto SECRET = "BahasaAsu123";
+constexpr auto CLIENT_KEY = "U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg=";
 
 using response_t = std::function<void(drogon::HttpResponsePtr const&)>;
 

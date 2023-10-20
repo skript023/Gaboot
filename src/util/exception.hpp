@@ -56,7 +56,7 @@ namespace gaboot
 	{
 		std::string m_message;
 	public:
-		explicit NotFoundException(std::string const& message = "Occured not found") : GabootException(message, k404NotFound), m_message(message)
+		explicit NotFoundException(std::string const& message = "Unable to retrieve some data, 0 data found.") : GabootException(message, k404NotFound), m_message(message)
 		{}
 
 		virtual ~NotFoundException() noexcept = default;
@@ -66,7 +66,7 @@ namespace gaboot
 	{
 		std::string m_message;
 	public:
-		explicit BadRequestException(std::string const& message = "Occured bad request") : GabootException(message, k400BadRequest), m_message(message)
+		explicit BadRequestException(std::string const& message = "Request requirement doesn't match, please check requirement.") : GabootException(message, k400BadRequest), m_message(message)
 		{}
 
 		virtual ~BadRequestException() noexcept = default;
