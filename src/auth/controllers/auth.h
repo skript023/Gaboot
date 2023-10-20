@@ -2,7 +2,7 @@
 #include "pch.hpp"
 
 #include <drogon/HttpController.h>
-#include "user/models/Users.h"
+#include "module/customer/models/MasterCustomers.h"
 
 using namespace drogon;
 using namespace orm;
@@ -12,9 +12,9 @@ namespace gaboot
 {
 	class auth : public HttpController<auth>
 	{
-		Mapper<Users>db()
+		Mapper<MasterCustomers>db()
 		{
-			return Mapper<Users>(DATABASE_CLIENT);
+			return Mapper<MasterCustomers>(DATABASE_CLIENT);
 		}
 	public:
 		METHOD_LIST_BEGIN

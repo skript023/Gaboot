@@ -1,12 +1,12 @@
-#include "user.h"
+#include "customer.h"
 #include "util/exception.hpp"
 
 // Add definition of your processing function here
 namespace gaboot
 {
-    void user::findAll(HttpRequestPtr const& req, response_t&& callback)
+    void customer::findAll(HttpRequestPtr const& req, response_t&& callback)
     {
-        db().findAll([=](std::vector<Users> users)
+        db().findAll([=](std::vector<MasterCustomers> users)
         {
             Json::Value json;
 
@@ -57,7 +57,7 @@ namespace gaboot
         });
     }
 
-    void user::findOne(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
+    void customer::findOne(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
     {
         Json::Value json;
 
@@ -68,7 +68,7 @@ namespace gaboot
                 throw BadRequestException("Unknown parameters");
             }
 
-            db().findByPrimaryKey(stoll(id),  [=](Users user) 
+            db().findByPrimaryKey(stoll(id),  [=](MasterCustomers user) 
             {
                 Json::Value json_cb;
                 json_cb["message"] = "Success retrieve user data";
@@ -104,7 +104,7 @@ namespace gaboot
         }
     }
 
-    void user::create(HttpRequestPtr const& req, response_t&& callback)
+    void customer::create(HttpRequestPtr const& req, response_t&& callback)
     {
         std::string error;
 
@@ -120,7 +120,7 @@ namespace gaboot
         auto& file = fileUpload.getFiles()[0];
 
         Json::Value data;
-        Users user;
+        MasterCustomers customer;
         auto parameters = fileUpload.getParameters();
 
         for (auto param = parameters.rbegin(); param != parameters.rend(); ++param)
@@ -128,33 +128,43 @@ namespace gaboot
             data[param->first] = param->second;
         }
 
-        std::string fullname = data["fullname"].asString();
+        std::string firstname = data["firstname"].asString();
+        std::string lastname = data["lastname"].asString();
         std::string username = data["username"].asString();
         std::string email = data["email"].asString();
+        std::string phone = data["phoneNumber"].asString();
+        std::string address = data["addressDetail"].asString();
+        std::string latitude = data["latitude"].asString();
+        std::string longitude = data["longitude"].asString();
         std::string password = data["password"].asString();
 
-        user.setFullname(fullname);
-        user.setUsername(username);
-        user.setPassword(bcrypt::generateHash(password));
-        user.setIsactive(true);
-        user.setRoleid(1);
-        user.setCreatedat(trantor::Date::now());
-        user.setUpdatedat(trantor::Date::now());
-        user.setImgpath(file.getFileName());
-        user.setImgthumbpath(file.getFileName());
+        customer.setFirstname(firstname);
+        customer.setLastname(lastname);
+        customer.setUsername(username);
+        customer.setEmail(email);
+        customer.setPassword(bcrypt::generateHash(password));
+        customer.setPhonenumber(phone);
+        customer.setAddressdetail(address);
+        customer.setLatitude(latitude);
+        customer.setLongitude(longitude);
+        customer.setCreatedat(trantor::Date::now());
+        customer.setUpdatedat(trantor::Date::now());
+        customer.setImagepath(file.getFileName());
+        customer.setThumbnailpath(file.getFileName());
+        customer.setIsactive(true);
 
-        auto valid = Users::validateJsonForCreation(user.toJson(), error);
+        auto valid = MasterCustomers::validateJsonForCreation(customer.toJson(), error);
 
         if (!valid)
         {
             callback(BadRequestException(error).response());
         }
 
-        db().insert(user, [=](Users user)
+        db().insert(customer, [=](MasterCustomers customer)
         {
             Json::Value json;
 
-            json["message"] = "Create user success";
+            json["message"] = "Create customer success";
             json["success"] = true;
 
             auto response = HttpResponse::newHttpJsonResponse(json);
@@ -175,7 +185,7 @@ namespace gaboot
         });
     }
 
-    void user::update(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
+    void customer::update(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
     {
         Json::Value resp;
 
@@ -210,16 +220,24 @@ namespace gaboot
                 }
             }
 
-            auto args = Criteria(Users::Cols::_id, CompareOperator::EQ, stoll(id));
+            if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
+            {
+                data["imagePath"] = file.getFileName();
+                data["thumbnailPath"] = file.getFileName();
+            }
+
+            auto args = Criteria(MasterCustomers::Cols::_id, CompareOperator::EQ, stoll(id));
 
             std::map<Json::Value::Members, std::string> columnMapping = {
-                {{Users::Cols::_fullName}, "fullname"},
-                {{Users::Cols::_userName}, "username"},
-                {{Users::Cols::_password}, "password"},
-                {{Users::Cols::_imgPath}, "image_path"},
-                {{Users::Cols::_imgThumbPath}, "thumb_path"},
-                {{Users::Cols::_roleId}, "role_id"},
-                {{Users::Cols::_isActive}, "is_active"},
+                {{MasterCustomers::Cols::_firstname}, "firstname"},
+                {{MasterCustomers::Cols::_lastname}, "lastname"},
+                {{MasterCustomers::Cols::_username}, "username"},
+                {{MasterCustomers::Cols::_email}, "email"},
+                {{MasterCustomers::Cols::_phoneNumber}, "phoneNumber"},
+                {{MasterCustomers::Cols::_addressDetail}, "addressDetail"},
+                {{MasterCustomers::Cols::_latitude}, "latitude"},
+                {{MasterCustomers::Cols::_longitude}, "longitude"},
+                {{MasterCustomers::Cols::_password}, "password"},
             };
             
             // Loop through JSON members and update corresponding database columns
@@ -232,15 +250,20 @@ namespace gaboot
                     {
                         auto record = db().updateFutureBy(column, args, jsonValue.asString());
                         
-                        resp[request + "_updated"] = true;
+                        if (record.valid() || record.get() != 0)
+                            resp[request + "_updated"] = true;
+                        else
+                            throw NotFoundException("Unable to update non-existing record.");
+                    }
+                    else
+                    {
+                        throw BadRequestException("Request requirement doesn't match");
                     }
                 }
             }
 
             if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
             {
-                data["image_path"] = file.getFileName();
-                data["thumb_path"] = file.getFileName();
                 LOG_INFO << "File saved.";
                 file.save();
             }
@@ -257,7 +280,7 @@ namespace gaboot
         }
     }
 
-    void user::remove(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
+    void customer::remove(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
     {
         Json::Value resp;
 
