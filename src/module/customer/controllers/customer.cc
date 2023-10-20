@@ -251,13 +251,20 @@ namespace gaboot
                         auto record = db().updateFutureBy(column, args, jsonValue.asString());
                         
                         if (record.valid() || record.get() != 0)
+                        {
                             resp[request + "_updated"] = true;
+                            resp["message"] = "Success update customer data.";
+                            resp["success"] = true;
+
+                            auto response = HttpResponse::newHttpJsonResponse(resp);
+                            callback(response);
+
+                            return;
+                        }
                         else
+                        {
                             throw NotFoundException("Unable to update non-existing record.");
-                    }
-                    else
-                    {
-                        throw BadRequestException("Request requirement doesn't match");
+                        }
                     }
                 }
             }
@@ -268,8 +275,8 @@ namespace gaboot
                 file.save();
             }
 
-            resp["message"] = data;
-            resp["success"] = true;
+            resp["message"] = "Unhandled update costumer.";
+            resp["success"] = false;
 
             auto response = HttpResponse::newHttpJsonResponse(resp);
             callback(response);

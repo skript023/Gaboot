@@ -22,6 +22,7 @@
 #include <cpr/cpr.h>
 
 #include "util/gaboot.hpp"
+#include "util/exception.hpp"
 
 #include <jwt-cpp/traits/nlohmann-json/traits.h>
 #pragma warning(push)
