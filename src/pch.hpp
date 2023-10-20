@@ -11,6 +11,7 @@
 #include <chrono>
 #include <fstream>
 #include <optional>
+#include <exception>
 #include <functional>
 #include <filesystem>
 

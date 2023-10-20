@@ -31,8 +31,38 @@ namespace gaboot::util
 
     inline bool is_numeric(std::string const& str)
     {
-        std::regex numberOnly("^[0-9]+$");
+        std::regex numeric("^[0-9]+$");
 
-        return std::regex_match(str, numberOnly);
+        return std::regex_match(str, numeric);
     }
+
+    inline bool allowed_image(std::string_view const& str)
+    {
+        std::regex extension(".*\\.(jpg|jpeg|png)$");
+
+        return std::regex_match(str.begin(), str.end(), extension);
+    }
+    
+    inline bool allowed_image(std::string const& str)
+    {
+        std::regex extension(".*\\.(jpg|jpeg|png)$");
+
+        return std::regex_match(str, extension);
+    }
+    
+    inline bool allowed_image(const char* str)
+    {
+        std::vector<std::string> extensions = { "jpg", "jpeg", "png" };
+
+        for (auto& extension : extensions)
+        {
+            if (strcmp(extension.c_str(), str) == 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

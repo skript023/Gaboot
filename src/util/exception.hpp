@@ -6,34 +6,88 @@ namespace gaboot
 	class GabootException : public std::runtime_error
 	{
 	public:
-
-		GabootException(std::string const& message, HttpStatusCode code) : std::runtime_error(message), m_status_code(code) {}
-		GabootException(std::string const& message) : std::runtime_error(message) {}
+	 	explicit GabootException(std::string const& message, HttpStatusCode code) : std::runtime_error(message), m_status_code(code), m_message(message) {}
+		explicit GabootException(std::string const& message) : std::runtime_error(message) {}
 		GabootException() = default;
 
-		~GabootException() noexcept = default;
+		virtual ~GabootException() noexcept = default;
 
 		HttpStatusCode get_code() const { return m_status_code; }
 		HttpStatusCode get_code() { return m_status_code; }
+		HttpResponsePtr response() const
+		{
+			Json::Value json;
+			json["message"] = m_message;
+			json["success"] = false;
+
+			auto response = HttpResponse::newHttpJsonResponse(json);
+			response->setStatusCode(m_status_code);
+
+			return response;
+		}
+		
+		HttpResponsePtr response()
+		{
+			Json::Value json;
+			json["message"] = m_message;
+			json["success"] = false;
+
+			auto response = HttpResponse::newHttpJsonResponse(json);
+			response->setStatusCode(m_status_code);
+
+			return response;
+		}
 	private:
+		std::string m_message;
 		HttpStatusCode m_status_code;
+	};
+
+	template<auto T>
+	class CustomException : public GabootException
+	{
+		std::string m_message;
+	public:
+		explicit CustomException(std::string const& message) : GabootException(message, T), m_message(message) {}
+
+		virtual ~CustomException() noexcept = default;
 	};
 
 	class NotFoundException : public GabootException
 	{
+		std::string m_message;
 	public:
-		NotFoundException(std::string const& message) : GabootException(message, k404NotFound)
+		explicit NotFoundException(std::string const& message = "Occured not found") : GabootException(message, k404NotFound), m_message(message)
 		{}
 
-		~NotFoundException() noexcept = default;
+		virtual ~NotFoundException() noexcept = default;
 	};
 
 	class BadRequestException : public GabootException
 	{
+		std::string m_message;
 	public:
-		BadRequestException(std::string const& message) : GabootException(message, k400BadRequest)
+		explicit BadRequestException(std::string const& message = "Occured bad request") : GabootException(message, k400BadRequest), m_message(message)
 		{}
 
-		~BadRequestException() noexcept = default;
+		virtual ~BadRequestException() noexcept = default;
+
+		HttpResponsePtr response()
+		{
+			Json::Value json;
+			json["message"] = m_message;
+			json["success"] = false;
+			auto response = HttpResponse::newHttpJsonResponse(json);
+			response->setStatusCode(k400BadRequest);
+
+			return response;
+		}
+	};
+
+	class UnauthorzedException : public GabootException
+	{
+		std::string m_message;
+	public:
+		explicit UnauthorzedException(std::string const& message = "Unauthorized exception") : GabootException(message, k401Unauthorized), m_message(message) {}
+		virtual ~UnauthorzedException() noexcept = default;
 	};
 }

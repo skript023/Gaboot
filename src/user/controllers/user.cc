@@ -6,42 +6,55 @@ namespace gaboot
 {
     void user::findAll(HttpRequestPtr const& req, response_t&& callback)
     {
-        Json::Value json;
-
-        try
+        db().findAll([=](std::vector<Users> users)
         {
-            auto users = db().findFutureAll();
+            Json::Value json;
 
-            if (!users.valid() || users.get().empty())
+            try
             {
-                throw  NotFoundException("No data retrieved");
-            }
-            
-            Json::Value res(Json::arrayValue);
+                if (users.empty())
+                {
+                    throw  NotFoundException("No data retrieved");
+                }
 
-            for (const auto& user : users.get()) 
+                Json::Value res(Json::arrayValue);
+
+                for (const auto& user : users)
+                {
+                    res.append(user.toJson());
+                }
+
+                json["message"] = "Success retreive users data";
+                json["success"] = true;
+                json["data"] = res;
+                auto response = HttpResponse::newHttpJsonResponse(json);
+
+                callback(response);
+            }
+            catch (const GabootException& e)
             {
-                res.append(user.toJson());
-            }
+                json["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.what());
+                json["success"] = false;
+                json["data"] = Json::arrayValue;
 
-            json["message"] = "Success retreive users data";
-            json["success"] = true;
-            json["data"] = res;
-            auto response = HttpResponse::newHttpJsonResponse(json);
-            
-            callback(response);
-        }
-        catch (GabootException const& e)
+                auto response = HttpResponse::newHttpJsonResponse(json);
+                response->setStatusCode(e.get_code());
+
+                callback(response);
+            }
+        }, [=](DrogonDbException const& e) 
         {
-            json["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.what());
+            Json::Value json;
+
+            json["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.base().what());
             json["success"] = false;
             json["data"] = Json::arrayValue;
 
             auto response = HttpResponse::newHttpJsonResponse(json);
-            response->setStatusCode(e.get_code());
+            response->setStatusCode(k500InternalServerError);
 
             callback(response);
-        }
+        });
     }
 
     void user::findOne(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
@@ -52,25 +65,33 @@ namespace gaboot
         {
             if (id.empty() || !util::is_numeric(id))
             {
-                throw BadRequestException("null id");
+                throw BadRequestException("Unknown parameters");
             }
 
-            auto user = db().findByPrimaryKey(stoll(id));
-
-            if (user.toJson().empty())
+            db().findByPrimaryKey(stoll(id),  [=](Users user) 
             {
-                throw NotFoundException("0 data found");
-            }
+                Json::Value json_cb;
+                json_cb["message"] = "Success retrieve user data";
+                json_cb["success"] = true;
+                json_cb["data"] = user.toJson();
 
-            json["message"] = "Success retrieve user data";
-            json["success"] = true;
-            json["data"] = user.toJson();
+                auto response = HttpResponse::newHttpJsonResponse(json_cb);
 
-            auto response = HttpResponse::newHttpJsonResponse(json);
-            
-            callback(response);
+                callback(response);
+            }, [=](DrogonDbException const& e) 
+            {
+                Json::Value json_cb;
+                json_cb["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.base().what());
+                json_cb["success"] = false;
+                json_cb["data"] = {};
+
+                auto response = HttpResponse::newHttpJsonResponse(json_cb);
+                response->setStatusCode(k500InternalServerError);
+
+                callback(response);
+            });
         }
-        catch(const GabootException& e)
+        catch (const GabootException& e)
         {
             json["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.what());
             json["success"] = false;
@@ -88,63 +109,78 @@ namespace gaboot
         Json::Value json;
         std::string error;
 
-        MultiPartParser fileUpload;
-
-        if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0) 
+        try
         {
-            // The framework handles an exception by logging it, and
-            // by responding to the client with an HTTP 500 status code.
-            throw std::runtime_error("Something went wrong");
-	    }
+            MultiPartParser fileUpload;
 
-        auto &file = fileUpload.getFiles()[0];
-	    
-        Json::Value data;
-        Users user;
-        auto parameters = fileUpload.getParameters();
+            if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0)
+            {
+                throw BadRequestException("Requirement doesn't match");
+            }
 
-        for (auto param = parameters.rbegin(); param != parameters.rend(); ++param)
-        {
-            data[param->first] = param->second;
+            auto& file = fileUpload.getFiles()[0];
+
+            Json::Value data;
+            Users user;
+            auto parameters = fileUpload.getParameters();
+
+            for (auto param = parameters.rbegin(); param != parameters.rend(); ++param)
+            {
+                data[param->first] = param->second;
+            }
+
+            std::string fullname = data["fullname"].asString();
+            std::string username = data["username"].asString();
+            std::string email = data["email"].asString();
+            std::string password = data["password"].asString();
+
+            user.setFullname(fullname);
+            user.setUsername(username);
+            user.setPassword(bcrypt::generateHash(password));
+            user.setIsactive(true);
+            user.setRoleid(1);
+            user.setCreatedat(trantor::Date::now());
+            user.setUpdatedat(trantor::Date::now());
+            user.setImgpath(file.getFileName());
+            user.setImgthumbpath(file.getFileName());
+
+            auto valid = Users::validateJsonForCreation(user.toJson(), error);
+
+            if (!valid)
+            {
+                throw BadRequestException(error);
+            }
+
+            db().insert(user, [&json, file, callback](Users user)
+            {
+                json["message"] = "Create user success";
+                json["success"] = true;
+
+                auto response = HttpResponse::newHttpJsonResponse(json);
+                file.save();
+
+                callback(response);
+            }, [&](DrogonDbException const& e)
+            {
+                json["message"] = e.base().what();
+                json["success"] = false;
+
+                auto response = HttpResponse::newHttpJsonResponse(json);
+                response->setStatusCode(HttpStatusCode::k500InternalServerError);
+
+                callback(response);
+            });
         }
-        
-        std::string fullname = data["fullname"].asString();
-        std::string username = data["username"].asString();
-        std::string email    = data["email"].asString();
-        std::string password = data["password"].asString();
-        
-        user.setFullname(fullname);
-        user.setUsername(username);
-        user.setPassword(bcrypt::generateHash(password));
-        user.setIsactive(true);
-        user.setRoleid(1);
-        user.setCreatedat(trantor::Date::now());
-        user.setUpdatedat(trantor::Date::now());
-        user.setImgpath(file.getFileName());
-        user.setImgthumbpath(file.getFileName());
-
-        auto validate = Users::validateJsonForCreation(user.toJson(), error);
-        
-        if (validate)
+        catch (const GabootException& e)
         {
-            db().insert(user);
-            json["message"] = "Create user success";
-            json["success"] = true;
-
-            auto response = HttpResponse::newHttpJsonResponse(json);
-            file.save();
-
-            callback(response);
-        }
-        else
-        {
-            json["message"] = error;
-            json["success"] = validate;
+            json["message"] = e.what();
+            json["success"] = false;
 
             auto response = HttpResponse::newHttpJsonResponse(json);
             response->setStatusCode(HttpStatusCode::k400BadRequest);
+
             callback(response);
-        }        
+        }
     }
 
     void user::update(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
@@ -153,23 +189,22 @@ namespace gaboot
 
         try
         {
-            Json::Value data;
-            
-            MultiPartParser fileUpload;
+            MultiPartParser multipart;
 
             if (id.empty() || !util::is_numeric(id))
             {
                 throw BadRequestException("Invalid parameters");
             }
 
-            if (fileUpload.parse(req) != 0) 
+            if (multipart.parse(req) != 0)
             {
-                throw BadRequestException("Invalid request");
+                throw BadRequestException("Requirement doesn't match");
             }
 
-            auto &file = fileUpload.getFiles()[0];
+            auto &file = multipart.getFiles()[0];
 
-            auto& parameters = fileUpload.getParameters();
+            auto& parameters = multipart.getParameters();
+            Json::Value data;
 
             for (auto param = parameters.rbegin(); param != parameters.rend(); ++param)
             {
@@ -177,18 +212,13 @@ namespace gaboot
                 {
                     data[param->first] = bcrypt::generateHash(param->second);
                 }
-                else if (fileUpload.getFiles().size() == 0)
-                {
-                    data[param->first] = file.getFileName();
-                    file.save();
-                }
                 else
                 {
                     data[param->first] = param->second;
                 }
             }
 
-            auto args = Criteria(Users::Cols::_id, CompareOperator::EQ, id);
+            auto args = Criteria(Users::Cols::_id, CompareOperator::EQ, stoll(id));
 
             std::map<Json::Value::Members, std::string> columnMapping = {
                 {{Users::Cols::_fullName}, "fullname"},
@@ -208,13 +238,22 @@ namespace gaboot
                     auto jsonValue = data[request];
                     if (!jsonValue.isNull())
                     {
-                        db().updateFutureBy(column, args, jsonValue.asString());
+                        auto record = db().updateFutureBy(column, args, jsonValue.asString());
+                        
                         resp[request + "_updated"] = true;
                     }
                 }
             }
 
-            resp["message"] = "Update activity successful";
+            if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
+            {
+                data["image_path"] = file.getFileName();
+                data["thumb_path"] = file.getFileName();
+                LOG_INFO << "File saved.";
+                file.save();
+            }
+
+            resp["message"] = data;
             resp["success"] = true;
 
             auto response = HttpResponse::newHttpJsonResponse(resp);
@@ -222,13 +261,7 @@ namespace gaboot
         }
         catch(const GabootException& e)
         {
-            resp["message"] = fmt::format("Update activity failed, error caught on {}", e.what());
-            resp["success"] = false;
-            
-            auto response = HttpResponse::newHttpJsonResponse(resp);
-            response->setStatusCode(e.get_code());
-
-            callback(response);
+            callback(e.response());
         }
     }
 
@@ -243,29 +276,37 @@ namespace gaboot
                 throw BadRequestException("Invalid parameters");
             }
 
-            auto record = db().deleteFutureByPrimaryKey(stoll(id));
-
-            if (!record.valid())
+            db().deleteByPrimaryKey(stoll(id), [=](size_t record) 
             {
-                throw NotFoundException("not found");
-            }
+                if (record != 0)
+                {
+                    Json::Value json;
+                    json["message"] = fmt::format("Delete user on {} successfully", record);
+                    json["success"] = true;
 
-            resp["message"] = "Delete user successfully";
-            resp["success"] = true;
+                    auto response = HttpResponse::newHttpJsonResponse(json);
+                    callback(response);
+                }
+                else
+                {
+                    callback(NotFoundException("Record not found").response());
+                }
 
-            auto response = HttpResponse::newHttpJsonResponse(resp);
-            callback(response);
+            }, [=](DrogonDbException const& e)
+            {
+                Json::Value json;
+                json["message"] = fmt::format("Failed delete user, error caught on {}", e.base().what());
+                json["success"] = false;
+
+                auto response = HttpResponse::newHttpJsonResponse(json);
+                response->setStatusCode(k500InternalServerError);
+
+                callback(response);
+            });
         }
-        catch(const GabootException& e)
+        catch (const GabootException& e)
         {
-            resp["message"] = fmt::format("Failed delete user, error caught on {}", e.what());
-            resp["success"] = false;
-
-            auto response = HttpResponse::newHttpJsonResponse(resp);
-            response->setStatusCode(e.get_code());
-
-            callback(response);
+            callback(e.response());
         }
-        
     }
 }

@@ -26,7 +26,7 @@ namespace gaboot
 		ADD_METHOD_TO(user::findAll, "/user", Get);
 		ADD_METHOD_TO(user::create, "/user", Post);
 		ADD_METHOD_TO(user::findOne, "/user/{id}", Get);
-		ADD_METHOD_TO(user::update, "/user/{id}", Patch);
+		ADD_METHOD_TO(user::update, "/user/{id}", Put);
 		ADD_METHOD_TO(user::remove, "/user/{id}", Delete);
 		METHOD_LIST_END
 		// your declaration of processing function maybe like this:
