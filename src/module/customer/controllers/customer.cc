@@ -188,6 +188,8 @@ namespace gaboot
     void customer::update(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
     {
         Json::Value resp;
+        Json::Value data;
+        std::vector<std::string> updated;
 
         try
         {
@@ -206,7 +208,8 @@ namespace gaboot
             auto &file = multipart.getFiles()[0];
 
             auto& parameters = multipart.getParameters();
-            Json::Value data;
+            
+            data["updatedAt"] = trantor::Date::now().toDbStringLocal();
 
             for (auto param = parameters.rbegin(); param != parameters.rend(); ++param)
             {
@@ -238,6 +241,9 @@ namespace gaboot
                 {{MasterCustomers::Cols::_latitude}, "latitude"},
                 {{MasterCustomers::Cols::_longitude}, "longitude"},
                 {{MasterCustomers::Cols::_password}, "password"},
+                {{MasterCustomers::Cols::_imagePath}, "imagePath"},
+                {{MasterCustomers::Cols::_thumbnailPath}, "thumbnailPath"},
+                {{MasterCustomers::Cols::_updatedAt}, "updatedAt"},
             };
             
             // Loop through JSON members and update corresponding database columns
@@ -253,13 +259,7 @@ namespace gaboot
                         if (record.valid() || record.get() != 0)
                         {
                             resp[request + "_updated"] = true;
-                            resp["message"] = "Success update customer data.";
-                            resp["success"] = true;
-
-                            auto response = HttpResponse::newHttpJsonResponse(resp);
-                            callback(response);
-
-                            return;
+                            updated.push_back(request);
                         }
                         else
                         {
@@ -269,17 +269,28 @@ namespace gaboot
                 }
             }
 
-            if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
+            if (!updated.empty())
             {
-                LOG_INFO << "File saved.";
-                file.save();
+                if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
+                {
+                    LOG_INFO << "File saved.";
+                    file.save();
+                }
+
+                resp["message"] = "Success update customer data.";
+                resp["success"] = true;
+
+                auto response = HttpResponse::newHttpJsonResponse(resp);
+                callback(response);
             }
+            else
+            {
+                resp["message"] = "Unable to update costumer";
+                resp["success"] = true;
 
-            resp["message"] = "Unhandled update costumer.";
-            resp["success"] = false;
-
-            auto response = HttpResponse::newHttpJsonResponse(resp);
-            callback(response);
+                auto response = HttpResponse::newHttpJsonResponse(resp);
+                callback(response);
+            }
         }
         catch(const GabootException& e)
         {
