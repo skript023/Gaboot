@@ -18,6 +18,7 @@ include(scripts/bcrypt.cmake)
 include(scripts/jwt.cmake)
 include(scripts/cpr.cmake)
 include(scripts/fmtlib.cmake)
+include(scripts/jsonvalidator.cmake)
 
 # Gaboot
 message(STATUS "Gaboot")
@@ -62,14 +63,17 @@ target_include_directories(Gaboot PRIVATE
   "${jwt_SOURCE_DIR}/include"
   "${nlohmann_json_SOURCE_DIR}/single_include"
   "${bcrypt_SOURCE_DIR}/include"
+  "${jsonvalidator_SOURCE_DIR}/src"
 )
 
-target_precompile_headers(Gaboot PRIVATE "${SRC_DIR}/pch.hpp")
+if (MSVC)
+    target_precompile_headers(Gaboot PRIVATE "${SRC_DIR}/pch.h")
+endif()
 
 find_package(OpenSSL REQUIRED)
 find_package(Drogon CONFIG REQUIRED)
 
-target_link_libraries(Gaboot PRIVATE Drogon::Drogon bcrypt OpenSSL::SSL OpenSSL::Crypto cpr fmt::fmt)
+target_link_libraries(Gaboot PRIVATE Drogon::Drogon bcrypt OpenSSL::SSL OpenSSL::Crypto cpr fmt::fmt nlohmann_json_schema_validator)
 
 # Warnings as errors
 set_property(TARGET Gaboot PROPERTY COMPILE_WARNING_AS_ERROR ON)

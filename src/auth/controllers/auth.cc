@@ -1,4 +1,5 @@
 #include "auth.h"
+#include "util/gaboot.hpp"
 #include "auth/generate_token.hpp"
 // Add definition of your processing function here
 namespace gaboot
@@ -38,7 +39,7 @@ namespace gaboot
                 resp["token"] = 0;
 
                 auto response = HttpResponse::newHttpJsonResponse(resp);
-                response->setStatusCode(HttpStatusCode::k400BadRequest);
+                response->setStatusCode(HttpStatusCode::k401Unauthorized);
 
                 callback(response);
             }
@@ -50,7 +51,7 @@ namespace gaboot
             resp["token"] = 0;
 
             auto response = HttpResponse::newHttpJsonResponse(resp);
-            response->setStatusCode(HttpStatusCode::k400BadRequest);
+            response->setStatusCode(HttpStatusCode::k401Unauthorized);
 
             callback(response);
         }

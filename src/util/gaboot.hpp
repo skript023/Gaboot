@@ -65,4 +65,26 @@ namespace gaboot::util
         return false;
     }
 
+    template<class T>
+    inline bool multipart_tojson(const T& multipart, Json::Value& json)
+    {
+        if (auto& params = multipart.getParameters(); !params.empty())
+        {
+            for (const auto& it : params)
+            {
+                if (it.first == "password")
+                {
+                    json[it.first] = bcrypt::generateHash(it.second);
+                }
+                else
+                {
+                    json[it.first] = it.second;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
 }

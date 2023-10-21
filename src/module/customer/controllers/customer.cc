@@ -1,4 +1,5 @@
 #include "customer.h"
+#include "util/gaboot.hpp"
 #include "util/exception.hpp"
 
 // Add definition of your processing function here
@@ -112,21 +113,15 @@ namespace gaboot
 
         if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0)
         {
-            callback(BadRequestException("Requirement doesn't match").response());
-
-            return;
+            return callback(BadRequestException("Requirement doesn't match").response());;
         }
 
         auto& file = fileUpload.getFiles()[0];
 
         Json::Value data;
         MasterCustomers customer;
-        auto parameters = fileUpload.getParameters();
 
-        for (auto param = parameters.rbegin(); param != parameters.rend(); ++param)
-        {
-            data[param->first] = param->second;
-        }
+        util::multipart_tojson(fileUpload, data);
 
         std::string firstname = data["firstname"].asString();
         std::string lastname = data["lastname"].asString();
@@ -142,7 +137,7 @@ namespace gaboot
         customer.setLastname(lastname);
         customer.setUsername(username);
         customer.setEmail(email);
-        customer.setPassword(bcrypt::generateHash(password));
+        customer.setPassword(password);
         customer.setPhonenumber(phone);
         customer.setAddressdetail(address);
         customer.setLatitude(latitude);
@@ -153,11 +148,14 @@ namespace gaboot
         customer.setThumbnailpath(file.getFileName());
         customer.setIsactive(true);
 
-        auto valid = MasterCustomers::validateJsonForCreation(customer.toJson(), error);
+        auto insert_data = customer.toJson();
+        validator::reconstruct_json(insert_data);
+        validator schema(master_customer_schema::customer_schema);
+        auto valid = schema.validate(insert_data, error);
 
         if (!valid)
         {
-            callback(BadRequestException(error).response());
+            return callback(BadRequestException(error).response());
         }
 
         db().insert(customer, [=](MasterCustomers customer)
@@ -170,7 +168,7 @@ namespace gaboot
             auto response = HttpResponse::newHttpJsonResponse(json);
             file.save();
 
-            callback(response);
+            return callback(response);
         }, [=](DrogonDbException const& e)
         {
             Json::Value json;
@@ -181,7 +179,7 @@ namespace gaboot
             auto response = HttpResponse::newHttpJsonResponse(json);
             response->setStatusCode(HttpStatusCode::k500InternalServerError);
 
-            callback(response);
+            return callback(response);
         });
     }
 
@@ -189,7 +187,7 @@ namespace gaboot
     {
         Json::Value resp;
         Json::Value data;
-        std::vector<std::string> updated;
+        Json::Value updated(Json::objectValue);
 
         try
         {
@@ -207,21 +205,9 @@ namespace gaboot
 
             auto &file = multipart.getFiles()[0];
 
-            auto& parameters = multipart.getParameters();
-            
             data["updatedAt"] = trantor::Date::now().toDbStringLocal();
 
-            for (auto param = parameters.rbegin(); param != parameters.rend(); ++param)
-            {
-                if (param->first == "password")
-                {
-                    data[param->first] = bcrypt::generateHash(param->second);
-                }
-                else
-                {
-                    data[param->first] = param->second;
-                }
-            }
+            util::multipart_tojson(multipart, data);
 
             if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
             {
@@ -231,23 +217,8 @@ namespace gaboot
 
             auto args = Criteria(MasterCustomers::Cols::_id, CompareOperator::EQ, stoll(id));
 
-            std::map<Json::Value::Members, std::string> columnMapping = {
-                {{MasterCustomers::Cols::_firstname}, "firstname"},
-                {{MasterCustomers::Cols::_lastname}, "lastname"},
-                {{MasterCustomers::Cols::_username}, "username"},
-                {{MasterCustomers::Cols::_email}, "email"},
-                {{MasterCustomers::Cols::_phoneNumber}, "phoneNumber"},
-                {{MasterCustomers::Cols::_addressDetail}, "addressDetail"},
-                {{MasterCustomers::Cols::_latitude}, "latitude"},
-                {{MasterCustomers::Cols::_longitude}, "longitude"},
-                {{MasterCustomers::Cols::_password}, "password"},
-                {{MasterCustomers::Cols::_imagePath}, "imagePath"},
-                {{MasterCustomers::Cols::_thumbnailPath}, "thumbnailPath"},
-                {{MasterCustomers::Cols::_updatedAt}, "updatedAt"},
-            };
-            
             // Loop through JSON members and update corresponding database columns
-            for (const auto& [column, request] : columnMapping)
+            for (const auto& [column, request] : this->columnMapping)
             {
                 if (data.isMember(request))
                 {
@@ -256,10 +227,9 @@ namespace gaboot
                     {
                         auto record = db().updateFutureBy(column, args, jsonValue.asString());
                         
-                        if (record.valid() || record.get() != 0)
+                        if (record.valid() && record.get())
                         {
-                            resp[request + "_updated"] = true;
-                            updated.push_back(request);
+                            updated[request + "_updated"] = "success";
                         }
                         else
                         {
@@ -277,6 +247,7 @@ namespace gaboot
                     file.save();
                 }
 
+                resp["data"] = updated;
                 resp["message"] = "Success update customer data.";
                 resp["success"] = true;
 
@@ -285,11 +256,7 @@ namespace gaboot
             }
             else
             {
-                resp["message"] = "Unable to update costumer";
-                resp["success"] = true;
-
-                auto response = HttpResponse::newHttpJsonResponse(resp);
-                callback(response);
+                throw BadRequestException("Unable to update costumer");
             }
         }
         catch(const GabootException& e)

@@ -18,16 +18,17 @@
 #include <fmt/format.h>
 #include <drogon/drogon.h>
 #include <nlohmann/json.hpp>
+#include <nlohmann/json-schema.hpp>
 #include <jwt-cpp/jwt.h>
 #include <cpr/cpr.h>
-
-#include "util/gaboot.hpp"
 
 #include <jwt-cpp/traits/nlohmann-json/traits.h>
 #pragma warning(push)
 #pragma warning(disable:4996)
 #include <bcrypt.h>
 #pragma warning(pop)
+
+#include <util/gaboot.hpp>
 
 #define ADD_LISTENER(IP, PORT) drogon::app().addListener(IP, PORT)
 #define ADD_CONFIG(JSON) drogon::app().loadConfigFile(JSON)
