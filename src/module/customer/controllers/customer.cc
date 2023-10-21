@@ -113,7 +113,7 @@ namespace gaboot
 
         if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0)
         {
-            return callback(BadRequestException("Requirement doesn't match").response());;
+            return callback(BadRequestException("Requirement doesn't match").response());
         }
 
         auto& file = fileUpload.getFiles()[0];
