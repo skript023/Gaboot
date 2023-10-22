@@ -4,8 +4,8 @@ WORKDIR /app
 
 EXPOSE 8080
 
-COPY out/build/WSL-GCC-Release/Gaboot ./
+COPY out/build/Linux-x64/docker/Gaboot ./
 
-COPY config.json ./
+COPY out/build/Linux-x64/docker/config.json ./
 
 CMD ["./Gaboot"]

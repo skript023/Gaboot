@@ -1,8 +1,31 @@
 version: "3.5"
 services:
+    mysql:
+        image: mariadb:latest
+        #restart: on-failure
+        container_name: gaboot-database
+        #command: --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_ROOT_PASSWORD: gaboot
+            MYSQL_DATABASE: gaboot
+            MYSQL_USER: docker
+            MYSQL_PASSWORD: gaboot
+        ports:
+            - 3306:3306
+        expose:
+            - '3306'
+        volumes:
+            - ./out/dump:/var/lib/mysql
     gaboot-api:
         build: .
-        container_name: gaboot-api-container
+        container_name: gaboot-server
         init: true
+        environment:
+            MYSQL_HOST: "mysql"
         ports:
             - 8080:8080
+        depends_on:
+            - mysql
+        volumes:
+            - ./out/gaboot:/upload
+            - ./out/gaboot:/Drogon Log
