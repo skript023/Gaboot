@@ -203,9 +203,9 @@ namespace gaboot
 			{
 				std::stringstream out;
 #ifdef _WIN32
-				out << "[WINDOWS]" << "[" << msg.timestamp("%H:%M:%S") << "] [" << std::left << std::setw(level_padding_length) << msg.level().append("]") << std::setw(max_padding_length);
+				out << "[WINDOWS] " << "[" << msg.timestamp("%H:%M:%S") << "] [" << std::left << std::setw(level_padding_length) << msg.level().append("]") << std::setw(max_padding_length);
 #elif __linux__
-				out << "[LINUX]" << "[" << msg.timestamp("%H:%M:%S") << "] [" << std::left << std::setw(level_padding_length) << msg.level().append("]") << std::setw(max_padding_length);
+				out << "[LINUX] " << "[" << msg.timestamp("%H:%M:%S") << "] [" << std::left << std::setw(level_padding_length) << msg.level().append("]") << std::setw(max_padding_length);
 #endif
 				return out.str();
 			}
