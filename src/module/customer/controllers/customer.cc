@@ -150,7 +150,14 @@ namespace gaboot
 
         auto insert_data = customer.toJson();
         validator::reconstruct_json(insert_data);
-        validator schema(master_customer_schema::customer_schema);
+        validator schema(
+            validator_params{"firstname", "type:string|required|minLength:3|alphabetOnly"},
+            validator_params{"lastname", "type:string|required|minLength:3|alphabetOnly"},
+            validator_params{"username", "type:string|required|minLength:5|alphanum"},
+            validator_params{"email", "type:string|required|email"},
+            validator_params{"password", "type:string|required|minLength:8"}
+        );
+
         auto valid = schema.validate(insert_data, error);
 
         if (!valid)

@@ -14,6 +14,7 @@
 #include <exception>
 #include <functional>
 #include <filesystem>
+#include <algorithm>
 
 #include <fmt/format.h>
 #include <drogon/drogon.h>
