@@ -1,13 +1,20 @@
 #include "customer.h"
 #include "util/gaboot.hpp"
 #include "util/exception.hpp"
+#include <util/file_manager.hpp>
 
 // Add definition of your processing function here
 namespace gaboot
 {
     void customer::findAll(HttpRequestPtr const& req, response_t&& callback)
     {
-        db().findAll([=](std::vector<MasterCustomers> users)
+        auto& limitParam = req->getParameter("limit");
+        auto& pageParam = req->getParameter("page");
+
+        const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
+        const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
+
+        db().orderBy(MasterCustomers::Cols::_firstname).limit(limit).offset(page * limit).findAll([=](std::vector<MasterCustomers> users)
         {
             Json::Value json;
 
@@ -25,9 +32,13 @@ namespace gaboot
                     res.append(user.toJson());
                 }
 
+                const size_t lastPage = users.size() / limit + (users.size() % limit) == 0 ? 0 : 1;
+
                 json["message"] = "Success retreive users data";
                 json["success"] = true;
                 json["data"] = res;
+                json["lastPage"] = lastPage;
+
                 auto response = HttpResponse::newHttpJsonResponse(json);
 
                 callback(response);
@@ -133,6 +144,10 @@ namespace gaboot
         std::string longitude = data["longitude"].asString();
         std::string password = data["password"].asString();
 
+        auto folder = g_file_manager.get_project_folder("./customers");
+        auto userImage = folder.get_file(fmt::format("./pictures/{}.{}", username, file.getFileExtension())).get_path();
+        auto userThumbnail = folder.get_file(fmt::format("./pictures/thumbnail/{}.{}", username, file.getFileExtension())).get_path();
+
         customer.setFirstname(firstname);
         customer.setLastname(lastname);
         customer.setUsername(username);
@@ -144,19 +159,19 @@ namespace gaboot
         customer.setLongitude(longitude);
         customer.setCreatedat(trantor::Date::now());
         customer.setUpdatedat(trantor::Date::now());
-        customer.setImagepath(file.getFileName());
-        customer.setThumbnailpath(file.getFileName());
+        customer.setImagepath(userImage.lexically_normal().string());
+        customer.setThumbnailpath(userThumbnail.lexically_normal().string());
         customer.setIsactive(true);
 
         auto insert_data = customer.toJson();
         validator::reconstruct_json(insert_data);
-        validator schema(
-            validator_params{"firstname", "type:string|required|minLength:3|alphabetOnly"},
-            validator_params{"lastname", "type:string|required|minLength:3|alphabetOnly"},
-            validator_params{"username", "type:string|required|minLength:5|alphanum"},
-            validator_params{"email", "type:string|required|email"},
-            validator_params{"password", "type:string|required|minLength:8"}
-        );
+        validator schema({
+            {"firstname", "type:string|required|minLength:3|alphabetOnly"},
+            {"lastname", "type:string|required|minLength:3|alphabetOnly"},
+            {"username", "type:string|required|minLength:5|alphanum"},
+            {"email", "type:string|required|email"},
+            {"password", "type:string|required|minLength:8"}
+        });
 
         auto valid = schema.validate(insert_data, error);
 
@@ -173,7 +188,9 @@ namespace gaboot
             json["success"] = true;
 
             auto response = HttpResponse::newHttpJsonResponse(json);
-            file.save();
+            
+            file.saveAs(userImage.string());
+            file.saveAs(userThumbnail.string());
 
             return callback(response);
         }, [=](DrogonDbException const& e)
@@ -229,7 +246,7 @@ namespace gaboot
             {
                 if (data.isMember(request))
                 {
-                    auto jsonValue = data[request];
+                    auto& jsonValue = data[request];
                     if (!jsonValue.isNull())
                     {
                         auto record = db().updateFutureBy(column, args, jsonValue.asString());
@@ -303,6 +320,32 @@ namespace gaboot
         {
             Json::Value json;
             json["message"] = fmt::format("Failed delete user, error caught on {}", e.base().what());
+            json["success"] = false;
+
+            auto response = HttpResponse::newHttpJsonResponse(json);
+            response->setStatusCode(k500InternalServerError);
+
+            callback(response);
+        });
+    }
+
+    void customer::getImage(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
+    {
+        if (id.empty() || !util::is_numeric(id))
+        {
+            return callback(BadRequestException("Invalid parameters").response());
+        }
+
+        db().findByPrimaryKey(stoll(id), [=](MasterCustomers customer) 
+        {
+            auto folder = g_file_manager.get_project_file(fmt::format("./customers/pictures/{}", "elaina023.jpg")).canonical_path();
+            auto response = HttpResponse::newFileResponse(folder.string(), "test.jpg");
+
+            callback(response);
+        }, [=](DrogonDbException const& e) 
+        {
+            Json::Value json;
+            json["message"] = fmt::format("Failed load user image, error caught on {}", e.base().what());
             json["success"] = false;
 
             auto response = HttpResponse::newHttpJsonResponse(json);

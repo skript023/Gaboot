@@ -30,14 +30,16 @@
 #pragma warning(pop)
 
 #include <util/gaboot.hpp>
+#include <util/validator.hpp>
 
 #define ADD_LISTENER(IP, PORT) drogon::app().addListener(IP, PORT)
 #define ADD_CONFIG(JSON) drogon::app().loadConfigFile(JSON)
 #define SERVER_RUN drogon::app().run()
+#define UPLOAD_PATH drogon::app().getUploadPath()
 
 #define DATABASE_CLIENT drogon::app().getDbClient()
 constexpr auto SECRET = "BahasaAsu123";
-constexpr auto CLIENT_KEY = "U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg=";
+constexpr auto SERVER_KEY = "U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg=";
 
 using response_t = std::function<void(drogon::HttpResponsePtr const&)>;
 

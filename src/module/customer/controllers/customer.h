@@ -45,6 +45,7 @@ namespace gaboot
 		ADD_METHOD_TO(customer::findOne, "/customers/{id}", Get);
 		ADD_METHOD_TO(customer::update, "/customers/{id}", Put);
 		ADD_METHOD_TO(customer::remove, "/customers/{id}", Delete);
+		ADD_METHOD_TO(customer::getImage, "/customers/image/{id}", Get);
 		METHOD_LIST_END
 		// your declaration of processing function maybe like this:
 		// void get(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, int p1, std::string p2);
@@ -54,5 +55,6 @@ namespace gaboot
 		void create(HttpRequestPtr const&, response_t&&);
 		void update(HttpRequestPtr const&, response_t&&, std::string&& id);
 		void remove(HttpRequestPtr const&, response_t&&, std::string&& id);
+		void getImage(HttpRequestPtr const&, response_t&&, std::string&& id);
 	};
 }
