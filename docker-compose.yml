@@ -2,9 +2,8 @@ version: "3.5"
 services:
     mysql:
         image: mariadb:latest
-        #restart: on-failure
+        restart: on-failure
         container_name: gaboot-database
-        #command: --default-authentication-plugin=mysql_native_password
         environment:
             MYSQL_ROOT_PASSWORD: gaboot
             MYSQL_DATABASE: gaboot
