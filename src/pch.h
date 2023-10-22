@@ -16,6 +16,11 @@
 #include <filesystem>
 #include <algorithm>
 
+#ifdef __GNUC__
+
+#endif
+
+
 #include <fmt/format.h>
 #include <drogon/drogon.h>
 #include <nlohmann/json.hpp>
@@ -30,6 +35,7 @@
 #pragma warning(pop)
 
 #include <util/gaboot.hpp>
+#include <util/logger.hpp>
 #include <util/validator.hpp>
 
 #define ADD_LISTENER(IP, PORT) drogon::app().addListener(IP, PORT)
@@ -38,6 +44,15 @@
 #define UPLOAD_PATH drogon::app().getUploadPath()
 
 #define DATABASE_CLIENT drogon::app().getDbClient()
+#ifdef _WIN32
+#define OS_NAME "Windows"
+#elif __linux__
+#define OS_NAME "Linux"
+#else
+#define OS_NAME "Unknown"
+#endif
+
+
 constexpr auto SECRET = "BahasaAsu123";
 constexpr auto SERVER_KEY = "U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg=";
 

@@ -10,7 +10,7 @@ namespace gaboot
         std::string last_name;
         std::string email;
         std::string phone;
-        std::string token = fmt::format("Basic ", CLIENT_KEY);
+        std::string token = fmt::format("Basic ", SERVER_KEY);
 
         std::regex pattern(R"(\d{3}-\d{3}-\d{4})");
 

@@ -1,4 +1,5 @@
 #pragma once
+#include <pch.h>
 
 namespace gaboot
 {
@@ -22,4 +23,4 @@ namespace gaboot
 
 		std::filesystem::path m_folder_path;
 	};
-}
+}	

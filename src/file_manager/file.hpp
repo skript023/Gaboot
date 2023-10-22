@@ -1,4 +1,5 @@
 #pragma once
+#include <pch.h>
 
 namespace gaboot
 {
@@ -15,7 +16,7 @@ namespace gaboot
 		file copy(const std::filesystem::path& new_path);
 		bool exists() const;
 		const std::filesystem::path get_path() const;
-		const std::filesystem::path file::canonical_path() const;
+		const std::filesystem::path canonical_path() const;
 		file move(std::filesystem::path new_path);
 
 	private:

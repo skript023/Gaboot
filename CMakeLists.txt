@@ -21,6 +21,7 @@ endif()
 include(scripts/bcrypt.cmake)
 include(scripts/jwt.cmake)
 include(scripts/cpr.cmake)
+include(scripts/g3log.cmake)
 include(scripts/fmtlib.cmake)
 include(scripts/jsonvalidator.cmake)
 
@@ -51,7 +52,7 @@ endif ()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(Gaboot "${SRC_DIR}/main.cc" "src/file_manager/file.cpp" "src/file_manager/folder.cpp" "src/util/file_manager.cpp" "src/util/validator.cpp")
+add_executable(Gaboot "${SRC_DIR}/main.cc")
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_property(TARGET Gaboot PROPERTY CXX_STANDARD 17) # 23 Because std::format is not avalible in std:c++20 for some reason. Maybe it's because i use v142 toolset.
@@ -77,7 +78,7 @@ endif()
 find_package(OpenSSL REQUIRED)
 find_package(Drogon CONFIG REQUIRED)
 
-target_link_libraries(Gaboot PRIVATE Drogon::Drogon bcrypt OpenSSL::SSL OpenSSL::Crypto cpr fmt::fmt nlohmann_json_schema_validator)
+target_link_libraries(Gaboot PRIVATE Drogon::Drogon bcrypt OpenSSL::SSL OpenSSL::Crypto cpr fmt::fmt nlohmann_json_schema_validator g3log)
 
 # Warnings as errors
 set_property(TARGET Gaboot PROPERTY COMPILE_WARNING_AS_ERROR ON)
