@@ -170,7 +170,7 @@ namespace gaboot
 #ifdef _WIN32
 					SetConsoleTextAttribute(g_logger->m_console_handle, static_cast<std::uint16_t>(log_colors[log_message._level.text]));
 					g_logger->m_console_out << log_message.toString(is_raw ? format_raw : format_console) << std::flush;
-#else
+#elif __linux__
 					std::cout << log_message.toString(is_raw ? format_raw : format_console) << std::flush;
 #endif
 				}
@@ -191,7 +191,7 @@ namespace gaboot
 				std::stringstream out;
 				out << "[WINDOWS]" << "[" << msg.timestamp("%H:%M:%S") << "] [" << std::left << std::setw(level_padding_length) << msg.level().append("]") << std::setw(max_padding_length) << file_name_with_line;
 				return out.str();
-#else
+#elif __linux__
 				std::string file_name_with_line = "[" + msg.file() + ":" + msg.line() + "]";
 				std::stringstream out;
 				out << "[LINUX]" << "[" << msg.timestamp("%H:%M:%S") << "] [" << std::left << std::setw(level_padding_length) << msg.level().append("]") << std::setw(max_padding_length) << file_name_with_line;
@@ -202,9 +202,9 @@ namespace gaboot
 			static std::string format_console(const g3::LogMessage& msg)
 			{
 				std::stringstream out;
-#ifdef __WIN32
+#ifdef _WIN32
 				out << "[WINDOWS]" << "[" << msg.timestamp("%H:%M:%S") << "] [" << std::left << std::setw(level_padding_length) << msg.level().append("]") << std::setw(max_padding_length);
-#else
+#elif __linux__
 				out << "[LINUX]" << "[" << msg.timestamp("%H:%M:%S") << "] [" << std::left << std::setw(level_padding_length) << msg.level().append("]") << std::setw(max_padding_length);
 #endif
 				return out.str();
