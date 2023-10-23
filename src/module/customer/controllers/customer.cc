@@ -1,7 +1,8 @@
 #include "customer.h"
+#include "util/upload.hpp"
 #include "util/gaboot.hpp"
 #include "util/exception.hpp"
-#include <util/file_manager.hpp>
+#include "util/file_manager.hpp"
 
 // Add definition of your processing function here
 namespace gaboot
@@ -144,9 +145,7 @@ namespace gaboot
         std::string longitude = data["longitude"].asString();
         std::string password = data["password"].asString();
 
-        auto folder = g_file_manager.get_project_folder("./customers");
-        auto userImage = folder.get_file(fmt::format("./pictures/{}.{}", username, file.getFileExtension())).get_path();
-        auto userThumbnail = folder.get_file(fmt::format("./pictures/thumbnail/{}.{}", username, file.getFileExtension())).get_path();
+        upload_file upload(file, username, "customers");
 
         customer.setFirstname(firstname);
         customer.setLastname(lastname);
@@ -159,8 +158,8 @@ namespace gaboot
         customer.setLongitude(longitude);
         customer.setCreatedat(trantor::Date::now());
         customer.setUpdatedat(trantor::Date::now());
-        customer.setImagepath(userImage.lexically_normal().string());
-        customer.setThumbnailpath(userThumbnail.lexically_normal().string());
+        customer.setImagepath(upload.get_image_path());
+        customer.setThumbnailpath(upload.get_thumbnail_path());
         customer.setIsactive(true);
 
         auto insert_data = customer.toJson();
@@ -189,8 +188,7 @@ namespace gaboot
 
             auto response = HttpResponse::newHttpJsonResponse(json);
             
-            file.saveAs(userImage.string());
-            file.saveAs(userThumbnail.string());
+            upload.save();
 
             return callback(response);
         }, [=](DrogonDbException const& e)
@@ -338,8 +336,7 @@ namespace gaboot
 
         db().findByPrimaryKey(stoll(id), [=](MasterCustomers customer) 
         {
-            auto folder = g_file_manager.get_project_file(fmt::format("./customers/pictures/{}", "elaina023.jpg")).canonical_path();
-            auto response = HttpResponse::newFileResponse(folder.string(), "test.jpg");
+            auto response = HttpResponse::newFileResponse(customer.getValueOfImagepath());
 
             callback(response);
         }, [=](DrogonDbException const& e) 

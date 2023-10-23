@@ -13,7 +13,7 @@ namespace gaboot
 
 		file get_file(std::filesystem::path file_path) const;
 		const std::filesystem::path get_path() const;
-		const std::filesystem::path cannonical_path() const;
+		const std::filesystem::path canonical_path() const;
 
 	private:
 		friend class file_manager;

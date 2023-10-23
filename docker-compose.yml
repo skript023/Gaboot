@@ -3,7 +3,7 @@ services:
     mysql:
         image: mariadb:latest
         restart: on-failure
-        container_name: gaboot-database
+        container_name: gaboot-shop-database
         environment:
             MYSQL_ROOT_PASSWORD: gaboot
             MYSQL_DATABASE: gaboot
@@ -17,7 +17,7 @@ services:
             - ./out/dump:/var/lib/mysql
     gaboot-api:
         build: .
-        container_name: gaboot-server
+        container_name: gaboot-shop-server
         init: true
         environment:
             MYSQL_HOST: "mysql"

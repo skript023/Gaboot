@@ -15,11 +15,14 @@
 #include <functional>
 #include <filesystem>
 #include <algorithm>
+#include <cstdio>
+#include <cstdint>
 
 #ifdef __GNUC__
 
+#elif _MSC_VER
+	#include <Windows.h>
 #endif
-
 
 #include <fmt/format.h>
 #include <drogon/drogon.h>
@@ -44,6 +47,9 @@
 #define UPLOAD_PATH drogon::app().getUploadPath()
 
 #define DATABASE_CLIENT drogon::app().getDbClient()
+
+#define NODISCARD [[nodiscard]]
+
 #ifdef _WIN32
 #define OS_NAME "Windows"
 #elif __linux__

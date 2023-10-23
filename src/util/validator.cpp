@@ -12,7 +12,7 @@ namespace gaboot
         }
         catch (std::exception const& e)
         {
-            LOG_WARN << "Error : " << e.what();
+            LOG(WARNING) << "Error : " << e.what();
         }
     }
     bool validator::validate(Json::Value const& json, std::string& error)
@@ -25,6 +25,7 @@ namespace gaboot
         if (err)
         {
             error += err.message() + " at " + err.pointer().to_string().substr(1);
+            LOG(WARNING) << fmt::format("{} at {}", err.message(), err.pointer().to_string().substr(1));
 
             return false;
         }

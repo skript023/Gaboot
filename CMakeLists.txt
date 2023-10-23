@@ -71,9 +71,7 @@ target_include_directories(Gaboot PRIVATE
   "${jsonvalidator_SOURCE_DIR}/src"
 )
 
-if (MSVC)
-    target_precompile_headers(Gaboot PRIVATE "${SRC_DIR}/pch.h")
-endif()
+target_precompile_headers(Gaboot PRIVATE "${SRC_DIR}/pch.h")
 
 find_package(OpenSSL REQUIRED)
 find_package(Drogon CONFIG REQUIRED)

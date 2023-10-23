@@ -37,7 +37,7 @@ namespace gaboot
 
 	const std::filesystem::path file::canonical_path() const
 	{
-		return std::filesystem::canonical(m_file_path);
+		return std::filesystem::weakly_canonical(m_file_path);
 	}
 
 	file file::move(std::filesystem::path new_path)
