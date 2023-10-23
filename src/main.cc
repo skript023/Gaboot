@@ -6,8 +6,6 @@ int main()
 {
     using namespace gaboot;
     //Set base directory to file manager
-    g_file_manager.init(UPLOAD_PATH);
-
     auto logger_instance = std::make_unique<logger>("Gaboot Logger");
 
     LOG(RAW_GREEN_TO_CONSOLE) << R"kek(
@@ -18,6 +16,10 @@ int main()
 | |__| | (_| | |_) | (_) | (_) | |_   ____) |  __/ |   \ V /  __/ |   
  \_____|\__,_|_.__/ \___/ \___/ \__| |_____/ \___|_|    \_/ \___|_|   
 )kek";
+
+    LOG(INFO) << "Upload folder created in " << UPLOAD_PATH;
+
+    g_file_manager.init(UPLOAD_PATH);
 
     //Set HTTP listener address and port
     LOG(INFO) << "Starting C++ Gaboot Server.";

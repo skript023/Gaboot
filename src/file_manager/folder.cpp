@@ -25,6 +25,6 @@ namespace gaboot
 	
 	const std::filesystem::path folder::canonical_path() const
 	{
-		return std::filesystem::weakly_canonical(m_folder_path);
+		return std::filesystem::canonical(m_folder_path);
 	}
 }

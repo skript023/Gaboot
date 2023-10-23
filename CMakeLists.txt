@@ -23,6 +23,7 @@ include(scripts/jwt.cmake)
 include(scripts/cpr.cmake)
 include(scripts/g3log.cmake)
 include(scripts/fmtlib.cmake)
+include(scripts/stb_image.cmake)
 include(scripts/jsonvalidator.cmake)
 
 # Gaboot
@@ -65,6 +66,7 @@ target_include_directories(Gaboot PRIVATE
   ${DROGON_INCLUDE_DIRS}
   ${openssl_INCLUDE_DIRS}
   "${fmtlib_SOURCE_DIR}/include"
+  "${stb_image_SOURCE_DIR}"
   "${jwt_SOURCE_DIR}/include"
   "${nlohmann_json_SOURCE_DIR}/single_include"
   "${bcrypt_SOURCE_DIR}/include"

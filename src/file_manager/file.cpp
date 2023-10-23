@@ -37,7 +37,12 @@ namespace gaboot
 
 	const std::filesystem::path file::canonical_path() const
 	{
-		return std::filesystem::weakly_canonical(m_file_path);
+		return std::filesystem::canonical(m_file_path);
+	}
+	
+	const std::filesystem::path file::absolute_path() const
+	{
+		return std::filesystem::absolute(m_file_path);
 	}
 
 	file file::move(std::filesystem::path new_path)
@@ -51,5 +56,15 @@ namespace gaboot
 			std::filesystem::rename(m_file_path, new_path);
 
 		return { new_path };
+	}
+
+	bool file::remove() const
+	{
+		if (std::filesystem::exists(m_file_path))
+		{
+			return std::filesystem::remove(m_file_path);
+		}
+
+		return false;
 	}
 }

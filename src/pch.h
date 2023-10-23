@@ -43,6 +43,7 @@
 
 #define ADD_LISTENER(IP, PORT) drogon::app().addListener(IP, PORT)
 #define ADD_CONFIG(JSON) drogon::app().loadConfigFile(JSON)
+#define SET_UPLOADED_PATH(path) drogon::app().setUploadPath(path);
 #define SERVER_RUN drogon::app().run()
 #define UPLOAD_PATH drogon::app().getUploadPath()
 #define DATABASE_CLIENT drogon::app().getDbClient()
@@ -55,6 +56,7 @@
 #define OS_NAME "Unknown"
 #endif
 
+#pragma warning(disable:4100)
 
 #define SECRET "BahasaAsu123"
 #define SERVER_KEY "U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg="
