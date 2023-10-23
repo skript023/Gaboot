@@ -3,55 +3,88 @@
 // Add definition of your processing function here
 namespace gaboot
 {
-    void order::create(HttpRequest const& req, response_t&& callback)
+    void order::create(HttpRequestPtr const& req, response_t&& callback)
     {
-        std::string order_id;
-        std::string first_name;
-        std::string last_name;
-        std::string email;
-        std::string phone;
-        std::string token = fmt::format("Basic ", SERVER_KEY);
+        try
+        {
+            std::string order_id = "YOUR-ORDERID-123456";
+            std::string first_name = "budi";
+            std::string last_name = "pratama";
+            std::string email = "budi.pra@example.com";
+            std::string phone = "08111222333";
+            std::string token = fmt::format("Basic {}", SERVER_KEY);
 
-        std::regex pattern(R"(\d{3}-\d{3}-\d{4})");
-
-        nlohmann::json json = {
-            {
-                "transaction_detail", {
-                    {"order_id", order_id}
+            nlohmann::ordered_json request_payment = {
+                {
+                    "transaction_details", {
+                        {"order_id", order_id},
+                        {"gross_amount", 12000000}
+                    },
                 },
-            },
-            {
-                "credit_card", {
-                    {"secure", true}
+                {
+                    "credit_card", {
+                        {"secure", true}
+                    },
                 },
-            },
-            {
-                "customer_details", {
-                    {"first_name", first_name},
-                    {"last_name", last_name},
-                    {"email", email},
-                    {"phone", phone}
+                {
+                    "customer_details", {
+                        {"first_name", first_name},
+                        {"last_name", last_name},
+                        {"email", email},
+                        {"phone", phone}
+                    }
                 }
+            };
+
+            cpr::Url url = "https://app.sandbox.midtrans.com/snap/v1/transactions";
+            cpr::Body body = request_payment.dump();
+            cpr::Header header = {
+                {"Accept", "application/json"},
+                { "Content-Type", "application/json" },
+                { "Authorization", token}
+            };
+
+            auto async = cpr::PostAsync(url, body, header);
+            auto res = async.get();
+
+            auto midtrans = nlohmann::ordered_json::parse(res.text);
+
+            if (res.status_code == 201)
+            {
+                midtrans["message"] = "Create transaction success";
+                midtrans["success"] = true;
+
+                auto response = HttpResponse::newHttpResponse();
+                response->setBody(midtrans.dump());
+                response->setContentTypeCode(CT_APPLICATION_JSON);
+
+                return callback(response);
             }
-        };
-        
-        cpr::Url url = "https://app.sandbox.midtrans.com/snap/v1/transactions";
-        cpr::Body body = json.dump();
-        cpr::Header header {
-            { "Content-Type", "application/json" },
-            { "Authorization", token}
-        };
+            else
+            {
+                midtrans["message"] = "Create transaction failed";
+                midtrans["success"] = false;
 
-        auto async = cpr::PostAsync(url, body, header);
-        
-        auto res = async.get();
-        auto midtrans = nlohmann::json::parse(res.text);
+                auto response = HttpResponse::newHttpResponse();
+                response->setBody(midtrans.dump());
+                response->setContentTypeCode(CT_APPLICATION_JSON);
+                response->setStatusCode((HttpStatusCode)res.status_code);
 
-        Json::Value resp;
-        resp["token"] = midtrans["token"].get<std::string>();
+                return callback(response);
+            }
+        }
+        catch (const std::exception& e)
+        {
+            LOG(WARNING) << "Unable to start transaction, error caught on " << e.what();
 
-        auto response = HttpResponse::newHttpJsonResponse(resp);
+            Json::Value json;
+            json["message"] = fmt::format("Unable to start transaction, error caught on {}", e.what());
+            json["success"] = false;
 
-        callback(response);
+            auto response = HttpResponse::newHttpJsonResponse(json);
+            response->setStatusCode(k500InternalServerError);
+
+            return callback(response);
+        }
     }
 } // namespace gaboot

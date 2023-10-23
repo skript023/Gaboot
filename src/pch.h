@@ -45,10 +45,7 @@
 #define ADD_CONFIG(JSON) drogon::app().loadConfigFile(JSON)
 #define SERVER_RUN drogon::app().run()
 #define UPLOAD_PATH drogon::app().getUploadPath()
-
 #define DATABASE_CLIENT drogon::app().getDbClient()
-
-#define NODISCARD [[nodiscard]]
 
 #ifdef _WIN32
 #define OS_NAME "Windows"
@@ -59,8 +56,8 @@
 #endif
 
 
-constexpr auto SECRET = "BahasaAsu123";
-constexpr auto SERVER_KEY = "U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg=";
+#define SECRET "BahasaAsu123"
+#define SERVER_KEY "U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg="
 
 using response_t = std::function<void(drogon::HttpResponsePtr const&)>;
 

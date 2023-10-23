@@ -36,6 +36,13 @@ namespace gaboot::util
         return std::regex_match(str, numeric);
     }
 
+    inline bool is_phone_number(std::string const& phoneNumber)
+    {
+        std::regex pattern("^(\\+\\d{1,3})?\\s?\\(?(\\d{3})\\)?[-.\\s]?(\\d{3})[-.\\s]?(\\d{4})$");
+
+        return std::regex_match(phoneNumber, pattern);
+    }
+
     inline bool allowed_image(std::string_view const& str)
     {
         std::regex extension(".*\\.(jpg|jpeg|png)$");

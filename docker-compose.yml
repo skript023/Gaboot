@@ -10,9 +10,9 @@ services:
             MYSQL_USER: docker
             MYSQL_PASSWORD: gaboot
         ports:
-            - 3306:3306
+            - 3307:3307
         expose:
-            - '3306'
+            - 3307
         volumes:
             - ./out/dump:/var/lib/mysql
     gaboot-api:
@@ -22,7 +22,7 @@ services:
         environment:
             MYSQL_HOST: "mysql"
         ports:
-            - 8080:8080
+            - 8088:8088
         depends_on:
             - mysql
         volumes:
