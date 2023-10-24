@@ -15,7 +15,7 @@ namespace gaboot
         try
         {
             auto user = db().findOne(Criteria(MasterCustomers::Cols::_username, CompareOperator::EQ, username));
-            auto user_password = user.getValueOfPassword();
+            auto& user_password = user.getValueOfPassword();
 
             if (auto valid = bcrypt::validatePassword(password, user_password); valid && !user_password.empty())
             {

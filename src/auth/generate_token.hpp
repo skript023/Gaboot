@@ -12,8 +12,8 @@ namespace gaboot
         {
             auto hour = std::chrono::system_clock::now() + std::chrono::hours(1);
 
-            m_token = jwt::create<traits>().set_expires_at(hour).
-                set_payload_claim("access", jwt::basic_claim<traits>(json.dump())).
+            m_token = jwt::create<traits>().set_expires_at(hour).set_issuer("jwt").
+                set_payload_claim("gaboot", jwt::basic_claim<traits>(json.dump())).
                 sign(jwt::algorithm::hs256{ SECRET });
         }
 

@@ -59,7 +59,7 @@
 
 #pragma warning(disable:4100)
 
-#define SECRET "BahasaAsu123"
+#define SECRET "QmFoYXNhQXN1MTIz"
 #define SERVER_KEY "U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg="
 
 using response_t = std::function<void(drogon::HttpResponsePtr const&)>;

@@ -19,7 +19,7 @@ namespace gaboot
 
 			if (products.empty())
 			{
-				callback(NotFoundException("No data retrieved").response());
+				return callback(NotFoundException("No data retrieved").response());
 			}
 
 			Json::Value res(Json::arrayValue);
@@ -92,32 +92,48 @@ namespace gaboot
 	{
 		std::string error;
 
-		MultiPartParser fileUpload;
+		auto& data = req->getJsonObject();
 
-		if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0)
-		{
-			return callback(BadRequestException("Requirement doesn't match").response());
-		}
-
-		auto& file = fileUpload.getFiles()[0];
-
-		Json::Value data;
-		MasterProducts customer;
-
-		util::multipart_tojson(fileUpload, data);
-
-		MasterProducts product(data);
+		if (!data) return callback(BadRequestException().response());
 
 		validator schema({
 			{"name", "type:string|required|minLength:3|alphabetOnly"},
-			{"description", "type:string|required|minLength:3|alphabetOnly"}
+			{"description", "type:string|required|minLength:3|alphabetOnly"},
+			{"price", "type:number|required|numberOnly"},
+			{"stock", "type:number|required|numberOnly"}
 		});
 
-		auto valid = schema.validate(data, error);
-		if (!valid)
+		MasterProducts product(*data);
+
+		if (!schema.validate(product.toJson(), error))
 		{
 			return callback(BadRequestException(error).response());
 		}
+
+		db().insert(product, [=](MasterProducts product) 
+		{
+			Json::Value json;
+
+			json["message"] = "Create product success";
+			json["success"] = true;
+
+			auto response = HttpResponse::newHttpJsonResponse(json);
+
+			return callback(response);
+		}, [=](DrogonDbException const& e) 
+		{
+			LOG(WARNING) << e.base().what();
+
+			Json::Value json;
+
+			json["message"] = e.base().what();
+			json["success"] = false;
+
+			auto response = HttpResponse::newHttpJsonResponse(json);
+			response->setStatusCode(HttpStatusCode::k500InternalServerError);
+
+			return callback(response);
+		});
 	}
 	void products::remove(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
 	{

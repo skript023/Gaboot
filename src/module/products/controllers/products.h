@@ -19,11 +19,11 @@ namespace gaboot
         // METHOD_ADD(products::get, "/{2}/{1}", Get); // path is /products/{arg2}/{arg1}
         // METHOD_ADD(products::your_method_name, "/{1}/{2}/list", Get); // path is /products/{arg1}/{arg2}/list
         // ADD_METHOD_TO(products::your_method_name, "/absolute/path/{1}/{2}/list", Get); // path is /absolute/path/{arg1}/{arg2}/list
-        ADD_METHOD_TO(products::findAll, "/products", Get);
-        ADD_METHOD_TO(products::findOne, "/products/{id}", Get);
-        ADD_METHOD_TO(products::update, "/products/{id}", Get);
-        ADD_METHOD_TO(products::create, "/products/{id}", Get);
-        ADD_METHOD_TO(products::remove, "/products/{id}", Get);
+        ADD_METHOD_TO(products::create, "/products", Post, "gaboot::login");
+        ADD_METHOD_TO(products::findAll, "/products", Get, "gaboot::login");
+        ADD_METHOD_TO(products::findOne, "/products/{id}", Get, "gaboot::login");
+        ADD_METHOD_TO(products::update, "/products/{id}", Patch);
+        ADD_METHOD_TO(products::remove, "/products/{id}", Delete);
         METHOD_LIST_END
         // your declaration of processing function maybe like this:
         // void get(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, int p1, std::string p2);
