@@ -66,7 +66,7 @@ namespace gaboot
 
         static void reconstruct_json(Json::Value& jsonValue);
 
-        inline nlohmann::json convert(const Json::Value& jsonCppValue)
+        nlohmann::json convert(const Json::Value& jsonCppValue)
         {
             nlohmann::json result;
 

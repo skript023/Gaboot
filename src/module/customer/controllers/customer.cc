@@ -133,7 +133,7 @@ namespace gaboot
 
         Json::Value data;
 
-        util::multipart_tojson(fileUpload, data);
+        if (!util::multipart_tojson(fileUpload, data)) return callback(BadRequestException("Unknown error").response());
 
         validator schema({
             {"firstname", "type:string|required|minLength:3|alphabetOnly"},
@@ -143,19 +143,17 @@ namespace gaboot
             {"password", "type:string|required|minLength:8"}
         });
 
-        upload_file upload(file, data["username"].asString(), "customers");
-
-        auto valid = schema.validate(data, error);
-
         MasterCustomers customer(data);
+
+        upload_file upload(file, customer.getValueOfUsername(), "customers");
 
         customer.setCreatedat(trantor::Date::now());
         customer.setUpdatedat(trantor::Date::now());
         customer.setImagepath(upload.get_image_path());
         customer.setThumbnailpath(upload.get_thumbnail_path());
         customer.setIsactive(true);
-
-        if (!valid)
+        
+        if (!schema.validate(customer.toJson(), error))
         {
             return callback(BadRequestException(error).response());
         }
@@ -174,6 +172,8 @@ namespace gaboot
             return callback(response);
         }, [=](DrogonDbException const& e)
         {
+            LOG(WARNING) << e.base().what();
+
             Json::Value json;
 
             json["message"] = e.base().what();
@@ -255,16 +255,29 @@ namespace gaboot
                 resp["success"] = true;
 
                 auto response = HttpResponse::newHttpJsonResponse(resp);
-                callback(response);
+                return callback(response);
             }
             else
             {
                 throw BadRequestException("Unable to update costumer");
             }
         }
-        catch(const GabootException& e)
+        catch (const GabootException& e)
         {
-            callback(e.response());
+            LOG(WARNING) << e.what();
+
+            return callback(e.response());
+        }
+        catch (const std::exception& e)
+        {
+            resp["message"] = fmt::format("Unable to update data, error caught on {}", e.what());
+            resp["success"] = true;
+
+            auto response = HttpResponse::newHttpJsonResponse(resp);
+
+            LOG(WARNING) << e.what();
+
+            return callback(response);
         }
     }
 
@@ -274,9 +287,7 @@ namespace gaboot
 
         if (id.empty() || !util::is_numeric(id))
         {
-            callback(BadRequestException("Invalid parameters").response());
-
-            return;
+            return callback(BadRequestException("Invalid parameters").response());
         }
 
         db().deleteByPrimaryKey(stoll(id), [=](size_t record)

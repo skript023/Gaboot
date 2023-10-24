@@ -47,7 +47,8 @@ namespace gaboot
 	{
 		std::string m_message;
 	public:
-		explicit CustomException(std::string const& message) : GabootException(message, T), m_message(message) {}
+		explicit CustomException(std::string const& message) : GabootException(message, T), m_message(message) 
+		{}
 
 		virtual ~CustomException() noexcept = default;
 	};
@@ -87,7 +88,8 @@ namespace gaboot
 	{
 		std::string m_message;
 	public:
-		explicit UnauthorzedException(std::string const& message = "Unauthorized exception") : GabootException(message, k401Unauthorized), m_message(message) {}
+		explicit UnauthorzedException(std::string const& message = "Unauthorized") : GabootException(message, k401Unauthorized), m_message(message) 
+		{}
 		virtual ~UnauthorzedException() noexcept = default;
 	};
 }

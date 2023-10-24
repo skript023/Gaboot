@@ -38,7 +38,7 @@ namespace gaboot
 
 			auto response = HttpResponse::newHttpJsonResponse(json);
 
-			callback(response);
+			return callback(response);
 		}, [=](DrogonDbException const& e)
 		{
 			Json::Value json;
@@ -50,7 +50,7 @@ namespace gaboot
 			auto response = HttpResponse::newHttpJsonResponse(json);
 			response->setStatusCode(k500InternalServerError);
 
-			callback(response);
+			return callback(response);
 		});
 	}
 	void products::findOne(HttpRequestPtr const& req, response_t&& callback, std::string&& id)

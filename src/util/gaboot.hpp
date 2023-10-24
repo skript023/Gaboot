@@ -72,8 +72,7 @@ namespace gaboot::util
         return false;
     }
 
-    template<class T>
-    inline bool multipart_tojson(const T& multipart, Json::Value& json)
+    inline bool multipart_tojson(const drogon::MultiPartParser& multipart, Json::Value& json)
     {
         if (auto& params = multipart.getParameters(); !params.empty())
         {
