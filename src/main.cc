@@ -24,7 +24,7 @@ int main()
     //Set HTTP listener address and port
     LOG(INFO) << "Starting C++ Gaboot Server.";
 
-    ADD_LISTENER("127.0.0.1", 8080);
+    ADD_LISTENER("0.0.0.0", 8088);
     LOG(INFO) << "Listener initialized.";
 
     ADD_CONFIG("./config.json");

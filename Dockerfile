@@ -2,10 +2,10 @@ FROM ubuntu:latest
 
 WORKDIR /app
 
-EXPOSE 8080
+EXPOSE 8088
 
-COPY out/build/Linux-x64/docker/Gaboot ./
+COPY out/build/Linux-x64/Gaboot ./
 
-COPY out/build/Linux-x64/docker/config.json ./
+COPY out/build/Linux-x64/config.json ./
 
 CMD ["./Gaboot"]

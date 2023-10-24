@@ -3,25 +3,14 @@
 #include <pch.h>
 #include <util/file_manager.hpp>
 
-#define STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#define STB_IMAGE_RESIZE_IMPLEMENTATION
-#include "stb_image.h"
-#include "stb_image_write.h"
-#include "stb_image_resize2.h"
-
 namespace gaboot
 {
-	namespace Express::Multer
-	{
-		using File = HttpFile;
-	}
 	using namespace drogon;
 
 	class upload_file
 	{
 	public:
-		explicit upload_file(Express::Multer::File const& file, std::string filename, std::string folderName) : m_file(file)
+		explicit upload_file(Multer const& file, std::string filename, std::string folderName) : m_file(file)
 		{
 			auto folder = g_file_manager.get_project_folder(fmt::format("./{}", folderName));
 			m_raw_image = folder.get_file(fmt::format("./pictures/{}.{}", filename, m_file.getFileExtension()));
@@ -41,46 +30,26 @@ namespace gaboot
 
 		bool resize() const
 		{
-			int inputWidth, inputHeight, inputChannels;
-			unsigned char* inputImage = stbi_load(m_thumbnail.string().c_str(), &inputWidth, &inputHeight, &inputChannels, 3);
+			cv::Mat image = cv::imread(m_thumbnail.string());
 
-			LOG(INFO) << "Attempting to load " << m_thumbnail.string().c_str();
-
-			int width = inputWidth * 0.4f;
-			int height = inputHeight * 0.4f;
-
-			if (stbi_failure_reason())
+			if (image.empty()) 
 			{
-				LOG(WARNING) << "Error: " << stbi_failure_reason() << " while load " << this->get_thumbnail_filename();
-				
+				LOG(WARNING) << "Error: Could not open or find the image.";
 				return false;
 			}
 
+			int originalWidth = image.cols * 0.4f;
+			int originalHeight = image.rows * 0.4f;
 
-			unsigned char* resizedImage = new unsigned char[width * height * inputChannels];
+			// Define the new size for the resized image
+			cv::Size newSize(originalWidth, originalHeight);
 
-			auto result = stbir_resize_uint8_linear(inputImage, inputWidth, inputHeight, 0, resizedImage, width, height, 0, (stbir_pixel_layout)inputChannels);
+			// Resize the image using the cv::resize function
+			cv::Mat resizedImage;
+			cv::resize(image, resizedImage, newSize);
 
-			if (stbi_failure_reason())
-			{
-				LOG(WARNING) << "Error: " << stbi_failure_reason() << " while resize " << this->get_thumbnail_filename();
-
-				stbi_image_free(inputImage);
-				delete[] resizedImage;
-
-				return false;
-			}
-
-			if (!stbi_write_jpg(m_raw_thumbnail.absolute_path().string().c_str(), width, height, inputChannels, resizedImage, 100))
-			{
-				LOG(WARNING) << "Error: Failed to save the resized image.";
-
-				return false;
-			}
-
-			// Clean up memory
-			stbi_image_free(inputImage);
-			delete[] resizedImage;
+			// Save the resized image to a file
+			cv::imwrite(m_thumbnail.string(), resizedImage);
 
 			return true;
 		}

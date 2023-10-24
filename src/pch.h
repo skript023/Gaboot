@@ -30,6 +30,7 @@
 #include <nlohmann/json-schema.hpp>
 #include <jwt-cpp/jwt.h>
 #include <cpr/cpr.h>
+#include <opencv2/opencv.hpp>
 
 #include <jwt-cpp/traits/nlohmann-json/traits.h>
 #pragma warning(push)
@@ -62,5 +63,6 @@
 #define SERVER_KEY "U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg="
 
 using response_t = std::function<void(drogon::HttpResponsePtr const&)>;
+using Multer = drogon::HttpFile;
 
 using namespace std::chrono_literals;

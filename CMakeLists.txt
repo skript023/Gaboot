@@ -23,8 +23,8 @@ include(scripts/jwt.cmake)
 include(scripts/cpr.cmake)
 include(scripts/g3log.cmake)
 include(scripts/fmtlib.cmake)
-include(scripts/stb_image.cmake)
 include(scripts/jsonvalidator.cmake)
+include(scripts/opencv.cmake)
 
 # Gaboot
 message(STATUS "Gaboot")
@@ -37,6 +37,7 @@ file(GLOB_RECURSE SRC_MAIN
     "${SRC_DIR}/**.asm"
 )
 
+set(ENABLE_ZLIB OFF)
 if (NOT MSVC)
     find_package(unofficial-libmariadb QUIET)
     if (unofficial-libmariadb_FOUND)
@@ -66,7 +67,6 @@ target_include_directories(Gaboot PRIVATE
   ${DROGON_INCLUDE_DIRS}
   ${openssl_INCLUDE_DIRS}
   "${fmtlib_SOURCE_DIR}/include"
-  "${stb_image_SOURCE_DIR}"
   "${jwt_SOURCE_DIR}/include"
   "${nlohmann_json_SOURCE_DIR}/single_include"
   "${bcrypt_SOURCE_DIR}/include"
@@ -78,7 +78,7 @@ target_precompile_headers(Gaboot PRIVATE "${SRC_DIR}/pch.h")
 find_package(OpenSSL REQUIRED)
 find_package(Drogon CONFIG REQUIRED)
 
-target_link_libraries(Gaboot PRIVATE Drogon::Drogon bcrypt OpenSSL::SSL OpenSSL::Crypto cpr fmt::fmt nlohmann_json_schema_validator g3log)
+target_link_libraries(Gaboot PRIVATE Drogon::Drogon bcrypt OpenSSL::SSL OpenSSL::Crypto cpr fmt::fmt nlohmann_json_schema_validator g3log opencv_core opencv_imgcodecs opencv_highgui)
 
 # Warnings as errors
 set_property(TARGET Gaboot PROPERTY COMPILE_WARNING_AS_ERROR ON)
