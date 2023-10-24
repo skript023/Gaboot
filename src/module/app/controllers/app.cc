@@ -7,6 +7,7 @@ namespace gaboot
 	{
 		auto response = HttpResponse::newHttpResponse();
 		response->setBody("Hello World!");
+		response->setStatusCode(k200OK);
 
 		return callback(response);
 	}

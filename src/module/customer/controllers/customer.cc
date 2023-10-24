@@ -83,6 +83,8 @@ namespace gaboot
 
             db().findByPrimaryKey(stoll(id),  [=](MasterCustomers user) 
             {
+                if (!user.getId()) return callback(NotFoundException("Unable retrieve customer detail").response());
+
                 Json::Value json_cb;
                 json_cb["message"] = "Success retrieve user data";
                 json_cb["success"] = true;
@@ -96,7 +98,6 @@ namespace gaboot
                 Json::Value json_cb;
                 json_cb["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.base().what());
                 json_cb["success"] = false;
-                json_cb["data"] = {};
 
                 auto response = HttpResponse::newHttpJsonResponse(json_cb);
                 response->setStatusCode(k500InternalServerError);
@@ -131,39 +132,9 @@ namespace gaboot
         auto& file = fileUpload.getFiles()[0];
 
         Json::Value data;
-        MasterCustomers customer;
 
         util::multipart_tojson(fileUpload, data);
 
-        std::string firstname = data["firstname"].asString();
-        std::string lastname = data["lastname"].asString();
-        std::string username = data["username"].asString();
-        std::string email = data["email"].asString();
-        std::string phone = data["phoneNumber"].asString();
-        std::string address = data["addressDetail"].asString();
-        std::string latitude = data["latitude"].asString();
-        std::string longitude = data["longitude"].asString();
-        std::string password = data["password"].asString();
-
-        upload_file upload(file, username, "customers");
-
-        customer.setFirstname(firstname);
-        customer.setLastname(lastname);
-        customer.setUsername(username);
-        customer.setEmail(email);
-        customer.setPassword(password);
-        customer.setPhonenumber(phone);
-        customer.setAddressdetail(address);
-        customer.setLatitude(latitude);
-        customer.setLongitude(longitude);
-        customer.setCreatedat(trantor::Date::now());
-        customer.setUpdatedat(trantor::Date::now());
-        customer.setImagepath(upload.get_image_path());
-        customer.setThumbnailpath(upload.get_thumbnail_path());
-        customer.setIsactive(true);
-
-        auto insert_data = customer.toJson();
-        validator::reconstruct_json(insert_data);
         validator schema({
             {"firstname", "type:string|required|minLength:3|alphabetOnly"},
             {"lastname", "type:string|required|minLength:3|alphabetOnly"},
@@ -172,7 +143,17 @@ namespace gaboot
             {"password", "type:string|required|minLength:8"}
         });
 
-        auto valid = schema.validate(insert_data, error);
+        upload_file upload(file, data["username"].asString(), "customers");
+
+        auto valid = schema.validate(data, error);
+
+        MasterCustomers customer(data);
+
+        customer.setCreatedat(trantor::Date::now());
+        customer.setUpdatedat(trantor::Date::now());
+        customer.setImagepath(upload.get_image_path());
+        customer.setThumbnailpath(upload.get_thumbnail_path());
+        customer.setIsactive(true);
 
         if (!valid)
         {

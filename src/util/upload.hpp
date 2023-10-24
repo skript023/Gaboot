@@ -25,10 +25,10 @@ namespace gaboot
 		{
 			m_file.saveAs(m_raw_image.absolute_path().string());
 			m_file.saveAs(m_raw_thumbnail.absolute_path().string());
-			this->resize();
+			this->resize_thumbnail();
 		}
 
-		bool resize() const
+		bool resize_thumbnail() const
 		{
 			cv::Mat image = cv::imread(m_thumbnail.string());
 
@@ -43,6 +43,29 @@ namespace gaboot
 
 			// Define the new size for the resized image
 			cv::Size newSize(originalWidth, originalHeight);
+
+			// Resize the image using the cv::resize function
+			cv::Mat resizedImage;
+			cv::resize(image, resizedImage, newSize);
+
+			// Save the resized image to a file
+			cv::imwrite(m_thumbnail.string(), resizedImage);
+
+			return true;
+		}
+
+		bool resize(int width, int height) const
+		{
+			cv::Mat image = cv::imread(m_thumbnail.string());
+
+			if (image.empty())
+			{
+				LOG(WARNING) << "Error: Could not open or find the image.";
+				return false;
+			}
+
+			// Define the new size for the resized image
+			cv::Size newSize(width, height);
 
 			// Resize the image using the cv::resize function
 			cv::Mat resizedImage;
