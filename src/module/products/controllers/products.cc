@@ -84,15 +84,59 @@ namespace gaboot
 			return callback(response);
 		});
 	}
-	void products::update(HttpRequestPtr const&, response_t&&, std::string&& id)
+	void products::update(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
 	{
+		const auto& json = req->getJsonObject();
 
+		if (!json) return callback(BadRequestException().response());
+
+		if (id.empty() || !util::is_numeric(id))
+		{
+			LOG(WARNING) << "Parameters is not valid or empty";
+
+			return callback(BadRequestException().response());
+		}
+
+		MasterProducts product(*json);
+		product.setId(stoll(id));
+		product.setUpdatedat(trantor::Date::now());
+
+		db().update(product, [=](size_t record)
+		{
+			Json::Value resp;
+
+			if (!record) 
+			{
+				LOG(WARNING) << "Unable to update product";
+
+				return callback(NotFoundException().response());
+			}
+
+			resp["data"] = product.toJson();
+			resp["message"] = "Success update customer data.";
+			resp["success"] = true;
+
+			auto response = HttpResponse::newHttpJsonResponse(resp);
+			return callback(response);
+		}, [=](DrogonDbException const& e)
+		{
+			Json::Value resp;
+
+			resp["message"] = fmt::format("Unable to update data, error caught on {}", e.base().what());
+            resp["success"] = false;
+
+            auto response = HttpResponse::newHttpJsonResponse(resp);
+
+            LOG(WARNING) << e.base().what();
+
+            return callback(response);
+		});
 	}
 	void products::create(HttpRequestPtr const& req, response_t&& callback)
 	{
 		std::string error;
 
-		auto& data = req->getJsonObject();
+		const auto& data = req->getJsonObject();
 
 		if (!data) return callback(BadRequestException().response());
 

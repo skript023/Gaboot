@@ -57,8 +57,6 @@
 #define OS_NAME "Unknown"
 #endif
 
-#pragma warning(disable:4100)
-
 #define SECRET "QmFoYXNhQXN1MTIz"
 #define SERVER_KEY "U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg="
 

@@ -17,7 +17,7 @@ namespace gaboot
     }
     bool validator::validate(Json::Value const& json, std::string& error)
     {
-        auto data = convert(json);
+        auto data = validator::convert(json);
 
         validate_error err;
         auto res = m_validate.validate(data, err);
