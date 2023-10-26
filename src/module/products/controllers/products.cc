@@ -12,7 +12,7 @@ namespace gaboot
 
 		const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
 		const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
-
+		
 		db().orderBy(MasterProducts::Cols::_name).limit(limit).offset(page * limit).findAll([=](std::vector<MasterProducts> products)
 		{
             Json::Value json;
@@ -43,7 +43,7 @@ namespace gaboot
 		{
 			Json::Value json;
 
-			json["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.base().what());
+			json["message"] = fmt::format("Unable retrieve user data, error caught on {}", e.base().what());
 			json["success"] = false;
 			json["data"] = Json::arrayValue;
 
@@ -57,7 +57,7 @@ namespace gaboot
 	{
 		if (id.empty() || !util::is_numeric(id))
 		{
-			return callback(BadRequestException("Unknown parameters").response());
+			return callback(BadRequestException("Parameters requirement doesn't match").response());
 		}
 
 		db().findByPrimaryKey(stoll(id), [=](MasterProducts product)
@@ -75,7 +75,7 @@ namespace gaboot
 		}, [=](DrogonDbException const& e) 
 		{
 			Json::Value json_cb;
-			json_cb["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.base().what());
+			json_cb["message"] = fmt::format("Unable retrieve user data, error caught on {}", e.base().what());
 			json_cb["success"] = false;
 
 			auto response = HttpResponse::newHttpJsonResponse(json_cb);
@@ -92,9 +92,7 @@ namespace gaboot
 
 		if (id.empty() || !util::is_numeric(id))
 		{
-			LOG(WARNING) << "Parameters is not valid or empty";
-
-			return callback(BadRequestException().response());
+			return callback(BadRequestException("Parameters requirement doesn't match").response());
 		}
 
 		MasterProducts product(*json);
@@ -107,9 +105,7 @@ namespace gaboot
 
 			if (!record) 
 			{
-				LOG(WARNING) << "Unable to update product";
-
-				return callback(NotFoundException().response());
+				return callback(NotFoundException("Unable to update non-existing product").response());
 			}
 
 			resp["data"] = product.toJson();
@@ -181,6 +177,39 @@ namespace gaboot
 	}
 	void products::remove(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
 	{
+		Json::Value resp;
 
+		if (id.empty() || !util::is_numeric(id))
+		{
+			return callback(BadRequestException("Parameters requirement doesn't match").response());
+		}
+
+		db().deleteByPrimaryKey(stoll(id), [=](size_t record)
+		{
+			if (record != 0)
+			{
+				Json::Value json;
+				json["message"] = fmt::format("Delete user on {} successfully", record);
+				json["success"] = true;
+
+				auto response = HttpResponse::newHttpJsonResponse(json);
+				callback(response);
+			}
+			else
+			{
+				callback(NotFoundException("Unable to delete non-existing data").response());
+			}
+
+		}, [=](DrogonDbException const& e)
+		{
+			Json::Value json;
+			json["message"] = fmt::format("Failed delete user, error caught on {}", e.base().what());
+			json["success"] = false;
+
+			auto response = HttpResponse::newHttpJsonResponse(json);
+			response->setStatusCode(k500InternalServerError);
+
+			callback(response);
+		});
 	}
 }

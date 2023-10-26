@@ -42,6 +42,9 @@
 #include <util/logger.hpp>
 #include <util/validator.hpp>
 
+//drogon::app().getLoop()->runEvery(std::chrono::milliseconds(1), [] { LOG(INFO) << "Looped"; });
+
+#define NUM_THREAD drogon::app().getThreadNum()
 #define ADD_LISTENER(IP, PORT) drogon::app().addListener(IP, PORT)
 #define ADD_CONFIG(JSON) drogon::app().loadConfigFile(JSON)
 #define SET_UPLOADED_PATH(path) drogon::app().setUploadPath(path);

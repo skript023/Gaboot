@@ -198,7 +198,7 @@ namespace gaboot
 
             if (id.empty() || !util::is_numeric(id))
             {
-                throw BadRequestException("Invalid parameters");
+                throw BadRequestException("Parameters requirement doesn't match");
             }
 
             if (multipart.parse(req) != 0)
@@ -287,7 +287,7 @@ namespace gaboot
 
         if (id.empty() || !util::is_numeric(id))
         {
-            return callback(BadRequestException("Invalid parameters").response());
+            return callback(BadRequestException("Parameters requirement doesn't match").response());
         }
 
         db().deleteByPrimaryKey(stoll(id), [=](size_t record)
@@ -323,7 +323,7 @@ namespace gaboot
     {
         if (id.empty() || !util::is_numeric(id))
         {
-            return callback(BadRequestException("Invalid parameters").response());
+            return callback(BadRequestException("Parameters requirement doesn't match").response());
         }
 
         db().findByPrimaryKey(stoll(id), [=](MasterCustomers customer) 

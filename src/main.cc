@@ -1,5 +1,7 @@
 #include <pch.h>
 
+#include "util/thread.hpp" 
+#include "util/version.hpp"
 #include "util/file_manager.hpp"
 
 int main() 
@@ -19,6 +21,8 @@ int main()
                                                                    |___/ 
 )kek";
 
+    LOG(INFO) << fmt::format("\n\tGit Info\n\tBranch:\t{}\n\tHash:\t{}\n\tDate:\t{}", server_version::GIT_BRANCH, server_version::GIT_SHA1, server_version::GIT_DATE);
+
     g_file_manager.init(UPLOAD_PATH);
 
     //Set HTTP listener address and port
@@ -26,7 +30,7 @@ int main()
 
     ADD_LISTENER("0.0.0.0", 8088);
     LOG(INFO) << "Listener initialized.";
-
+    LOG(INFO) << "Thread used : " << NUM_THREAD;
     ADD_CONFIG("./config.json");
     LOG(INFO) << "Configuration loaded.";
 

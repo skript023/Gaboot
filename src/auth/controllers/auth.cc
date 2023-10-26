@@ -19,7 +19,7 @@ namespace gaboot
 
             if (auto valid = bcrypt::validatePassword(password, user_password); valid && !user_password.empty())
             {
-                jwt_create jwt = nlohmann::json({
+                jwt_create jwt({
                     {"id", user.getValueOfId()},
                     {"username", user.getValueOfUsername()}
                 });
@@ -36,7 +36,6 @@ namespace gaboot
             {
                 resp["message"] = "Login failed, credentials doesn't invalid";
                 resp["success"] = false;
-                resp["token"] = 0;
 
                 auto response = HttpResponse::newHttpJsonResponse(resp);
                 response->setStatusCode(HttpStatusCode::k401Unauthorized);
@@ -48,7 +47,6 @@ namespace gaboot
         {
             resp["message"] = "Login failed, credentials doesn't invalid";
             resp["success"] = false;
-            resp["token"] = 0;
 
             auto response = HttpResponse::newHttpJsonResponse(resp);
             response->setStatusCode(HttpStatusCode::k401Unauthorized);

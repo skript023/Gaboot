@@ -18,6 +18,8 @@ else()
 endif()
 
 #include external dependencies
+include(scripts/git.cmake)
+message("\nFetching modules")
 include(scripts/bcrypt.cmake)
 include(scripts/jwt.cmake)
 include(scripts/cpr.cmake)
