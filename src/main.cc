@@ -4,6 +4,8 @@
 #include "util/version.hpp"
 #include "util/file_manager.hpp"
 
+#include "module/customer/services/customer_manager.hpp"
+
 int main() 
 {
     using namespace gaboot;
@@ -28,6 +30,9 @@ int main()
     //Set HTTP listener address and port
     LOG(INFO) << "Starting C++ Gaboot Server.";
 
+    auto customer_manager_instance = std::make_unique<customer_manager>();
+    LOG(INFO) << "Customer manager initialized.";
+
     ADD_LISTENER("0.0.0.0", 8088);
     LOG(INFO) << "Listener initialized.";
     LOG(INFO) << "Thread used : " << NUM_THREAD;
@@ -39,6 +44,9 @@ int main()
     SERVER_RUN;
     
     LOG(INFO) << "Server has shutdown.";
+
+    customer_manager_instance.reset();
+    LOG(INFO) << "Customer manager uninitialized.";
 
     logger_instance.reset();
     return 0;

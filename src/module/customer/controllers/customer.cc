@@ -3,6 +3,7 @@
 #include "util/gaboot.hpp"
 #include "util/exception.hpp"
 #include "util/file_manager.hpp"
+#include "module/customer/services/customer_manager.hpp"
 
 // Add definition of your processing function here
 namespace gaboot
@@ -19,42 +20,28 @@ namespace gaboot
         {
             Json::Value json;
 
-            try
+            if (users.empty())
             {
-                if (users.empty())
-                {
-                    throw  NotFoundException("No data retrieved");
-                }
-
-                Json::Value res(Json::arrayValue);
-
-                for (const auto& user : users)
-                {
-                    res.append(user.toJson());
-                }
-
-                const size_t lastPage = users.size() / limit + (users.size() % limit) == 0 ? 0 : 1;
-
-                json["message"] = "Success retreive users data";
-                json["success"] = true;
-                json["data"] = res;
-                json["lastPage"] = lastPage;
-
-                auto response = HttpResponse::newHttpJsonResponse(json);
-
-                callback(response);
+                callback(NotFoundException("No data retrieved").response());
             }
-            catch (const GabootException& e)
+
+            Json::Value res(Json::arrayValue);
+
+            for (const auto& user : users)
             {
-                json["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.what());
-                json["success"] = false;
-                json["data"] = Json::arrayValue;
-
-                auto response = HttpResponse::newHttpJsonResponse(json);
-                response->setStatusCode(e.get_code());
-
-                callback(response);
+                res.append(user.toJson());
             }
+
+            const size_t lastPage = users.size() / limit + (users.size() % limit) == 0 ? 0 : 1;
+
+            json["message"] = "Success retreive users data";
+            json["success"] = true;
+            json["data"] = res;
+            json["lastPage"] = lastPage;
+
+            auto response = HttpResponse::newHttpJsonResponse(json);
+
+            callback(response);
         }, [=](DrogonDbException const& e) 
         {
             Json::Value json;
@@ -72,50 +59,34 @@ namespace gaboot
 
     void customer::findOne(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
     {
-        Json::Value json;
-
-        try
+        if (id.empty() || !util::is_numeric(id))
         {
-            if (id.empty() || !util::is_numeric(id))
-            {
-                throw BadRequestException("Unknown parameters");
-            }
-
-            db().findByPrimaryKey(stoll(id),  [=](MasterCustomers user) 
-            {
-                if (!user.getId()) return callback(NotFoundException("Unable retrieve customer detail").response());
-
-                Json::Value json_cb;
-                json_cb["message"] = "Success retrieve user data";
-                json_cb["success"] = true;
-                json_cb["data"] = user.toJson();
-
-                auto response = HttpResponse::newHttpJsonResponse(json_cb);
-
-                callback(response);
-            }, [=](DrogonDbException const& e) 
-            {
-                Json::Value json_cb;
-                json_cb["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.base().what());
-                json_cb["success"] = false;
-
-                auto response = HttpResponse::newHttpJsonResponse(json_cb);
-                response->setStatusCode(k500InternalServerError);
-
-                callback(response);
-            });
+            return callback(BadRequestException("Requirement doesn't match").response());
         }
-        catch (const GabootException& e)
-        {
-            json["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.what());
-            json["success"] = false;
-            json["data"] = {};
 
-            auto response = HttpResponse::newHttpJsonResponse(json);
-            response->setStatusCode(e.get_code());
+        db().findByPrimaryKey(stoll(id), [=](MasterCustomers user)
+        {
+            if (!user.getId()) return callback(NotFoundException("Unable retrieve customer detail").response());
+
+            Json::Value json_cb;
+            json_cb["message"] = "Success retrieve user data";
+            json_cb["success"] = true;
+            json_cb["data"] = user.toJson();
+
+            auto response = HttpResponse::newHttpJsonResponse(json_cb);
 
             callback(response);
-        }
+        }, [=](DrogonDbException const& e)
+        {
+            Json::Value json_cb;
+            json_cb["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.base().what());
+            json_cb["success"] = false;
+
+            auto response = HttpResponse::newHttpJsonResponse(json_cb);
+            response->setStatusCode(k500InternalServerError);
+
+            callback(response);
+        });
     }
 
     void customer::create(HttpRequestPtr const& req, response_t&& callback)
@@ -236,7 +207,7 @@ namespace gaboot
                         }
                         else
                         {
-                            throw NotFoundException("Unable to update non-existing record.");
+                            callback(NotFoundException("Unable to update non-existing record.").response());
                         }
                     }
                 }
@@ -259,23 +230,18 @@ namespace gaboot
             }
             else
             {
-                throw BadRequestException("Unable to update costumer");
+                return callback(BadRequestException("Unable to update costumer").response());
             }
         }
-        catch (const GabootException& e)
+        catch (const DrogonDbException& e)
         {
-            LOG(WARNING) << e.what();
-
-            return callback(e.response());
-        }
-        catch (const std::exception& e)
-        {
-            resp["message"] = fmt::format("Unable to update data, error caught on {}", e.what());
+            resp["message"] = fmt::format("Unable to update data, error caught on {}", e.base().what());
             resp["success"] = true;
 
             auto response = HttpResponse::newHttpJsonResponse(resp);
+            response->setStatusCode(k500InternalServerError);
 
-            LOG(WARNING) << e.what();
+            LOG(WARNING) << e.base().what();
 
             return callback(response);
         }
@@ -342,5 +308,41 @@ namespace gaboot
 
             callback(response);
         });
+    }
+
+    void customer::getProfile(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
+    {
+        Json::Value resp;
+        MasterCustomers customer;
+
+        if (id.empty() || !util::is_numeric(id))
+        {
+            return callback(BadRequestException().response());
+        }
+
+        if (g_customer_manager->find(stoll(id), &customer))
+        {
+            auto customer_data = customer.toJson();
+            customer_data.removeMember("password");
+            customer_data.removeMember("updatedAt");
+            customer_data.removeMember("isActive");
+            customer_data.removeMember("token");
+
+            resp["data"] = customer_data;
+            resp["message"] = "Success retreive user profile";
+            resp["success"] = true;
+
+            auto response = HttpResponse::newHttpJsonResponse(resp);
+
+            return callback(response);
+        }
+
+        resp["message"] = "Unable to retreive user profile";
+        resp["success"] = false;
+
+        auto response = HttpResponse::newHttpJsonResponse(resp);
+        response->setStatusCode(k404NotFound);
+
+        return callback(response);
     }
 }
