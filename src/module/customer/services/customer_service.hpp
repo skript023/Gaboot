@@ -3,6 +3,7 @@
 #include <drogon/HttpController.h>
 
 #include "util/validator.hpp"
+#include "interfaces/response.hpp"
 #include "module/customer/models/MasterCustomers.h"
 
 using namespace drogon;
@@ -49,5 +50,8 @@ namespace gaboot
 		HttpResponsePtr remove(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr getProfile(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr getImage(HttpRequestPtr const&, std::string&&);
+	private:
+		response_data m_response;
+		std::string m_error;
 	};
 }

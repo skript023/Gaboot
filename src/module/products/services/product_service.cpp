@@ -5,8 +5,6 @@ namespace gaboot
 {
 	HttpResponsePtr product_service::findAll(HttpRequestPtr const& req)
 	{
-		Json::Value json;
-		
 		try
 		{
 			auto& limitParam = req->getParameter("limit");
@@ -31,21 +29,19 @@ namespace gaboot
 
 			const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
 
-			json["message"] = "Success retreive products data";
-			json["success"] = true;
-			json["data"] = res;
-			json["lastPage"] = lastPage;
+			m_response.m_message = "Success retreive products data";
+			m_response.m_success = true;
+			m_response.m_data = res;
+			m_response.m_last_page = lastPage;
 
-			auto response = HttpResponse::newHttpJsonResponse(json);
-
-			return response;
+			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		}
 		catch (const DrogonDbException& e)
 		{
-			json["message"] = fmt::format("Unable retrieve products data, error caught on {}", e.base().what());
-			json["success"] = false;
+			m_response.m_message = fmt::format("Unable retrieve products data, error caught on {}", e.base().what());
+			m_response.m_success = false;
 
-			auto response = HttpResponse::newHttpJsonResponse(json);
+			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 			response->setStatusCode(k500InternalServerError);
 
 			return response;
@@ -53,9 +49,6 @@ namespace gaboot
 	}
 	HttpResponsePtr product_service::create(HttpRequestPtr const& req)
 	{
-		std::string error;
-		Json::Value json;
-
 		try
 		{
 			const auto& data = req->getJsonObject();
@@ -71,17 +64,17 @@ namespace gaboot
 
 			MasterProducts product(*data);
 
-			if (!schema.validate(product.toJson(), error))
+			if (!schema.validate(product.toJson(), m_error))
 			{
-				return BadRequestException(error).response();
+				return BadRequestException(m_error).response();
 			}
 
 			db().insert(product);
 
-			json["message"] = "Create product success";
-			json["success"] = true;
+			m_response.m_message = "Create product success";
+			m_response.m_success = true;
 
-			auto response = HttpResponse::newHttpJsonResponse(json);
+			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 
 			return response;
 		}
@@ -89,10 +82,10 @@ namespace gaboot
 		{
 			LOG(WARNING) << e.base().what();
 
-			json["message"] = e.base().what();
-			json["success"] = false;
+			m_response.m_message = e.base().what();
+			m_response.m_success = false;
 
-			auto response = HttpResponse::newHttpJsonResponse(json);
+			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 			response->setStatusCode(HttpStatusCode::k500InternalServerError);
 
 			return response;
@@ -100,8 +93,6 @@ namespace gaboot
 	}
 	HttpResponsePtr product_service::findOne(HttpRequestPtr const& req, std::string&& id)
 	{
-		Json::Value json_cb;
-
 		try
 		{
 			if (id.empty() || !util::is_numeric(id))
@@ -113,20 +104,20 @@ namespace gaboot
 
 			if (!product.getId()) return NotFoundException("Product data is empty 0 data found").response();
 
-			json_cb["message"] = "Success retrieve products data";
-			json_cb["success"] = true;
-			json_cb["data"] = product.toJson();
+			m_response.m_message = "Success retrieve products data";
+			m_response.m_success = true;
+			m_response.m_data = product.toJson();
 
-			auto response = HttpResponse::newHttpJsonResponse(json_cb);
+			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 
 			return response;
 		}
 		catch (const DrogonDbException& e)
 		{
-			json_cb["message"] = fmt::format("Unable retrieve products data, error caught on {}", e.base().what());
-			json_cb["success"] = false;
+			m_response.m_message = fmt::format("Unable retrieve products data, error caught on {}", e.base().what());
+			m_response.m_success = false;
 
-			auto response = HttpResponse::newHttpJsonResponse(json_cb);
+			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 			response->setStatusCode(k500InternalServerError);
 
 			return response;
@@ -134,8 +125,6 @@ namespace gaboot
 	}
 	HttpResponsePtr product_service::update(HttpRequestPtr const& req, std::string&& id)
 	{
-		Json::Value resp;
-
 		try
 		{
 			const auto& json = req->getJsonObject();
@@ -158,19 +147,19 @@ namespace gaboot
 				return NotFoundException("Unable to update non-existing product").response();
 			}
 
-			resp["data"] = product.toJson();
-			resp["message"] = "Success update customer data.";
-			resp["success"] = true;
+			m_response.m_data = product.toJson();
+			m_response.m_message = "Success update customer data.";
+			m_response.m_success = true;
 
-			auto response = HttpResponse::newHttpJsonResponse(resp);
+			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 			return response;
 		}
 		catch (const DrogonDbException& e)
 		{
-			resp["message"] = fmt::format("Unable to update data, error caught on {}", e.base().what());
-			resp["success"] = false;
+			m_response.m_message = fmt::format("Unable to update data, error caught on {}", e.base().what());
+			m_response.m_success = false;
 
-			auto response = HttpResponse::newHttpJsonResponse(resp);
+			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 
 			LOG(WARNING) << e.base().what();
 
@@ -179,8 +168,6 @@ namespace gaboot
 	}
 	HttpResponsePtr product_service::remove(HttpRequestPtr const& req, std::string&& id)
 	{
-		Json::Value json;
-
 		try
 		{
 			if (id.empty() || !util::is_numeric(id))
@@ -192,10 +179,10 @@ namespace gaboot
 
 			if (record != 0)
 			{
-				json["message"] = fmt::format("Delete user on {} successfully", record);
-				json["success"] = true;
+				m_response.m_message = fmt::format("Delete user on {} successfully", record);
+				m_response.m_success = true;
 
-				auto response = HttpResponse::newHttpJsonResponse(json);
+				auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 				return response;
 			}
 			
@@ -203,10 +190,10 @@ namespace gaboot
 		}
 		catch (const DrogonDbException& e)
 		{
-			json["message"] = fmt::format("Failed delete user, error caught on {}", e.base().what());
-			json["success"] = false;
+			m_response.m_message = fmt::format("Failed delete user, error caught on {}", e.base().what());
+			m_response.m_success = false;
 
-			auto response = HttpResponse::newHttpJsonResponse(json);
+			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 			response->setStatusCode(k500InternalServerError);
 
 			return response;

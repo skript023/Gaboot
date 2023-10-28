@@ -10,8 +10,6 @@ namespace gaboot
 {
 	HttpResponsePtr customer_service::findAll(HttpRequestPtr const& req)
 	{
-        Json::Value json;
-
         auto& limitParam = req->getParameter("limit");
         auto& pageParam = req->getParameter("page");
 
@@ -36,20 +34,20 @@ namespace gaboot
 
             const size_t lastPage = users.size() / limit + (users.size() % limit) == 0 ? 0 : 1;
 
-            json["message"] = "Success retreive users data";
-            json["success"] = true;
-            json["data"] = res;
-            json["lastPage"] = lastPage;
+            m_response.m_message = "Success retreive users data";
+            m_response.m_success = true;
+            m_response.m_data = res;
+            m_response.m_last_page = lastPage;
 
-            return HttpResponse::newHttpJsonResponse(json);
+            return HttpResponse::newHttpJsonResponse(m_response.to_json());
         }
         catch (const DrogonDbException& e)
         {
-            json["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.base().what());
-            json["success"] = false;
-            json["data"] = Json::arrayValue;
+            m_response.m_message = fmt::format("Cannot retrieve user data, error caught on {}", e.base().what());
+            m_response.m_success = false;
+            m_response.m_data = Json::arrayValue;
 
-            auto response = HttpResponse::newHttpJsonResponse(json);
+            auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
             response->setStatusCode(k500InternalServerError);
 
             return response;
@@ -57,8 +55,6 @@ namespace gaboot
 	}
     HttpResponsePtr customer_service::create(HttpRequestPtr const& req)
     {
-        std::string error;
-        Json::Value json;
         Json::Value data;
 
         MultiPartParser fileUpload;
@@ -92,17 +88,17 @@ namespace gaboot
             customer.setThumbnailpath(upload.get_thumbnail_path());
             customer.setIsactive(true);
 
-            if (!schema.validate(customer.toJson(), error))
+            if (!schema.validate(customer.toJson(), m_error))
             {
-                return BadRequestException(error).response();
+                return BadRequestException(m_error).response();
             }
 
             db().insert(customer);
 
-            json["message"] = "Create customer success";
-            json["success"] = true;
+            m_response.m_message = "Create customer success";
+            m_response.m_success = true;
 
-            auto response = HttpResponse::newHttpJsonResponse(json);
+            auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 
             upload.save();
 
@@ -112,10 +108,10 @@ namespace gaboot
         {
             LOG(WARNING) << e.base().what();
 
-            json["message"] = e.base().what();
-            json["success"] = false;
+            m_response.m_message = e.base().what();
+            m_response.m_success = false;
 
-            auto response = HttpResponse::newHttpJsonResponse(json);
+            auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
             response->setStatusCode(HttpStatusCode::k500InternalServerError);
 
             return response;
@@ -123,8 +119,6 @@ namespace gaboot
     }
     HttpResponsePtr customer_service::findOne(HttpRequestPtr const& req, std::string&& id)
     {
-        Json::Value json_cb;
-
         if (id.empty() || !util::is_numeric(id))
         {
             return BadRequestException("Requirement doesn't match").response();
@@ -136,20 +130,18 @@ namespace gaboot
 
             if (!user.getId()) return NotFoundException("Unable retrieve customer detail").response();
 
-            json_cb["message"] = "Success retrieve user data";
-            json_cb["success"] = true;
-            json_cb["data"] = user.toJson();
+            m_response.m_message = "Success retrieve user data";
+            m_response.m_success = true;
+            m_response.m_data = user.toJson();
 
-            auto response = HttpResponse::newHttpJsonResponse(json_cb);
-
-            return response;
+            return HttpResponse::newHttpJsonResponse(m_response.to_json());
         }
         catch (const DrogonDbException& e)
         {
-            json_cb["message"] = fmt::format("Cannot retrieve user data, error caught on {}", e.base().what());
-            json_cb["success"] = false;
+            m_response.m_message = fmt::format("Cannot retrieve user data, error caught on {}", e.base().what());
+            m_response.m_success = false;
 
-            auto response = HttpResponse::newHttpJsonResponse(json_cb);
+            auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
             response->setStatusCode(k500InternalServerError);
 
             return response;
@@ -157,9 +149,7 @@ namespace gaboot
     }
     HttpResponsePtr customer_service::update(HttpRequestPtr const& req, std::string&& id)
     {
-        Json::Value resp;
         Json::Value data;
-        Json::Value updated(Json::objectValue);
 
         try
         {
@@ -201,7 +191,7 @@ namespace gaboot
 
                         if (record.valid() && record.get())
                         {
-                            updated[request + "_updated"] = "success";
+                            m_response.m_data = fmt::format("{} success", request);
                         }
                         else
                         {
@@ -211,7 +201,7 @@ namespace gaboot
                 }
             }
 
-            if (!updated.empty())
+            if (!m_response.m_data.empty())
             {
                 if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
                 {
@@ -219,11 +209,10 @@ namespace gaboot
                     file.save();
                 }
 
-                resp["data"] = updated;
-                resp["message"] = "Success update customer data.";
-                resp["success"] = true;
+                m_response.m_message = "Success update customer data.";
+                m_response.m_success = true;
 
-                auto response = HttpResponse::newHttpJsonResponse(resp);
+                auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
                 return response;
             }
             else
@@ -233,10 +222,10 @@ namespace gaboot
         }
         catch (const DrogonDbException& e)
         {
-            resp["message"] = fmt::format("Unable to update data, error caught on {}", e.base().what());
-            resp["success"] = true;
+            m_response.m_message = fmt::format("Unable to update data, error caught on {}", e.base().what());
+            m_response.m_success = true;
 
-            auto response = HttpResponse::newHttpJsonResponse(resp);
+            auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
             response->setStatusCode(k500InternalServerError);
 
             LOG(WARNING) << e.base().what();
@@ -246,8 +235,6 @@ namespace gaboot
     }
     HttpResponsePtr customer_service::remove(HttpRequestPtr const& req, std::string&& id)
     {
-        Json::Value json;
-
         if (id.empty() || !util::is_numeric(id))
         {
             return BadRequestException("Parameters requirement doesn't match").response();
@@ -258,20 +245,20 @@ namespace gaboot
             const auto record = db().deleteByPrimaryKey(stoll(id));
             if (record != 0)
             {
-                json["message"] = fmt::format("Delete user on {} successfully", record);
-                json["success"] = true;
+                m_response.m_message = fmt::format("Delete user on {} successfully", record);
+                m_response.m_success = true;
 
-                return HttpResponse::newHttpJsonResponse(json);
+                return HttpResponse::newHttpJsonResponse(m_response.to_json());
             }
 
             return NotFoundException("Record not found").response();
         }
         catch (const DrogonDbException& e)
         {
-            json["message"] = fmt::format("Failed delete user, error caught on {}", e.base().what());
-            json["success"] = false;
+            m_response.m_message = fmt::format("Failed delete user, error caught on {}", e.base().what());
+            m_response.m_success = false;
 
-            auto response = HttpResponse::newHttpJsonResponse(json);
+            auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
             response->setStatusCode(k500InternalServerError);
 
             return response;
@@ -279,7 +266,6 @@ namespace gaboot
     }
     HttpResponsePtr customer_service::getProfile(HttpRequestPtr const& req, std::string&& id)
     {
-        Json::Value resp;
         MasterCustomers customer;
 
         if (id.empty() || !util::is_numeric(id))
@@ -295,19 +281,19 @@ namespace gaboot
             customer_data.removeMember("isActive");
             customer_data.removeMember("token");
 
-            resp["data"] = customer_data;
-            resp["message"] = "Success retreive user profile";
-            resp["success"] = true;
+            m_response.m_data = customer_data;
+            m_response.m_message = "Success retreive user profile";
+            m_response.m_success = true;
 
-            auto response = HttpResponse::newHttpJsonResponse(resp);
+            auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 
             return response;
         }
 
-        resp["message"] = "Unable to retreive user profile";
-        resp["success"] = false;
+        m_response.m_message = "Unable to retreive user profile";
+        m_response.m_success = false;
 
-        auto response = HttpResponse::newHttpJsonResponse(resp);
+        auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
         response->setStatusCode(k404NotFound);
 
         return response;
@@ -315,7 +301,6 @@ namespace gaboot
     HttpResponsePtr customer_service::getImage(HttpRequestPtr const& req, std::string&& id)
     {
         MasterCustomers customer;
-        Json::Value json;
 
         if (id.empty() || !util::is_numeric(id))
         {
@@ -333,10 +318,10 @@ namespace gaboot
             return HttpResponse::newFileResponse(customer.getValueOfImagepath());
         }
 
-        json["message"] = "Unable to retreive user image";
-        json["success"] = false;
+        m_response.m_message = "Unable to retreive user image";
+        m_response.m_success = false;
 
-        auto response = HttpResponse::newHttpJsonResponse(json);
+        auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
         response->setStatusCode(k404NotFound);
 
         return response;

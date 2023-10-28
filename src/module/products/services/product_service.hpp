@@ -1,6 +1,7 @@
 #pragma once
 
 #include <pch.h>
+#include <interfaces/response.hpp>
 #include <module/products/models/MasterProducts.h>
 
 using namespace drogon;
@@ -27,5 +28,8 @@ namespace gaboot
 		HttpResponsePtr findOne(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr update(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr remove(HttpRequestPtr const&, std::string&&);
+	private:
+		response_data m_response;
+		std::string m_error;
 	};
 }

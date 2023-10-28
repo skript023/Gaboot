@@ -8,11 +8,8 @@
 
 #include "util/validator.hpp"
 #include "module/customer/services/customer_service.hpp"
-#include "module/customer/models/MasterCustomers.h"
 
 using namespace drogon;
-using namespace orm;
-using namespace drogon_model::gaboot;
 
 namespace gaboot
 {

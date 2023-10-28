@@ -3,6 +3,7 @@
 #include <drogon/HttpController.h>
 
 #include "util/validator.hpp"
+#include "interfaces/response.hpp"
 #include "module/wishlist/models/Wishlists.h"
 
 using namespace drogon;
@@ -29,5 +30,8 @@ namespace gaboot
 		HttpResponsePtr findOne(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr update(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr remove(HttpRequestPtr const&, std::string&&);
+	private:
+		response_data m_response;
+		std::string m_error;
 	};
 }

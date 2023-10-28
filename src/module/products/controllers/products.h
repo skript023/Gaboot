@@ -5,8 +5,6 @@
 #include <module/products/services/product_service.hpp>
 
 using namespace drogon;
-using namespace orm;
-using namespace drogon_model::gaboot;
 
 namespace gaboot
 {
