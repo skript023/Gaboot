@@ -3,6 +3,50 @@
 
 namespace gaboot
 {
+	HttpResponsePtr wishlist_service::create(HttpRequestPtr const& req)
+	{
+		try
+		{
+			const auto& data = req->getJsonObject();
+
+			if (!data) return BadRequestException().response();
+
+			validator schema({
+				{"name", "type:string|required|minLength:3|alphabetOnly"},
+				{"description", "type:string|required|minLength:3|alphabetOnly"},
+				{"price", "type:number|required|numberOnly"},
+				{"stock", "type:number|required|numberOnly"}
+			});
+
+			Wishlists product(*data);
+
+			if (!schema.validate(product.toJson(), m_error))
+			{
+				return BadRequestException(m_error).response();
+			}
+
+			db().insert(product);
+
+			m_response.m_message = "Create product success";
+			m_response.m_success = true;
+
+			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+
+			return response;
+		}
+		catch (const DrogonDbException& e)
+		{
+			LOG(WARNING) << e.base().what();
+
+			m_response.m_message = e.base().what();
+			m_response.m_success = false;
+
+			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+			response->setStatusCode(HttpStatusCode::k500InternalServerError);
+
+			return response;
+		}
+	}
     HttpResponsePtr wishlist_service::findAll(HttpRequestPtr const& req)
     {
 		try
@@ -49,50 +93,6 @@ namespace gaboot
 			return response;
 		}
     }
-	HttpResponsePtr wishlist_service::create(HttpRequestPtr const& req)
-	{
-		try
-		{
-			const auto& data = req->getJsonObject();
-
-			if (!data) return BadRequestException().response();
-
-			validator schema({
-				{"name", "type:string|required|minLength:3|alphabetOnly"},
-				{"description", "type:string|required|minLength:3|alphabetOnly"},
-				{"price", "type:number|required|numberOnly"},
-				{"stock", "type:number|required|numberOnly"}
-			});
-
-			Wishlists product(*data);
-
-			if (!schema.validate(product.toJson(), m_error))
-			{
-				return BadRequestException(m_error).response();
-			}
-
-			db().insert(product);
-
-			m_json["message"] = "Create product success";
-			m_json["success"] = true;
-
-			auto response = HttpResponse::newHttpJsonResponse(m_json);
-
-			return response;
-		}
-		catch (const DrogonDbException& e)
-		{
-			LOG(WARNING) << e.base().what();
-
-			m_json["message"] = e.base().what();
-			m_json["success"] = false;
-
-			auto response = HttpResponse::newHttpJsonResponse(m_json);
-			response->setStatusCode(HttpStatusCode::k500InternalServerError);
-
-			return response;
-		}
-	}
 	HttpResponsePtr wishlist_service::findOne(HttpRequestPtr const& req, std::string&& id)
 	{
 		try

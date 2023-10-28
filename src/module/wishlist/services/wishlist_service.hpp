@@ -25,8 +25,8 @@ namespace gaboot
 		wishlist_service(wishlist_service&& that) = delete;
 		wishlist_service& operator=(wishlist_service&& that) = delete;
 
-		HttpResponsePtr findAll(HttpRequestPtr const&);
 		HttpResponsePtr create(HttpRequestPtr const&);
+		HttpResponsePtr findAll(HttpRequestPtr const&);
 		HttpResponsePtr findOne(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr update(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr remove(HttpRequestPtr const&, std::string&&);
