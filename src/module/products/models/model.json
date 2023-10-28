@@ -20,7 +20,8 @@
     //"client_encoding": "",
     //table: An array of tables to be modelized. if the array is empty, all revealed tables are modelized.
     "tables": [
-        "master_products"
+      "master_products",
+      "product_images"
     ],
     //convert: the value can be changed by a function call before it is stored into database or
     //after it is read from database
