@@ -119,13 +119,13 @@ namespace gaboot
     }
     HttpResponsePtr customer_service::findOne(HttpRequestPtr const& req, std::string&& id)
     {
-        if (id.empty() || !util::is_numeric(id))
-        {
-            return BadRequestException("Requirement doesn't match").response();
-        }
-
         try
         {
+            if (id.empty() || !util::is_numeric(id))
+            {
+                return BadRequestException("Requirement doesn't match").response();
+            }
+
             const auto user = db().findByPrimaryKey(stoll(id));
 
             if (!user.getId()) return NotFoundException("Unable retrieve customer detail").response();

@@ -127,14 +127,14 @@ namespace gaboot
 	{
 		try
 		{
-			const auto& json = req->getJsonObject();
-
-			if (!json) return BadRequestException().response();
-
 			if (id.empty() || !util::is_numeric(id))
 			{
 				return BadRequestException("Parameters requirement doesn't match").response();
 			}
+
+			const auto& json = req->getJsonObject();
+
+			if (!json) return BadRequestException().response();
 
 			MasterProducts product(*json);
 			product.setId(stoll(id));
