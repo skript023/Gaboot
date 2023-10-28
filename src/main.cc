@@ -3,8 +3,10 @@
 #include "util/thread.hpp" 
 #include "util/version.hpp"
 #include "util/file_manager.hpp"
+#include "scheduler/schedule.hpp"
 
 #include "module/customer/services/customer_manager.hpp"
+#include <scheduler/tasks.hpp>
 
 int main() 
 {
@@ -33,6 +35,10 @@ int main()
     //Set HTTP listener address and port
     LOG(INFO) << "Starting C++ Gaboot Server.";
 
+    auto schedule_instance = std::make_unique<schedule>();
+    auto tasks_instance = std::make_unique<tasks>();
+    LOG(INFO) << "Schedule task initialized.";
+
     auto customer_manager_instance = std::make_unique<customer_manager>();
     LOG(INFO) << "Customer manager initialized.";
 
@@ -50,6 +56,10 @@ int main()
 
     customer_manager_instance.reset();
     LOG(INFO) << "Customer manager uninitialized.";
+
+    tasks_instance.reset();
+    schedule_instance.reset();
+    LOG(INFO) << "Schedule task uninitialized.";
 
     logger_instance.reset();
     return 0;
