@@ -5,7 +5,7 @@
  */
 
 #include <pch.h>
-#include "login.h"
+#include "cutomer_middleware.h"
 #include "util/exception.hpp"
 #include "module/customer/services/customer_manager.hpp"
 
@@ -14,7 +14,7 @@ using namespace drogon;
 namespace gaboot
 {
     using traits = jwt::traits::nlohmann_json;
-    void login::doFilter(const HttpRequestPtr& req,
+    void customer_middleware::doFilter(const HttpRequestPtr& req,
         FilterCallback&& fcb,
         FilterChainCallback&& fccb)
     {
@@ -39,17 +39,17 @@ namespace gaboot
                 return fccb();
             }
 
-            return fcb(UnauthorzedException().response()); 
+            return fcb(UnauthorizedException("You're currently not logged in, please login!").response());
         }
         catch (const jwt::error::token_verification_exception& e)
         {
             LOG(WARNING) << e.what();
 
-            auto res = UnauthorzedException(e.what()).response();
+            auto res = UnauthorizedException(e.what()).response();
             fcb(res);
         }
     }
-    bool login::parse_token(std::string const& header)
+    bool customer_middleware::parse_token(std::string const& header)
     {
         if (auto it = header.find(m_prefix); it != std::string::npos)
         {
@@ -62,7 +62,7 @@ namespace gaboot
 
         return false;
     }
-    nlohmann::json::object_t login::verify_token(std::string const& header)
+    nlohmann::json::object_t customer_middleware::verify_token(std::string const& header)
     {
         if (auto token = this->parse_token(header); token)
         {

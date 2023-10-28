@@ -90,14 +90,14 @@ namespace gaboot
 		}
 	};
 
-	class UnauthorzedException : public GabootException
+	class UnauthorizedException : public GabootException
 	{
 		std::string m_message;
 	public:
-		explicit UnauthorzedException(std::string const& message = "Unauthorized") : GabootException(message, k401Unauthorized), m_message(message) 
+		explicit UnauthorizedException(std::string const& message = "Unauthorized") : GabootException(message, k401Unauthorized), m_message(message)
 		{
 			LOG(WARNING) << m_message;
 		}
-		virtual ~UnauthorzedException() noexcept = default;
+		virtual ~UnauthorizedException() noexcept = default;
 	};
 }

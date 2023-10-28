@@ -7,18 +7,16 @@
 #pragma once
 
 #include <drogon/HttpFilter.h>
-#include "module/customer/models/MasterCustomers.h"
 
 using namespace drogon;
 using namespace orm;
 
 namespace gaboot
 {
-    class login : public HttpFilter<login>
+    class customer_middleware : public HttpFilter<customer_middleware>
     {
-        //Mapper<MasterCustomers> db() { return Mapper<MasterCustomers>(DATABASE_CLIENT); }
     public:
-        login() {}
+        customer_middleware() {}
         void doFilter(const HttpRequestPtr& req,
             FilterCallback&& fcb,
             FilterChainCallback&& fccb) override;
