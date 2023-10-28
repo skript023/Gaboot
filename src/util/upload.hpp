@@ -23,9 +23,10 @@ namespace gaboot
 
 		void save() const
 		{
-			m_file.saveAs(m_raw_image.absolute_path().string());
-			m_file.saveAs(m_raw_thumbnail.absolute_path().string());
-			this->resize_thumbnail();
+			if (is_save_success())
+			{
+				this->resize_thumbnail();
+			}
 		}
 
 		bool resize_thumbnail() const
@@ -81,6 +82,23 @@ namespace gaboot
 		[[nodiscard]] std::string get_thumbnail_filename() const { return m_thumbnail.has_filename() ? m_thumbnail.filename().string() : ""; }
 		[[nodiscard]] std::string get_image_path() const { return m_image.string(); }
 		[[nodiscard]] std::string get_thumbnail_path() const { return m_thumbnail.string(); }
+	private:
+		bool is_save_success() const
+		{
+			try
+			{
+				m_file.saveAs(m_raw_thumbnail.absolute_path().string());
+				m_file.saveAs(m_raw_image.absolute_path().string());
+
+				return true;
+			}
+			catch (const std::exception& e)
+			{
+				LOG(WARNING) << e.what();
+
+				return false;
+			}
+		}
 	private:
 		HttpFile m_file;
 		std::filesystem::path m_image;

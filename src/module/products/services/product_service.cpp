@@ -1,5 +1,6 @@
 #include "product_service.hpp"
 #include "util/exception.hpp"
+#include <util/upload.hpp>
 
 namespace gaboot
 {
@@ -51,9 +52,16 @@ namespace gaboot
 	{
 		try
 		{
-			const auto& data = req->getJsonObject();
+			MultiPartParser fileUpload;
 
-			if (!data) return BadRequestException().response();
+			if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0)
+			{
+				return BadRequestException("Requirement doesn't match").response();
+			}
+
+			auto& file = fileUpload.getFiles()[0];
+
+			if (!util::multipart_tojson(fileUpload, m_data)) return BadRequestException("Unknown error").response();
 
 			validator schema({
 				{"name", "type:string|required|minLength:3|alphabetOnly"},
@@ -62,7 +70,14 @@ namespace gaboot
 				{"stock", "type:number|required|numberOnly"}
 			});
 
-			MasterProducts product(*data);
+			MasterProducts product(m_data);
+			ProductImages productImage;
+			upload_file upload(file, product.getValueOfName(), "products");
+			productImage.setImagepath(upload.get_image_path());
+			productImage.setThumbnailpath(upload.get_thumbnail_path());
+
+			product.setCreatedat(trantor::Date::now());
+			product.setUpdatedat(trantor::Date::now());
 
 			if (!schema.validate(product.toJson(), m_error))
 			{
@@ -70,6 +85,9 @@ namespace gaboot
 			}
 
 			db().insert(product);
+			db_images().insert(productImage);
+
+			upload.save();
 
 			m_response.m_message = "Create product success";
 			m_response.m_success = true;
@@ -127,24 +145,52 @@ namespace gaboot
 	{
 		try
 		{
+			ProductImages product_image;
+
+			MultiPartParser multipart;
+
 			if (id.empty() || !util::is_numeric(id))
 			{
 				return BadRequestException("Parameters requirement doesn't match").response();
 			}
 
-			const auto& json = req->getJsonObject();
+			if (multipart.parse(req) != 0)
+			{
+				return BadRequestException("Requirement doesn't match").response();
+			}
 
-			if (!json) return BadRequestException().response();
+			auto& file = multipart.getFiles()[0];
 
-			MasterProducts product(*json);
+			util::multipart_tojson(multipart, m_data);
+
+			upload_file upload(file, std::to_string(trantor::Date::now().microSecondsSinceEpoch()), "products");
+
+			m_data["updatedAt"] = trantor::Date::now().toDbStringLocal();
+
+			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
+			{
+				product_image.setProductid(stoll(id));
+				product_image.setImagepath(upload.get_image_path());
+				product_image.setThumbnailpath(upload.get_thumbnail_path());
+				product_image.setUpdatedat(trantor::Date::now());
+			}
+
+			MasterProducts product(m_data);
 			product.setId(stoll(id));
 			product.setUpdatedat(trantor::Date::now());
 
-			const auto record = db().updateFuture(product).get();
+			const auto record = db().update(product);
+			const auto record2 = db_images().update(product_image);
 
-			if (!record)
+			if (!record || !record2)
 			{
 				return NotFoundException("Unable to update non-existing product").response();
+			}
+
+			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
+			{
+				LOG_INFO << "File saved.";
+				upload.save();
 			}
 
 			m_response.m_data = product.toJson();

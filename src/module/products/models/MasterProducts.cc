@@ -6,7 +6,7 @@
  */
 
 #include "MasterProducts.h"
-#include "Categories.h"
+#include "module/category/models/Categories.h"
 #include <drogon/utils/Utilities.h>
 #include <string>
 
@@ -2300,7 +2300,7 @@ void MasterProducts::getCategories(const DbClientPtr &clientPtr,
 {
     const static std::string sql = "select * from categories where id = ?";
     *clientPtr << sql
-               << *categoryId_
+               << *categoryid_
                >> [rcb = std::move(rcb), ecb](const Result &r){
                     if (r.size() == 0)
                     {

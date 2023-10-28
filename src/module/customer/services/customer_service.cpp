@@ -57,10 +57,10 @@ namespace gaboot
     {
         Json::Value data;
 
-        MultiPartParser fileUpload;
-
         try
         {
+            MultiPartParser fileUpload;
+
             if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0)
             {
                 return BadRequestException("Requirement doesn't match").response();

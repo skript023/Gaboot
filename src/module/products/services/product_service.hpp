@@ -3,6 +3,7 @@
 #include <pch.h>
 #include <interfaces/response.hpp>
 #include <module/products/models/MasterProducts.h>
+#include <module/products/models/ProductImages.h>
 
 using namespace drogon;
 using namespace orm;
@@ -13,6 +14,7 @@ namespace gaboot
 	class product_service
 	{
 		Mapper<MasterProducts> db() { return Mapper<MasterProducts>(DATABASE_CLIENT); }
+		Mapper<ProductImages> db_images() { return Mapper<ProductImages>(DATABASE_CLIENT); }
 	public:
 		explicit product_service() = default;
 		virtual ~product_service() = default;
@@ -31,5 +33,6 @@ namespace gaboot
 	private:
 		response_data m_response;
 		std::string m_error;
+		Json::Value m_data;
 	};
 }

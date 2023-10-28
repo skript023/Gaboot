@@ -20,7 +20,7 @@ namespace gaboot
         ADD_METHOD_TO(products::create, "/products", Post, ADMIN_MIDDLEWARE);
         ADD_METHOD_TO(products::findAll, "/products", Get);
         ADD_METHOD_TO(products::findOne, "/products/{id}", Get);
-        ADD_METHOD_TO(products::update, "/products/{id}", Patch, ADMIN_MIDDLEWARE);
+        ADD_METHOD_TO(products::update, "/products/{id}", Put, ADMIN_MIDDLEWARE);
         ADD_METHOD_TO(products::remove, "/products/{id}", Delete, ADMIN_MIDDLEWARE);
         METHOD_LIST_END
         // your declaration of processing function maybe like this:

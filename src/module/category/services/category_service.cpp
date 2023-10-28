@@ -26,7 +26,7 @@ namespace gaboot
 
 			Categories category(m_data);
 
-			upload_file upload(file, category.getValueOfName(), "categories");
+			upload_file upload(file, trantor::Date::now().toDbStringLocal(), "categories");
 
 			category.setCreatedat(trantor::Date::now());
 			category.setUpdatedat(trantor::Date::now());
@@ -158,10 +158,12 @@ namespace gaboot
 
 			util::multipart_tojson(multipart, m_data);
 
+			upload_file upload(file, std::to_string(trantor::Date::now().microSecondsSinceEpoch()), "categories");
+
 			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 			{
-				m_data["imagePath"] = file.getFileName();
-				m_data["thumbnailPath"] = file.getFileName();
+				m_data["imagePath"] = upload.get_image_path();
+				m_data["thumbnailPath"] = upload.get_thumbnail_path();
 			}
 
 			auto args = Criteria(Categories::Cols::_id, CompareOperator::EQ, stoll(id));
@@ -194,7 +196,7 @@ namespace gaboot
 				if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 				{
 					LOG_INFO << "File saved.";
-					file.save();
+					upload.save();
 				}
 
 				m_response.m_message = "Success update customer data.";
