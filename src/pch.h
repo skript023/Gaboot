@@ -55,6 +55,8 @@
 #define SECRET util::get_env("SECRET")
 #define SERVER_KEY util::get_env("SERVER_KEY")
 
+#define ADMIN_MIDDLEWARE_DISABLE
+
 #ifdef ADMIN_MIDDLEWARE_DISABLE
 #define ADMIN_MIDDLEWARE
 #define ADMIN_MIDDLEWARE_STATUS "Deactivated"
@@ -70,7 +72,6 @@
 #define CUSTOMER_MIDDLEWARE "gaboot::customer_middleware"
 #define CUSTOMER_MIDDLEWARE_STATUS "Activated"
 #endif // CUSTOMER_MIDDLEWARE_ACTIVE
-
 
 #ifdef _WIN32
 #define OS_NAME "Windows"

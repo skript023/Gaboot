@@ -20,8 +20,8 @@ namespace gaboot
 			if (!util::multipart_tojson(fileUpload, m_data)) return BadRequestException("Unknown error").response();
 
 			validator schema({
-				{"name", "type:string|required|minLength:3|alphabetOnly"},
-				{"description", "type:string|required|minLength:3|alphabetOnly"}
+				{"name", "type:string|required|alphabetOnly"},
+				{"description", "type:string|required|alphabetOnly"}
 			});
 
 			Categories category(m_data);
@@ -39,6 +39,8 @@ namespace gaboot
 			}
 			
 			db().insert(category);
+
+			upload.save();
 
 			m_response.m_message = "Create product success";
 			m_response.m_success = true;
@@ -138,39 +140,73 @@ namespace gaboot
 	{
 		try
 		{
+			MultiPartParser multipart;
+
 			if (id.empty() || !util::is_numeric(id))
 			{
 				return BadRequestException("Parameters requirement doesn't match").response();
 			}
 
-			MultiPartParser fileUpload;
-
-			if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0)
+			if (multipart.parse(req) != 0)
 			{
 				return BadRequestException("Requirement doesn't match").response();
 			}
 
-			auto& file = fileUpload.getFiles()[0];
+			auto& file = multipart.getFiles()[0];
 
-			if (!util::multipart_tojson(fileUpload, m_data)) return BadRequestException("Unknown error").response();
+			m_data["updatedAt"] = trantor::Date::now().toDbStringLocal();
 
-			Categories product(m_data);
-			product.setId(stoll(id));
-			product.setUpdatedat(trantor::Date::now());
+			util::multipart_tojson(multipart, m_data);
 
-			const auto record = db().updateFuture(product).get();
-
-			if (!record)
+			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 			{
-				return NotFoundException("Unable to update non-existing product").response();
+				m_data["imagePath"] = file.getFileName();
+				m_data["thumbnailPath"] = file.getFileName();
 			}
 
-			m_response.m_data = product.toJson();
-			m_response.m_message = "Success update customer data.";
-			m_response.m_success = true;
+			auto args = Criteria(Categories::Cols::_id, CompareOperator::EQ, stoll(id));
 
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			return response;
+			// Loop through JSON members and update corresponding database columns
+			for (const auto& [column, request] : this->columnMapping)
+			{
+				if (m_data.isMember(request))
+				{
+					auto& jsonValue = m_data[request];
+
+					if (!jsonValue.isNull())
+					{
+						auto record = db().updateFutureBy(column, args, jsonValue.asString());
+
+						if (record.valid() && record.get())
+						{
+							m_response.m_data[request + "_updated"] = "success";
+						}
+						else
+						{
+							return NotFoundException("Unable to update non-existing record.").response();
+						}
+					}
+				}
+			}
+
+			if (!m_response.m_data.empty())
+			{
+				if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
+				{
+					LOG_INFO << "File saved.";
+					file.save();
+				}
+
+				m_response.m_message = "Success update customer data.";
+				m_response.m_success = true;
+
+				auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+				return response;
+			}
+			else
+			{
+				return BadRequestException("Unable to update costumer").response();
+			}
 		}
 		catch (const DrogonDbException& e)
 		{

@@ -169,7 +169,7 @@ namespace gaboot
 
             data["updatedAt"] = trantor::Date::now().toDbStringLocal();
 
-            util::multipart_tojson(multipart, data);
+            if (!util::multipart_tojson(multipart, data)) return BadRequestException("Data parsing failed").response();
 
             if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
             {
@@ -191,7 +191,7 @@ namespace gaboot
 
                         if (record.valid() && record.get())
                         {
-                            m_response.m_data = fmt::format("{} success", request);
+                            m_response.m_data[request + "_updated"] = "success";
                         }
                         else
                         {

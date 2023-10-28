@@ -15,6 +15,14 @@ namespace gaboot
 	class category_service
 	{
 		Mapper<Categories> db() { return Mapper<Categories>(DATABASE_CLIENT); }
+		std::map<Json::Value::Members, std::string> columnMapping = {
+			{{Categories::Cols::_name}, "name"},
+			{{Categories::Cols::_description}, "description"},
+			{{Categories::Cols::_imagePath}, "imagePath"},
+			{{Categories::Cols::_thumbnailPath}, "thumbnailPath"},
+			{{Categories::Cols::_updatedAt}, "updatedAt"},
+			{{Categories::Cols::_createdAt}, "createdAt"}
+		};
 	public:
 		explicit category_service() = default;
 		virtual ~category_service() = default;
