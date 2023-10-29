@@ -14,7 +14,6 @@ namespace gaboot
         Json::Value to_json() const 
         {
             Json::Value json;
-            if (m_success) json["success"] = m_success;
             if (!m_message.empty()) json["message"] = m_message;
             if (!m_data.empty()) json["data"] = m_data;
             if (m_last_page != 0) json["lastPage"] = m_last_page;

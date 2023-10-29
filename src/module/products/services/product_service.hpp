@@ -34,5 +34,6 @@ namespace gaboot
 		response_data m_response;
 		std::string m_error;
 		Json::Value m_data;
+		Json::Value m_data_image;
 	};
 }

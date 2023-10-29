@@ -17,8 +17,8 @@ namespace gaboot
 
 		static void run()
 		{
-			g_schedule->task([] { LOG(INFO) << "Schedule running test"; })->every(10s);
-			g_schedule->task([] { LOG(INFO) << "Schedule running test 2"; })->every(5s);
+			//g_schedule->task([] { LOG(INFO) << "Schedule running test"; })->every(10s);
+			//g_schedule->task([] { LOG(INFO) << "Schedule running test 2"; })->every(5s);
 		}
 	};
 }

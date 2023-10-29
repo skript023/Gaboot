@@ -64,17 +64,23 @@ namespace gaboot
 			if (!util::multipart_tojson(fileUpload, m_data)) return BadRequestException("Unknown error").response();
 
 			validator schema({
-				{"name", "type:string|required|minLength:3|alphabetOnly"},
+				{"name", "type:string|required|minLength:3|alphanum"},
 				{"description", "type:string|required|minLength:3|alphabetOnly"},
 				{"price", "type:number|required|numberOnly"},
 				{"stock", "type:number|required|numberOnly"}
 			});
+
+			m_data["price"] = stoll(m_data["price"].asString());
+			m_data["stock"] = stoll(m_data["stock"].asString());
 
 			MasterProducts product(m_data);
 			ProductImages productImage;
 			upload_file upload(file, product.getValueOfName(), "products");
 			productImage.setImagepath(upload.get_image_path());
 			productImage.setThumbnailpath(upload.get_thumbnail_path());
+			
+			productImage.setCreatedat(trantor::Date::now());
+			productImage.setUpdatedat(trantor::Date::now());
 
 			product.setCreatedat(trantor::Date::now());
 			product.setUpdatedat(trantor::Date::now());
@@ -85,6 +91,7 @@ namespace gaboot
 			}
 
 			db().insert(product);
+			productImage.setProductid(product.getPrimaryKey());
 			db_images().insert(productImage);
 
 			upload.save();
@@ -145,8 +152,6 @@ namespace gaboot
 	{
 		try
 		{
-			ProductImages product_image;
-
 			MultiPartParser multipart;
 
 			if (id.empty() || !util::is_numeric(id))
@@ -169,27 +174,31 @@ namespace gaboot
 
 			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 			{
-				product_image.setProductid(stoll(id));
-				product_image.setImagepath(upload.get_image_path());
-				product_image.setThumbnailpath(upload.get_thumbnail_path());
-				product_image.setUpdatedat(trantor::Date::now());
+				m_data_image["imagePath"] = upload.get_image_path();
+				m_data_image["thumbnailPath"] = upload.get_thumbnail_path();
+				m_data_image["updatedAt"] = trantor::Date::now().toDbStringLocal();
 			}
 
 			MasterProducts product(m_data);
 			product.setId(stoll(id));
 			product.setUpdatedat(trantor::Date::now());
 
-			const auto record = db().update(product);
-			const auto record2 = db_images().update(product_image);
-
-			if (!record || !record2)
+			if (const auto record = db().update(product); !record)
 			{
 				return NotFoundException("Unable to update non-existing product").response();
 			}
 
 			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 			{
-				LOG_INFO << "File saved.";
+				if (const auto record2 = db_images().updateBy(m_data_image.getMemberNames(),
+					Criteria(ProductImages::Cols::_productId, CompareOperator::EQ, id),
+					upload.get_image_path(),
+					upload.get_thumbnail_path(),
+					trantor::Date::now()
+				); !record2)
+				{
+					return NotFoundException("Unable to update non-existing product").response();
+				}
 				upload.save();
 			}
 
@@ -206,6 +215,7 @@ namespace gaboot
 			m_response.m_success = false;
 
 			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+			response->setStatusCode(k500InternalServerError);
 
 			LOG(WARNING) << e.base().what();
 
