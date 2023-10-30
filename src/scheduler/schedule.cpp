@@ -20,11 +20,11 @@ namespace gaboot
 		std::unique_lock lock(m_mutex);
 		if (!m_tasks.empty())
 		{
-			auto job = std::move(m_tasks.top());
+			scheduler_t job = std::move(m_tasks.top());
 			m_tasks.pop();
 			lock.unlock();
 
-			drogon::app().getLoop()->runEvery(duration, std::move(job));
+			RUN_EVERY(duration, std::move(job));
 		}
 	}
 

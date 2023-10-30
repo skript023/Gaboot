@@ -44,6 +44,7 @@
 
 //drogon::app().getLoop()->runEvery(std::chrono::milliseconds(1), [] { LOG(INFO) << "Looped"; });
 
+#define RUN_EVERY(duration, callback) drogon::app().getLoop()->runEvery(duration, callback)
 #define NUM_THREAD drogon::app().getThreadNum()
 #define ADD_LISTENER(IP, PORT) drogon::app().addListener(IP, PORT)
 #define ADD_CONFIG(JSON) drogon::app().loadConfigFile(JSON)

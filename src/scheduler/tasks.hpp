@@ -10,8 +10,7 @@ namespace gaboot
 	public:
 		explicit tasks()
 		{
-			g_schedule->task([] { LOG(INFO) << "Schedule running test"; })->every(10s)->call();
-			g_schedule->task([] { LOG(INFO) << "Schedule running test 2"; })->every(5s)->call();
+			//g_schedule->task([] { LOG(INFO) << "Schedule running test"; })->every(10s)->call();
 		}
 
 		virtual ~tasks() = default;
