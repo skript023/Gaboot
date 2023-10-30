@@ -10,15 +10,10 @@ namespace gaboot
 	public:
 		explicit tasks()
 		{
-			drogon::app().getLoop()->runInLoop(tasks::run);
+			g_schedule->task([] { LOG(INFO) << "Schedule running test"; })->every(10s)->call();
+			g_schedule->task([] { LOG(INFO) << "Schedule running test 2"; })->every(5s)->call();
 		}
 
 		virtual ~tasks() = default;
-
-		static void run()
-		{
-			//g_schedule->task([] { LOG(INFO) << "Schedule running test"; })->every(10s);
-			//g_schedule->task([] { LOG(INFO) << "Schedule running test 2"; })->every(5s);
-		}
 	};
 }

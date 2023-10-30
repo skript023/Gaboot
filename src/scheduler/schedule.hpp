@@ -2,6 +2,8 @@
 
 namespace gaboot
 {
+	using scheduler_t = std::function<void()>;
+
 	class schedule
 	{
 	public:
@@ -13,14 +15,13 @@ namespace gaboot
 		schedule(schedule&& that) = delete;
 		schedule& operator=(schedule&& that) = delete;
 
-		void tick();
-		schedule* task(std::function<void()> job);
-		void every(std::optional<std::chrono::high_resolution_clock::duration> time);
-		static void run();
+		void call();
+		schedule* task(scheduler_t job);
+		schedule* every(std::chrono::high_resolution_clock::duration time);
 	private:
-		std::stack<std::function<void()>> m_jobs;
-		std::optional<std::chrono::high_resolution_clock::time_point> m_wake_time;
+		std::chrono::high_resolution_clock::time_point m_wake_time;
 		std::recursive_mutex m_mutex;
+		std::stack<scheduler_t> m_tasks;
 	};
 
 	inline schedule* g_schedule;

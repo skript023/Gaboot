@@ -5,8 +5,6 @@ namespace gaboot
 {
 	schedule::schedule()
 	{
-		drogon::app().getLoop()->runEvery(1ms, schedule::run);
-
 		g_schedule = this;
 	}
 
@@ -15,47 +13,36 @@ namespace gaboot
 		g_schedule = nullptr;
 	}
 
-	void schedule::tick()
+	void schedule::call()
 	{
-		if (!m_wake_time.has_value() || m_wake_time.value() <= std::chrono::high_resolution_clock::now())
-		{
-			std::unique_lock lock(m_mutex);
-			if (!m_jobs.empty())
-			{
-				std::function<void()> job = std::move(m_jobs.top());
-				m_jobs.pop();
-				lock.unlock();
+		std::chrono::duration<double> duration = m_wake_time - std::chrono::high_resolution_clock::now();
 
-				std::invoke(std::move(job));
-			}
+		std::unique_lock lock(m_mutex);
+		if (!m_tasks.empty())
+		{
+			auto job = std::move(m_tasks.top());
+			m_tasks.pop();
+			lock.unlock();
+
+			drogon::app().getLoop()->runEvery(duration, std::move(job));
 		}
 	}
 
-	schedule* schedule::task(std::function<void()> job)
+	schedule* schedule::task(scheduler_t callback)
 	{
-		if (job)
+		if (callback)
 		{
 			std::lock_guard lock(m_mutex);
-			m_jobs.push(std::move(job));
+			m_tasks.push(std::move(callback));
 		}
 
 		return this;
 	}
 
-	void schedule::every(std::optional<std::chrono::high_resolution_clock::duration> time)
+	schedule* schedule::every(std::chrono::high_resolution_clock::duration time)
 	{
-		if (time.has_value())
-		{
-			m_wake_time = std::chrono::high_resolution_clock::now() + time.value();
-		}
-		else
-		{
-			m_wake_time = std::nullopt;
-		}
-	}
+		m_wake_time = std::chrono::high_resolution_clock::now() + time;
 
-	void schedule::run()
-	{
-		g_schedule->tick();
+		return this;
 	}
 }
