@@ -9,5 +9,5 @@ FetchContent_Declare(
     GIT_PROGRESS TRUE
 )
 
-message("STB Image")
+message("\nFetching stb image library")
 FetchContent_MakeAvailable(stb_image)

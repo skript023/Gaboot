@@ -1,3 +1,4 @@
+message("\nInstalling drogon library")
 
 if (MSVC)
     # Set the path to vcpkg for Windows
@@ -26,11 +27,11 @@ if(NOT Drogon_FOUND)
 
     if(OpenCV_FOUND)
         find_package(OpenSSL REQUIRED)
-        message(STATUS "Drogon module loaded.")
+        message(STATUS "Drogon is found.")
     else()
         message(FATAL_ERROR "Drogon not found even after attempting to install it.")
     endif()
 else()
     find_package(OpenSSL REQUIRED)
-    message("Drogon module loaded.")
+    message(STATUS "Drogon is already exist, located in : ${DROGON_INCLUDE_DIRS}")
 endif()

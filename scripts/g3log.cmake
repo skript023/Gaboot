@@ -11,6 +11,6 @@ FetchContent_Declare(
     GIT_TAG        b24d4a4523164aa69013d4327ca9faae484fa844
     GIT_PROGRESS TRUE
 )
-message("g3log")
+message("\nFetching g3log library")
 FetchContent_MakeAvailable(g3log)
 set_property(TARGET g3log PROPERTY CXX_STANDARD 17)

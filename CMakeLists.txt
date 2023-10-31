@@ -17,8 +17,10 @@ else()
     
 endif()
 
-#include external dependencies
+#generate version file
 include(scripts/git.cmake)
+
+#include external dependencies
 message("\nFetching modules")
 include(scripts/bcrypt.cmake)
 include(scripts/jwt.cmake)
@@ -26,6 +28,9 @@ include(scripts/cpr.cmake)
 include(scripts/g3log.cmake)
 include(scripts/fmtlib.cmake)
 include(scripts/jsonvalidator.cmake)
+
+#include vcpkg dependencies
+message("\nFetching packages")
 include(scripts/opencv.cmake)
 include(scripts/drogon.cmake)
 

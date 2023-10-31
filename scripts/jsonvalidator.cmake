@@ -6,6 +6,6 @@ FetchContent_Declare(
     GIT_TAG        main
     GIT_PROGRESS TRUE
 ) 
-message("Json Validator")
+message("\nFetching json validator library")
 
 FetchContent_MakeAvailable(jsonvalidator)
