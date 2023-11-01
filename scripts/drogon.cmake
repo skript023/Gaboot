@@ -8,6 +8,14 @@ else()
     message("GCC is used")
 endif()
 
+set(ENABLE_ZLIB OFF)
+if (NOT MSVC)
+    find_package(unofficial-libmariadb QUIET)
+    if (unofficial-libmariadb_FOUND)
+        message("Unofficial maria is found")
+    endif()
+endif()
+
 find_package(Drogon)
 
 if(NOT Drogon_FOUND)
