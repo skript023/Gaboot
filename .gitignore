@@ -562,3 +562,4 @@ FodyWeavers.xsd
 build/
 CMakebackup1.txt
 src/util/version.cpp
+.env
