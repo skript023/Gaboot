@@ -60,6 +60,11 @@ namespace gaboot
 
         virtual ~validator() noexcept = default;
 
+        validator(validator const&) = delete;
+        validator& operator=(validator const&) = delete;
+        validator(validator&&) = delete;
+        validator& operator=(validator&&) = delete;
+
         bool validate(Json::Value const& json, std::string& error);
 
         static void empty_string_check(Json::Value& jsonValue);

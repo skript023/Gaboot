@@ -24,7 +24,7 @@ namespace gaboot
 
         if (err)
         {
-            error += err.message() + " at " + err.pointer().to_string().substr(1);
+            error = err.message() + " at " + err.pointer().to_string().substr(1);
             LOG(WARNING) << fmt::format("{} at {}", err.message(), err.pointer().to_string().substr(1));
 
             return false;
@@ -164,7 +164,7 @@ namespace gaboot
 
                 if (auto it = extracted.find("alphabetOnly"); it != extracted.end())
                 {
-                    m_schema["properties"][validation.first]["pattern"] = "^[A-Za-z]+$";
+                    m_schema["properties"][validation.first]["pattern"] = "^[A-Za-z ]+$";
                 }
 
                 if (auto it = extracted.find("numberOnly"); it != extracted.end())
@@ -174,7 +174,7 @@ namespace gaboot
 
                 if (auto it = extracted.find("alphanum"); it != extracted.end())
                 {
-                    m_schema["properties"][validation.first]["pattern"] = "^[A-Za-z0-9]+$";
+                    m_schema["properties"][validation.first]["pattern"] = "^[A-Za-z0-9 ]+$";
                 }
 
                 if (auto it = extracted.find("email"); it != extracted.end())
@@ -265,7 +265,7 @@ namespace gaboot
 
                 if (auto it = extracted.find("alphabetOnly"); it != extracted.end())
                 {
-                    m_schema["properties"][validation.key()]["pattern"] = "^[A-Za-z]+$";
+                    m_schema["properties"][validation.key()]["pattern"] = "^[A-Za-z ]+$";
                 }
 
                 if (auto it = extracted.find("numberOnly"); it != extracted.end())
@@ -275,7 +275,7 @@ namespace gaboot
 
                 if (auto it = extracted.find("alphanum"); it != extracted.end())
                 {
-                    m_schema["properties"][validation.key()]["pattern"] = "^[A-Za-z0-9]+$";
+                    m_schema["properties"][validation.key()]["pattern"] = "^[A-Za-z0-9 ]+$";
                 }
 
                 if (auto it = extracted.find("email"); it != extracted.end())

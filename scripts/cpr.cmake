@@ -10,7 +10,7 @@ FetchContent_Declare(
     GIT_TAG        99e3e23033f2fc6ef8a041d6980098aab7e77014
     GIT_PROGRESS TRUE
 ) 
-message("cpr")
+message("\nFetching cpr library")
 FetchContent_MakeAvailable(cpr)
 
 set(BUILD_TESTING ${BUILD_TESTING_BEFORE} CACHE INTERNAL "" FORCE)

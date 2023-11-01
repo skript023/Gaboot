@@ -1,11 +1,11 @@
-
+message("\nInstalling openCV library")
   
 if (MSVC)
     # Set the path to vcpkg for Windows
     set(VCPKG_EXECUTABLE "D:/Coding/vcpkg/vcpkg.exe")
 else()
     set(VCPKG_EXECUTABLE "/mnt/j/database/Tools/vcpkg/vcpkg")
-    message("GCC is used")
+    message("GCC is used.")
 endif()
 
 find_package(OpenCV)
@@ -21,19 +21,19 @@ if(NOT OpenCV_FOUND)
     if(VCPKG_RESULT)
         message(FATAL_ERROR "vcpkg failed with error code: ${VCPKG_RESULT}")
     else()
-        message("Open CV installed")
+        message(STATUS "OpenCV has been successfully installed.")
     endif()
 
     find_package(OpenCV CONFIG REQUIRED)
 
     if(OpenCV_FOUND)
-        message(STATUS "load OpenCV module.")
+        message(STATUS "OpenCV is found.")
         # You can use OpenCV here
     else()
         message(FATAL_ERROR "OpenCV not found even after attempting to install it.")
     endif()
 else()
-    message("load OpenCV module.")
+    message(STATUS "OpenCV is already exist.")
 endif()
 
 

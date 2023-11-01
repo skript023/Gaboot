@@ -8,6 +8,6 @@ FetchContent_Declare(
     GIT_TAG        c089f7d497bcce35a0fd6da0512f8585ed1cc002
     GIT_PROGRESS TRUE
 ) 
-message("fmtlib")
+message("\nFetching fmtlib library")
 
 FetchContent_MakeAvailable(fmtlib)

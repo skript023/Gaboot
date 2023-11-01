@@ -42,12 +42,37 @@
 #include <util/logger.hpp>
 #include <util/validator.hpp>
 
+//drogon::app().getLoop()->runEvery(std::chrono::milliseconds(1), [] { LOG(INFO) << "Looped"; });
+
+#define RUN_EVERY(duration, callback) drogon::app().getLoop()->runEvery(duration, callback)
+#define NUM_THREAD drogon::app().getThreadNum()
 #define ADD_LISTENER(IP, PORT) drogon::app().addListener(IP, PORT)
 #define ADD_CONFIG(JSON) drogon::app().loadConfigFile(JSON)
 #define SET_UPLOADED_PATH(path) drogon::app().setUploadPath(path);
 #define SERVER_RUN drogon::app().run()
 #define UPLOAD_PATH drogon::app().getUploadPath()
 #define DATABASE_CLIENT drogon::app().getDbClient()
+
+#define SECRET util::get_env("SECRET")
+#define SERVER_KEY util::get_env("SERVER_KEY")
+
+#define ADMIN_MIDDLEWARE_DISABLE
+
+#ifdef ADMIN_MIDDLEWARE_DISABLE
+#define ADMIN_MIDDLEWARE
+#define ADMIN_MIDDLEWARE_STATUS "Deactivated"
+#else
+#define ADMIN_MIDDLEWARE "gaboot::admin_middleware"
+#define ADMIN_MIDDLEWARE_STATUS "Activated"
+#endif
+
+#ifdef CUSTOMER_MIDDLEWARE_DISABLE
+#define CUSTOMER_MIDDLEWARE
+#define CUSTOMER_MIDDLEWARE_STATUS "Deactivated"
+#else
+#define CUSTOMER_MIDDLEWARE "gaboot::customer_middleware"
+#define CUSTOMER_MIDDLEWARE_STATUS "Activated"
+#endif // CUSTOMER_MIDDLEWARE_ACTIVE
 
 #ifdef _WIN32
 #define OS_NAME "Windows"
@@ -56,9 +81,6 @@
 #else
 #define OS_NAME "Unknown"
 #endif
-
-#define SECRET "QmFoYXNhQXN1MTIz"
-#define SERVER_KEY "U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg="
 
 using response_t = std::function<void(drogon::HttpResponsePtr const&)>;
 using Multer = drogon::HttpFile;

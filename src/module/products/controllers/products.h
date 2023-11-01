@@ -2,28 +2,26 @@
 
 #include <pch.h>
 #include <drogon/HttpController.h>
-#include <module/products/models/MasterProducts.h>
+#include <module/products/services/product_service.hpp>
 
 using namespace drogon;
-using namespace orm;
-using namespace drogon_model::gaboot;
 
 namespace gaboot
 {
     class products : public drogon::HttpController<products>
     {
-        Mapper<MasterProducts> db() { return Mapper<MasterProducts>(DATABASE_CLIENT); }
+        product_service m_product_service;
     public:
         METHOD_LIST_BEGIN
         // use METHOD_ADD to add your custom processing function here;
         // METHOD_ADD(products::get, "/{2}/{1}", Get); // path is /products/{arg2}/{arg1}
         // METHOD_ADD(products::your_method_name, "/{1}/{2}/list", Get); // path is /products/{arg1}/{arg2}/list
         // ADD_METHOD_TO(products::your_method_name, "/absolute/path/{1}/{2}/list", Get); // path is /absolute/path/{arg1}/{arg2}/list
-        ADD_METHOD_TO(products::create, "/products", Post, "gaboot::login");
-        ADD_METHOD_TO(products::findAll, "/products", Get, "gaboot::login");
-        ADD_METHOD_TO(products::findOne, "/products/{id}", Get, "gaboot::login");
-        ADD_METHOD_TO(products::update, "/products/{id}", Patch);
-        ADD_METHOD_TO(products::remove, "/products/{id}", Delete);
+        ADD_METHOD_TO(products::create, "/products", Post, ADMIN_MIDDLEWARE);
+        ADD_METHOD_TO(products::findAll, "/products", Get);
+        ADD_METHOD_TO(products::findOne, "/products/{id}", Get);
+        ADD_METHOD_TO(products::update, "/products/{id}", Put, ADMIN_MIDDLEWARE);
+        ADD_METHOD_TO(products::remove, "/products/{id}", Delete, ADMIN_MIDDLEWARE);
         METHOD_LIST_END
         // your declaration of processing function maybe like this:
         // void get(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, int p1, std::string p2);

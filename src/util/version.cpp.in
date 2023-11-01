@@ -1,0 +1,9 @@
+#include "version.hpp"
+
+namespace gaboot
+{
+	const char* server_version::GIT_SHA1           = "@GIT_SHA1@";
+	const char* server_version::GIT_BRANCH         = "@GIT_BRANCH@";
+	const char* server_version::GIT_DATE           = "@GIT_DATE@";
+	const char* server_version::GIT_COMMIT_SUBJECT = "@GIT_COMMIT_SUBJECT@";
+};

@@ -17,14 +17,22 @@ else()
     
 endif()
 
+#generate version file
+include(scripts/git.cmake)
+
 #include external dependencies
+message("\nFetching modules")
 include(scripts/bcrypt.cmake)
 include(scripts/jwt.cmake)
 include(scripts/cpr.cmake)
 include(scripts/g3log.cmake)
 include(scripts/fmtlib.cmake)
 include(scripts/jsonvalidator.cmake)
+
+#include vcpkg dependencies
+message("\nFetching packages")
 include(scripts/opencv.cmake)
+include(scripts/drogon.cmake)
 
 # Gaboot
 message(STATUS "Gaboot")
@@ -74,9 +82,6 @@ target_include_directories(Gaboot PRIVATE
 )
 
 target_precompile_headers(Gaboot PRIVATE "${SRC_DIR}/pch.h")
-
-find_package(OpenSSL REQUIRED)
-find_package(Drogon CONFIG REQUIRED)
 
 target_link_libraries(Gaboot PRIVATE Drogon::Drogon bcrypt OpenSSL::SSL OpenSSL::Crypto cpr fmt::fmt nlohmann_json_schema_validator g3log opencv_core opencv_imgcodecs opencv_highgui)
 
