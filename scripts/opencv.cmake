@@ -2,7 +2,7 @@
   
 if (MSVC)
     # Set the path to vcpkg for Windows
-    set(VCPKG_EXECUTABLE "J:/database/Tools/vcpkg/vcpkg.exe")
+    set(VCPKG_EXECUTABLE "D:/Coding/vcpkg/vcpkg.exe")
 else()
     set(VCPKG_EXECUTABLE "/mnt/j/database/Tools/vcpkg/vcpkg")
     message("GCC is used")
