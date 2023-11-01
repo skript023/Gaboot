@@ -10,7 +10,7 @@ if (MSVC)
     if("${CMAKE_MAKE_PROGRAM}" MATCHES "ninja")
         message("Ninja build system is being used.")
     else()
-        include("D:/Coding/vcpkg/scripts/buildsystems/vcpkg.cmake")
+        include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
         message("Ninja build system is not being used.")
     endif()
 else()
@@ -39,6 +39,8 @@ message(STATUS "Gaboot")
 file(GLOB_RECURSE SRC_MAIN
     "${SRC_DIR}/**.hpp"
     "${SRC_DIR}/**.h"
+    "${SRC_DIR}/**.hxx"
+    "${SRC_DIR}/**.hh"
     "${SRC_DIR}/**.cpp"
     "${SRC_DIR}/**.cc"
     "${SRC_DIR}/**.cxx"
