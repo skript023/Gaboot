@@ -9,10 +9,15 @@ include(CheckIncludeFileCXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if (MSVC)
-include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+if (WIN32)
+  message("Building on Windows")
+  include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+elseif(UNIX)
+  message("Building on a Unix-based platform (including Linux)")
+  include("/mnt/j/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake")
 else()
-include("/mnt/j/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake")
+  message(FATAL "Building on an unknown or unsupported platform")
+  # Add default configurations or actions here
 endif()
 
 #generate version file
