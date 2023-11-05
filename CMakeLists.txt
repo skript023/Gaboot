@@ -45,13 +45,18 @@ file(GLOB_RECURSE SRC_MAIN
     "${SRC_DIR}/**.asm"
 )
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+  enable_language("RC")
+  set (ICON ${SRC_DIR}/gaboot_icon.rc)
+endif()
+
 if (MSVC)
   add_compile_options(/bigobj)
 else ()
   #add_compile_options(-Wa,-mbig-obj)
 endif ()
 
-add_executable(Gaboot "${SRC_DIR}/main.cc")
+add_executable(Gaboot "${SRC_DIR}/main.cc" ${ICON})
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_property(TARGET Gaboot PROPERTY CXX_STANDARD 17)

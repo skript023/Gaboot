@@ -4,8 +4,8 @@ WORKDIR /app
 
 EXPOSE 8088
 
-COPY out/build/Linux-x64/Gaboot ./
+COPY build/Gaboot ./
 
-COPY out/build/Linux-x64/config.json ./
+COPY build/config.json ./
 
 CMD ["./Gaboot"]
