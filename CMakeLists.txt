@@ -9,11 +9,10 @@ include(CheckIncludeFileCXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if("${CMAKE_MAKE_PROGRAM}" MATCHES "ninja")
-    message("Ninja build system is being used.")
+if (MSVC)
+include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 else()
-    include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
-    message("Ninja build system is not being used.")
+include("/mnt/j/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake")
 endif()
 
 #generate version file

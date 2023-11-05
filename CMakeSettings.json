@@ -10,7 +10,6 @@
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "msvc_x64_x64" ],
-      "cmakeToolchain": "J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake",
       "intelliSenseMode": "windows-msvc-arm64"
     },
     {
@@ -23,7 +22,6 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
-      "cmakeToolchain": "J:/database/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake",
       "inheritEnvironments": [ "linux_x64" ],
       "intelliSenseMode": "linux-gcc-x64",
       "wslPath": "Ubuntu",
