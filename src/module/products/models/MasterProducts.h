@@ -53,7 +53,6 @@ class MasterProducts
         static const std::string _weight;
         static const std::string _weightUnit;
         static const std::string _categoryId;
-        static const std::string _wishlistId;
         static const std::string _createdAt;
         static const std::string _updatedAt;
     };
@@ -62,7 +61,7 @@ class MasterProducts
     const static std::string tableName;
     const static bool hasPrimaryKey;
     const static std::string primaryKeyName;
-    using PrimaryKeyType = int32_t;
+    using PrimaryKeyType = uint64_t;
     const PrimaryKeyType &getPrimaryKey() const;
 
     /**
@@ -109,11 +108,11 @@ class MasterProducts
 
     /**  For column id  */
     ///Get the value of the column id, returns the default value if the column is null
-    const int32_t &getValueOfId() const noexcept;
+    const uint64_t &getValueOfId() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getId() const noexcept;
+    const std::shared_ptr<uint64_t> &getId() const noexcept;
     ///Set the value of the column id
-    void setId(const int32_t &pId) noexcept;
+    void setId(const uint64_t &pId) noexcept;
 
     /**  For column name  */
     ///Get the value of the column name, returns the default value if the column is null
@@ -123,7 +122,6 @@ class MasterProducts
     ///Set the value of the column name
     void setName(const std::string &pName) noexcept;
     void setName(std::string &&pName) noexcept;
-    void setNameToNull() noexcept;
 
     /**  For column description  */
     ///Get the value of the column description, returns the default value if the column is null
@@ -133,25 +131,22 @@ class MasterProducts
     ///Set the value of the column description
     void setDescription(const std::string &pDescription) noexcept;
     void setDescription(std::string &&pDescription) noexcept;
-    void setDescriptionToNull() noexcept;
 
     /**  For column price  */
     ///Get the value of the column price, returns the default value if the column is null
-    const int32_t &getValueOfPrice() const noexcept;
+    const double &getValueOfPrice() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getPrice() const noexcept;
+    const std::shared_ptr<double> &getPrice() const noexcept;
     ///Set the value of the column price
-    void setPrice(const int32_t &pPrice) noexcept;
-    void setPriceToNull() noexcept;
+    void setPrice(const double &pPrice) noexcept;
 
     /**  For column stock  */
     ///Get the value of the column stock, returns the default value if the column is null
-    const int32_t &getValueOfStock() const noexcept;
+    const uint32_t &getValueOfStock() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getStock() const noexcept;
+    const std::shared_ptr<uint32_t> &getStock() const noexcept;
     ///Set the value of the column stock
-    void setStock(const int32_t &pStock) noexcept;
-    void setStockToNull() noexcept;
+    void setStock(const uint32_t &pStock) noexcept;
 
     /**  For column dimension  */
     ///Get the value of the column dimension, returns the default value if the column is null
@@ -161,16 +156,14 @@ class MasterProducts
     ///Set the value of the column dimension
     void setDimension(const std::string &pDimension) noexcept;
     void setDimension(std::string &&pDimension) noexcept;
-    void setDimensionToNull() noexcept;
 
     /**  For column weight  */
     ///Get the value of the column weight, returns the default value if the column is null
-    const int32_t &getValueOfWeight() const noexcept;
+    const double &getValueOfWeight() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getWeight() const noexcept;
+    const std::shared_ptr<double> &getWeight() const noexcept;
     ///Set the value of the column weight
-    void setWeight(const int32_t &pWeight) noexcept;
-    void setWeightToNull() noexcept;
+    void setWeight(const double &pWeight) noexcept;
 
     /**  For column weightUnit  */
     ///Get the value of the column weightUnit, returns the default value if the column is null
@@ -180,7 +173,6 @@ class MasterProducts
     ///Set the value of the column weightUnit
     void setWeightunit(const std::string &pWeightunit) noexcept;
     void setWeightunit(std::string &&pWeightunit) noexcept;
-    void setWeightunitToNull() noexcept;
 
     /**  For column categoryId  */
     ///Get the value of the column categoryId, returns the default value if the column is null
@@ -189,16 +181,6 @@ class MasterProducts
     const std::shared_ptr<int32_t> &getCategoryid() const noexcept;
     ///Set the value of the column categoryId
     void setCategoryid(const int32_t &pCategoryid) noexcept;
-    void setCategoryidToNull() noexcept;
-
-    /**  For column wishlistId  */
-    ///Get the value of the column wishlistId, returns the default value if the column is null
-    const int32_t &getValueOfWishlistid() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getWishlistid() const noexcept;
-    ///Set the value of the column wishlistId
-    void setWishlistid(const int32_t &pWishlistid) noexcept;
-    void setWishlistidToNull() noexcept;
 
     /**  For column createdAt  */
     ///Get the value of the column createdAt, returns the default value if the column is null
@@ -217,7 +199,7 @@ class MasterProducts
     void setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept;
 
 
-    static size_t getColumnNumber() noexcept {  return 12;  }
+    static size_t getColumnNumber() noexcept {  return 11;  }
     static const std::string &getColumnName(size_t index) noexcept(false);
 
     Json::Value toJson() const;
@@ -242,16 +224,15 @@ class MasterProducts
     void updateArgs(drogon::orm::internal::SqlBinder &binder) const;
     ///For mysql or sqlite3
     void updateId(const uint64_t id);
-    std::shared_ptr<int32_t> id_;
+    std::shared_ptr<uint64_t> id_;
     std::shared_ptr<std::string> name_;
     std::shared_ptr<std::string> description_;
-    std::shared_ptr<int32_t> price_;
-    std::shared_ptr<int32_t> stock_;
+    std::shared_ptr<double> price_;
+    std::shared_ptr<uint32_t> stock_;
     std::shared_ptr<std::string> dimension_;
-    std::shared_ptr<int32_t> weight_;
+    std::shared_ptr<double> weight_;
     std::shared_ptr<std::string> weightunit_;
     std::shared_ptr<int32_t> categoryid_;
-    std::shared_ptr<int32_t> wishlistid_;
     std::shared_ptr<::trantor::Date> createdat_;
     std::shared_ptr<::trantor::Date> updatedat_;
     struct MetaData
@@ -265,7 +246,7 @@ class MasterProducts
         const bool notNull_;
     };
     static const std::vector<MetaData> metaData_;
-    bool dirtyFlag_[12]={ false };
+    bool dirtyFlag_[11]={ false };
   public:
     static const std::string &sqlForFindingByPrimaryKey()
     {
@@ -325,20 +306,17 @@ class MasterProducts
             sql += "categoryId,";
             ++parametersCount;
         }
-        if(dirtyFlag_[9])
+        sql += "createdAt,";
+        ++parametersCount;
+        if(!dirtyFlag_[9])
         {
-            sql += "wishlistId,";
-            ++parametersCount;
+            needSelection=true;
         }
-        if(dirtyFlag_[10])
+        sql += "updatedAt,";
+        ++parametersCount;
+        if(!dirtyFlag_[10])
         {
-            sql += "createdAt,";
-            ++parametersCount;
-        }
-        if(dirtyFlag_[11])
-        {
-            sql += "updatedAt,";
-            ++parametersCount;
+            needSelection=true;
         }
         needSelection=true;
         if(parametersCount > 0)
@@ -395,15 +373,18 @@ class MasterProducts
             sql.append("?,");
 
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[10])
         {
             sql.append("?,");
 
         }
-        if(dirtyFlag_[11])
+        else
         {
-            sql.append("?,");
-
+            sql +="default,";
         }
         if(parametersCount > 0)
         {

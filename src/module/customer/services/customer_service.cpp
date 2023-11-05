@@ -84,8 +84,8 @@ namespace gaboot
 
             customer.setCreatedat(trantor::Date::now());
             customer.setUpdatedat(trantor::Date::now());
-            customer.setImagepath(upload.get_image_path());
-            customer.setThumbnailpath(upload.get_thumbnail_path());
+            customer.setImgpath(upload.get_image_path());
+            customer.setImgthumbpath(upload.get_thumbnail_path());
             customer.setIsactive(true);
 
             if (!schema.validate(customer.toJson(), m_error))
@@ -315,7 +315,7 @@ namespace gaboot
             customer_data.removeMember("isActive");
             customer_data.removeMember("token");
 
-            return HttpResponse::newFileResponse(customer.getValueOfImagepath());
+            return HttpResponse::newFileResponse(customer.getValueOfImgpath());
         }
 
         m_response.m_message = "Unable to retreive user image";

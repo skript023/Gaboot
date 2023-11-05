@@ -18,8 +18,8 @@ namespace gaboot
 		std::map<Json::Value::Members, std::string> columnMapping = {
 			{{Categories::Cols::_name}, "name"},
 			{{Categories::Cols::_description}, "description"},
-			{{Categories::Cols::_imagePath}, "imagePath"},
-			{{Categories::Cols::_thumbnailPath}, "thumbnailPath"},
+			{{Categories::Cols::_imgPath}, "imagePath"},
+			{{Categories::Cols::_imgThumbPath}, "thumbnailPath"},
 			{{Categories::Cols::_updatedAt}, "updatedAt"},
 			{{Categories::Cols::_createdAt}, "createdAt"}
 		};

@@ -18,7 +18,7 @@ namespace gaboot
 		{
 			return Mapper<MasterCustomers>(DATABASE_CLIENT);
 		}
-
+			
 		std::map<Json::Value::Members, std::string> columnMapping = {
 			{{MasterCustomers::Cols::_firstname}, "firstname"},
 			{{MasterCustomers::Cols::_lastname}, "lastname"},
@@ -29,8 +29,8 @@ namespace gaboot
 			{{MasterCustomers::Cols::_latitude}, "latitude"},
 			{{MasterCustomers::Cols::_longitude}, "longitude"},
 			{{MasterCustomers::Cols::_password}, "password"},
-			{{MasterCustomers::Cols::_imagePath}, "imagePath"},
-			{{MasterCustomers::Cols::_thumbnailPath}, "thumbnailPath"},
+			{{MasterCustomers::Cols::_imgPath}, "imgPath"},
+			{{MasterCustomers::Cols::_imgThumbPath}, "imgThumbPath"},
 			{{MasterCustomers::Cols::_updatedAt}, "updatedAt"},
 		};
 	public:

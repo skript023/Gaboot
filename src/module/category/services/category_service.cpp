@@ -30,8 +30,8 @@ namespace gaboot
 
 			category.setCreatedat(trantor::Date::now());
 			category.setUpdatedat(trantor::Date::now());
-			category.setImagepath(upload.get_image_path());
-			category.setThumbnailpath(upload.get_thumbnail_path());
+			category.setImgpath(upload.get_image_path());
+			category.setImgthumbpath(upload.get_thumbnail_path());
 
 			if (!schema.validate(category.toJson(), m_error))
 			{

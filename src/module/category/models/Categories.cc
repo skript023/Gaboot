@@ -6,7 +6,7 @@
  */
 
 #include "Categories.h"
-#include "module/products/models/MasterProducts.h"
+#include "products/models/MasterProducts.h"
 #include <drogon/utils/Utilities.h>
 #include <string>
 
@@ -17,8 +17,8 @@ using namespace drogon_model::gaboot;
 const std::string Categories::Cols::_id = "id";
 const std::string Categories::Cols::_name = "name";
 const std::string Categories::Cols::_description = "description";
-const std::string Categories::Cols::_imagePath = "imagePath";
-const std::string Categories::Cols::_thumbnailPath = "thumbnailPath";
+const std::string Categories::Cols::_imgPath = "imgPath";
+const std::string Categories::Cols::_imgThumbPath = "imgThumbPath";
 const std::string Categories::Cols::_createdAt = "createdAt";
 const std::string Categories::Cols::_updatedAt = "updatedAt";
 const std::string Categories::primaryKeyName = "id";
@@ -26,11 +26,11 @@ const bool Categories::hasPrimaryKey = true;
 const std::string Categories::tableName = "categories";
 
 const std::vector<typename Categories::MetaData> Categories::metaData_={
-{"id","int32_t","int(11)",4,1,1,1},
-{"name","std::string","varchar(255)",255,0,0,0},
-{"description","std::string","varchar(255)",255,0,0,0},
-{"imagePath","std::string","varchar(255)",255,0,0,0},
-{"thumbnailPath","std::string","varchar(255)",255,0,0,0},
+{"id","uint64_t","bigint(20) unsigned",8,1,1,1},
+{"name","std::string","varchar(100)",100,0,0,1},
+{"description","std::string","text",0,0,0,1},
+{"imgPath","std::string","varchar(255)",255,0,0,0},
+{"imgThumbPath","std::string","varchar(255)",255,0,0,0},
 {"createdAt","::trantor::Date","datetime",0,0,0,1},
 {"updatedAt","::trantor::Date","datetime",0,0,0,1}
 };
@@ -45,7 +45,7 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
     {
         if(!r["id"].isNull())
         {
-            id_=std::make_shared<int32_t>(r["id"].as<int32_t>());
+            id_=std::make_shared<uint64_t>(r["id"].as<uint64_t>());
         }
         if(!r["name"].isNull())
         {
@@ -55,13 +55,13 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
         {
             description_=std::make_shared<std::string>(r["description"].as<std::string>());
         }
-        if(!r["imagePath"].isNull())
+        if(!r["imgPath"].isNull())
         {
-            imagepath_=std::make_shared<std::string>(r["imagePath"].as<std::string>());
+            imgpath_=std::make_shared<std::string>(r["imgPath"].as<std::string>());
         }
-        if(!r["thumbnailPath"].isNull())
+        if(!r["imgThumbPath"].isNull())
         {
-            thumbnailpath_=std::make_shared<std::string>(r["thumbnailPath"].as<std::string>());
+            imgthumbpath_=std::make_shared<std::string>(r["imgThumbPath"].as<std::string>());
         }
         if(!r["createdAt"].isNull())
         {
@@ -120,7 +120,7 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 0;
         if(!r[index].isNull())
         {
-            id_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            id_=std::make_shared<uint64_t>(r[index].as<uint64_t>());
         }
         index = offset + 1;
         if(!r[index].isNull())
@@ -135,12 +135,12 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 3;
         if(!r[index].isNull())
         {
-            imagepath_=std::make_shared<std::string>(r[index].as<std::string>());
+            imgpath_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 4;
         if(!r[index].isNull())
         {
-            thumbnailpath_=std::make_shared<std::string>(r[index].as<std::string>());
+            imgthumbpath_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 5;
         if(!r[index].isNull())
@@ -204,7 +204,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
         dirtyFlag_[0] = true;
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<uint64_t>((uint64_t)pJson[pMasqueradingVector[0]].asUInt64());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -228,7 +228,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
         dirtyFlag_[3] = true;
         if(!pJson[pMasqueradingVector[3]].isNull())
         {
-            imagepath_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
+            imgpath_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
         }
     }
     if(!pMasqueradingVector[4].empty() && pJson.isMember(pMasqueradingVector[4]))
@@ -236,7 +236,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            thumbnailpath_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
+            imgthumbpath_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -300,7 +300,7 @@ Categories::Categories(const Json::Value &pJson) noexcept(false)
         dirtyFlag_[0]=true;
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<uint64_t>((uint64_t)pJson["id"].asUInt64());
         }
     }
     if(pJson.isMember("name"))
@@ -319,20 +319,20 @@ Categories::Categories(const Json::Value &pJson) noexcept(false)
             description_=std::make_shared<std::string>(pJson["description"].asString());
         }
     }
-    if(pJson.isMember("imagePath"))
+    if(pJson.isMember("imgPath"))
     {
         dirtyFlag_[3]=true;
-        if(!pJson["imagePath"].isNull())
+        if(!pJson["imgPath"].isNull())
         {
-            imagepath_=std::make_shared<std::string>(pJson["imagePath"].asString());
+            imgpath_=std::make_shared<std::string>(pJson["imgPath"].asString());
         }
     }
-    if(pJson.isMember("thumbnailPath"))
+    if(pJson.isMember("imgThumbPath"))
     {
         dirtyFlag_[4]=true;
-        if(!pJson["thumbnailPath"].isNull())
+        if(!pJson["imgThumbPath"].isNull())
         {
-            thumbnailpath_=std::make_shared<std::string>(pJson["thumbnailPath"].asString());
+            imgthumbpath_=std::make_shared<std::string>(pJson["imgThumbPath"].asString());
         }
     }
     if(pJson.isMember("createdAt"))
@@ -401,7 +401,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
     {
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<uint64_t>((uint64_t)pJson[pMasqueradingVector[0]].asUInt64());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -425,7 +425,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[3] = true;
         if(!pJson[pMasqueradingVector[3]].isNull())
         {
-            imagepath_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
+            imgpath_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
         }
     }
     if(!pMasqueradingVector[4].empty() && pJson.isMember(pMasqueradingVector[4]))
@@ -433,7 +433,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            thumbnailpath_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
+            imgthumbpath_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -496,7 +496,7 @@ void Categories::updateByJson(const Json::Value &pJson) noexcept(false)
     {
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<uint64_t>((uint64_t)pJson["id"].asUInt64());
         }
     }
     if(pJson.isMember("name"))
@@ -515,20 +515,20 @@ void Categories::updateByJson(const Json::Value &pJson) noexcept(false)
             description_=std::make_shared<std::string>(pJson["description"].asString());
         }
     }
-    if(pJson.isMember("imagePath"))
+    if(pJson.isMember("imgPath"))
     {
         dirtyFlag_[3] = true;
-        if(!pJson["imagePath"].isNull())
+        if(!pJson["imgPath"].isNull())
         {
-            imagepath_=std::make_shared<std::string>(pJson["imagePath"].asString());
+            imgpath_=std::make_shared<std::string>(pJson["imgPath"].asString());
         }
     }
-    if(pJson.isMember("thumbnailPath"))
+    if(pJson.isMember("imgThumbPath"))
     {
         dirtyFlag_[4] = true;
-        if(!pJson["thumbnailPath"].isNull())
+        if(!pJson["imgThumbPath"].isNull())
         {
-            thumbnailpath_=std::make_shared<std::string>(pJson["thumbnailPath"].asString());
+            imgthumbpath_=std::make_shared<std::string>(pJson["imgThumbPath"].asString());
         }
     }
     if(pJson.isMember("createdAt"))
@@ -585,20 +585,20 @@ void Categories::updateByJson(const Json::Value &pJson) noexcept(false)
     }
 }
 
-const int32_t &Categories::getValueOfId() const noexcept
+const uint64_t &Categories::getValueOfId() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
+    const static uint64_t defaultValue = uint64_t();
     if(id_)
         return *id_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &Categories::getId() const noexcept
+const std::shared_ptr<uint64_t> &Categories::getId() const noexcept
 {
     return id_;
 }
-void Categories::setId(const int32_t &pId) noexcept
+void Categories::setId(const uint64_t &pId) noexcept
 {
-    id_ = std::make_shared<int32_t>(pId);
+    id_ = std::make_shared<uint64_t>(pId);
     dirtyFlag_[0] = true;
 }
 const typename Categories::PrimaryKeyType & Categories::getPrimaryKey() const
@@ -628,11 +628,6 @@ void Categories::setName(std::string &&pName) noexcept
     name_ = std::make_shared<std::string>(std::move(pName));
     dirtyFlag_[1] = true;
 }
-void Categories::setNameToNull() noexcept
-{
-    name_.reset();
-    dirtyFlag_[1] = true;
-}
 
 const std::string &Categories::getValueOfDescription() const noexcept
 {
@@ -655,63 +650,58 @@ void Categories::setDescription(std::string &&pDescription) noexcept
     description_ = std::make_shared<std::string>(std::move(pDescription));
     dirtyFlag_[2] = true;
 }
-void Categories::setDescriptionToNull() noexcept
-{
-    description_.reset();
-    dirtyFlag_[2] = true;
-}
 
-const std::string &Categories::getValueOfImagepath() const noexcept
+const std::string &Categories::getValueOfImgpath() const noexcept
 {
     const static std::string defaultValue = std::string();
-    if(imagepath_)
-        return *imagepath_;
+    if(imgpath_)
+        return *imgpath_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &Categories::getImagepath() const noexcept
+const std::shared_ptr<std::string> &Categories::getImgpath() const noexcept
 {
-    return imagepath_;
+    return imgpath_;
 }
-void Categories::setImagepath(const std::string &pImagepath) noexcept
+void Categories::setImgpath(const std::string &pImgpath) noexcept
 {
-    imagepath_ = std::make_shared<std::string>(pImagepath);
+    imgpath_ = std::make_shared<std::string>(pImgpath);
     dirtyFlag_[3] = true;
 }
-void Categories::setImagepath(std::string &&pImagepath) noexcept
+void Categories::setImgpath(std::string &&pImgpath) noexcept
 {
-    imagepath_ = std::make_shared<std::string>(std::move(pImagepath));
+    imgpath_ = std::make_shared<std::string>(std::move(pImgpath));
     dirtyFlag_[3] = true;
 }
-void Categories::setImagepathToNull() noexcept
+void Categories::setImgpathToNull() noexcept
 {
-    imagepath_.reset();
+    imgpath_.reset();
     dirtyFlag_[3] = true;
 }
 
-const std::string &Categories::getValueOfThumbnailpath() const noexcept
+const std::string &Categories::getValueOfImgthumbpath() const noexcept
 {
     const static std::string defaultValue = std::string();
-    if(thumbnailpath_)
-        return *thumbnailpath_;
+    if(imgthumbpath_)
+        return *imgthumbpath_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &Categories::getThumbnailpath() const noexcept
+const std::shared_ptr<std::string> &Categories::getImgthumbpath() const noexcept
 {
-    return thumbnailpath_;
+    return imgthumbpath_;
 }
-void Categories::setThumbnailpath(const std::string &pThumbnailpath) noexcept
+void Categories::setImgthumbpath(const std::string &pImgthumbpath) noexcept
 {
-    thumbnailpath_ = std::make_shared<std::string>(pThumbnailpath);
+    imgthumbpath_ = std::make_shared<std::string>(pImgthumbpath);
     dirtyFlag_[4] = true;
 }
-void Categories::setThumbnailpath(std::string &&pThumbnailpath) noexcept
+void Categories::setImgthumbpath(std::string &&pImgthumbpath) noexcept
 {
-    thumbnailpath_ = std::make_shared<std::string>(std::move(pThumbnailpath));
+    imgthumbpath_ = std::make_shared<std::string>(std::move(pImgthumbpath));
     dirtyFlag_[4] = true;
 }
-void Categories::setThumbnailpathToNull() noexcept
+void Categories::setImgthumbpathToNull() noexcept
 {
-    thumbnailpath_.reset();
+    imgthumbpath_.reset();
     dirtyFlag_[4] = true;
 }
 
@@ -751,7 +741,7 @@ void Categories::setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept
 
 void Categories::updateId(const uint64_t id)
 {
-    id_ = std::make_shared<int32_t>(static_cast<int32_t>(id));
+    id_ = std::make_shared<uint64_t>(id);
 }
 
 const std::vector<std::string> &Categories::insertColumns() noexcept
@@ -759,8 +749,8 @@ const std::vector<std::string> &Categories::insertColumns() noexcept
     static const std::vector<std::string> inCols={
         "name",
         "description",
-        "imagePath",
-        "thumbnailPath",
+        "imgPath",
+        "imgThumbPath",
         "createdAt",
         "updatedAt"
     };
@@ -793,9 +783,9 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[3])
     {
-        if(getImagepath())
+        if(getImgpath())
         {
-            binder << getValueOfImagepath();
+            binder << getValueOfImgpath();
         }
         else
         {
@@ -804,9 +794,9 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[4])
     {
-        if(getThumbnailpath())
+        if(getImgthumbpath())
         {
-            binder << getValueOfThumbnailpath();
+            binder << getValueOfImgthumbpath();
         }
         else
         {
@@ -893,9 +883,9 @@ void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[3])
     {
-        if(getImagepath())
+        if(getImgpath())
         {
-            binder << getValueOfImagepath();
+            binder << getValueOfImgpath();
         }
         else
         {
@@ -904,9 +894,9 @@ void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[4])
     {
-        if(getThumbnailpath())
+        if(getImgthumbpath())
         {
-            binder << getValueOfThumbnailpath();
+            binder << getValueOfImgthumbpath();
         }
         else
         {
@@ -941,7 +931,7 @@ Json::Value Categories::toJson() const
     Json::Value ret;
     if(getId())
     {
-        ret["id"]=getValueOfId();
+        ret["id"]=(Json::UInt64)getValueOfId();
     }
     else
     {
@@ -963,21 +953,21 @@ Json::Value Categories::toJson() const
     {
         ret["description"]=Json::Value();
     }
-    if(getImagepath())
+    if(getImgpath())
     {
-        ret["imagePath"]=getValueOfImagepath();
+        ret["imgPath"]=getValueOfImgpath();
     }
     else
     {
-        ret["imagePath"]=Json::Value();
+        ret["imgPath"]=Json::Value();
     }
-    if(getThumbnailpath())
+    if(getImgthumbpath())
     {
-        ret["thumbnailPath"]=getValueOfThumbnailpath();
+        ret["imgThumbPath"]=getValueOfImgthumbpath();
     }
     else
     {
-        ret["thumbnailPath"]=Json::Value();
+        ret["imgThumbPath"]=Json::Value();
     }
     if(getCreatedat())
     {
@@ -1008,7 +998,7 @@ Json::Value Categories::toMasqueradedJson(
         {
             if(getId())
             {
-                ret[pMasqueradingVector[0]]=getValueOfId();
+                ret[pMasqueradingVector[0]]=(Json::UInt64)getValueOfId();
             }
             else
             {
@@ -1039,9 +1029,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[3].empty())
         {
-            if(getImagepath())
+            if(getImgpath())
             {
-                ret[pMasqueradingVector[3]]=getValueOfImagepath();
+                ret[pMasqueradingVector[3]]=getValueOfImgpath();
             }
             else
             {
@@ -1050,9 +1040,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[4].empty())
         {
-            if(getThumbnailpath())
+            if(getImgthumbpath())
             {
-                ret[pMasqueradingVector[4]]=getValueOfThumbnailpath();
+                ret[pMasqueradingVector[4]]=getValueOfImgthumbpath();
             }
             else
             {
@@ -1086,7 +1076,7 @@ Json::Value Categories::toMasqueradedJson(
     LOG_ERROR << "Masquerade failed";
     if(getId())
     {
-        ret["id"]=getValueOfId();
+        ret["id"]=(Json::UInt64)getValueOfId();
     }
     else
     {
@@ -1108,21 +1098,21 @@ Json::Value Categories::toMasqueradedJson(
     {
         ret["description"]=Json::Value();
     }
-    if(getImagepath())
+    if(getImgpath())
     {
-        ret["imagePath"]=getValueOfImagepath();
+        ret["imgPath"]=getValueOfImgpath();
     }
     else
     {
-        ret["imagePath"]=Json::Value();
+        ret["imgPath"]=Json::Value();
     }
-    if(getThumbnailpath())
+    if(getImgthumbpath())
     {
-        ret["thumbnailPath"]=getValueOfThumbnailpath();
+        ret["imgThumbPath"]=getValueOfImgthumbpath();
     }
     else
     {
-        ret["thumbnailPath"]=Json::Value();
+        ret["imgThumbPath"]=Json::Value();
     }
     if(getCreatedat())
     {
@@ -1155,19 +1145,29 @@ bool Categories::validateJsonForCreation(const Json::Value &pJson, std::string &
         if(!validJsonOfField(1, "name", pJson["name"], err, true))
             return false;
     }
+    else
+    {
+        err="The name column cannot be null";
+        return false;
+    }
     if(pJson.isMember("description"))
     {
         if(!validJsonOfField(2, "description", pJson["description"], err, true))
             return false;
     }
-    if(pJson.isMember("imagePath"))
+    else
     {
-        if(!validJsonOfField(3, "imagePath", pJson["imagePath"], err, true))
+        err="The description column cannot be null";
+        return false;
+    }
+    if(pJson.isMember("imgPath"))
+    {
+        if(!validJsonOfField(3, "imgPath", pJson["imgPath"], err, true))
             return false;
     }
-    if(pJson.isMember("thumbnailPath"))
+    if(pJson.isMember("imgThumbPath"))
     {
-        if(!validJsonOfField(4, "thumbnailPath", pJson["thumbnailPath"], err, true))
+        if(!validJsonOfField(4, "imgThumbPath", pJson["imgThumbPath"], err, true))
             return false;
     }
     if(pJson.isMember("createdAt"))
@@ -1175,20 +1175,10 @@ bool Categories::validateJsonForCreation(const Json::Value &pJson, std::string &
         if(!validJsonOfField(5, "createdAt", pJson["createdAt"], err, true))
             return false;
     }
-    else
-    {
-        err="The createdAt column cannot be null";
-        return false;
-    }
     if(pJson.isMember("updatedAt"))
     {
         if(!validJsonOfField(6, "updatedAt", pJson["updatedAt"], err, true))
             return false;
-    }
-    else
-    {
-        err="The updatedAt column cannot be null";
-        return false;
     }
     return true;
 }
@@ -1217,6 +1207,11 @@ bool Categories::validateMasqueradedJsonForCreation(const Json::Value &pJson,
               if(!validJsonOfField(1, pMasqueradingVector[1], pJson[pMasqueradingVector[1]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[1] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[2].empty())
       {
@@ -1225,6 +1220,11 @@ bool Categories::validateMasqueradedJsonForCreation(const Json::Value &pJson,
               if(!validJsonOfField(2, pMasqueradingVector[2], pJson[pMasqueradingVector[2]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[2] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[3].empty())
       {
@@ -1249,11 +1249,6 @@ bool Categories::validateMasqueradedJsonForCreation(const Json::Value &pJson,
               if(!validJsonOfField(5, pMasqueradingVector[5], pJson[pMasqueradingVector[5]], err, true))
                   return false;
           }
-        else
-        {
-            err="The " + pMasqueradingVector[5] + " column cannot be null";
-            return false;
-        }
       }
       if(!pMasqueradingVector[6].empty())
       {
@@ -1262,11 +1257,6 @@ bool Categories::validateMasqueradedJsonForCreation(const Json::Value &pJson,
               if(!validJsonOfField(6, pMasqueradingVector[6], pJson[pMasqueradingVector[6]], err, true))
                   return false;
           }
-        else
-        {
-            err="The " + pMasqueradingVector[6] + " column cannot be null";
-            return false;
-        }
       }
     }
     catch(const Json::LogicError &e)
@@ -1298,14 +1288,14 @@ bool Categories::validateJsonForUpdate(const Json::Value &pJson, std::string &er
         if(!validJsonOfField(2, "description", pJson["description"], err, false))
             return false;
     }
-    if(pJson.isMember("imagePath"))
+    if(pJson.isMember("imgPath"))
     {
-        if(!validJsonOfField(3, "imagePath", pJson["imagePath"], err, false))
+        if(!validJsonOfField(3, "imgPath", pJson["imgPath"], err, false))
             return false;
     }
-    if(pJson.isMember("thumbnailPath"))
+    if(pJson.isMember("imgThumbPath"))
     {
-        if(!validJsonOfField(4, "thumbnailPath", pJson["thumbnailPath"], err, false))
+        if(!validJsonOfField(4, "imgThumbPath", pJson["imgThumbPath"], err, false))
             return false;
     }
     if(pJson.isMember("createdAt"))
@@ -1397,7 +1387,7 @@ bool Categories::validJsonOfField(size_t index,
                 err="The automatic primary key cannot be set";
                 return false;
             }
-            if(!pJson.isInt())
+            if(!pJson.isUInt64())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -1406,7 +1396,8 @@ bool Categories::validJsonOfField(size_t index,
         case 1:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
             if(!pJson.isString())
             {
@@ -1414,11 +1405,11 @@ bool Categories::validJsonOfField(size_t index,
                 return false;
             }
             // asString().length() creates a string object, is there any better way to validate the length?
-            if(pJson.isString() && pJson.asString().length() > 255)
+            if(pJson.isString() && pJson.asString().length() > 100)
             {
                 err="String length exceeds limit for the " +
                     fieldName +
-                    " field (the maximum value is 255)";
+                    " field (the maximum value is 100)";
                 return false;
             }
 
@@ -1426,22 +1417,14 @@ bool Categories::validJsonOfField(size_t index,
         case 2:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
             if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
             }
-            // asString().length() creates a string object, is there any better way to validate the length?
-            if(pJson.isString() && pJson.asString().length() > 255)
-            {
-                err="String length exceeds limit for the " +
-                    fieldName +
-                    " field (the maximum value is 255)";
-                return false;
-            }
-
             break;
         case 3:
             if(pJson.isNull())

@@ -6,7 +6,7 @@
  */
 
 #include "MasterProducts.h"
-#include "module/category/models/Categories.h"
+#include "category/models/Categories.h"
 #include <drogon/utils/Utilities.h>
 #include <string>
 
@@ -23,7 +23,6 @@ const std::string MasterProducts::Cols::_dimension = "dimension";
 const std::string MasterProducts::Cols::_weight = "weight";
 const std::string MasterProducts::Cols::_weightUnit = "weightUnit";
 const std::string MasterProducts::Cols::_categoryId = "categoryId";
-const std::string MasterProducts::Cols::_wishlistId = "wishlistId";
 const std::string MasterProducts::Cols::_createdAt = "createdAt";
 const std::string MasterProducts::Cols::_updatedAt = "updatedAt";
 const std::string MasterProducts::primaryKeyName = "id";
@@ -31,16 +30,15 @@ const bool MasterProducts::hasPrimaryKey = true;
 const std::string MasterProducts::tableName = "master_products";
 
 const std::vector<typename MasterProducts::MetaData> MasterProducts::metaData_={
-{"id","int32_t","int(11)",4,1,1,1},
-{"name","std::string","varchar(255)",255,0,0,0},
-{"description","std::string","varchar(255)",255,0,0,0},
-{"price","int32_t","int(11)",4,0,0,0},
-{"stock","int32_t","int(11)",4,0,0,0},
-{"dimension","std::string","varchar(255)",255,0,0,0},
-{"weight","int32_t","int(11)",4,0,0,0},
-{"weightUnit","std::string","varchar(255)",255,0,0,0},
-{"categoryId","int32_t","int(11)",4,0,0,0},
-{"wishlistId","int32_t","int(11)",4,0,0,0},
+{"id","uint64_t","bigint(20) unsigned",8,1,1,1},
+{"name","std::string","varchar(150)",150,0,0,1},
+{"description","std::string","text",0,0,0,1},
+{"price","double","double unsigned",8,0,0,1},
+{"stock","uint32_t","int(10) unsigned",4,0,0,1},
+{"dimension","std::string","varchar(255)",255,0,0,1},
+{"weight","double","double unsigned",8,0,0,1},
+{"weightUnit","std::string","varchar(20)",20,0,0,1},
+{"categoryId","int32_t","int(11)",4,0,0,1},
 {"createdAt","::trantor::Date","datetime",0,0,0,1},
 {"updatedAt","::trantor::Date","datetime",0,0,0,1}
 };
@@ -55,7 +53,7 @@ MasterProducts::MasterProducts(const Row &r, const ssize_t indexOffset) noexcept
     {
         if(!r["id"].isNull())
         {
-            id_=std::make_shared<int32_t>(r["id"].as<int32_t>());
+            id_=std::make_shared<uint64_t>(r["id"].as<uint64_t>());
         }
         if(!r["name"].isNull())
         {
@@ -67,11 +65,11 @@ MasterProducts::MasterProducts(const Row &r, const ssize_t indexOffset) noexcept
         }
         if(!r["price"].isNull())
         {
-            price_=std::make_shared<int32_t>(r["price"].as<int32_t>());
+            price_=std::make_shared<double>(r["price"].as<double>());
         }
         if(!r["stock"].isNull())
         {
-            stock_=std::make_shared<int32_t>(r["stock"].as<int32_t>());
+            stock_=std::make_shared<uint32_t>(r["stock"].as<uint32_t>());
         }
         if(!r["dimension"].isNull())
         {
@@ -79,7 +77,7 @@ MasterProducts::MasterProducts(const Row &r, const ssize_t indexOffset) noexcept
         }
         if(!r["weight"].isNull())
         {
-            weight_=std::make_shared<int32_t>(r["weight"].as<int32_t>());
+            weight_=std::make_shared<double>(r["weight"].as<double>());
         }
         if(!r["weightUnit"].isNull())
         {
@@ -88,10 +86,6 @@ MasterProducts::MasterProducts(const Row &r, const ssize_t indexOffset) noexcept
         if(!r["categoryId"].isNull())
         {
             categoryid_=std::make_shared<int32_t>(r["categoryId"].as<int32_t>());
-        }
-        if(!r["wishlistId"].isNull())
-        {
-            wishlistid_=std::make_shared<int32_t>(r["wishlistId"].as<int32_t>());
         }
         if(!r["createdAt"].isNull())
         {
@@ -141,7 +135,7 @@ MasterProducts::MasterProducts(const Row &r, const ssize_t indexOffset) noexcept
     else
     {
         size_t offset = (size_t)indexOffset;
-        if(offset + 12 > r.size())
+        if(offset + 11 > r.size())
         {
             LOG_FATAL << "Invalid SQL result for this model";
             return;
@@ -150,7 +144,7 @@ MasterProducts::MasterProducts(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 0;
         if(!r[index].isNull())
         {
-            id_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            id_=std::make_shared<uint64_t>(r[index].as<uint64_t>());
         }
         index = offset + 1;
         if(!r[index].isNull())
@@ -165,12 +159,12 @@ MasterProducts::MasterProducts(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 3;
         if(!r[index].isNull())
         {
-            price_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            price_=std::make_shared<double>(r[index].as<double>());
         }
         index = offset + 4;
         if(!r[index].isNull())
         {
-            stock_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            stock_=std::make_shared<uint32_t>(r[index].as<uint32_t>());
         }
         index = offset + 5;
         if(!r[index].isNull())
@@ -180,7 +174,7 @@ MasterProducts::MasterProducts(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 6;
         if(!r[index].isNull())
         {
-            weight_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            weight_=std::make_shared<double>(r[index].as<double>());
         }
         index = offset + 7;
         if(!r[index].isNull())
@@ -193,11 +187,6 @@ MasterProducts::MasterProducts(const Row &r, const ssize_t indexOffset) noexcept
             categoryid_=std::make_shared<int32_t>(r[index].as<int32_t>());
         }
         index = offset + 9;
-        if(!r[index].isNull())
-        {
-            wishlistid_=std::make_shared<int32_t>(r[index].as<int32_t>());
-        }
-        index = offset + 10;
         if(!r[index].isNull())
         {
             auto timeStr = r[index].as<std::string>();
@@ -220,7 +209,7 @@ MasterProducts::MasterProducts(const Row &r, const ssize_t indexOffset) noexcept
                 createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        index = offset + 11;
+        index = offset + 10;
         if(!r[index].isNull())
         {
             auto timeStr = r[index].as<std::string>();
@@ -249,7 +238,7 @@ MasterProducts::MasterProducts(const Row &r, const ssize_t indexOffset) noexcept
 
 MasterProducts::MasterProducts(const Json::Value &pJson, const std::vector<std::string> &pMasqueradingVector) noexcept(false)
 {
-    if(pMasqueradingVector.size() != 12)
+    if(pMasqueradingVector.size() != 11)
     {
         LOG_ERROR << "Bad masquerading vector";
         return;
@@ -259,7 +248,7 @@ MasterProducts::MasterProducts(const Json::Value &pJson, const std::vector<std::
         dirtyFlag_[0] = true;
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<uint64_t>((uint64_t)pJson[pMasqueradingVector[0]].asUInt64());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -281,17 +270,13 @@ MasterProducts::MasterProducts(const Json::Value &pJson, const std::vector<std::
     if(!pMasqueradingVector[3].empty() && pJson.isMember(pMasqueradingVector[3]))
     {
         dirtyFlag_[3] = true;
-        if(!pJson[pMasqueradingVector[3]].isNull())
-        {
-            price_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[3]].asInt64());
         }
-    }
     if(!pMasqueradingVector[4].empty() && pJson.isMember(pMasqueradingVector[4]))
     {
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            stock_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[4]].asInt64());
+            stock_=std::make_shared<uint32_t>((uint32_t)pJson[pMasqueradingVector[4]].asUInt64());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -305,11 +290,7 @@ MasterProducts::MasterProducts(const Json::Value &pJson, const std::vector<std::
     if(!pMasqueradingVector[6].empty() && pJson.isMember(pMasqueradingVector[6]))
     {
         dirtyFlag_[6] = true;
-        if(!pJson[pMasqueradingVector[6]].isNull())
-        {
-            weight_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[6]].asInt64());
         }
-    }
     if(!pMasqueradingVector[7].empty() && pJson.isMember(pMasqueradingVector[7]))
     {
         dirtyFlag_[7] = true;
@@ -331,15 +312,7 @@ MasterProducts::MasterProducts(const Json::Value &pJson, const std::vector<std::
         dirtyFlag_[9] = true;
         if(!pJson[pMasqueradingVector[9]].isNull())
         {
-            wishlistid_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[9]].asInt64());
-        }
-    }
-    if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
-    {
-        dirtyFlag_[10] = true;
-        if(!pJson[pMasqueradingVector[10]].isNull())
-        {
-            auto timeStr = pJson[pMasqueradingVector[10]].asString();
+            auto timeStr = pJson[pMasqueradingVector[9]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -360,12 +333,12 @@ MasterProducts::MasterProducts(const Json::Value &pJson, const std::vector<std::
             }
         }
     }
-    if(!pMasqueradingVector[11].empty() && pJson.isMember(pMasqueradingVector[11]))
+    if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
     {
-        dirtyFlag_[11] = true;
-        if(!pJson[pMasqueradingVector[11]].isNull())
+        dirtyFlag_[10] = true;
+        if(!pJson[pMasqueradingVector[10]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[11]].asString();
+            auto timeStr = pJson[pMasqueradingVector[10]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -395,7 +368,7 @@ MasterProducts::MasterProducts(const Json::Value &pJson) noexcept(false)
         dirtyFlag_[0]=true;
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<uint64_t>((uint64_t)pJson["id"].asUInt64());
         }
     }
     if(pJson.isMember("name"))
@@ -417,17 +390,13 @@ MasterProducts::MasterProducts(const Json::Value &pJson) noexcept(false)
     if(pJson.isMember("price"))
     {
         dirtyFlag_[3]=true;
-        if(!pJson["price"].isNull())
-        {
-            price_=std::make_shared<int32_t>((int32_t)pJson["price"].asInt64());
-        }
     }
     if(pJson.isMember("stock"))
     {
         dirtyFlag_[4]=true;
         if(!pJson["stock"].isNull())
         {
-            stock_=std::make_shared<int32_t>((int32_t)pJson["stock"].asInt64());
+            stock_=std::make_shared<uint32_t>((uint32_t)pJson["stock"].asUInt64());
         }
     }
     if(pJson.isMember("dimension"))
@@ -441,10 +410,6 @@ MasterProducts::MasterProducts(const Json::Value &pJson) noexcept(false)
     if(pJson.isMember("weight"))
     {
         dirtyFlag_[6]=true;
-        if(!pJson["weight"].isNull())
-        {
-            weight_=std::make_shared<int32_t>((int32_t)pJson["weight"].asInt64());
-        }
     }
     if(pJson.isMember("weightUnit"))
     {
@@ -462,17 +427,9 @@ MasterProducts::MasterProducts(const Json::Value &pJson) noexcept(false)
             categoryid_=std::make_shared<int32_t>((int32_t)pJson["categoryId"].asInt64());
         }
     }
-    if(pJson.isMember("wishlistId"))
-    {
-        dirtyFlag_[9]=true;
-        if(!pJson["wishlistId"].isNull())
-        {
-            wishlistid_=std::make_shared<int32_t>((int32_t)pJson["wishlistId"].asInt64());
-        }
-    }
     if(pJson.isMember("createdAt"))
     {
-        dirtyFlag_[10]=true;
+        dirtyFlag_[9]=true;
         if(!pJson["createdAt"].isNull())
         {
             auto timeStr = pJson["createdAt"].asString();
@@ -498,7 +455,7 @@ MasterProducts::MasterProducts(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("updatedAt"))
     {
-        dirtyFlag_[11]=true;
+        dirtyFlag_[10]=true;
         if(!pJson["updatedAt"].isNull())
         {
             auto timeStr = pJson["updatedAt"].asString();
@@ -527,7 +484,7 @@ MasterProducts::MasterProducts(const Json::Value &pJson) noexcept(false)
 void MasterProducts::updateByMasqueradedJson(const Json::Value &pJson,
                                             const std::vector<std::string> &pMasqueradingVector) noexcept(false)
 {
-    if(pMasqueradingVector.size() != 12)
+    if(pMasqueradingVector.size() != 11)
     {
         LOG_ERROR << "Bad masquerading vector";
         return;
@@ -536,7 +493,7 @@ void MasterProducts::updateByMasqueradedJson(const Json::Value &pJson,
     {
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<uint64_t>((uint64_t)pJson[pMasqueradingVector[0]].asUInt64());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -558,17 +515,13 @@ void MasterProducts::updateByMasqueradedJson(const Json::Value &pJson,
     if(!pMasqueradingVector[3].empty() && pJson.isMember(pMasqueradingVector[3]))
     {
         dirtyFlag_[3] = true;
-        if(!pJson[pMasqueradingVector[3]].isNull())
-        {
-            price_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[3]].asInt64());
         }
-    }
     if(!pMasqueradingVector[4].empty() && pJson.isMember(pMasqueradingVector[4]))
     {
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            stock_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[4]].asInt64());
+            stock_=std::make_shared<uint32_t>((uint32_t)pJson[pMasqueradingVector[4]].asUInt64());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -582,11 +535,7 @@ void MasterProducts::updateByMasqueradedJson(const Json::Value &pJson,
     if(!pMasqueradingVector[6].empty() && pJson.isMember(pMasqueradingVector[6]))
     {
         dirtyFlag_[6] = true;
-        if(!pJson[pMasqueradingVector[6]].isNull())
-        {
-            weight_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[6]].asInt64());
         }
-    }
     if(!pMasqueradingVector[7].empty() && pJson.isMember(pMasqueradingVector[7]))
     {
         dirtyFlag_[7] = true;
@@ -608,15 +557,7 @@ void MasterProducts::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[9] = true;
         if(!pJson[pMasqueradingVector[9]].isNull())
         {
-            wishlistid_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[9]].asInt64());
-        }
-    }
-    if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
-    {
-        dirtyFlag_[10] = true;
-        if(!pJson[pMasqueradingVector[10]].isNull())
-        {
-            auto timeStr = pJson[pMasqueradingVector[10]].asString();
+            auto timeStr = pJson[pMasqueradingVector[9]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -637,12 +578,12 @@ void MasterProducts::updateByMasqueradedJson(const Json::Value &pJson,
             }
         }
     }
-    if(!pMasqueradingVector[11].empty() && pJson.isMember(pMasqueradingVector[11]))
+    if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
     {
-        dirtyFlag_[11] = true;
-        if(!pJson[pMasqueradingVector[11]].isNull())
+        dirtyFlag_[10] = true;
+        if(!pJson[pMasqueradingVector[10]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[11]].asString();
+            auto timeStr = pJson[pMasqueradingVector[10]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -671,7 +612,7 @@ void MasterProducts::updateByJson(const Json::Value &pJson) noexcept(false)
     {
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<uint64_t>((uint64_t)pJson["id"].asUInt64());
         }
     }
     if(pJson.isMember("name"))
@@ -693,17 +634,13 @@ void MasterProducts::updateByJson(const Json::Value &pJson) noexcept(false)
     if(pJson.isMember("price"))
     {
         dirtyFlag_[3] = true;
-        if(!pJson["price"].isNull())
-        {
-            price_=std::make_shared<int32_t>((int32_t)pJson["price"].asInt64());
         }
-    }
     if(pJson.isMember("stock"))
     {
         dirtyFlag_[4] = true;
         if(!pJson["stock"].isNull())
         {
-            stock_=std::make_shared<int32_t>((int32_t)pJson["stock"].asInt64());
+            stock_=std::make_shared<uint32_t>((uint32_t)pJson["stock"].asUInt64());
         }
     }
     if(pJson.isMember("dimension"))
@@ -717,11 +654,7 @@ void MasterProducts::updateByJson(const Json::Value &pJson) noexcept(false)
     if(pJson.isMember("weight"))
     {
         dirtyFlag_[6] = true;
-        if(!pJson["weight"].isNull())
-        {
-            weight_=std::make_shared<int32_t>((int32_t)pJson["weight"].asInt64());
         }
-    }
     if(pJson.isMember("weightUnit"))
     {
         dirtyFlag_[7] = true;
@@ -738,17 +671,9 @@ void MasterProducts::updateByJson(const Json::Value &pJson) noexcept(false)
             categoryid_=std::make_shared<int32_t>((int32_t)pJson["categoryId"].asInt64());
         }
     }
-    if(pJson.isMember("wishlistId"))
-    {
-        dirtyFlag_[9] = true;
-        if(!pJson["wishlistId"].isNull())
-        {
-            wishlistid_=std::make_shared<int32_t>((int32_t)pJson["wishlistId"].asInt64());
-        }
-    }
     if(pJson.isMember("createdAt"))
     {
-        dirtyFlag_[10] = true;
+        dirtyFlag_[9] = true;
         if(!pJson["createdAt"].isNull())
         {
             auto timeStr = pJson["createdAt"].asString();
@@ -774,7 +699,7 @@ void MasterProducts::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("updatedAt"))
     {
-        dirtyFlag_[11] = true;
+        dirtyFlag_[10] = true;
         if(!pJson["updatedAt"].isNull())
         {
             auto timeStr = pJson["updatedAt"].asString();
@@ -800,20 +725,20 @@ void MasterProducts::updateByJson(const Json::Value &pJson) noexcept(false)
     }
 }
 
-const int32_t &MasterProducts::getValueOfId() const noexcept
+const uint64_t &MasterProducts::getValueOfId() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
+    const static uint64_t defaultValue = uint64_t();
     if(id_)
         return *id_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &MasterProducts::getId() const noexcept
+const std::shared_ptr<uint64_t> &MasterProducts::getId() const noexcept
 {
     return id_;
 }
-void MasterProducts::setId(const int32_t &pId) noexcept
+void MasterProducts::setId(const uint64_t &pId) noexcept
 {
-    id_ = std::make_shared<int32_t>(pId);
+    id_ = std::make_shared<uint64_t>(pId);
     dirtyFlag_[0] = true;
 }
 const typename MasterProducts::PrimaryKeyType & MasterProducts::getPrimaryKey() const
@@ -843,11 +768,6 @@ void MasterProducts::setName(std::string &&pName) noexcept
     name_ = std::make_shared<std::string>(std::move(pName));
     dirtyFlag_[1] = true;
 }
-void MasterProducts::setNameToNull() noexcept
-{
-    name_.reset();
-    dirtyFlag_[1] = true;
-}
 
 const std::string &MasterProducts::getValueOfDescription() const noexcept
 {
@@ -870,53 +790,38 @@ void MasterProducts::setDescription(std::string &&pDescription) noexcept
     description_ = std::make_shared<std::string>(std::move(pDescription));
     dirtyFlag_[2] = true;
 }
-void MasterProducts::setDescriptionToNull() noexcept
-{
-    description_.reset();
-    dirtyFlag_[2] = true;
-}
 
-const int32_t &MasterProducts::getValueOfPrice() const noexcept
+const double &MasterProducts::getValueOfPrice() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
+    const static double defaultValue = double();
     if(price_)
         return *price_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &MasterProducts::getPrice() const noexcept
+const std::shared_ptr<double> &MasterProducts::getPrice() const noexcept
 {
     return price_;
 }
-void MasterProducts::setPrice(const int32_t &pPrice) noexcept
+void MasterProducts::setPrice(const double &pPrice) noexcept
 {
-    price_ = std::make_shared<int32_t>(pPrice);
-    dirtyFlag_[3] = true;
-}
-void MasterProducts::setPriceToNull() noexcept
-{
-    price_.reset();
+    price_ = std::make_shared<double>(pPrice);
     dirtyFlag_[3] = true;
 }
 
-const int32_t &MasterProducts::getValueOfStock() const noexcept
+const uint32_t &MasterProducts::getValueOfStock() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
+    const static uint32_t defaultValue = uint32_t();
     if(stock_)
         return *stock_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &MasterProducts::getStock() const noexcept
+const std::shared_ptr<uint32_t> &MasterProducts::getStock() const noexcept
 {
     return stock_;
 }
-void MasterProducts::setStock(const int32_t &pStock) noexcept
+void MasterProducts::setStock(const uint32_t &pStock) noexcept
 {
-    stock_ = std::make_shared<int32_t>(pStock);
-    dirtyFlag_[4] = true;
-}
-void MasterProducts::setStockToNull() noexcept
-{
-    stock_.reset();
+    stock_ = std::make_shared<uint32_t>(pStock);
     dirtyFlag_[4] = true;
 }
 
@@ -941,31 +846,21 @@ void MasterProducts::setDimension(std::string &&pDimension) noexcept
     dimension_ = std::make_shared<std::string>(std::move(pDimension));
     dirtyFlag_[5] = true;
 }
-void MasterProducts::setDimensionToNull() noexcept
-{
-    dimension_.reset();
-    dirtyFlag_[5] = true;
-}
 
-const int32_t &MasterProducts::getValueOfWeight() const noexcept
+const double &MasterProducts::getValueOfWeight() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
+    const static double defaultValue = double();
     if(weight_)
         return *weight_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &MasterProducts::getWeight() const noexcept
+const std::shared_ptr<double> &MasterProducts::getWeight() const noexcept
 {
     return weight_;
 }
-void MasterProducts::setWeight(const int32_t &pWeight) noexcept
+void MasterProducts::setWeight(const double &pWeight) noexcept
 {
-    weight_ = std::make_shared<int32_t>(pWeight);
-    dirtyFlag_[6] = true;
-}
-void MasterProducts::setWeightToNull() noexcept
-{
-    weight_.reset();
+    weight_ = std::make_shared<double>(pWeight);
     dirtyFlag_[6] = true;
 }
 
@@ -990,11 +885,6 @@ void MasterProducts::setWeightunit(std::string &&pWeightunit) noexcept
     weightunit_ = std::make_shared<std::string>(std::move(pWeightunit));
     dirtyFlag_[7] = true;
 }
-void MasterProducts::setWeightunitToNull() noexcept
-{
-    weightunit_.reset();
-    dirtyFlag_[7] = true;
-}
 
 const int32_t &MasterProducts::getValueOfCategoryid() const noexcept
 {
@@ -1012,33 +902,6 @@ void MasterProducts::setCategoryid(const int32_t &pCategoryid) noexcept
     categoryid_ = std::make_shared<int32_t>(pCategoryid);
     dirtyFlag_[8] = true;
 }
-void MasterProducts::setCategoryidToNull() noexcept
-{
-    categoryid_.reset();
-    dirtyFlag_[8] = true;
-}
-
-const int32_t &MasterProducts::getValueOfWishlistid() const noexcept
-{
-    const static int32_t defaultValue = int32_t();
-    if(wishlistid_)
-        return *wishlistid_;
-    return defaultValue;
-}
-const std::shared_ptr<int32_t> &MasterProducts::getWishlistid() const noexcept
-{
-    return wishlistid_;
-}
-void MasterProducts::setWishlistid(const int32_t &pWishlistid) noexcept
-{
-    wishlistid_ = std::make_shared<int32_t>(pWishlistid);
-    dirtyFlag_[9] = true;
-}
-void MasterProducts::setWishlistidToNull() noexcept
-{
-    wishlistid_.reset();
-    dirtyFlag_[9] = true;
-}
 
 const ::trantor::Date &MasterProducts::getValueOfCreatedat() const noexcept
 {
@@ -1054,7 +917,7 @@ const std::shared_ptr<::trantor::Date> &MasterProducts::getCreatedat() const noe
 void MasterProducts::setCreatedat(const ::trantor::Date &pCreatedat) noexcept
 {
     createdat_ = std::make_shared<::trantor::Date>(pCreatedat);
-    dirtyFlag_[10] = true;
+    dirtyFlag_[9] = true;
 }
 
 const ::trantor::Date &MasterProducts::getValueOfUpdatedat() const noexcept
@@ -1071,12 +934,12 @@ const std::shared_ptr<::trantor::Date> &MasterProducts::getUpdatedat() const noe
 void MasterProducts::setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept
 {
     updatedat_ = std::make_shared<::trantor::Date>(pUpdatedat);
-    dirtyFlag_[11] = true;
+    dirtyFlag_[10] = true;
 }
 
 void MasterProducts::updateId(const uint64_t id)
 {
-    id_ = std::make_shared<int32_t>(static_cast<int32_t>(id));
+    id_ = std::make_shared<uint64_t>(id);
 }
 
 const std::vector<std::string> &MasterProducts::insertColumns() noexcept
@@ -1090,7 +953,6 @@ const std::vector<std::string> &MasterProducts::insertColumns() noexcept
         "weight",
         "weightUnit",
         "categoryId",
-        "wishlistId",
         "createdAt",
         "updatedAt"
     };
@@ -1189,17 +1051,6 @@ void MasterProducts::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[9])
     {
-        if(getWishlistid())
-        {
-            binder << getValueOfWishlistid();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[10])
-    {
         if(getCreatedat())
         {
             binder << getValueOfCreatedat();
@@ -1209,7 +1060,7 @@ void MasterProducts::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[11])
+    if(dirtyFlag_[10])
     {
         if(getUpdatedat())
         {
@@ -1264,10 +1115,6 @@ const std::vector<std::string> MasterProducts::updateColumns() const
     if(dirtyFlag_[10])
     {
         ret.push_back(getColumnName(10));
-    }
-    if(dirtyFlag_[11])
-    {
-        ret.push_back(getColumnName(11));
     }
     return ret;
 }
@@ -1364,17 +1211,6 @@ void MasterProducts::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[9])
     {
-        if(getWishlistid())
-        {
-            binder << getValueOfWishlistid();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[10])
-    {
         if(getCreatedat())
         {
             binder << getValueOfCreatedat();
@@ -1384,7 +1220,7 @@ void MasterProducts::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[11])
+    if(dirtyFlag_[10])
     {
         if(getUpdatedat())
         {
@@ -1401,7 +1237,7 @@ Json::Value MasterProducts::toJson() const
     Json::Value ret;
     if(getId())
     {
-        ret["id"]=getValueOfId();
+        ret["id"]=(Json::UInt64)getValueOfId();
     }
     else
     {
@@ -1471,14 +1307,6 @@ Json::Value MasterProducts::toJson() const
     {
         ret["categoryId"]=Json::Value();
     }
-    if(getWishlistid())
-    {
-        ret["wishlistId"]=getValueOfWishlistid();
-    }
-    else
-    {
-        ret["wishlistId"]=Json::Value();
-    }
     if(getCreatedat())
     {
         ret["createdAt"]=getCreatedat()->toDbStringLocal();
@@ -1502,13 +1330,13 @@ Json::Value MasterProducts::toMasqueradedJson(
     const std::vector<std::string> &pMasqueradingVector) const
 {
     Json::Value ret;
-    if(pMasqueradingVector.size() == 12)
+    if(pMasqueradingVector.size() == 11)
     {
         if(!pMasqueradingVector[0].empty())
         {
             if(getId())
             {
-                ret[pMasqueradingVector[0]]=getValueOfId();
+                ret[pMasqueradingVector[0]]=(Json::UInt64)getValueOfId();
             }
             else
             {
@@ -1605,9 +1433,9 @@ Json::Value MasterProducts::toMasqueradedJson(
         }
         if(!pMasqueradingVector[9].empty())
         {
-            if(getWishlistid())
+            if(getCreatedat())
             {
-                ret[pMasqueradingVector[9]]=getValueOfWishlistid();
+                ret[pMasqueradingVector[9]]=getCreatedat()->toDbStringLocal();
             }
             else
             {
@@ -1616,24 +1444,13 @@ Json::Value MasterProducts::toMasqueradedJson(
         }
         if(!pMasqueradingVector[10].empty())
         {
-            if(getCreatedat())
+            if(getUpdatedat())
             {
-                ret[pMasqueradingVector[10]]=getCreatedat()->toDbStringLocal();
+                ret[pMasqueradingVector[10]]=getUpdatedat()->toDbStringLocal();
             }
             else
             {
                 ret[pMasqueradingVector[10]]=Json::Value();
-            }
-        }
-        if(!pMasqueradingVector[11].empty())
-        {
-            if(getUpdatedat())
-            {
-                ret[pMasqueradingVector[11]]=getUpdatedat()->toDbStringLocal();
-            }
-            else
-            {
-                ret[pMasqueradingVector[11]]=Json::Value();
             }
         }
         return ret;
@@ -1641,7 +1458,7 @@ Json::Value MasterProducts::toMasqueradedJson(
     LOG_ERROR << "Masquerade failed";
     if(getId())
     {
-        ret["id"]=getValueOfId();
+        ret["id"]=(Json::UInt64)getValueOfId();
     }
     else
     {
@@ -1711,14 +1528,6 @@ Json::Value MasterProducts::toMasqueradedJson(
     {
         ret["categoryId"]=Json::Value();
     }
-    if(getWishlistid())
-    {
-        ret["wishlistId"]=getValueOfWishlistid();
-    }
-    else
-    {
-        ret["wishlistId"]=Json::Value();
-    }
     if(getCreatedat())
     {
         ret["createdAt"]=getCreatedat()->toDbStringLocal();
@@ -1750,65 +1559,90 @@ bool MasterProducts::validateJsonForCreation(const Json::Value &pJson, std::stri
         if(!validJsonOfField(1, "name", pJson["name"], err, true))
             return false;
     }
+    else
+    {
+        err="The name column cannot be null";
+        return false;
+    }
     if(pJson.isMember("description"))
     {
         if(!validJsonOfField(2, "description", pJson["description"], err, true))
             return false;
+    }
+    else
+    {
+        err="The description column cannot be null";
+        return false;
     }
     if(pJson.isMember("price"))
     {
         if(!validJsonOfField(3, "price", pJson["price"], err, true))
             return false;
     }
+    else
+    {
+        err="The price column cannot be null";
+        return false;
+    }
     if(pJson.isMember("stock"))
     {
         if(!validJsonOfField(4, "stock", pJson["stock"], err, true))
             return false;
+    }
+    else
+    {
+        err="The stock column cannot be null";
+        return false;
     }
     if(pJson.isMember("dimension"))
     {
         if(!validJsonOfField(5, "dimension", pJson["dimension"], err, true))
             return false;
     }
+    else
+    {
+        err="The dimension column cannot be null";
+        return false;
+    }
     if(pJson.isMember("weight"))
     {
         if(!validJsonOfField(6, "weight", pJson["weight"], err, true))
             return false;
+    }
+    else
+    {
+        err="The weight column cannot be null";
+        return false;
     }
     if(pJson.isMember("weightUnit"))
     {
         if(!validJsonOfField(7, "weightUnit", pJson["weightUnit"], err, true))
             return false;
     }
+    else
+    {
+        err="The weightUnit column cannot be null";
+        return false;
+    }
     if(pJson.isMember("categoryId"))
     {
         if(!validJsonOfField(8, "categoryId", pJson["categoryId"], err, true))
             return false;
     }
-    if(pJson.isMember("wishlistId"))
+    else
     {
-        if(!validJsonOfField(9, "wishlistId", pJson["wishlistId"], err, true))
-            return false;
+        err="The categoryId column cannot be null";
+        return false;
     }
     if(pJson.isMember("createdAt"))
     {
-        if(!validJsonOfField(10, "createdAt", pJson["createdAt"], err, true))
+        if(!validJsonOfField(9, "createdAt", pJson["createdAt"], err, true))
             return false;
-    }
-    else
-    {
-        err="The createdAt column cannot be null";
-        return false;
     }
     if(pJson.isMember("updatedAt"))
     {
-        if(!validJsonOfField(11, "updatedAt", pJson["updatedAt"], err, true))
+        if(!validJsonOfField(10, "updatedAt", pJson["updatedAt"], err, true))
             return false;
-    }
-    else
-    {
-        err="The updatedAt column cannot be null";
-        return false;
     }
     return true;
 }
@@ -1816,7 +1650,7 @@ bool MasterProducts::validateMasqueradedJsonForCreation(const Json::Value &pJson
                                                         const std::vector<std::string> &pMasqueradingVector,
                                                         std::string &err)
 {
-    if(pMasqueradingVector.size() != 12)
+    if(pMasqueradingVector.size() != 11)
     {
         err = "Bad masquerading vector";
         return false;
@@ -1837,6 +1671,11 @@ bool MasterProducts::validateMasqueradedJsonForCreation(const Json::Value &pJson
               if(!validJsonOfField(1, pMasqueradingVector[1], pJson[pMasqueradingVector[1]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[1] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[2].empty())
       {
@@ -1845,6 +1684,11 @@ bool MasterProducts::validateMasqueradedJsonForCreation(const Json::Value &pJson
               if(!validJsonOfField(2, pMasqueradingVector[2], pJson[pMasqueradingVector[2]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[2] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[3].empty())
       {
@@ -1853,6 +1697,11 @@ bool MasterProducts::validateMasqueradedJsonForCreation(const Json::Value &pJson
               if(!validJsonOfField(3, pMasqueradingVector[3], pJson[pMasqueradingVector[3]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[3] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[4].empty())
       {
@@ -1861,6 +1710,11 @@ bool MasterProducts::validateMasqueradedJsonForCreation(const Json::Value &pJson
               if(!validJsonOfField(4, pMasqueradingVector[4], pJson[pMasqueradingVector[4]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[4] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[5].empty())
       {
@@ -1869,6 +1723,11 @@ bool MasterProducts::validateMasqueradedJsonForCreation(const Json::Value &pJson
               if(!validJsonOfField(5, pMasqueradingVector[5], pJson[pMasqueradingVector[5]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[5] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[6].empty())
       {
@@ -1877,6 +1736,11 @@ bool MasterProducts::validateMasqueradedJsonForCreation(const Json::Value &pJson
               if(!validJsonOfField(6, pMasqueradingVector[6], pJson[pMasqueradingVector[6]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[6] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[7].empty())
       {
@@ -1885,6 +1749,11 @@ bool MasterProducts::validateMasqueradedJsonForCreation(const Json::Value &pJson
               if(!validJsonOfField(7, pMasqueradingVector[7], pJson[pMasqueradingVector[7]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[7] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[8].empty())
       {
@@ -1893,6 +1762,11 @@ bool MasterProducts::validateMasqueradedJsonForCreation(const Json::Value &pJson
               if(!validJsonOfField(8, pMasqueradingVector[8], pJson[pMasqueradingVector[8]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[8] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[9].empty())
       {
@@ -1909,24 +1783,6 @@ bool MasterProducts::validateMasqueradedJsonForCreation(const Json::Value &pJson
               if(!validJsonOfField(10, pMasqueradingVector[10], pJson[pMasqueradingVector[10]], err, true))
                   return false;
           }
-        else
-        {
-            err="The " + pMasqueradingVector[10] + " column cannot be null";
-            return false;
-        }
-      }
-      if(!pMasqueradingVector[11].empty())
-      {
-          if(pJson.isMember(pMasqueradingVector[11]))
-          {
-              if(!validJsonOfField(11, pMasqueradingVector[11], pJson[pMasqueradingVector[11]], err, true))
-                  return false;
-          }
-        else
-        {
-            err="The " + pMasqueradingVector[11] + " column cannot be null";
-            return false;
-        }
       }
     }
     catch(const Json::LogicError &e)
@@ -1988,19 +1844,14 @@ bool MasterProducts::validateJsonForUpdate(const Json::Value &pJson, std::string
         if(!validJsonOfField(8, "categoryId", pJson["categoryId"], err, false))
             return false;
     }
-    if(pJson.isMember("wishlistId"))
-    {
-        if(!validJsonOfField(9, "wishlistId", pJson["wishlistId"], err, false))
-            return false;
-    }
     if(pJson.isMember("createdAt"))
     {
-        if(!validJsonOfField(10, "createdAt", pJson["createdAt"], err, false))
+        if(!validJsonOfField(9, "createdAt", pJson["createdAt"], err, false))
             return false;
     }
     if(pJson.isMember("updatedAt"))
     {
-        if(!validJsonOfField(11, "updatedAt", pJson["updatedAt"], err, false))
+        if(!validJsonOfField(10, "updatedAt", pJson["updatedAt"], err, false))
             return false;
     }
     return true;
@@ -2009,7 +1860,7 @@ bool MasterProducts::validateMasqueradedJsonForUpdate(const Json::Value &pJson,
                                                       const std::vector<std::string> &pMasqueradingVector,
                                                       std::string &err)
 {
-    if(pMasqueradingVector.size() != 12)
+    if(pMasqueradingVector.size() != 11)
     {
         err = "Bad masquerading vector";
         return false;
@@ -2075,11 +1926,6 @@ bool MasterProducts::validateMasqueradedJsonForUpdate(const Json::Value &pJson,
           if(!validJsonOfField(10, pMasqueradingVector[10], pJson[pMasqueradingVector[10]], err, false))
               return false;
       }
-      if(!pMasqueradingVector[11].empty() && pJson.isMember(pMasqueradingVector[11]))
-      {
-          if(!validJsonOfField(11, pMasqueradingVector[11], pJson[pMasqueradingVector[11]], err, false))
-              return false;
-      }
     }
     catch(const Json::LogicError &e)
     {
@@ -2107,7 +1953,7 @@ bool MasterProducts::validJsonOfField(size_t index,
                 err="The automatic primary key cannot be set";
                 return false;
             }
-            if(!pJson.isInt())
+            if(!pJson.isUInt64())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -2116,7 +1962,8 @@ bool MasterProducts::validJsonOfField(size_t index,
         case 1:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
             if(!pJson.isString())
             {
@@ -2124,11 +1971,11 @@ bool MasterProducts::validJsonOfField(size_t index,
                 return false;
             }
             // asString().length() creates a string object, is there any better way to validate the length?
-            if(pJson.isString() && pJson.asString().length() > 255)
+            if(pJson.isString() && pJson.asString().length() > 150)
             {
                 err="String length exceeds limit for the " +
                     fieldName +
-                    " field (the maximum value is 255)";
+                    " field (the maximum value is 150)";
                 return false;
             }
 
@@ -2136,29 +1983,22 @@ bool MasterProducts::validJsonOfField(size_t index,
         case 2:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
             if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
             }
-            // asString().length() creates a string object, is there any better way to validate the length?
-            if(pJson.isString() && pJson.asString().length() > 255)
-            {
-                err="String length exceeds limit for the " +
-                    fieldName +
-                    " field (the maximum value is 255)";
-                return false;
-            }
-
             break;
         case 3:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
-            if(!pJson.isInt())
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -2167,9 +2007,10 @@ bool MasterProducts::validJsonOfField(size_t index,
         case 4:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
-            if(!pJson.isInt())
+            if(!pJson.isUInt())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -2178,7 +2019,8 @@ bool MasterProducts::validJsonOfField(size_t index,
         case 5:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
             if(!pJson.isString())
             {
@@ -2198,9 +2040,10 @@ bool MasterProducts::validJsonOfField(size_t index,
         case 6:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
-            if(!pJson.isInt())
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -2209,7 +2052,8 @@ bool MasterProducts::validJsonOfField(size_t index,
         case 7:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
             if(!pJson.isString())
             {
@@ -2217,11 +2061,11 @@ bool MasterProducts::validJsonOfField(size_t index,
                 return false;
             }
             // asString().length() creates a string object, is there any better way to validate the length?
-            if(pJson.isString() && pJson.asString().length() > 255)
+            if(pJson.isString() && pJson.asString().length() > 20)
             {
                 err="String length exceeds limit for the " +
                     fieldName +
-                    " field (the maximum value is 255)";
+                    " field (the maximum value is 20)";
                 return false;
             }
 
@@ -2229,7 +2073,8 @@ bool MasterProducts::validJsonOfField(size_t index,
         case 8:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
             if(!pJson.isInt())
             {
@@ -2238,17 +2083,6 @@ bool MasterProducts::validJsonOfField(size_t index,
             }
             break;
         case 9:
-            if(pJson.isNull())
-            {
-                return true;
-            }
-            if(!pJson.isInt())
-            {
-                err="Type error in the "+fieldName+" field";
-                return false;
-            }
-            break;
-        case 10:
             if(pJson.isNull())
             {
                 err="The " + fieldName + " column cannot be null";
@@ -2260,7 +2094,7 @@ bool MasterProducts::validJsonOfField(size_t index,
                 return false;
             }
             break;
-        case 11:
+        case 10:
             if(pJson.isNull())
             {
                 err="The " + fieldName + " column cannot be null";

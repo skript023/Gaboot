@@ -23,9 +23,9 @@ const bool Wishlists::hasPrimaryKey = true;
 const std::string Wishlists::tableName = "wishlists";
 
 const std::vector<typename Wishlists::MetaData> Wishlists::metaData_={
-{"id","int32_t","int(11)",4,1,1,1},
-{"productId","int32_t","int(11)",4,0,0,0},
-{"category","std::string","varchar(255)",255,0,0,0},
+{"id","uint64_t","bigint(20) unsigned",8,1,1,1},
+{"productId","uint32_t","int(10) unsigned",4,0,0,1},
+{"category","std::string","varchar(100)",100,0,0,1},
 {"createdAt","::trantor::Date","datetime",0,0,0,1},
 {"updatedAt","::trantor::Date","datetime",0,0,0,1}
 };
@@ -40,11 +40,11 @@ Wishlists::Wishlists(const Row &r, const ssize_t indexOffset) noexcept
     {
         if(!r["id"].isNull())
         {
-            id_=std::make_shared<int32_t>(r["id"].as<int32_t>());
+            id_=std::make_shared<uint64_t>(r["id"].as<uint64_t>());
         }
         if(!r["productId"].isNull())
         {
-            productid_=std::make_shared<int32_t>(r["productId"].as<int32_t>());
+            productid_=std::make_shared<uint32_t>(r["productId"].as<uint32_t>());
         }
         if(!r["category"].isNull())
         {
@@ -107,12 +107,12 @@ Wishlists::Wishlists(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 0;
         if(!r[index].isNull())
         {
-            id_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            id_=std::make_shared<uint64_t>(r[index].as<uint64_t>());
         }
         index = offset + 1;
         if(!r[index].isNull())
         {
-            productid_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            productid_=std::make_shared<uint32_t>(r[index].as<uint32_t>());
         }
         index = offset + 2;
         if(!r[index].isNull())
@@ -181,7 +181,7 @@ Wishlists::Wishlists(const Json::Value &pJson, const std::vector<std::string> &p
         dirtyFlag_[0] = true;
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<uint64_t>((uint64_t)pJson[pMasqueradingVector[0]].asUInt64());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -189,7 +189,7 @@ Wishlists::Wishlists(const Json::Value &pJson, const std::vector<std::string> &p
         dirtyFlag_[1] = true;
         if(!pJson[pMasqueradingVector[1]].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[1]].asInt64());
+            productid_=std::make_shared<uint32_t>((uint32_t)pJson[pMasqueradingVector[1]].asUInt64());
         }
     }
     if(!pMasqueradingVector[2].empty() && pJson.isMember(pMasqueradingVector[2]))
@@ -261,7 +261,7 @@ Wishlists::Wishlists(const Json::Value &pJson) noexcept(false)
         dirtyFlag_[0]=true;
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<uint64_t>((uint64_t)pJson["id"].asUInt64());
         }
     }
     if(pJson.isMember("productId"))
@@ -269,7 +269,7 @@ Wishlists::Wishlists(const Json::Value &pJson) noexcept(false)
         dirtyFlag_[1]=true;
         if(!pJson["productId"].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson["productId"].asInt64());
+            productid_=std::make_shared<uint32_t>((uint32_t)pJson["productId"].asUInt64());
         }
     }
     if(pJson.isMember("category"))
@@ -346,7 +346,7 @@ void Wishlists::updateByMasqueradedJson(const Json::Value &pJson,
     {
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<uint64_t>((uint64_t)pJson[pMasqueradingVector[0]].asUInt64());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -354,7 +354,7 @@ void Wishlists::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[1] = true;
         if(!pJson[pMasqueradingVector[1]].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[1]].asInt64());
+            productid_=std::make_shared<uint32_t>((uint32_t)pJson[pMasqueradingVector[1]].asUInt64());
         }
     }
     if(!pMasqueradingVector[2].empty() && pJson.isMember(pMasqueradingVector[2]))
@@ -425,7 +425,7 @@ void Wishlists::updateByJson(const Json::Value &pJson) noexcept(false)
     {
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<uint64_t>((uint64_t)pJson["id"].asUInt64());
         }
     }
     if(pJson.isMember("productId"))
@@ -433,7 +433,7 @@ void Wishlists::updateByJson(const Json::Value &pJson) noexcept(false)
         dirtyFlag_[1] = true;
         if(!pJson["productId"].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson["productId"].asInt64());
+            productid_=std::make_shared<uint32_t>((uint32_t)pJson["productId"].asUInt64());
         }
     }
     if(pJson.isMember("category"))
@@ -498,20 +498,20 @@ void Wishlists::updateByJson(const Json::Value &pJson) noexcept(false)
     }
 }
 
-const int32_t &Wishlists::getValueOfId() const noexcept
+const uint64_t &Wishlists::getValueOfId() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
+    const static uint64_t defaultValue = uint64_t();
     if(id_)
         return *id_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &Wishlists::getId() const noexcept
+const std::shared_ptr<uint64_t> &Wishlists::getId() const noexcept
 {
     return id_;
 }
-void Wishlists::setId(const int32_t &pId) noexcept
+void Wishlists::setId(const uint64_t &pId) noexcept
 {
-    id_ = std::make_shared<int32_t>(pId);
+    id_ = std::make_shared<uint64_t>(pId);
     dirtyFlag_[0] = true;
 }
 const typename Wishlists::PrimaryKeyType & Wishlists::getPrimaryKey() const
@@ -520,25 +520,20 @@ const typename Wishlists::PrimaryKeyType & Wishlists::getPrimaryKey() const
     return *id_;
 }
 
-const int32_t &Wishlists::getValueOfProductid() const noexcept
+const uint32_t &Wishlists::getValueOfProductid() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
+    const static uint32_t defaultValue = uint32_t();
     if(productid_)
         return *productid_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &Wishlists::getProductid() const noexcept
+const std::shared_ptr<uint32_t> &Wishlists::getProductid() const noexcept
 {
     return productid_;
 }
-void Wishlists::setProductid(const int32_t &pProductid) noexcept
+void Wishlists::setProductid(const uint32_t &pProductid) noexcept
 {
-    productid_ = std::make_shared<int32_t>(pProductid);
-    dirtyFlag_[1] = true;
-}
-void Wishlists::setProductidToNull() noexcept
-{
-    productid_.reset();
+    productid_ = std::make_shared<uint32_t>(pProductid);
     dirtyFlag_[1] = true;
 }
 
@@ -561,11 +556,6 @@ void Wishlists::setCategory(const std::string &pCategory) noexcept
 void Wishlists::setCategory(std::string &&pCategory) noexcept
 {
     category_ = std::make_shared<std::string>(std::move(pCategory));
-    dirtyFlag_[2] = true;
-}
-void Wishlists::setCategoryToNull() noexcept
-{
-    category_.reset();
     dirtyFlag_[2] = true;
 }
 
@@ -605,7 +595,7 @@ void Wishlists::setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept
 
 void Wishlists::updateId(const uint64_t id)
 {
-    id_ = std::make_shared<int32_t>(static_cast<int32_t>(id));
+    id_ = std::make_shared<uint64_t>(id);
 }
 
 const std::vector<std::string> &Wishlists::insertColumns() noexcept
@@ -741,7 +731,7 @@ Json::Value Wishlists::toJson() const
     Json::Value ret;
     if(getId())
     {
-        ret["id"]=getValueOfId();
+        ret["id"]=(Json::UInt64)getValueOfId();
     }
     else
     {
@@ -792,7 +782,7 @@ Json::Value Wishlists::toMasqueradedJson(
         {
             if(getId())
             {
-                ret[pMasqueradingVector[0]]=getValueOfId();
+                ret[pMasqueradingVector[0]]=(Json::UInt64)getValueOfId();
             }
             else
             {
@@ -848,7 +838,7 @@ Json::Value Wishlists::toMasqueradedJson(
     LOG_ERROR << "Masquerade failed";
     if(getId())
     {
-        ret["id"]=getValueOfId();
+        ret["id"]=(Json::UInt64)getValueOfId();
     }
     else
     {
@@ -901,30 +891,30 @@ bool Wishlists::validateJsonForCreation(const Json::Value &pJson, std::string &e
         if(!validJsonOfField(1, "productId", pJson["productId"], err, true))
             return false;
     }
+    else
+    {
+        err="The productId column cannot be null";
+        return false;
+    }
     if(pJson.isMember("category"))
     {
         if(!validJsonOfField(2, "category", pJson["category"], err, true))
             return false;
+    }
+    else
+    {
+        err="The category column cannot be null";
+        return false;
     }
     if(pJson.isMember("createdAt"))
     {
         if(!validJsonOfField(3, "createdAt", pJson["createdAt"], err, true))
             return false;
     }
-    else
-    {
-        err="The createdAt column cannot be null";
-        return false;
-    }
     if(pJson.isMember("updatedAt"))
     {
         if(!validJsonOfField(4, "updatedAt", pJson["updatedAt"], err, true))
             return false;
-    }
-    else
-    {
-        err="The updatedAt column cannot be null";
-        return false;
     }
     return true;
 }
@@ -953,6 +943,11 @@ bool Wishlists::validateMasqueradedJsonForCreation(const Json::Value &pJson,
               if(!validJsonOfField(1, pMasqueradingVector[1], pJson[pMasqueradingVector[1]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[1] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[2].empty())
       {
@@ -961,6 +956,11 @@ bool Wishlists::validateMasqueradedJsonForCreation(const Json::Value &pJson,
               if(!validJsonOfField(2, pMasqueradingVector[2], pJson[pMasqueradingVector[2]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[2] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[3].empty())
       {
@@ -969,11 +969,6 @@ bool Wishlists::validateMasqueradedJsonForCreation(const Json::Value &pJson,
               if(!validJsonOfField(3, pMasqueradingVector[3], pJson[pMasqueradingVector[3]], err, true))
                   return false;
           }
-        else
-        {
-            err="The " + pMasqueradingVector[3] + " column cannot be null";
-            return false;
-        }
       }
       if(!pMasqueradingVector[4].empty())
       {
@@ -982,11 +977,6 @@ bool Wishlists::validateMasqueradedJsonForCreation(const Json::Value &pJson,
               if(!validJsonOfField(4, pMasqueradingVector[4], pJson[pMasqueradingVector[4]], err, true))
                   return false;
           }
-        else
-        {
-            err="The " + pMasqueradingVector[4] + " column cannot be null";
-            return false;
-        }
       }
     }
     catch(const Json::LogicError &e)
@@ -1097,7 +1087,7 @@ bool Wishlists::validJsonOfField(size_t index,
                 err="The automatic primary key cannot be set";
                 return false;
             }
-            if(!pJson.isInt())
+            if(!pJson.isUInt64())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -1106,9 +1096,10 @@ bool Wishlists::validJsonOfField(size_t index,
         case 1:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
-            if(!pJson.isInt())
+            if(!pJson.isUInt())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -1117,7 +1108,8 @@ bool Wishlists::validJsonOfField(size_t index,
         case 2:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
             if(!pJson.isString())
             {
@@ -1125,11 +1117,11 @@ bool Wishlists::validJsonOfField(size_t index,
                 return false;
             }
             // asString().length() creates a string object, is there any better way to validate the length?
-            if(pJson.isString() && pJson.asString().length() > 255)
+            if(pJson.isString() && pJson.asString().length() > 100)
             {
                 err="String length exceeds limit for the " +
                     fieldName +
-                    " field (the maximum value is 255)";
+                    " field (the maximum value is 100)";
                 return false;
             }
 

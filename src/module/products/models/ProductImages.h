@@ -47,15 +47,15 @@ class ProductImages
         static const std::string _imagePath;
         static const std::string _thumbnailPath;
         static const std::string _productId;
-        static const std::string _createdAt;
-        static const std::string _updatedAt;
+        static const std::string _created_at;
+        static const std::string _updated_at;
     };
 
     const static int primaryKeyNumber;
     const static std::string tableName;
     const static bool hasPrimaryKey;
     const static std::string primaryKeyName;
-    using PrimaryKeyType = int32_t;
+    using PrimaryKeyType = uint64_t;
     const PrimaryKeyType &getPrimaryKey() const;
 
     /**
@@ -102,11 +102,11 @@ class ProductImages
 
     /**  For column id  */
     ///Get the value of the column id, returns the default value if the column is null
-    const int32_t &getValueOfId() const noexcept;
+    const uint64_t &getValueOfId() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getId() const noexcept;
+    const std::shared_ptr<uint64_t> &getId() const noexcept;
     ///Set the value of the column id
-    void setId(const int32_t &pId) noexcept;
+    void setId(const uint64_t &pId) noexcept;
 
     /**  For column imagePath  */
     ///Get the value of the column imagePath, returns the default value if the column is null
@@ -116,7 +116,6 @@ class ProductImages
     ///Set the value of the column imagePath
     void setImagepath(const std::string &pImagepath) noexcept;
     void setImagepath(std::string &&pImagepath) noexcept;
-    void setImagepathToNull() noexcept;
 
     /**  For column thumbnailPath  */
     ///Get the value of the column thumbnailPath, returns the default value if the column is null
@@ -126,7 +125,6 @@ class ProductImages
     ///Set the value of the column thumbnailPath
     void setThumbnailpath(const std::string &pThumbnailpath) noexcept;
     void setThumbnailpath(std::string &&pThumbnailpath) noexcept;
-    void setThumbnailpathToNull() noexcept;
 
     /**  For column productId  */
     ///Get the value of the column productId, returns the default value if the column is null
@@ -135,23 +133,24 @@ class ProductImages
     const std::shared_ptr<int32_t> &getProductid() const noexcept;
     ///Set the value of the column productId
     void setProductid(const int32_t &pProductid) noexcept;
-    void setProductidToNull() noexcept;
 
-    /**  For column createdAt  */
-    ///Get the value of the column createdAt, returns the default value if the column is null
-    const ::trantor::Date &getValueOfCreatedat() const noexcept;
+    /**  For column created_at  */
+    ///Get the value of the column created_at, returns the default value if the column is null
+    const ::trantor::Date &getValueOfCreatedAt() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<::trantor::Date> &getCreatedat() const noexcept;
-    ///Set the value of the column createdAt
-    void setCreatedat(const ::trantor::Date &pCreatedat) noexcept;
+    const std::shared_ptr<::trantor::Date> &getCreatedAt() const noexcept;
+    ///Set the value of the column created_at
+    void setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept;
+    void setCreatedAtToNull() noexcept;
 
-    /**  For column updatedAt  */
-    ///Get the value of the column updatedAt, returns the default value if the column is null
-    const ::trantor::Date &getValueOfUpdatedat() const noexcept;
+    /**  For column updated_at  */
+    ///Get the value of the column updated_at, returns the default value if the column is null
+    const ::trantor::Date &getValueOfUpdatedAt() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<::trantor::Date> &getUpdatedat() const noexcept;
-    ///Set the value of the column updatedAt
-    void setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept;
+    const std::shared_ptr<::trantor::Date> &getUpdatedAt() const noexcept;
+    ///Set the value of the column updated_at
+    void setUpdatedAt(const ::trantor::Date &pUpdatedAt) noexcept;
+    void setUpdatedAtToNull() noexcept;
 
 
     static size_t getColumnNumber() noexcept {  return 6;  }
@@ -175,12 +174,12 @@ class ProductImages
     void updateArgs(drogon::orm::internal::SqlBinder &binder) const;
     ///For mysql or sqlite3
     void updateId(const uint64_t id);
-    std::shared_ptr<int32_t> id_;
+    std::shared_ptr<uint64_t> id_;
     std::shared_ptr<std::string> imagepath_;
     std::shared_ptr<std::string> thumbnailpath_;
     std::shared_ptr<int32_t> productid_;
-    std::shared_ptr<::trantor::Date> createdat_;
-    std::shared_ptr<::trantor::Date> updatedat_;
+    std::shared_ptr<::trantor::Date> createdAt_;
+    std::shared_ptr<::trantor::Date> updatedAt_;
     struct MetaData
     {
         const std::string colName_;
@@ -229,12 +228,12 @@ class ProductImages
         }
         if(dirtyFlag_[4])
         {
-            sql += "createdAt,";
+            sql += "created_at,";
             ++parametersCount;
         }
         if(dirtyFlag_[5])
         {
-            sql += "updatedAt,";
+            sql += "updated_at,";
             ++parametersCount;
         }
         needSelection=true;

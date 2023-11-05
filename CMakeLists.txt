@@ -61,6 +61,9 @@ source_group(TREE ${SRC_DIR} PREFIX "src" FILES ${SRC_MAIN})
 
 target_include_directories(Gaboot PRIVATE 
   ${SRC_DIR}
+  "${SRC_DIR}/module"
+  "${SRC_DIR}/util"
+  "${SRC_DIR}/middleware"
   ${DROGON_INCLUDE_DIRS}
   ${openssl_INCLUDE_DIRS}
   "${fmtlib_SOURCE_DIR}/include"

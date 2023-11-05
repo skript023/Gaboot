@@ -70,8 +70,8 @@ namespace gaboot
 				{"stock", "type:number|required|numberOnly"}
 			});
 
-			m_data["price"] = stoll(m_data["price"].asString());
-			m_data["stock"] = stoll(m_data["stock"].asString());
+			m_data["price"] = stod(m_data["price"].asString());
+			m_data["stock"] = stoi(m_data["stock"].asString());
 
 			MasterProducts product(m_data);
 			ProductImages productImage;
@@ -79,8 +79,8 @@ namespace gaboot
 			productImage.setImagepath(upload.get_image_path());
 			productImage.setThumbnailpath(upload.get_thumbnail_path());
 			
-			productImage.setCreatedat(trantor::Date::now());
-			productImage.setUpdatedat(trantor::Date::now());
+			productImage.setCreatedAt(trantor::Date::now());
+			productImage.setUpdatedAt(trantor::Date::now());
 
 			product.setCreatedat(trantor::Date::now());
 			product.setUpdatedat(trantor::Date::now());

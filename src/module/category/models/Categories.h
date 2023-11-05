@@ -47,8 +47,8 @@ class Categories
         static const std::string _id;
         static const std::string _name;
         static const std::string _description;
-        static const std::string _imagePath;
-        static const std::string _thumbnailPath;
+        static const std::string _imgPath;
+        static const std::string _imgThumbPath;
         static const std::string _createdAt;
         static const std::string _updatedAt;
     };
@@ -57,7 +57,7 @@ class Categories
     const static std::string tableName;
     const static bool hasPrimaryKey;
     const static std::string primaryKeyName;
-    using PrimaryKeyType = int32_t;
+    using PrimaryKeyType = uint64_t;
     const PrimaryKeyType &getPrimaryKey() const;
 
     /**
@@ -104,11 +104,11 @@ class Categories
 
     /**  For column id  */
     ///Get the value of the column id, returns the default value if the column is null
-    const int32_t &getValueOfId() const noexcept;
+    const uint64_t &getValueOfId() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getId() const noexcept;
+    const std::shared_ptr<uint64_t> &getId() const noexcept;
     ///Set the value of the column id
-    void setId(const int32_t &pId) noexcept;
+    void setId(const uint64_t &pId) noexcept;
 
     /**  For column name  */
     ///Get the value of the column name, returns the default value if the column is null
@@ -118,7 +118,6 @@ class Categories
     ///Set the value of the column name
     void setName(const std::string &pName) noexcept;
     void setName(std::string &&pName) noexcept;
-    void setNameToNull() noexcept;
 
     /**  For column description  */
     ///Get the value of the column description, returns the default value if the column is null
@@ -128,27 +127,26 @@ class Categories
     ///Set the value of the column description
     void setDescription(const std::string &pDescription) noexcept;
     void setDescription(std::string &&pDescription) noexcept;
-    void setDescriptionToNull() noexcept;
 
-    /**  For column imagePath  */
-    ///Get the value of the column imagePath, returns the default value if the column is null
-    const std::string &getValueOfImagepath() const noexcept;
+    /**  For column imgPath  */
+    ///Get the value of the column imgPath, returns the default value if the column is null
+    const std::string &getValueOfImgpath() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getImagepath() const noexcept;
-    ///Set the value of the column imagePath
-    void setImagepath(const std::string &pImagepath) noexcept;
-    void setImagepath(std::string &&pImagepath) noexcept;
-    void setImagepathToNull() noexcept;
+    const std::shared_ptr<std::string> &getImgpath() const noexcept;
+    ///Set the value of the column imgPath
+    void setImgpath(const std::string &pImgpath) noexcept;
+    void setImgpath(std::string &&pImgpath) noexcept;
+    void setImgpathToNull() noexcept;
 
-    /**  For column thumbnailPath  */
-    ///Get the value of the column thumbnailPath, returns the default value if the column is null
-    const std::string &getValueOfThumbnailpath() const noexcept;
+    /**  For column imgThumbPath  */
+    ///Get the value of the column imgThumbPath, returns the default value if the column is null
+    const std::string &getValueOfImgthumbpath() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getThumbnailpath() const noexcept;
-    ///Set the value of the column thumbnailPath
-    void setThumbnailpath(const std::string &pThumbnailpath) noexcept;
-    void setThumbnailpath(std::string &&pThumbnailpath) noexcept;
-    void setThumbnailpathToNull() noexcept;
+    const std::shared_ptr<std::string> &getImgthumbpath() const noexcept;
+    ///Set the value of the column imgThumbPath
+    void setImgthumbpath(const std::string &pImgthumbpath) noexcept;
+    void setImgthumbpath(std::string &&pImgthumbpath) noexcept;
+    void setImgthumbpathToNull() noexcept;
 
     /**  For column createdAt  */
     ///Get the value of the column createdAt, returns the default value if the column is null
@@ -192,11 +190,11 @@ class Categories
     void updateArgs(drogon::orm::internal::SqlBinder &binder) const;
     ///For mysql or sqlite3
     void updateId(const uint64_t id);
-    std::shared_ptr<int32_t> id_;
+    std::shared_ptr<uint64_t> id_;
     std::shared_ptr<std::string> name_;
     std::shared_ptr<std::string> description_;
-    std::shared_ptr<std::string> imagepath_;
-    std::shared_ptr<std::string> thumbnailpath_;
+    std::shared_ptr<std::string> imgpath_;
+    std::shared_ptr<std::string> imgthumbpath_;
     std::shared_ptr<::trantor::Date> createdat_;
     std::shared_ptr<::trantor::Date> updatedat_;
     struct MetaData
@@ -242,23 +240,25 @@ class Categories
         }
         if(dirtyFlag_[3])
         {
-            sql += "imagePath,";
+            sql += "imgPath,";
             ++parametersCount;
         }
         if(dirtyFlag_[4])
         {
-            sql += "thumbnailPath,";
+            sql += "imgThumbPath,";
             ++parametersCount;
         }
-        if(dirtyFlag_[5])
+        sql += "createdAt,";
+        ++parametersCount;
+        if(!dirtyFlag_[5])
         {
-            sql += "createdAt,";
-            ++parametersCount;
+            needSelection=true;
         }
-        if(dirtyFlag_[6])
+        sql += "updatedAt,";
+        ++parametersCount;
+        if(!dirtyFlag_[6])
         {
-            sql += "updatedAt,";
-            ++parametersCount;
+            needSelection=true;
         }
         needSelection=true;
         if(parametersCount > 0)
@@ -295,10 +295,18 @@ class Categories
             sql.append("?,");
 
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[6])
         {
             sql.append("?,");
 
+        }
+        else
+        {
+            sql +="default,";
         }
         if(parametersCount > 0)
         {
