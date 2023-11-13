@@ -22,16 +22,14 @@ jobs:
           git clone https://github.com/microsoft/vcpkg.git
           cd vcpkg
           .\bootstrap-vcpkg.bat
-          .\vcpkg install drogon[core,ctl,orm,mysql]:x64-windows
-          .\vcpkg install opencv:x64-windows
-          echo "VCPKG_ROOT=$(pwd)" >> $GITHUB_ENV
-          echo VCPKG_ROOT
+          echo "VCPKG_ROOT=%cd%" >> $env:GITHUB_ENV
+          echo ${{ env.VCPKG_ROOT }}
 
       - name: "Check Directory"
         run: echo VCPKG_ROOT
 
       - name: Setup vcpkg toolchain
-        run: cmake -D CMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
+        run: cmake -D CMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }} CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
         
       - name: Build 64bit release Executable
         run: cmake --build ./build --config Release --target Gaboot --
