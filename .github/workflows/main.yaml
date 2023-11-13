@@ -2,9 +2,6 @@ name: build
 
 on: [push, pull_request]
 
-env:
-    VCPKG_ROOT: x
-
 jobs:
   build:
     runs-on: windows-2022
@@ -25,8 +22,7 @@ jobs:
           git clone https://github.com/microsoft/vcpkg.git
           cd vcpkg
           .\bootstrap-vcpkg.bat
-          $VCPKG_ROOT=%CD%
-          echo $VCPKG_ROOT
+          echo "VCPKG_ROOT=$(pwd)" >> $GITHUB_ENV
 
       - name: Setup vcpkg toolchain
         run: cmake -D CMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT -S. -Bbuild -G Ninja
