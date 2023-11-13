@@ -22,14 +22,14 @@ jobs:
 
       - name: Set up vcpkg
         run: |
-          git clone https://github.com/microsoft/vcpkg.git
-          cd vcpkg
-          .\bootstrap-vcpkg.bat
-          echo "VCPKG_ROOT=%cd%" >> $env:GITHUB_ENV
+          cd ${{ env.VCPKG_ROOT }}
+          .\vcpkg install drogon[core,ctl,orm,mysql]:x64-windows
+          .\vcpkg install opencv:x64-windows
           echo ${{ env.VCPKG_ROOT }}
 
       - name: "Check Directory"
-        run: echo ${{ env.VCPKG_ROOT }}
+        run: | 
+          echo ${{ env.VCPKG_ROOT }}
 
       - name: Setup vcpkg toolchain
         run: cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
