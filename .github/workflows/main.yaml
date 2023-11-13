@@ -3,7 +3,7 @@ name: build
 on: [push, pull_request]
 
 env:
-  VCPKG_ROOT: ./vcpkg
+  VCPKG_FOLDER: ./vcpkg
 
 jobs:
   build:
@@ -22,14 +22,14 @@ jobs:
 
       - name: Set up vcpkg
         run: |
-          cd ${{ env.VCPKG_ROOT }}
-          .\vcpkg install drogon[core,ctl,orm,mysql]:x64-windows
-          .\vcpkg install opencv:x64-windows
-          echo ${{ env.VCPKG_ROOT }}
+          git clone https://github.com/microsoft/vcpkg.git
+          cd vcpkg
+          .\bootstrap-vcpkg.bat
+          echo $VCPKG_FOLDER
 
       - name: "Check Directory"
         run: | 
-          echo ${{ env.VCPKG_ROOT }}
+          echo $VCPKG_FOLDER
 
       - name: Setup vcpkg toolchain
         run: cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
