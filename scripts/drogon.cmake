@@ -2,14 +2,11 @@ message("\nInstalling drogon library")
 
 if (MSVC)
     # Set the path to vcpkg for Windows
-    set(VCPKG_ROOT "$ENV{VCPKG_ROOT}")
-    message("MSVC is used.")
+    set(VCPKG_EXECUTABLE "$ENV{VCPKG_ROOT}/vcpkg.exe")
 else()
-    set(VCPKG_ROOT "/mnt/j/database/Tools/vcpkg")
+    set(VCPKG_EXECUTABLE "/mnt/j/database/Tools/vcpkg/vcpkg")
     message("GCC is used")
 endif()
-
-message(STATUS "Drogon attempting to finding package, vcpkg found in ${VCPKG_ROOT}")
 
 set(ENABLE_ZLIB OFF)
 if (NOT MSVC)
@@ -24,7 +21,7 @@ find_package(Drogon)
 if(NOT Drogon_FOUND)
     message(STATUS "Drogon not found. Attempting to install it.")
     execute_process(
-    COMMAND cd "${VCPKG_ROOT}" && ${VCPKG_EXECUTABLE} install drogon[core,ctl,orm,mysql]
+    COMMAND "${VCPKG_EXECUTABLE}" install drogon[core,ctl,orm,mysql]
     RESULT_VARIABLE VCPKG_RESULT
     )
 
