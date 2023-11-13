@@ -1,0 +1,53 @@
+name: build
+
+on: [push, pull_request]
+
+env:
+    VCPKG_ROOT: x
+
+jobs:
+  build:
+    runs-on: windows-2022
+    name: build
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Check CMake version
+        run: cmake --version
+
+      - name: Setup MSVC environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - name: Set up vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git
+          cd vcpkg
+          .\bootstrap-vcpkg.bat
+          $VCPKG_ROOT=%CD%
+          echo $VCPKG_ROOT
+
+      - name: Setup vcpkg toolchain
+        run: cmake -D CMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT -S. -Bbuild -G Ninja
+
+      - name: Generate CMake project
+        run: cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
+
+      - name: Build 64bit release Executable
+        run: cmake --build ./build --config Release --target Gaboot --
+
+      - name: Check if Executable got built
+        run: if (-Not (Test-Path -path "build/Gaboot.exe")) {throw 1}
+
+      - name: Rename Executable to Gaboot-dev-{GITHUB_SHA}.exe
+        run: |
+          del Gaboot-dev-*.exe
+          ren Gaboot.exe Gaboot-dev-${{github.sha}}.exe
+        working-directory: build/
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: binary
+          path: build/Gaboot-dev-*.exe
