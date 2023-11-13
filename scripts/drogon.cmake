@@ -3,10 +3,13 @@ message("\nInstalling drogon library")
 if (MSVC)
     # Set the path to vcpkg for Windows
     set(VCPKG_EXECUTABLE "$ENV{VCPKG_ROOT}/vcpkg.exe")
+    message("MSVC is used.")
 else()
     set(VCPKG_EXECUTABLE "/mnt/j/database/Tools/vcpkg/vcpkg")
     message("GCC is used")
 endif()
+
+message(STATUS "OpenCV attempting to finding package, vcpkg found in ${VCPKG_EXECUTABLE}")
 
 set(ENABLE_ZLIB OFF)
 if (NOT MSVC)

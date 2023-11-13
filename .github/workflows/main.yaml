@@ -25,11 +25,8 @@ jobs:
           echo "VCPKG_ROOT=$(pwd)" >> $GITHUB_ENV
 
       - name: Setup vcpkg toolchain
-        run: cmake -D CMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT -S. -Bbuild -G Ninja
-
-      - name: Generate CMake project
-        run: cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
-
+        run: cmake -D CMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
+        
       - name: Build 64bit release Executable
         run: cmake --build ./build --config Release --target Gaboot --
 
