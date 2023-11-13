@@ -6,7 +6,7 @@
         <img src="https://img.shields.io/github/license/skript023/Gaboot.svg?style=flat-square"/>
     </a>
     <a href="https://github.com/skript023/Gaboot/actions">
-        <img src="https://img.shields.io/github/actions/workflow/status/skript023/Gaboot/main.yml?branch=main&style=flat-square"/>
+        <img src="https://img.shields.io/github/actions/workflow/status/skript023/Gaboot/main.yaml?branch=main&style=flat-square"/>
     </a>
     <br>
     Gaboot E-Commerce Backend Server
