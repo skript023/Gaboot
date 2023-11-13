@@ -3,9 +3,11 @@ message("\nInstalling openCV library")
 if (MSVC)
     # Set the path to vcpkg for Windows
     set(VCPKG_EXECUTABLE "$ENV{VCPKG_ROOT}/vcpkg.exe")
+    set(VCPKG_EXECUTABLE "./vcpkg.exe")
     message("MSVC is used.")
 else()
     set(VCPKG_EXECUTABLE "/mnt/j/database/Tools/vcpkg/vcpkg")
+    set(VCPKG_EXECUTABLE "./vcpkg")
     message("GCC is used.")
 endif()
 
@@ -17,7 +19,7 @@ if(NOT OpenCV_FOUND)
     
     message(STATUS "OpenCV not found. Attempting to install it.")
     execute_process(
-    COMMAND "${VCPKG_EXECUTABLE}" install opencv
+    COMMAND cd "${VCPKG_ROOT}" && ${VCPKG_EXECUTABLE} install opencv
     RESULT_VARIABLE VCPKG_RESULT
     )
 
