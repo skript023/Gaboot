@@ -14,7 +14,7 @@ if(NOT OpenCV_FOUND)
     
     message(STATUS "OpenCV not found. Attempting to install it.")
     execute_process(
-    COMMAND "${VCPKG_EXECUTABLE}" install opencv
+    COMMAND "${VCPKG_EXECUTABLE}" install opencv --clean-after-build
     RESULT_VARIABLE VCPKG_RESULT
     )
 

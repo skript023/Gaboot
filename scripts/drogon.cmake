@@ -21,7 +21,7 @@ find_package(Drogon)
 if(NOT Drogon_FOUND)
     message(STATUS "Drogon not found. Attempting to install it.")
     execute_process(
-    COMMAND "${VCPKG_EXECUTABLE}" install drogon[core,ctl,orm,mysql]
+    COMMAND ${VCPKG_EXECUTABLE} install drogon[core,ctl,orm,mysql] --clean-after-build
     RESULT_VARIABLE VCPKG_RESULT
     )
 
