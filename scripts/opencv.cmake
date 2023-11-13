@@ -2,11 +2,11 @@ message("\nInstalling openCV library")
   
 if (MSVC)
     # Set the path to vcpkg for Windows
-    set(VCPKG_ROOT "$ENV{VCPKG_ROOT}/vcpkg.exe")
+    set(VCPKG_ROOT "$ENV{VCPKG_ROOT}")
     set(VCPKG_EXECUTABLE "./vcpkg.exe")
     message("MSVC is used.")
 else()
-    set(VCPKG_ROOT "/mnt/j/database/Tools/vcpkg/vcpkg")
+    set(VCPKG_ROOT "/mnt/j/database/Tools/vcpkg")
     set(VCPKG_EXECUTABLE "./vcpkg")
     message("GCC is used.")
 endif()
