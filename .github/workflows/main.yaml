@@ -25,12 +25,7 @@ jobs:
           git clone https://github.com/microsoft/vcpkg.git
           cd vcpkg
           .\bootstrap-vcpkg.bat
-          echo $VCPKG_FOLDER
-
-      - name: "Check Directory"
-        run: | 
-          echo $VCPKG_FOLDER
-
+          
       - name: Setup vcpkg toolchain
         run: cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
         
