@@ -76,17 +76,16 @@ namespace gaboot::util
     {
         if (auto& params = multipart.getParameters(); !params.empty())
         {
-            for (const auto& it : params)
-            {
-                if (it.first == "password")
+            std::ranges::for_each(params.begin(), params.end(), [&](const std::pair<const std::string, std::string>& param) {
+                if (param.first == "password")
                 {
-                    json[it.first] = bcrypt::generateHash(it.second);
+                    json[param.first] = bcrypt::generateHash(param.second);
                 }
                 else
                 {
-                    json[it.first] = it.second;
+                    json[param.first] = param.second;
                 }
-            }
+            });
 
             return true;
         }

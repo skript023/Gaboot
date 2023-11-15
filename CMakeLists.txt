@@ -64,7 +64,7 @@ endif ()
 add_executable(Gaboot "${SRC_DIR}/main.cc" ${ICON})
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-set_property(TARGET Gaboot PROPERTY CXX_STANDARD 17)
+set_property(TARGET Gaboot PROPERTY CXX_STANDARD 20)
 # set_property(TARGET Gaboot PROPERTY ISPC_INSTRUCTION_SETS avx2-i32x4)
 
 source_group(TREE ${SRC_DIR} PREFIX "src" FILES ${SRC_MAIN})

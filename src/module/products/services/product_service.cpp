@@ -82,6 +82,7 @@ namespace gaboot
 			productImage.setCreatedAt(trantor::Date::now());
 			productImage.setUpdatedAt(trantor::Date::now());
 
+			product.setPrice(m_data["price"].asDouble());
 			product.setCreatedat(trantor::Date::now());
 			product.setUpdatedat(trantor::Date::now());
 
