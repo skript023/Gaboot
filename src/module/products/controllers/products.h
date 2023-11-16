@@ -18,8 +18,8 @@ namespace gaboot
         // METHOD_ADD(products::your_method_name, "/{1}/{2}/list", Get); // path is /products/{arg1}/{arg2}/list
         // ADD_METHOD_TO(products::your_method_name, "/absolute/path/{1}/{2}/list", Get); // path is /absolute/path/{arg1}/{arg2}/list
         ADD_METHOD_TO(products::create, "/products", Post, ADMIN_MIDDLEWARE);
-        ADD_METHOD_TO(products::findAll, "/products", Get);
-        ADD_METHOD_TO(products::findOne, "/products/{id}", Get);
+        ADD_METHOD_TO(products::findAll, "/products", Get, CUSTOMER_MIDDLEWARE);
+        ADD_METHOD_TO(products::findOne, "/products/{id}", Get, CUSTOMER_MIDDLEWARE);
         ADD_METHOD_TO(products::update, "/products/{id}", Put, ADMIN_MIDDLEWARE);
         ADD_METHOD_TO(products::remove, "/products/{id}", Delete, ADMIN_MIDDLEWARE);
         METHOD_LIST_END

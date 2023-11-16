@@ -14,13 +14,11 @@ using namespace drogon;
 namespace gaboot
 {
     using traits = jwt::traits::nlohmann_json;
-    void customer_middleware::doFilter(const HttpRequestPtr& req,
-        FilterCallback&& fcb,
-        FilterChainCallback&& fccb)
+    void customer_middleware::doFilter(const HttpRequestPtr& req, FilterCallback&& fcb,  FilterChainCallback&& fccb)
     {
         std::string param = req->getHeader("Authorization");
 
-        try
+        try 
         {
             if (auto success = this->parse_token(param); success)
             {
@@ -35,6 +33,7 @@ namespace gaboot
                 auto id = json["id"].get<int64_t>();
                 
                 g_customer_manager->insert(id);
+                req->setBody(std::to_string(id));
 
                 return fccb();
             }
@@ -46,6 +45,7 @@ namespace gaboot
             LOG(WARNING) << e.what();
 
             auto res = UnauthorizedException(e.what()).response();
+
             fcb(res);
         }
     }
@@ -58,7 +58,7 @@ namespace gaboot
             return true;
         }
 
-        LOG(INFO) << "Invalid Bearer token string.";
+        LOG(WARNING) << "Invalid Bearer token string.";
 
         return false;
     }

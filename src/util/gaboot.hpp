@@ -35,6 +35,13 @@ namespace gaboot::util
 
         return std::regex_match(str, numeric);
     }
+    
+    inline bool is_numeric(std::string_view const& str)
+    {
+        std::regex numeric("^[0-9]+$");
+
+        return std::regex_match(str.data(), numeric);
+    }
 
     inline bool is_phone_number(std::string const& phoneNumber)
     {

@@ -153,7 +153,7 @@ namespace gaboot
 				{WARNING.text, log_color::red},
 				{HACKER.text, log_color::green | log_color::intensify},
 				{FATAL.text, log_color::red | log_color::intensify},
-				{G3LOG_DEBUG.text, log_color::blue},
+				{G3LOG_DEBUG.text, log_color::blue | log_color::intensify},
 				{RAW_RED.text, log_color::red},
 				{RAW_GREEN_TO_CONSOLE.text, log_color::green | log_color::intensify}
 			};
