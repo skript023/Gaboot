@@ -56,8 +56,6 @@
 #define SECRET util::get_env("SECRET")
 #define SERVER_KEY util::get_env("SERVER_KEY")
 
-#define ADMIN_MIDDLEWARE_DISABLE
-
 #ifdef ADMIN_MIDDLEWARE_DISABLE
 #define ADMIN_MIDDLEWARE
 #define ADMIN_MIDDLEWARE_STATUS "Deactivated"

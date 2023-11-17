@@ -23,7 +23,7 @@ namespace gaboot
         m_json["credit_card"]["token_id"] = m_token_id;
         m_json["credit_card"]["authentication"] = true;
 
-        return payment_service(m_json);
+        return *this;
     }
 
     payment_service payment_service::bank_transfer()
@@ -34,7 +34,7 @@ namespace gaboot
 
         m_json["bank_transfer"]["bank"] = m_bank;
 
-        return payment_service(m_json);
+        return *this;
     }
 
     payment_service payment_service::electronic_wallet()
@@ -43,7 +43,7 @@ namespace gaboot
         m_json["transaction_details"]["order_id"] = m_order_id;
         m_json["transaction_details"]["gross_amount"] = m_gross_amount;
 
-        return payment_service(m_json);
+        return *this;
     }
 
     bool payment_service::make_payment(nlohmann::json& midtrans)

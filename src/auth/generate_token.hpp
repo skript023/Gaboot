@@ -95,7 +95,7 @@ namespace gaboot
                 return true;
             }
 
-            LOG(INFO) << "Invalid Bearer token string.";
+            LOG(WARNING) << "Invalid Bearer token string.";
 
             return false;
         }
