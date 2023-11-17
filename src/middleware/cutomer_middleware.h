@@ -21,8 +21,9 @@ namespace gaboot
             FilterCallback&& fcb,
             FilterChainCallback&& fccb) override;
     private:
-        [[nodiscard]] bool parse_token(std::string const& header);
-        [[nodiscard]] nlohmann::json::object_t verify_token(std::string const& header);
+        [[nodiscard]] bool parse_token_from_header(std::string const& header);
+        [[nodiscard]] bool parse_token_from_cookie(std::string const& header);
+        [[nodiscard]] nlohmann::json verify_token();
     private:
         std::string m_token;
         std::mutex m_lock;

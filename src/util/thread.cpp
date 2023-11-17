@@ -1,5 +1,4 @@
 #include "thread.hpp"
-#include <pch.h>
 
 namespace gaboot
 {
@@ -43,13 +42,13 @@ namespace gaboot
 		m_thread_pool.clear();
 	}
 
-	void thread_pool::push(std::function<void()> func)
+	void thread_pool::push(std::function<void()> func, std::source_location location)
 	{
 		if (func)
 		{
 			{
 				std::unique_lock lock(m_lock);
-				m_job_stack.push({ func });
+				m_job_stack.push({ func, location });
 
 				if (m_allocated_thread_count < m_job_stack.size())
 				{
@@ -84,7 +83,7 @@ namespace gaboot
 			if (m_job_stack.empty())
 				continue;
 
-			auto job = m_job_stack.top();
+			thread_pool_job job = m_job_stack.top();
 			m_job_stack.pop();
 			lock.unlock();
 
@@ -92,7 +91,11 @@ namespace gaboot
 
 			try
 			{
-				std::invoke(job);
+				const auto source_file = std::filesystem::path(job.m_source_location.file_name()).filename().string();
+				LOG(INFO) << "Thread " << std::this_thread::get_id() << " executing " << source_file << ":"
+					<< job.m_source_location.line();
+
+				std::invoke(job.m_func);
 			}
 			catch (const std::exception& e)
 			{

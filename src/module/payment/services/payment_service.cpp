@@ -56,8 +56,7 @@ namespace gaboot
             { "Authorization", token}
         };
 
-        auto async = cpr::PostAsync(m_url, m_body, header);
-        auto res = async.get();
+        auto res = cpr::PostAsync(m_url, m_body, header).get();
 
         if (res.status_code == 201)
         {

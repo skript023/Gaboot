@@ -15,9 +15,8 @@ namespace gaboot
         try
         {
             MasterCustomers user = db().findOne(Criteria(MasterCustomers::Cols::_username, CompareOperator::EQ, username));
-            const std::string& user_password = user.getValueOfPassword();
 
-            if (auto valid = bcrypt::validatePassword(password, user_password); valid && !user_password.empty())
+            if (auto valid = bcrypt::validatePassword(password, *user.getPassword()); valid && !user.getPassword()->empty())
             {
                 jwt_generator jwt({
                     {"id", user.getValueOfId()},

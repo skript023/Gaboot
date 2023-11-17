@@ -20,16 +20,9 @@ namespace gaboot
 
         try 
         {
-            if (auto success = this->parse_token(param); success)
+            if (this->parse_token_from_header(param))
             {
-                auto decoded = jwt::decode<traits>(m_token);
-
-                jwt::verify<traits>().
-                    allow_algorithm(jwt::algorithm::hs256{ SECRET }).
-                    with_issuer("gaboot").
-                    verify(decoded);
-
-                auto json = nlohmann::json::parse(decoded.get_payload_claim("gaboot").as_string());
+                auto json = this->verify_token();
                 auto id = json["id"].get<int64_t>();
                 
                 g_customer_manager->insert(id);
@@ -49,7 +42,7 @@ namespace gaboot
             fcb(res);
         }
     }
-    bool customer_middleware::parse_token(std::string const& header)
+    bool customer_middleware::parse_token_from_header(std::string const& header)
     {
         if (auto it = header.find(m_prefix); it != std::string::npos)
         {
@@ -62,21 +55,28 @@ namespace gaboot
 
         return false;
     }
-    nlohmann::json::object_t customer_middleware::verify_token(std::string const& header)
+    bool customer_middleware::parse_token_from_cookie(std::string const& cookie)
     {
-        if (auto token = this->parse_token(header); token)
+        if (!cookie.empty())
         {
-            auto decoded = jwt::decode<traits>(m_token);
+            m_token = cookie;
 
-            auto& verifier = jwt::verify<traits>()
-                .allow_algorithm(jwt::algorithm::hs256{ SECRET })
-                .with_issuer("auth0");
-
-            verifier.verify(decoded);
-
-            return {};
+            return true;
         }
 
-        return {};
+        LOG(WARNING) << "Invalid Bearer token string.";
+
+        return false;
+    }
+    nlohmann::json customer_middleware::verify_token()
+    {
+        auto decoded = jwt::decode<traits>(m_token);
+
+        jwt::verify<traits>().
+            allow_algorithm(jwt::algorithm::hs256{ SECRET }).
+            with_issuer("gaboot").
+            verify(decoded);
+
+        return nlohmann::json::parse(decoded.get_payload_claim("gaboot").as_string());
     }
 }

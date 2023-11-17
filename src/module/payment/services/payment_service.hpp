@@ -15,7 +15,7 @@ namespace gaboot
 
         payment_service(nlohmann::json const& params);
 
-        virtual ~payment_service() = default;
+        ~payment_service() = default;
 
         payment_service credit_card();
         

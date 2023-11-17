@@ -309,13 +309,8 @@ namespace gaboot
 
         if (g_customer_manager->find(stoll(id), &customer))
         {
-            auto customer_data = customer.toJson();
-            customer_data.removeMember("password");
-            customer_data.removeMember("updatedAt");
-            customer_data.removeMember("isActive");
-            customer_data.removeMember("token");
-
-            return HttpResponse::newFileResponse(customer.getValueOfImgpath());
+            if (auto image = customer.getImgpath(); image && !image->empty())
+                return HttpResponse::newFileResponse(*customer.getImgpath());
         }
 
         m_response.m_message = "Unable to retreive user image";

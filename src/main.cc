@@ -42,9 +42,11 @@ int main()
     auto customer_manager_instance = std::make_unique<customer_manager>();
     LOG(INFO) << "Customer manager initialized.";
 
+    auto thread_instance = std::make_unique<thread_pool>();
+    LOG(INFO) << "Thread pool initialized.";
+
     ADD_LISTENER("0.0.0.0", 8088);
     LOG(INFO) << "Listener initialized.";
-    LOG(INFO) << "Thread used : " << NUM_THREAD;
     ADD_CONFIG("./config.json");
     LOG(INFO) << "Configuration loaded.";
 
@@ -54,6 +56,10 @@ int main()
     
     LOG(INFO) << "Server has shutdown.";
 
+    thread_instance->destroy();
+    thread_instance.reset();
+    LOG(INFO) << "Thread pool uninitialized.";
+
     customer_manager_instance.reset();
     LOG(INFO) << "Customer manager uninitialized.";
 
@@ -62,5 +68,6 @@ int main()
     LOG(INFO) << "Schedule task uninitialized.";
 
     logger_instance.reset();
-    return 0;
+
+    return EXIT_SUCCESS;
 }
