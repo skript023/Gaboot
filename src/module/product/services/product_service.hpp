@@ -2,8 +2,8 @@
 
 #include <pch.h>
 #include <interfaces/response.hpp>
-#include <module/products/models/MasterProducts.h>
-#include <module/products/models/ProductImages.h>
+#include <module/product/models/MasterProducts.h>
+#include <module/product/models/ProductImages.h>
 
 using namespace drogon;
 using namespace orm;

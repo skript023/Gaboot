@@ -2,7 +2,7 @@
 
 #include <pch.h>
 #include <drogon/HttpController.h>
-#include <module/products/services/product_service.hpp>
+#include <module/product/services/product_service.hpp>
 
 using namespace drogon;
 

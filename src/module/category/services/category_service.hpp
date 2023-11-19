@@ -4,7 +4,7 @@
 
 #include "util/validator.hpp"
 #include "interfaces/response.hpp"
-#include "module/category/models/Categories.h"
+#include "category/models/Categories.h"
 
 using namespace drogon;
 using namespace orm;

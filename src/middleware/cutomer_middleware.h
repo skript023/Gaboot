@@ -26,8 +26,6 @@ namespace gaboot
         [[nodiscard]] nlohmann::json verify_token();
     private:
         std::string m_token;
-        std::mutex m_lock;
-        std::condition_variable m_data_condition;
-        inline static constexpr const char* m_prefix = "Bearer ";
+        inline static constexpr const char* m_prefix = "Bearer";
     };
 }

@@ -39,7 +39,7 @@ namespace gaboot
 
             auto res = UnauthorizedException(e.what()).response();
 
-            fcb(res);
+            return fcb(res);
         }
     }
     bool customer_middleware::parse_token_from_header(std::string const& header)
