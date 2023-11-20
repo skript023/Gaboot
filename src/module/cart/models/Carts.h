@@ -37,6 +37,8 @@ namespace drogon_model
 {
 namespace gaboot
 {
+class MasterCustomers;
+class MasterProducts;
 
 class Carts
 {
@@ -127,11 +129,11 @@ class Carts
 
     /**  For column price  */
     ///Get the value of the column price, returns the default value if the column is null
-    const udouble &getValueOfPrice() const noexcept;
+    const double &getValueOfPrice() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<udouble> &getPrice() const noexcept;
+    const std::shared_ptr<double> &getPrice() const noexcept;
     ///Set the value of the column price
-    void setPrice(const udouble &pPrice) noexcept;
+    void setPrice(const double &pPrice) noexcept;
 
     /**  For column quantity  */
     ///Get the value of the column quantity, returns the default value if the column is null
@@ -164,6 +166,14 @@ class Carts
     Json::Value toJson() const;
     Json::Value toMasqueradedJson(const std::vector<std::string> &pMasqueradingVector) const;
     /// Relationship interfaces
+    MasterCustomers getMaster_customers(const drogon::orm::DbClientPtr &clientPtr) const;
+    void getMaster_customers(const drogon::orm::DbClientPtr &clientPtr,
+                             const std::function<void(MasterCustomers)> &rcb,
+                             const drogon::orm::ExceptionCallback &ecb) const;
+    MasterProducts getMaster_products(const drogon::orm::DbClientPtr &clientPtr) const;
+    void getMaster_products(const drogon::orm::DbClientPtr &clientPtr,
+                            const std::function<void(MasterProducts)> &rcb,
+                            const drogon::orm::ExceptionCallback &ecb) const;
   private:
     friend drogon::orm::Mapper<Carts>;
     friend drogon::orm::BaseBuilder<Carts, true, true>;
@@ -182,7 +192,7 @@ class Carts
     std::shared_ptr<uint64_t> id_;
     std::shared_ptr<uint32_t> customerid_;
     std::shared_ptr<uint32_t> productid_;
-    std::shared_ptr<udouble> price_;
+    std::shared_ptr<double> price_;
     std::shared_ptr<uint32_t> quantity_;
     std::shared_ptr<::trantor::Date> createdat_;
     std::shared_ptr<::trantor::Date> updatedat_;

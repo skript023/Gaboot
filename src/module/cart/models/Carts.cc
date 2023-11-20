@@ -6,6 +6,8 @@
  */
 
 #include "Carts.h"
+#include "customer/models/MasterCustomers.h"
+#include "product/models/MasterProducts.h"
 #include <drogon/utils/Utilities.h>
 #include <string>
 
@@ -28,7 +30,7 @@ const std::vector<typename Carts::MetaData> Carts::metaData_={
 {"id","uint64_t","bigint(20) unsigned",8,1,1,1},
 {"customerId","uint32_t","int(10) unsigned",4,0,0,1},
 {"productId","uint32_t","int(10) unsigned",4,0,0,1},
-{"price","udouble","double unsigned",8,0,0,1},
+{"price","double","double unsigned",8,0,0,1},
 {"quantity","uint32_t","int(10) unsigned",4,0,0,1},
 {"createdAt","::trantor::Date","datetime",0,0,0,1},
 {"updatedAt","::trantor::Date","datetime",0,0,0,1}
@@ -56,7 +58,7 @@ Carts::Carts(const Row &r, const ssize_t indexOffset) noexcept
         }
         if(!r["price"].isNull())
         {
-            price_=std::make_shared<udouble>(r["price"].as<udouble>());
+            price_=std::make_shared<double>(r["price"].as<double>());
         }
         if(!r["quantity"].isNull())
         {
@@ -134,7 +136,7 @@ Carts::Carts(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 3;
         if(!r[index].isNull())
         {
-            price_=std::make_shared<udouble>(r[index].as<udouble>());
+            price_=std::make_shared<double>(r[index].as<double>());
         }
         index = offset + 4;
         if(!r[index].isNull())
@@ -624,20 +626,20 @@ void Carts::setProductid(const uint32_t &pProductid) noexcept
     dirtyFlag_[2] = true;
 }
 
-const udouble &Carts::getValueOfPrice() const noexcept
+const double &Carts::getValueOfPrice() const noexcept
 {
-    const static udouble defaultValue = udouble();
+    const static double defaultValue = double();
     if(price_)
         return *price_;
     return defaultValue;
 }
-const std::shared_ptr<udouble> &Carts::getPrice() const noexcept
+const std::shared_ptr<double> &Carts::getPrice() const noexcept
 {
     return price_;
 }
-void Carts::setPrice(const udouble &pPrice) noexcept
+void Carts::setPrice(const double &pPrice) noexcept
 {
-    price_ = std::make_shared<udouble>(pPrice);
+    price_ = std::make_shared<double>(pPrice);
     dirtyFlag_[3] = true;
 }
 
@@ -1443,4 +1445,82 @@ bool Carts::validJsonOfField(size_t index,
             return false;
     }
     return true;
+}
+
+MasterCustomers Carts::getMaster_customers(const drogon::orm::DbClientPtr &clientPtr) const {
+    std::shared_ptr<std::promise<MasterCustomers>> pro(new std::promise<MasterCustomers>);
+    std::future<MasterCustomers> f = pro->get_future();
+    getMaster_customers(clientPtr, [&pro] (MasterCustomers result) {
+        try {
+            pro->set_value(result);
+        }
+        catch (...) {
+            pro->set_exception(std::current_exception());
+        }
+    }, [&pro] (const DrogonDbException &err) {
+        pro->set_exception(std::make_exception_ptr(err));
+    });
+    return f.get();
+}
+void Carts::getMaster_customers(const DbClientPtr &clientPtr,
+                                const std::function<void(MasterCustomers)> &rcb,
+                                const ExceptionCallback &ecb) const
+{
+    const static std::string sql = "select * from master_customers where id = ?";
+    *clientPtr << sql
+               << *customerid_
+               >> [rcb = std::move(rcb), ecb](const Result &r){
+                    if (r.size() == 0)
+                    {
+                        ecb(UnexpectedRows("0 rows found"));
+                    }
+                    else if (r.size() > 1)
+                    {
+                        ecb(UnexpectedRows("Found more than one row"));
+                    }
+                    else
+                    {
+                        rcb(MasterCustomers(r[0]));
+                    }
+               }
+               >> ecb;
+}
+
+MasterProducts Carts::getMaster_products(const drogon::orm::DbClientPtr &clientPtr) const {
+    std::shared_ptr<std::promise<MasterProducts>> pro(new std::promise<MasterProducts>);
+    std::future<MasterProducts> f = pro->get_future();
+    getMaster_products(clientPtr, [&pro] (MasterProducts result) {
+        try {
+            pro->set_value(result);
+        }
+        catch (...) {
+            pro->set_exception(std::current_exception());
+        }
+    }, [&pro] (const DrogonDbException &err) {
+        pro->set_exception(std::make_exception_ptr(err));
+    });
+    return f.get();
+}
+void Carts::getMaster_products(const DbClientPtr &clientPtr,
+                               const std::function<void(MasterProducts)> &rcb,
+                               const ExceptionCallback &ecb) const
+{
+    const static std::string sql = "select * from master_products where id = ?";
+    *clientPtr << sql
+               << *productid_
+               >> [rcb = std::move(rcb), ecb](const Result &r){
+                    if (r.size() == 0)
+                    {
+                        ecb(UnexpectedRows("0 rows found"));
+                    }
+                    else if (r.size() > 1)
+                    {
+                        ecb(UnexpectedRows("Found more than one row"));
+                    }
+                    else
+                    {
+                        rcb(MasterProducts(r[0]));
+                    }
+               }
+               >> ecb;
 }
