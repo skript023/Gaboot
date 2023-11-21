@@ -2,19 +2,19 @@
 
 namespace gaboot
 {
-    payment_service::payment_service(std::string const& order_id, int gross_amount, std::string token_id) :
+    payment_processing::payment_processing(std::string const& order_id, int gross_amount, std::string token_id) :
         m_order_id(order_id), m_gross_amount(gross_amount), m_token_id(token_id)
     {};
 
-    payment_service::payment_service(std::string const& order_id, std::string bank, int gross_amount) :
+    payment_processing::payment_processing(std::string const& order_id, std::string bank, int gross_amount) :
         m_order_id(order_id), m_gross_amount(gross_amount), m_bank(bank)
     {};
     
-    payment_service::payment_service(nlohmann::json const& params) :
+    payment_processing::payment_processing(nlohmann::json const& params) :
         m_body(params.dump()), m_json(params)
     {};
 
-    payment_service payment_service::credit_card()
+    payment_processing payment_processing::credit_card()
     {
         m_json["payment_type"] = "credit_card";
         m_json["transaction_details"]["order_id"] = m_order_id;
@@ -26,7 +26,7 @@ namespace gaboot
         return *this;
     }
 
-    payment_service payment_service::bank_transfer()
+    payment_processing payment_processing::bank_transfer()
     {
         m_json["payment_type"] = "bank_transfer";
         m_json["transaction_details"]["order_id"] = m_order_id;
@@ -37,7 +37,7 @@ namespace gaboot
         return *this;
     }
 
-    payment_service payment_service::electronic_wallet()
+    payment_processing payment_processing::electronic_wallet()
     {
         m_json["payment_type"] = "gopay";
         m_json["transaction_details"]["order_id"] = m_order_id;
@@ -46,7 +46,7 @@ namespace gaboot
         return *this;
     }
 
-    bool payment_service::make_payment(nlohmann::json& midtrans)
+    bool payment_processing::make_payment(nlohmann::json& midtrans)
     {
         std::string token = fmt::format("Basic {}", SERVER_KEY);
 

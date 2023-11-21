@@ -6,22 +6,24 @@
 
 namespace gaboot
 {
-    class payment_service final
+    class payment_processing final
     {
     public:
-        payment_service(std::string const& order_id, int gross_amount, std::string token_id);
+        payment_processing(std::string const& order_id, int gross_amount, std::string token_id);
 
-        payment_service(std::string const& order_id, std::string bank, int gross_amount);
+        payment_processing(std::string const& order_id, std::string bank, int gross_amount);
 
-        payment_service(nlohmann::json const& params);
+        payment_processing(nlohmann::json const& params);
 
-        ~payment_service() = default;
+        payment_processing() = default;
 
-        payment_service credit_card();
+        ~payment_processing() = default;
+
+        payment_processing credit_card();
         
-        payment_service bank_transfer();
+        payment_processing bank_transfer();
         
-        payment_service electronic_wallet();
+        payment_processing electronic_wallet();
 
         bool make_payment(nlohmann::json& midtrans);
     private:
