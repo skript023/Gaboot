@@ -5,7 +5,8 @@
 #include "util/file_manager.hpp"
 #include "scheduler/schedule.hpp"
 
-#include "module/customer/services/customer_manager.hpp"
+#include "customer/services/customer_manager.hpp"
+#include "payment/services/payment_processing.hpp"
 #include <scheduler/tasks.hpp>
 
 int main() 
@@ -42,6 +43,9 @@ int main()
     auto customer_manager_instance = std::make_unique<customer_manager>();
     LOG(INFO) << "Customer manager initialized.";
 
+    auto payment_processing_instance = std::make_unique<payment_processing>();
+    LOG(INFO) << "Payment processing initialized.";
+
     auto thread_instance = std::make_unique<thread_pool>();
     LOG(INFO) << "Thread pool initialized.";
 
@@ -59,6 +63,9 @@ int main()
     thread_instance->destroy();
     thread_instance.reset();
     LOG(INFO) << "Thread pool uninitialized.";
+
+    payment_processing_instance.reset();
+    LOG(INFO) << "Payment processing uninitialized.";
 
     customer_manager_instance.reset();
     LOG(INFO) << "Customer manager uninitialized.";

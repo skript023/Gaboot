@@ -14,17 +14,17 @@ namespace gaboot
 
         ~payment_processing();
 
-        payment_processing credit_card(std::string orderId, int grossAmount, std::string tokenId);
+        payment_processing credit_card(std::string const& orderId, std::string const& tokenId, int grossAmount);
         
-        payment_processing bank_transfer(std::string orderId, std::string bankType, int grossAmount);
+        payment_processing bank_transfer(std::string const& orderId, std::string const& bankType, int grossAmount);
         
-        payment_processing electronic_wallet(std::string orderId, int grossAmount);
+        payment_processing electronic_wallet(std::string const& orderId, int grossAmount);
 
         payment_processing item_detail(item_detail* itemDetail);
 
         payment_processing customer_detail(customer_detail* customerDetail);
 
-        bool make_payment(nlohmann::json& midtrans);
+        bool make_payment(nlohmann::ordered_json& midtrans);
     private:
         std::string m_order_id;
         std::string m_token_id;
