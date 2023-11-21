@@ -11,11 +11,9 @@ namespace gaboot
 
 			nlohmann::ordered_json midtrans;
 
-			auto payment_bank = g_payment_processing->bank_transfer(json["order_id"].asString(), json["bank_type"].asString(), json["gross_amount"].asInt());
-			if (payment_bank.make_payment(midtrans))
+			g_payment_processing->bank_transfer(json["order_id"].asString(), json["bank_type"].asString(), json["gross_amount"].asInt());
+			if (g_payment_processing->make_payment(midtrans))
 			{
-				LOG(INFO) << midtrans.dump();
-
 				Payments payments;
 				payments.setCurrency(midtrans["currency"]);
 				payments.setExpiryTime(midtrans["expiry_time"]);
@@ -40,9 +38,13 @@ namespace gaboot
 				return response;
 			}
 
+			midtrans["message"] = "Request failed";
+			midtrans["success"] = false;
+
 			auto response = HttpResponse::newHttpResponse();
-			response->setStatusCode(k404NotFound);
-			response->setBody("Unknown exception");
+			response->setStatusCode(k406NotAcceptable);
+			response->setContentTypeCode(CT_APPLICATION_JSON);
+			response->setBody(midtrans.dump());
 
 			return response;
 		}
