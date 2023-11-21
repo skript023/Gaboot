@@ -1,6 +1,8 @@
 #pragma once
 #include <pch.h>
 
+#include "fwddec.hpp"
+
 namespace gaboot
 {
 	struct response_data

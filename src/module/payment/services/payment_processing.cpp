@@ -2,46 +2,44 @@
 
 namespace gaboot
 {
-    payment_processing::payment_processing(std::string const& order_id, int gross_amount, std::string token_id) :
-        m_order_id(order_id), m_gross_amount(gross_amount), m_token_id(token_id)
-    {};
+    payment_processing::payment_processing()
+    {
+        g_payment_processing = this;
+    };
 
-    payment_processing::payment_processing(std::string const& order_id, std::string bank, int gross_amount) :
-        m_order_id(order_id), m_gross_amount(gross_amount), m_bank(bank)
-    {};
-    
-    payment_processing::payment_processing(nlohmann::json const& params) :
-        m_body(params.dump()), m_json(params)
-    {};
+    payment_processing::~payment_processing()
+    {
+        g_payment_processing = nullptr;
+    }
 
-    payment_processing payment_processing::credit_card()
+    payment_processing payment_processing::credit_card(std::string orderId, int grossAmount, std::string tokenId)
     {
         m_json["payment_type"] = "credit_card";
-        m_json["transaction_details"]["order_id"] = m_order_id;
-        m_json["transaction_details"]["gross_amount"] = m_gross_amount;
+        m_json["transaction_details"]["order_id"] = std::move(orderId);
+        m_json["transaction_details"]["gross_amount"] = grossAmount;
 
-        m_json["credit_card"]["token_id"] = m_token_id;
+        m_json["credit_card"]["token_id"] = std::move(tokenId);
         m_json["credit_card"]["authentication"] = true;
 
         return *this;
     }
 
-    payment_processing payment_processing::bank_transfer()
+    payment_processing payment_processing::bank_transfer(std::string orderId, std::string bankType, int grossAmount)
     {
         m_json["payment_type"] = "bank_transfer";
-        m_json["transaction_details"]["order_id"] = m_order_id;
-        m_json["transaction_details"]["gross_amount"] = m_gross_amount;
+        m_json["transaction_details"]["order_id"] = std::move(orderId);
+        m_json["transaction_details"]["gross_amount"] = grossAmount;
 
-        m_json["bank_transfer"]["bank"] = m_bank;
+        m_json["bank_transfer"]["bank"] = std::move(bankType);
 
         return *this;
     }
 
-    payment_processing payment_processing::electronic_wallet()
+    payment_processing payment_processing::electronic_wallet(std::string orderId, int grossAmount)
     {
         m_json["payment_type"] = "gopay";
-        m_json["transaction_details"]["order_id"] = m_order_id;
-        m_json["transaction_details"]["gross_amount"] = m_gross_amount;
+        m_json["transaction_details"]["order_id"] = std::move(orderId);
+        m_json["transaction_details"]["gross_amount"] = grossAmount;
 
         return *this;
     }
@@ -56,9 +54,11 @@ namespace gaboot
             { "Authorization", token}
         };
 
+        m_body = m_json.dump();
+
         auto res = cpr::PostAsync(m_url, m_body, header).get();
 
-        if (res.status_code == 201)
+        if (res.status_code == 200)
         {
             midtrans = nlohmann::ordered_json::parse(res.text);
 

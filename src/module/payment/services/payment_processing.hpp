@@ -3,27 +3,26 @@
 #include <pch.h>
 #include <util/validator.hpp>
 #include <util/jenkins.hpp>
+#include <interfaces/fwddec.hpp>
 
 namespace gaboot
 {
     class payment_processing final
     {
     public:
-        payment_processing(std::string const& order_id, int gross_amount, std::string token_id);
+        explicit payment_processing();
 
-        payment_processing(std::string const& order_id, std::string bank, int gross_amount);
+        ~payment_processing();
 
-        payment_processing(nlohmann::json const& params);
-
-        payment_processing() = default;
-
-        ~payment_processing() = default;
-
-        payment_processing credit_card();
+        payment_processing credit_card(std::string orderId, int grossAmount, std::string tokenId);
         
-        payment_processing bank_transfer();
+        payment_processing bank_transfer(std::string orderId, std::string bankType, int grossAmount);
         
-        payment_processing electronic_wallet();
+        payment_processing electronic_wallet(std::string orderId, int grossAmount);
+
+        payment_processing item_detail(item_detail* itemDetail);
+
+        payment_processing customer_detail(customer_detail* customerDetail);
 
         bool make_payment(nlohmann::json& midtrans);
     private:
@@ -36,4 +35,6 @@ namespace gaboot
         cpr::Body m_body;
         cpr::Url m_url = "https://api.sandbox.midtrans.com/v2/charge";
     };
-} // namespace gaboot
+
+    inline payment_processing* g_payment_processing{};
+}
