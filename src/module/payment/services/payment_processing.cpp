@@ -55,10 +55,10 @@ namespace gaboot
 
         auto json = nlohmann::ordered_json::parse(res.text);
 
-        if (json["status_code"].get<int>() == 201 && res.status_code == 200)
+        midtrans = json;
+
+        if (json["status_code"] == "201" && res.status_code == 200)
         {
-            midtrans = json;
-            LOG(INFO) << "Request success";
             return true;
         }
 

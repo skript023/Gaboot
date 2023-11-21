@@ -5,16 +5,18 @@ namespace gaboot
 {
 	HttpResponsePtr gaboot::payment_service::create(HttpRequestPtr const& req)
 	{
+		auto& json = *req->getJsonObject();
+
+		nlohmann::ordered_json midtrans;
+
 		try
 		{
-			auto& json = *req->getJsonObject();
-
-			nlohmann::ordered_json midtrans;
-
 			g_payment_processing->bank_transfer(json["order_id"].asString(), json["bank_type"].asString(), json["gross_amount"].asInt());
 			if (g_payment_processing->make_payment(midtrans))
 			{
 				Payments payments;
+				payments.setBank(midtrans["va_numbers"][0]["bank"]);
+				payments.setVanumber(midtrans["va_numbers"][0]["va_number"]);
 				payments.setCurrency(midtrans["currency"]);
 				payments.setExpiryTime(midtrans["expiry_time"]);
 				payments.setMerchantid(midtrans["merchant_id"]);
@@ -38,11 +40,8 @@ namespace gaboot
 				return response;
 			}
 
-			midtrans["message"] = "Request failed";
-			midtrans["success"] = false;
-
 			auto response = HttpResponse::newHttpResponse();
-			response->setStatusCode(k406NotAcceptable);
+			response->setStatusCode((HttpStatusCode)std::stoi(midtrans["status_code"].get<std::string>()));
 			response->setContentTypeCode(CT_APPLICATION_JSON);
 			response->setBody(midtrans.dump());
 
