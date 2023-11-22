@@ -1,6 +1,9 @@
 #include "payment_processing.hpp"
 #include "thread.hpp"
 
+#include "interfaces/item_detail.hpp"
+#include "interfaces/customer_detail.hpp"
+
 namespace gaboot
 {
     payment_processing::payment_processing()
@@ -39,6 +42,28 @@ namespace gaboot
         m_json["transaction_details"]["gross_amount"] = grossAmount;
     }
 
+    void payment_processing::item_details(item_detail* itemDetail)
+    {
+        auto items = nlohmann::json::object({
+            {"id", itemDetail->id},
+            {"name", itemDetail->name},
+            {"price", itemDetail->price},
+            {"quantity", itemDetail->quantity}
+        });
+
+        m_json["item_details"] = nlohmann::json::array({ items });
+    }
+
+    void payment_processing::customer_details(customer_detail* customerDetail)
+    {
+        m_json["customer_detail"] = nlohmann::json::object({
+            {"first_name", customerDetail->first_name},
+            {"last_name", customerDetail->last_name},
+            {"email", customerDetail->email},
+            {"phone", customerDetail->phone},
+        });
+    }
+
     bool payment_processing::make_payment(nlohmann::ordered_json& midtrans)
     {
         std::string token = fmt::format("Basic {}", SERVER_KEY);
@@ -46,7 +71,7 @@ namespace gaboot
         cpr::Header header = {
             { "Accept", "application/json" },
             { "Content-Type", "application/json" },
-            { "Authorization", token}
+            { "Authorization", token }
         };
 
         cpr::Body body = m_json.dump();

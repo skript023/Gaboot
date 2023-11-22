@@ -1,6 +1,9 @@
 #include "payment_service.hpp"
 #include "payment_processing.hpp"
 
+#include "interfaces/item_detail.hpp"
+#include "interfaces/customer_detail.hpp"
+
 namespace gaboot
 {
 	HttpResponsePtr gaboot::payment_service::create(HttpRequestPtr const& req)
@@ -11,7 +14,20 @@ namespace gaboot
 
 		try
 		{
+			m_items.id = 1;
+			m_items.name = "RTX 4090";
+			m_items.price = 35000000.0;
+			m_items.quantity = 1;
+
+			m_customer.first_name = "Elaina";
+			m_customer.last_name = "Celesteria";
+			m_customer.email = "elaina023@example.com";
+			m_customer.phone = "+62813131212";
+
+			g_payment_processing->item_details(&m_items);
+			g_payment_processing->customer_details(&m_customer);
 			g_payment_processing->bank_transfer(json["order_id"].asString(), json["bank_type"].asString(), json["gross_amount"].asInt());
+
 			if (g_payment_processing->make_payment(midtrans))
 			{
 				Payments payments;

@@ -18,32 +18,34 @@ namespace gaboot
 
         try
         {
-            auto users = db().orderBy(MasterCustomers::Cols::_firstname).limit(limit).offset(page * limit).findFutureAll().get();
+            const auto customers = db().orderBy(MasterCustomers::Cols::_firstname).limit(limit).offset(page * limit).findFutureAll().get();
 
-            if (users.empty())
+            if (customers.empty())
             {
-                return NotFoundException("No data retrieved").response();
+                m_response.m_message = "No data retrieved";
+                m_response.m_success = false;
+
+                return HttpResponse::newHttpJsonResponse(m_response.to_json());
             }
 
-            Json::Value res(Json::arrayValue);
+            Json::Value data(Json::arrayValue);
 
-            for (const auto& user : users)
-            {
-                res.append(user.toJson());
-            }
+            std::ranges::for_each(customers.begin(), customers.end(), [&data](MasterCustomers const& customer) {
+                data.append(customer.toJson());
+            });
 
-            const size_t lastPage = users.size() / limit + (users.size() % limit) == 0 ? 0 : 1;
+            const size_t lastPage = customers.size() / limit + (customers.size() % limit) == 0 ? 0 : 1;
 
-            m_response.m_message = "Success retreive users data";
+            m_response.m_message = "Success retreive customers data";
             m_response.m_success = true;
-            m_response.m_data = res;
+            m_response.m_data = data;
             m_response.m_last_page = lastPage;
 
             return HttpResponse::newHttpJsonResponse(m_response.to_json());
         }
         catch (const DrogonDbException& e)
         {
-            m_response.m_message = fmt::format("Cannot retrieve user data, error caught on {}", e.base().what());
+            m_response.m_message = fmt::format("Cannot retrieve customers data, error caught on {}", e.base().what());
             m_response.m_success = false;
             m_response.m_data = Json::arrayValue;
 
@@ -130,7 +132,7 @@ namespace gaboot
 
             if (!user.getId()) return NotFoundException("Unable retrieve customer detail").response();
 
-            m_response.m_message = "Success retrieve user data";
+            m_response.m_message = "Success retrieve customers data";
             m_response.m_success = true;
             m_response.m_data = user.toJson();
 
@@ -138,7 +140,7 @@ namespace gaboot
         }
         catch (const DrogonDbException& e)
         {
-            m_response.m_message = fmt::format("Cannot retrieve user data, error caught on {}", e.base().what());
+            m_response.m_message = fmt::format("Cannot retrieve customers data, error caught on {}", e.base().what());
             m_response.m_success = false;
 
             auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
@@ -245,7 +247,7 @@ namespace gaboot
             const auto record = db().deleteByPrimaryKey(stoll(id));
             if (record != 0)
             {
-                m_response.m_message = fmt::format("Delete user on {} successfully", record);
+                m_response.m_message = fmt::format("Delete customers on {} successfully", record);
                 m_response.m_success = true;
 
                 return HttpResponse::newHttpJsonResponse(m_response.to_json());
@@ -255,7 +257,7 @@ namespace gaboot
         }
         catch (const DrogonDbException& e)
         {
-            m_response.m_message = fmt::format("Failed delete user, error caught on {}", e.base().what());
+            m_response.m_message = fmt::format("Failed delete customers, error caught on {}", e.base().what());
             m_response.m_success = false;
 
             auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
@@ -282,7 +284,7 @@ namespace gaboot
             customer_data.removeMember("token");
 
             m_response.m_data = customer_data;
-            m_response.m_message = "Success retreive user profile";
+            m_response.m_message = "Success retreive customers profile";
             m_response.m_success = true;
 
             auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
@@ -290,7 +292,7 @@ namespace gaboot
             return response;
         }
 
-        m_response.m_message = "Unable to retreive user profile";
+        m_response.m_message = "Unable to retreive customers profile";
         m_response.m_success = false;
 
         auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
@@ -313,7 +315,7 @@ namespace gaboot
                 return HttpResponse::newFileResponse(*customer.getImgpath());
         }
 
-        m_response.m_message = "Unable to retreive user image";
+        m_response.m_message = "Unable to retreive customers image";
         m_response.m_success = false;
 
         auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());

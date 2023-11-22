@@ -72,32 +72,34 @@ namespace gaboot
 			const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
 			const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
-			const auto products = db().orderBy(Categories::Cols::_name).limit(limit).offset(page * limit).findFutureAll().get();
+			const auto categories = db().orderBy(Categories::Cols::_name).limit(limit).offset(page * limit).findFutureAll().get();
 
-			if (products.empty())
+			if (categories.empty())
 			{
-				return NotFoundException("No data retrieved").response();
+				m_response.m_message = "No data retrieved";
+				m_response.m_success = false;
+
+				return HttpResponse::newHttpJsonResponse(m_response.to_json());
 			}
 
-			Json::Value res(Json::arrayValue);
+			Json::Value data(Json::arrayValue);
 
-			for (const auto& user : products)
-			{
-				res.append(user.toJson());
-			}
+			std::ranges::for_each(categories.begin(), categories.end(), [&data](Categories const& category) {
+				data.append(category.toJson());
+			});
 
-			const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
+			const size_t lastPage = (categories.size() / (limit + (categories.size() % limit))) == 0 ? 0 : 1;
 
-			m_response.m_message = "Success retreive products data";
+			m_response.m_message = "Success retreive categories data";
 			m_response.m_success = true;
-			m_response.m_data = res;
+			m_response.m_data = data;
 			m_response.m_last_page = lastPage;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		}
 		catch (const DrogonDbException& e)
 		{
-			m_response.m_message = fmt::format("Unable retrieve products data, error caught on {}", e.base().what());
+			m_response.m_message = fmt::format("Unable retrieve categories data, error caught on {}", e.base().what());
 			m_response.m_success = false;
 
 			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());

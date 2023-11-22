@@ -57,25 +57,27 @@ namespace gaboot
 			const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
 			const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
-			const auto products = db().orderBy(Wishlists::Cols::_category).limit(limit).offset(page * limit).findFutureAll().get();
+			const auto wishlists = db().orderBy(Wishlists::Cols::_category).limit(limit).offset(page * limit).findFutureAll().get();
 
-			if (products.empty())
+			if (wishlists.empty())
 			{
-				return NotFoundException("No data retrieved").response();
+				m_response.m_message = "No data retrieved";
+				m_response.m_success = false;
+
+				return HttpResponse::newHttpJsonResponse(m_response.to_json());
 			}
 
-			Json::Value res(Json::arrayValue);
+			Json::Value data(Json::arrayValue);
 
-			for (const auto& user : products)
-			{
-				res.append(user.toJson());
-			}
+			std::ranges::for_each(wishlists.begin(), wishlists.end(), [&data](Wishlists const& wishlist) {
+				data.append(wishlist.toJson());
+			});
 
-			const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
+			const size_t lastPage = (wishlists.size() / (limit + (wishlists.size() % limit))) == 0 ? 0 : 1;
 
 			m_response.m_message = "Success retreive products data";
 			m_response.m_success = true;
-			m_response.m_data = res;
+			m_response.m_data = data;
 			m_response.m_last_page = lastPage;
 
 			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());

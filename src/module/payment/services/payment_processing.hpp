@@ -20,9 +20,9 @@ namespace gaboot
         
         void electronic_wallet(std::string const& orderId, int grossAmount);
 
-        void item_detail(item_detail* itemDetail);
+        void item_details(item_detail* itemDetail);
 
-        void customer_detail(customer_detail* customerDetail);
+        void customer_details(customer_detail* customerDetail);
 
         bool make_payment(nlohmann::ordered_json& midtrans);
     private:

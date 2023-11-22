@@ -18,21 +18,23 @@ namespace gaboot
 
 			if (products.empty())
 			{
-				return NotFoundException("No data retrieved").response();
+				m_response.m_message = "Product data is empty 0 data found";
+				m_response.m_success = false;
+
+				return HttpResponse::newHttpJsonResponse(m_response.to_json());
 			}
 
-			Json::Value res(Json::arrayValue);
+			Json::Value data(Json::arrayValue);
 
-			for (const auto& user : products)
-			{
-				res.append(user.toJson());
-			}
+			std::ranges::for_each(products.begin(), products.end(), [&data](MasterProducts const& product) {
+				data.append(product.toJson());
+			});
 
 			const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
 
 			m_response.m_message = "Success retreive products data";
 			m_response.m_success = true;
-			m_response.m_data = res;
+			m_response.m_data = data;
 			m_response.m_last_page = lastPage;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());

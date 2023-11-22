@@ -4,6 +4,9 @@
 #include <interfaces/response.hpp>
 #include <payment/models/Payments.h>
 
+#include <interfaces/item_detail.hpp>
+#include <interfaces/customer_detail.hpp>
+
 using namespace drogon;
 using namespace orm;
 using namespace drogon_model::gaboot;
@@ -26,5 +29,7 @@ namespace gaboot
         HttpResponsePtr create(HttpRequestPtr const&);
     private:
         response_data m_response;
+        item_detail m_items;
+        customer_detail m_customer;
     };
 }
