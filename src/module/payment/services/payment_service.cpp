@@ -1,5 +1,6 @@
 #include "payment_service.hpp"
 #include "payment_processing.hpp"
+#include "util/money_formatter.hpp"
 
 #include "interfaces/item_detail.hpp"
 #include "interfaces/customer_detail.hpp"
@@ -24,9 +25,13 @@ namespace gaboot
 			m_customer.email = "elaina023@example.com";
 			m_customer.phone = "+62813131212";
 
+			money_formatter price = m_items.price;
+
 			g_payment_processing->item_details(&m_items);
 			g_payment_processing->customer_details(&m_customer);
 			g_payment_processing->bank_transfer(json["order_id"].asString(), json["bank_type"].asString(), json["gross_amount"].asInt());
+
+			LOG(INFO) << price.get();
 
 			if (g_payment_processing->make_payment(midtrans))
 			{
