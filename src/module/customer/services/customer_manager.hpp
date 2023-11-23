@@ -16,6 +16,7 @@ namespace gaboot
 		virtual ~customer_manager();
 
 		bool insert(int64_t id);
+		bool insert(int64_t id, MasterCustomers* customer);
 		bool find(int64_t id, MasterCustomers* customer);
 		MasterCustomers* find(int64_t id);
 		bool remove(int64_t id);

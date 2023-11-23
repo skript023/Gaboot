@@ -2,12 +2,15 @@
 
 #include "util/thread.hpp" 
 #include "util/version.hpp"
+#include "scheduler/tasks.hpp"
 #include "util/file_manager.hpp"
 #include "scheduler/schedule.hpp"
 
+#include "hardware/memory.hpp"
+#include "hardware/processor.hpp"
+
 #include "customer/services/customer_manager.hpp"
 #include "payment/services/payment_processing.hpp"
-#include <scheduler/tasks.hpp>
 
 int main() 
 {
@@ -49,6 +52,12 @@ int main()
     auto thread_instance = std::make_unique<thread_pool>();
     LOG(INFO) << "Thread pool initialized.";
 
+    auto memory_instance = std::make_unique<memory>();
+    LOG(INFO) << "Memory initialized.";
+
+    auto processor_instance = std::make_unique<processor>();
+    LOG(INFO) << "Processor initialized.";
+
     ADD_LISTENER("0.0.0.0", 8088);
     LOG(INFO) << "Listener initialized.";
     ADD_CONFIG("./config.json");
@@ -59,6 +68,12 @@ int main()
     SERVER_RUN;
     
     LOG(INFO) << "Server has shutdown.";
+
+    processor_instance.reset();
+    LOG(INFO) << "Processor uninitialized.";
+
+    memory_instance.reset();
+    LOG(INFO) << "Memory uninitialized.";
 
     thread_instance->destroy();
     thread_instance.reset();

@@ -19,9 +19,12 @@
 #include <cstdint>
 
 #ifdef __GNUC__
-
 #elif _MSC_VER
 	#include <Windows.h>
+	#include "psapi.h"
+	#include <Pdh.h>
+
+	#pragma comment(lib, "pdh.lib")
 #endif
 
 #include <fmt/format.h>

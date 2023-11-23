@@ -27,6 +27,8 @@ namespace gaboot
                 m_response.m_success = true;
                 m_response.m_data = jwt.result();
 
+                g_customer_manager->insert(*user.getId(), &user);
+
                 auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 
                 return response;

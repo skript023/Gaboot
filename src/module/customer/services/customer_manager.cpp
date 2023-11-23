@@ -16,15 +16,46 @@ namespace gaboot
 	{
 		try
 		{
-			auto customer = db().findFutureByPrimaryKey(id).get();
-			auto result = m_cache_auth.insert({ id, customer });
+			if (!this->find(id))
+			{
+				auto customer = db().findFutureByPrimaryKey(id).get();
+				auto result = m_cache_auth.insert({ id, customer });
 
-			if (result.second)
-				LOG(INFO_TO_FILE) << "Customer " << *result.first->second.getUsername() << " successfully inserted into authentication pool";
-			else
-				LOG(INFO_TO_FILE) << "Customer " << *result.first->second.getUsername() << " is already exist in authentication pool";
+				if (result.second)
+					LOG(INFO_TO_FILE) << "Customer " << *result.first->second.getUsername() << " successfully inserted into authentication pool";
+				else
+					LOG(INFO_TO_FILE) << "Customer " << *result.first->second.getUsername() << " is already exist in authentication pool";
 
-			return true;
+				return true;
+			}
+
+			return false;
+		}
+		catch (const DrogonDbException& e)
+		{
+			LOG(WARNING) << e.base().what();
+
+			return false;
+		}
+	}
+	
+	bool customer_manager::insert(int64_t id, MasterCustomers* customer)
+	{
+		try
+		{
+			if (!this->find(id))
+			{
+				auto result = m_cache_auth.insert({ id, *customer });
+
+				if (result.second)
+					LOG(INFO_TO_FILE) << "Customer " << *result.first->second.getUsername() << " successfully inserted into authentication pool";
+				else
+					LOG(INFO_TO_FILE) << "Customer " << *result.first->second.getUsername() << " is already exist in authentication pool";
+
+				return true;
+			}
+
+			return false;
 		}
 		catch (const DrogonDbException& e)
 		{

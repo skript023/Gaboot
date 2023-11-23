@@ -42,25 +42,25 @@ namespace gaboot
         m_json["transaction_details"]["gross_amount"] = grossAmount;
     }
 
-    void payment_processing::item_details(item_detail* itemDetail)
+    void payment_processing::item_details(item_detail* item)
     {
         auto items = nlohmann::json::object({
-            {"id", itemDetail->id},
-            {"name", itemDetail->name},
-            {"price", itemDetail->price},
-            {"quantity", itemDetail->quantity}
+            {"id", item->id},
+            {"name", item->name},
+            {"price", item->price},
+            {"quantity", item->quantity}
         });
 
         m_json["item_details"] = nlohmann::json::array({ items });
     }
 
-    void payment_processing::customer_details(customer_detail* customerDetail)
+    void payment_processing::customer_details(customer_detail* customer)
     {
         m_json["customer_detail"] = nlohmann::json::object({
-            {"first_name", customerDetail->first_name},
-            {"last_name", customerDetail->last_name},
-            {"email", customerDetail->email},
-            {"phone", customerDetail->phone},
+            {"first_name", customer->first_name},
+            {"last_name", customer->last_name},
+            {"email", customer->email},
+            {"phone", customer->phone},
         });
     }
 
