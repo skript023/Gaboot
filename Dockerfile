@@ -10,4 +10,6 @@ COPY out/build/Linux-x64/config.json ./
 
 COPY out/build/Linux-x64/.env ./
 
+COPY out/build/Linux-x64/uploads/ ./uploads
+
 CMD ["./Gaboot"]
