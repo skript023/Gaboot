@@ -20,17 +20,17 @@ namespace gaboot
 	{
 		g_virtual_memory = nullptr;
 	}
-    double memory::memory_used()
+    std::string memory::memory_used()
     {
         this->get_memory();
 #ifdef _WIN32
-        auto current_memory = m_memory_info.ullTotalPageFile - m_memory_info.ullAvailPageFile;
+        auto current_memory = m_memory_info.ullTotalPhys - m_memory_info.ullAvailPhys;
 
-        return this->bytes_to_gigabytes(current_memory);
+        return fmt::format("{:.2f}/{:.2f} Gigabytes", this->bytes_to_gigabytes(m_total_virtual_memory), this->bytes_to_gigabytes(current_memory));
 #elif __linux__
         auto current_memory = m_total_memory - m_free_memory;
 
-        return this->kilobytes_to_gigabytes(current_memory);
+        return fmt::format("{:.2f} Gigabytes", this->bytes_to_gigabytes(current_memory));
 #endif
     }
     void memory::get_current_memory()

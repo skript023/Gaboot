@@ -9,7 +9,7 @@ namespace gaboot
 		explicit memory();
 		~memory() noexcept;
 
-		double memory_used();
+		std::string memory_used();
 		void get_current_memory();
 		void get_memory();
 

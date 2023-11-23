@@ -50,8 +50,8 @@ namespace gaboot
         memcpy(&sys, &fsys, sizeof(FILETIME));
         memcpy(&user, &fuser, sizeof(FILETIME));
 
-        percent = (sys.QuadPart - m_last_sys_cpu.QuadPart) + (user.QuadPart - m_last_user_cpu.QuadPart);
-        percent /= (now.QuadPart - m_last_cpu.QuadPart);
+        percent = static_cast<double>(sys.QuadPart - m_last_sys_cpu.QuadPart) + static_cast<double>(user.QuadPart - m_last_user_cpu.QuadPart);
+        percent /= static_cast<double>(now.QuadPart - m_last_cpu.QuadPart);
         percent /= m_num_processor;
 
         m_last_cpu = now;
