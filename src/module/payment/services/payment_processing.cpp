@@ -80,9 +80,11 @@ namespace gaboot
 
         auto json = nlohmann::ordered_json::parse(res.text);
 
+        json["status_code"] = std::stol(json["status_code"].get<std::string>());
+
         midtrans = json;
 
-        if (json["status_code"] == "201" && res.status_code == 200)
+        if (json["status_code"] == 201 && res.status_code == 200)
         {
             return true;
         }

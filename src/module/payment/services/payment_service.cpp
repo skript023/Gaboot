@@ -70,6 +70,8 @@ namespace gaboot
 		}
 		catch (const std::exception& e)
 		{
+			LOG(WARNING) << e.what();
+
 			auto response = HttpResponse::newHttpResponse();
 			response->setStatusCode(k500InternalServerError);
 			response->setBody(e.what());

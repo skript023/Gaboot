@@ -45,6 +45,8 @@ namespace gaboot
         }
         catch (const DrogonDbException& e)
         {
+            LOG(WARNING) << fmt::format("Cannot retrieve customers data, error caught on {}", e.base().what());
+
             m_response.m_message = fmt::format("Cannot retrieve customers data, error caught on {}", e.base().what());
             m_response.m_success = false;
             m_response.m_data = Json::arrayValue;
@@ -140,6 +142,8 @@ namespace gaboot
         }
         catch (const DrogonDbException& e)
         {
+            LOG(WARNING) << fmt::format("Cannot retrieve customers data, error caught on {}", e.base().what());
+
             m_response.m_message = fmt::format("Cannot retrieve customers data, error caught on {}", e.base().what());
             m_response.m_success = false;
 
@@ -159,11 +163,15 @@ namespace gaboot
 
             if (id.empty() || !util::is_numeric(id))
             {
+                LOG(WARNING) << "ID empty or id is not numeric";
+
                 return BadRequestException("Parameters requirement doesn't match").response();
             }
 
             if (multipart.parse(req) != 0)
             {
+                LOG(WARNING) << "Multipart data is empty";
+
                 return BadRequestException("Requirement doesn't match").response();
             }
 
@@ -197,6 +205,7 @@ namespace gaboot
                         }
                         else
                         {
+                            LOG(WARNING) << "Unable to update non-existing record.";
                             return NotFoundException("Unable to update non-existing record.").response();
                         }
                     }
@@ -207,7 +216,7 @@ namespace gaboot
             {
                 if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
                 {
-                    LOG_INFO << "File saved.";
+                    LOG(INFO) << "File saved.";
                     file.save();
                 }
 
@@ -219,18 +228,20 @@ namespace gaboot
             }
             else
             {
+                LOG(WARNING) << "Unable to update costumer";
+
                 return BadRequestException("Unable to update costumer").response();
             }
         }
         catch (const DrogonDbException& e)
         {
+            LOG(WARNING) << fmt::format("Unable to update data, error caught on {}", e.base().what());
+
             m_response.m_message = fmt::format("Unable to update data, error caught on {}", e.base().what());
             m_response.m_success = true;
 
             auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
             response->setStatusCode(k500InternalServerError);
-
-            LOG(WARNING) << e.base().what();
 
             return response;
         }
@@ -239,6 +250,8 @@ namespace gaboot
     {
         if (id.empty() || !util::is_numeric(id))
         {
+            LOG(WARNING) << "ID is empty or ID is not numeric";
+
             return BadRequestException("Parameters requirement doesn't match").response();
         }
 
@@ -257,6 +270,8 @@ namespace gaboot
         }
         catch (const DrogonDbException& e)
         {
+            LOG(WARNING) << fmt::format("Failed delete customers, error caught on {}", e.base().what());
+
             m_response.m_message = fmt::format("Failed delete customers, error caught on {}", e.base().what());
             m_response.m_success = false;
 
@@ -272,6 +287,8 @@ namespace gaboot
 
         if (id.empty() || !util::is_numeric(id))
         {
+            LOG(WARNING) << "ID is empty or ID is not numeric";
+
             return BadRequestException().response();
         }
 
@@ -306,11 +323,28 @@ namespace gaboot
 
         if (id.empty() || !util::is_numeric(id))
         {
+            LOG(WARNING) << "ID is empty or ID is not numeric";
+
             return BadRequestException("Parameters requirement doesn't match").response();
         }
 
         if (g_customer_manager->find(stoll(id), &customer))
         {
+            std::filesystem::path filepath(*customer.getImgpath());
+
+            if (!std::filesystem::exists(filepath))
+            {
+                LOG(WARNING) << "File doesn't exist in server";
+
+                m_response.m_message = "Unable to retreive profile picture, please upload your profile picture";
+                m_response.m_success = false;
+
+                auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+                response->setStatusCode(k404NotFound);
+
+                return response;
+            }
+
             if (auto image = customer.getImgpath(); image && !image->empty())
                 return HttpResponse::newFileResponse(*customer.getImgpath());
         }
@@ -320,6 +354,8 @@ namespace gaboot
 
         auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
         response->setStatusCode(k404NotFound);
+
+        LOG(WARNING) << "Unable to retreive customers image";
 
         return response;
     }
