@@ -345,11 +345,11 @@ namespace gaboot
 
         if (g_customer_manager->find(stoll(id), &customer))
         {
-            auto file = g_file_manager.get_project_file(*customer.getImgthumbpath());
+            std::filesystem::path file(*customer.getImgthumbpath());
 
-            if (!file.exists())
+            if (!std::filesystem::exists(file))
             {
-                LOG(WARNING) << "File at " << file.get_path() << " doesn't exist in server";
+                LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
 
                 m_response.m_message = "Unable to retreive profile picture, please upload your profile picture";
                 m_response.m_success = false;
@@ -361,7 +361,7 @@ namespace gaboot
             }
 
             if (auto image = customer.getImgpath(); image && !image->empty())
-                return HttpResponse::newFileResponse(file.get_path().lexically_normal().string());
+                return HttpResponse::newFileResponse(*customer.getImgthumbpath());
         }
 
         m_response.m_message = "Unable to retreive customers image";
