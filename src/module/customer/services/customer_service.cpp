@@ -206,11 +206,11 @@ namespace gaboot
             auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
             return response;
         }
-        catch (const DrogonDbException& e)
+        catch (const std::exception& e)
         {
-            LOG(WARNING) << fmt::format("Unable to update data, error caught on {}", e.base().what());
+            LOG(WARNING) << fmt::format("Unable to update data, error caught on {}", e.what());
 
-            m_response.m_message = fmt::format("Unable to update data, error caught on {}", e.base().what());
+            m_response.m_message = fmt::format("Unable to update data, error caught on {}", e.what());
             m_response.m_success = true;
 
             auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
