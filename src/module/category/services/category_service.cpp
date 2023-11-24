@@ -185,32 +185,21 @@ namespace gaboot
 						{
 							m_response.m_data[request + "_updated"] = "success";
 						}
-						else
-						{
-							return NotFoundException("Unable to update non-existing record.").response();
-						}
 					}
 				}
 			}
 
-			if (!m_response.m_data.empty())
+			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 			{
-				if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
-				{
-					LOG_INFO << "File saved.";
-					upload.save();
-				}
-
-				m_response.m_message = "Success update customer data.";
-				m_response.m_success = true;
-
-				auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-				return response;
+				LOG_INFO << "File saved.";
+				upload.save();
 			}
-			else
-			{
-				return BadRequestException("Unable to update costumer").response();
-			}
+
+			m_response.m_message = "Success update customer data.";
+			m_response.m_success = true;
+
+			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+			return response;
 		}
 		catch (const DrogonDbException& e)
 		{

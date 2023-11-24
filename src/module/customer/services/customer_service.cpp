@@ -67,7 +67,7 @@ namespace gaboot
 
             if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0)
             {
-                return BadRequestException("Requirement doesn't match").response();
+                return BadRequestException("Data is empty or file requirement doesn't match").response();
             }
 
             auto& file = fileUpload.getFiles()[0];
@@ -97,14 +97,16 @@ namespace gaboot
                 return BadRequestException(m_error).response();
             }
 
-            db().insert(customer);
+            db().insertFuture(customer);
+
+            LOG(INFO) << "Image saved at " << upload.get_image_path() << " thumbnail saved at " << upload.get_thumbnail_path();
+
+            upload.save();
 
             m_response.m_message = "Create customer success";
             m_response.m_success = true;
 
             auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-
-            upload.save();
 
             return response;
         }
@@ -155,83 +157,54 @@ namespace gaboot
     }
     HttpResponsePtr customer_service::update(HttpRequestPtr const& req, std::string&& id)
     {
-        Json::Value data;
+        MasterCustomers customer;
+        MultiPartParser multipart;
 
         try
         {
-            MultiPartParser multipart;
-
             if (id.empty() || !util::is_numeric(id))
             {
-                LOG(WARNING) << "ID empty or id is not numeric";
-
-                return BadRequestException("Parameters requirement doesn't match").response();
+                return BadRequestException("Parameters empty or doesn't match").response();
             }
 
             if (multipart.parse(req) != 0)
             {
-                LOG(WARNING) << "Multipart data is empty";
-
-                return BadRequestException("Requirement doesn't match").response();
+                return BadRequestException("Data is empty or file requirement doesn't match").response();
             }
 
             auto& file = multipart.getFiles()[0];
 
-            data["updatedAt"] = trantor::Date::now().toDbStringLocal();
+            if (!g_customer_manager->find(stoll(id), &customer))
+                return UnauthorizedException("You're not logged in, please login!").response();
 
-            if (!util::multipart_tojson(multipart, data)) return BadRequestException("Data parsing failed").response();
+            upload_file upload(file, customer.getValueOfUsername(), "customers");
 
-            if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
-            {
-                data["imagePath"] = file.getFileName();
-                data["thumbnailPath"] = file.getFileName();
-            }
+            util::multipart_tojson(multipart, m_data);
 
-            auto args = Criteria(MasterCustomers::Cols::_id, CompareOperator::EQ, stoll(id));
+            if (!util::allowed_image(upload.get_image_filename()))
+                return BadRequestException("File type is not allowerd").response();
 
-            // Loop through JSON members and update corresponding database columns
-            for (const auto& [column, request] : this->columnMapping)
-            {
-                if (data.isMember(request))
-                {
-                    auto& jsonValue = data[request];
-                    if (!jsonValue.isNull())
-                    {
-                        auto record = db().updateFutureBy(column, args, jsonValue.asString());
+            m_data["imgPath"] = upload.get_image_path();
+            m_data["imgThumbPath"] = upload.get_thumbnail_path();
+            m_data["updatedAt"] = trantor::Date::now().toDbStringLocal();
 
-                        if (record.valid() && record.get())
-                        {
-                            m_response.m_data[request + "_updated"] = "success";
-                        }
-                        else
-                        {
-                            LOG(WARNING) << "Unable to update non-existing record.";
-                            return NotFoundException("Unable to update non-existing record.").response();
-                        }
-                    }
-                }
-            }
+            customer.updateByJson(m_data);
 
-            if (!m_response.m_data.empty())
-            {
-                if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
-                {
-                    LOG(INFO) << "File saved.";
-                    file.save();
-                }
+            if (auto record = db().updateFuture(customer).get(); !record)
+                return BadRequestException("Unable to update non-existing record").response();
 
-                m_response.m_message = "Success update customer data.";
-                m_response.m_success = true;
+            LOG(INFO) << "Image saved at " << upload.get_image_path() << " thumbnail saved at " << upload.get_thumbnail_path();
 
-                auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-                return response;
-            }
-            else
-            {
-                LOG(WARNING) << "Unable to update costumer";
+            if (multipart.getFiles().size() != 0)
+                upload.save();
 
-                return BadRequestException("Unable to update costumer").response();
-            }
+            m_response.m_message = "Success update customer data.";
+            m_response.m_success = true;
+
+            g_customer_manager->remove(stoll(id));
+
+            auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+            return response;
         }
         catch (const DrogonDbException& e)
         {
@@ -330,9 +303,53 @@ namespace gaboot
 
         if (g_customer_manager->find(stoll(id), &customer))
         {
-            if (auto file = g_file_manager.get_project_file(*customer.getImgpath()); !file.exists())
+            std::filesystem::path file(*customer.getImgpath());
+
+            if (!std::filesystem::exists(file))
             {
-                LOG(WARNING) << "File at " << file.absolute_path() << " doesn't exist in server";
+                LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
+
+                m_response.m_message = "Unable to retreive profile picture, please upload your profile picture";
+                m_response.m_success = false;
+
+                   auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+                response->setStatusCode(k404NotFound);
+
+                return response;
+            }
+
+            if (auto image = customer.getImgpath(); image && !image->empty())
+                return HttpResponse::newFileResponse(*customer.getImgpath());
+        }
+
+        m_response.m_message = "Unable to retreive customers image";
+        m_response.m_success = false;
+
+        auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+        response->setStatusCode(k404NotFound);
+
+        LOG(WARNING) << "Unable to retreive customers image";
+
+        return response;
+    }
+    HttpResponsePtr customer_service::getThumbnail(HttpRequestPtr const& req, std::string&& id)
+    {
+        MasterCustomers customer;
+
+        if (id.empty() || !util::is_numeric(id))
+        {
+            LOG(WARNING) << "ID is empty or ID is not numeric";
+
+            return BadRequestException("Parameters requirement doesn't match").response();
+        }
+
+        if (g_customer_manager->find(stoll(id), &customer))
+        {
+            auto file = g_file_manager.get_project_file(*customer.getImgthumbpath());
+
+            if (!file.exists())
+            {
+                LOG(WARNING) << "File at " << file.get_path() << " doesn't exist in server";
 
                 m_response.m_message = "Unable to retreive profile picture, please upload your profile picture";
                 m_response.m_success = false;
@@ -344,7 +361,7 @@ namespace gaboot
             }
 
             if (auto image = customer.getImgpath(); image && !image->empty())
-                return HttpResponse::newFileResponse(*customer.getImgpath());
+                return HttpResponse::newFileResponse(file.get_path().lexically_normal().string());
         }
 
         m_response.m_message = "Unable to retreive customers image";

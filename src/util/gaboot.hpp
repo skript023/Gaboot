@@ -1,4 +1,5 @@
 #pragma once
+#include <logger.hpp>
 
 namespace gaboot::util
 {
@@ -52,21 +53,21 @@ namespace gaboot::util
 
     inline bool allowed_image(std::string_view const& str)
     {
-        std::regex extension(".*\\.(jpg|jpeg|png)$");
+        std::regex extension(".*\\.(jpg|jpeg|png|gif)$");
 
         return std::regex_match(str.begin(), str.end(), extension);
     }
     
     inline bool allowed_image(std::string const& str)
     {
-        std::regex extension(".*\\.(jpg|jpeg|png)$");
+        std::regex extension(".*\\.(jpg|jpeg|png|gif)$");
 
         return std::regex_match(str, extension);
     }
     
     inline bool allowed_image(const char* str)
     {
-        std::vector<std::string> extensions = { "jpg", "jpeg", "png" };
+        std::vector<std::string> extensions = { "jpg", "jpeg", "png", "gif"};
 
         for (auto& extension : extensions)
         {
@@ -81,9 +82,10 @@ namespace gaboot::util
 
     inline bool multipart_tojson(const drogon::MultiPartParser& multipart, Json::Value& json)
     {
-        if (auto& params = multipart.getParameters(); !params.empty())
+        if (const auto& params = multipart.getParameters(); !params.empty())
         {
-            std::ranges::for_each(params.begin(), params.end(), [&](const std::pair<const std::string, std::string>& param) {
+            for (const auto& param : params)
+            {
                 if (param.first == "password")
                 {
                     json[param.first] = bcrypt::generateHash(param.second);
@@ -92,10 +94,12 @@ namespace gaboot::util
                 {
                     json[param.first] = param.second;
                 }
-            });
+            }
 
             return true;
         }
+
+        LOG(WARNING) << "Failed get parameters because size is " << multipart.getParameters().size();
 
         return false;
     }

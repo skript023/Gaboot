@@ -38,6 +38,11 @@ namespace gaboot
         callback(m_customer_service.getImage(req, std::move(id)));
     }
 
+    void customer::getThumbnail(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
+    {
+        callback(m_customer_service.getThumbnail(req, std::move(id)));
+    }
+
     void customer::getProfile(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
     {
         callback(m_customer_service.getProfile(req, std::move(id)));

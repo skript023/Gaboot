@@ -18,13 +18,14 @@
 #include <cstdio>
 #include <cstdint>
 
-#ifdef __GNUC__
-#elif _MSC_VER
-	#include <Windows.h>
-	#include "psapi.h"
-	#include <Pdh.h>
+#ifdef _WIN32
+#include <Windows.h>
+#include "psapi.h"
+#include <Pdh.h>
 
-	#pragma comment(lib, "pdh.lib")
+#pragma comment(lib, "pdh.lib")
+#elif __linux__
+	
 #endif
 
 #include <fmt/format.h>

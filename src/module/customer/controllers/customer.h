@@ -28,6 +28,7 @@ namespace gaboot
 		ADD_METHOD_TO(customer::update, "/customers/{id}", Put, CUSTOMER_MIDDLEWARE);
 		ADD_METHOD_TO(customer::remove, "/customers/{id}", Delete, ADMIN_MIDDLEWARE);
 		ADD_METHOD_TO(customer::getImage, "/customers/image/{id}", Get, CUSTOMER_MIDDLEWARE);
+		ADD_METHOD_TO(customer::getImage, "/customers/thumbnail/{id}", Get, CUSTOMER_MIDDLEWARE);
 		ADD_METHOD_TO(customer::getProfile, "/customers/profile/{id}", Get, CUSTOMER_MIDDLEWARE);
 		METHOD_LIST_END
 		// your declaration of processing function maybe like this:
@@ -36,9 +37,10 @@ namespace gaboot
 		void findAll(HttpRequestPtr const&, response_t&&);
 		void findOne(HttpRequestPtr const&, response_t&&, std::string&& id);
 		void create(HttpRequestPtr const&, response_t&&);
-		void update(HttpRequestPtr const&, response_t&&, std::string&& id);
+		void update(HttpRequestPtr const& req, response_t&& callback, std::string&& id);
 		void remove(HttpRequestPtr const&, response_t&&, std::string&& id);
 		void getImage(HttpRequestPtr const&, response_t&&, std::string&& id);
+		void getThumbnail(HttpRequestPtr const&, response_t&&, std::string&& id);
 		void getProfile(HttpRequestPtr const&, response_t&&, std::string&& id);
 	};
 }

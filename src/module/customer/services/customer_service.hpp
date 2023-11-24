@@ -18,21 +18,7 @@ namespace gaboot
 		{
 			return Mapper<MasterCustomers>(DATABASE_CLIENT);
 		}
-			
-		std::map<Json::Value::Members, std::string> columnMapping = {
-			{{MasterCustomers::Cols::_firstname}, "firstname"},
-			{{MasterCustomers::Cols::_lastname}, "lastname"},
-			{{MasterCustomers::Cols::_username}, "username"},
-			{{MasterCustomers::Cols::_email}, "email"},
-			{{MasterCustomers::Cols::_phoneNumber}, "phoneNumber"},
-			{{MasterCustomers::Cols::_addressDetail}, "addressDetail"},
-			{{MasterCustomers::Cols::_latitude}, "latitude"},
-			{{MasterCustomers::Cols::_longitude}, "longitude"},
-			{{MasterCustomers::Cols::_password}, "password"},
-			{{MasterCustomers::Cols::_imgPath}, "imgPath"},
-			{{MasterCustomers::Cols::_imgThumbPath}, "imgThumbPath"},
-			{{MasterCustomers::Cols::_updatedAt}, "updatedAt"},
-		};
+
 	public:
 		explicit customer_service() = default;
 		virtual ~customer_service() = default;
@@ -50,8 +36,10 @@ namespace gaboot
 		HttpResponsePtr remove(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr getProfile(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr getImage(HttpRequestPtr const&, std::string&&);
+		HttpResponsePtr getThumbnail(HttpRequestPtr const&, std::string&&);
 	private:
 		response_data m_response;
 		std::string m_error;
+		Json::Value m_data;
 	};
 }

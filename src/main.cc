@@ -58,7 +58,7 @@ int main()
     auto processor_instance = std::make_unique<processor>();
     LOG(INFO) << "Processor initialized.";
 
-    ADD_LISTENER("0.0.0.0", 8088);
+    ADD_LISTENER("0.0.0.0", 8080);
     LOG(INFO) << "Listener initialized.";
     ADD_CONFIG("./config.json");
     LOG(INFO) << "Configuration loaded.";

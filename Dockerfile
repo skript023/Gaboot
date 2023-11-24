@@ -2,7 +2,7 @@ FROM ubuntu:latest
 
 WORKDIR /app
 
-EXPOSE 8088
+EXPOSE 8080
 
 COPY out/build/Linux-x64/Gaboot ./
 

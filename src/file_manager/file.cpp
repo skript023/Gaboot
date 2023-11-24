@@ -35,9 +35,9 @@ namespace gaboot
 		return m_file_path;
 	}
 
-	const std::filesystem::path file::canonical_path() const
+	const std::filesystem::path file::relative_path() const
 	{
-		return std::filesystem::canonical(m_file_path);
+		return std::filesystem::relative(m_file_path);
 	}
 	
 	const std::filesystem::path file::absolute_path() const
