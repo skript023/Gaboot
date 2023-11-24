@@ -26,7 +26,7 @@ namespace gaboot
 
 			Categories category(m_data);
 
-			upload_file upload(file, trantor::Date::now().toDbStringLocal(), "categories");
+			upload_file upload(&file, trantor::Date::now().toDbStringLocal(), "categories");
 
 			category.setCreatedat(trantor::Date::now());
 			category.setUpdatedat(trantor::Date::now());
@@ -160,7 +160,7 @@ namespace gaboot
 
 			util::multipart_tojson(multipart, m_data);
 
-			upload_file upload(file, std::to_string(trantor::Date::now().microSecondsSinceEpoch()), "categories");
+			upload_file upload(&file, std::to_string(trantor::Date::now().microSecondsSinceEpoch()), "categories");
 
 			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 			{

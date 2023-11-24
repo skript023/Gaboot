@@ -67,7 +67,7 @@ namespace gaboot::util
     
     inline bool allowed_image(const char* str)
     {
-        std::vector<std::string> extensions = { "jpg", "jpeg", "png", "gif"};
+        std::vector<std::string> extensions = { "jpg", "jpeg", "png", "gif" };
 
         for (auto& extension : extensions)
         {

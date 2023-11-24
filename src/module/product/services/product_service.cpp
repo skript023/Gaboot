@@ -77,7 +77,7 @@ namespace gaboot
 
 			MasterProducts product(m_data);
 			ProductImages productImage;
-			upload_file upload(file, product.getValueOfName(), "products");
+			upload_file upload(&file, product.getValueOfName(), "products");
 			productImage.setImagepath(upload.get_image_path());
 			productImage.setThumbnailpath(upload.get_thumbnail_path());
 			
@@ -171,7 +171,7 @@ namespace gaboot
 
 			util::multipart_tojson(multipart, m_data);
 
-			upload_file upload(file, std::to_string(trantor::Date::now().microSecondsSinceEpoch()), "products");
+			upload_file upload(&file, std::to_string(trantor::Date::now().microSecondsSinceEpoch()), "products");
 
 			m_data["updatedAt"] = trantor::Date::now().toDbStringLocal();
 

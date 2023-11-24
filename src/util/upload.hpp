@@ -10,11 +10,14 @@ namespace gaboot
 	class upload_file
 	{
 	public:
-		explicit upload_file(Multer const& file, std::string filename, std::string folderName) : m_file(file)
+		explicit upload_file(const Multer* file, std::string filename, std::string folderName) : m_file(file)
 		{
+			if (!file)
+				throw std::runtime_error("File doesn't exist");
+
 			auto folder = g_file_manager.get_project_folder(fmt::format("./{}", folderName));
-			m_raw_image = folder.get_file(fmt::format("./pictures/{}.{}", filename, m_file.getFileExtension()));
-			m_raw_thumbnail = folder.get_file(fmt::format("./pictures/thumbnail/{}.{}", filename, m_file.getFileExtension())).get_path();
+			m_raw_image = folder.get_file(fmt::format("./pictures/{}.{}", filename, m_file->getFileExtension()));
+			m_raw_thumbnail = folder.get_file(fmt::format("./pictures/thumbnail/{}.{}", filename, m_file->getFileExtension())).get_path();
 
 			m_file_image = folder.get_file(fmt::format("./pictures/thumbnail/{}", filename)).relative_path();
 			m_file_thumbnail = folder.get_file(fmt::format("./pictures/thumbnail/{}", filename)).relative_path();
@@ -34,7 +37,7 @@ namespace gaboot
 
 		bool resize_thumbnail() const
 		{
-			if (m_file.getFileExtension() == "gif")
+			if (m_file->getFileExtension() == "gif")
 			{
 				LOG(WARNING) << "GIF file doesn't support resizing";
 
@@ -68,10 +71,10 @@ namespace gaboot
 		bool convert_to_jpg() const
 		{
 			// Read the PNG image
-			if (m_file.getFileExtension() == "png")
+			if (m_file->getFileExtension() == "png")
 			{
-				cv::Mat img = cv::imread(fmt::format("{}.{}", m_file_image.string(), m_file.getFileExtension()));
-				cv::Mat thumb = cv::imread(fmt::format("{}.{}", m_file_thumbnail.string(), m_file.getFileExtension()));
+				cv::Mat img = cv::imread(fmt::format("{}.{}", m_file_image.string(), m_file->getFileExtension()));
+				cv::Mat thumb = cv::imread(fmt::format("{}.{}", m_file_thumbnail.string(), m_file->getFileExtension()));
 
 				if (img.empty())
 				{
@@ -122,8 +125,8 @@ namespace gaboot
 		{
 			try
 			{
-				m_file.saveAs(m_raw_thumbnail.absolute_path().string());
-				m_file.saveAs(m_raw_image.absolute_path().string());
+				m_file->saveAs(m_raw_thumbnail.absolute_path().string());
+				m_file->saveAs(m_raw_image.absolute_path().string());
 
 				LOG(INFO) << "Thumbnail saved at " << m_raw_thumbnail.absolute_path().string();
 				LOG(INFO) << "Image saved at " << m_raw_image.absolute_path().string();
@@ -138,7 +141,7 @@ namespace gaboot
 			}
 		}
 	private:
-		HttpFile m_file;
+		const Multer* m_file;
 		std::filesystem::path m_image;
 		std::filesystem::path m_thumbnail;
 		std::filesystem::path m_file_image;

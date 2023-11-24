@@ -84,7 +84,7 @@ namespace gaboot
 
             MasterCustomers customer(data);
 
-            upload_file upload(file, customer.getValueOfUsername(), "customers");
+            upload_file upload(&file, customer.getValueOfUsername(), "customers");
 
             customer.setCreatedat(trantor::Date::now());
             customer.setUpdatedat(trantor::Date::now());
@@ -177,7 +177,7 @@ namespace gaboot
             if (!g_customer_manager->find(stoll(id), &customer))
                 return UnauthorizedException("You're not logged in, please login!").response();
 
-            upload_file upload(file, customer.getValueOfUsername(), "customers");
+            upload_file upload(&file, customer.getValueOfUsername(), "customers");
 
             util::multipart_tojson(multipart, m_data);
 
