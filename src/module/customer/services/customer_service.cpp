@@ -155,7 +155,7 @@ namespace gaboot
             return response;
         }
     }
-    HttpResponsePtr customer_service::update(HttpRequestPtr const& req, std::string&& id)
+    HttpResponsePtr customer_service::update(HttpRequestPtr const& req, std::string&& id) //bugged when upload file
     {
         try
         {
@@ -185,7 +185,7 @@ namespace gaboot
             if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
             {
                 m_data["imagePath"] = upload.get_image_path();
-                m_data["thumbnailPath"] = upload.get_thumbnail_path();
+                m_data["thumbnailPath"] = upload.get_thumbnail_path(); 
             }
 
             customer.updateByJson(m_data);
