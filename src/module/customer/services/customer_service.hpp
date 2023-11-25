@@ -18,21 +18,6 @@ namespace gaboot
 		{
 			return Mapper<MasterCustomers>(DATABASE_CLIENT);
 		}
-
-		std::map<Json::Value::Members, std::string> columnMapping = {
-			{{MasterCustomers::Cols::_firstname}, "firstname"},
-			{{MasterCustomers::Cols::_lastname}, "lastname"},
-			{{MasterCustomers::Cols::_username}, "username"},
-			{{MasterCustomers::Cols::_email}, "email"},
-			{{MasterCustomers::Cols::_phoneNumber}, "phoneNumber"},
-			{{MasterCustomers::Cols::_addressDetail}, "addressDetail"},
-			{{MasterCustomers::Cols::_latitude}, "latitude"},
-			{{MasterCustomers::Cols::_longitude}, "longitude"},
-			{{MasterCustomers::Cols::_password}, "password"},
-			{{MasterCustomers::Cols::_imgPath}, "imgPath"},
-			{{MasterCustomers::Cols::_imgThumbPath}, "imgThumbPath"},
-			{{MasterCustomers::Cols::_updatedAt}, "updatedAt"},
-		};
 	public:
 		explicit customer_service() = default;
 		virtual ~customer_service() = default;

@@ -157,51 +157,50 @@ namespace gaboot
     }
     HttpResponsePtr customer_service::update(HttpRequestPtr const& req, std::string&& id)
     {
-        MasterCustomers customer;
-        MultiPartParser multipart;
-
         try
         {
+            MultiPartParser multipart;
+            MasterCustomers customer;
+
             if (id.empty() || !util::is_numeric(id))
             {
-                return BadRequestException("Parameters empty or doesn't match").response();
+                return BadRequestException("Parameters requirement doesn't match").response();
             }
 
             if (multipart.parse(req) != 0)
             {
-                return BadRequestException("Data is empty or file requirement doesn't match").response();
+                return BadRequestException("Requirement doesn't match").response();
             }
 
             auto& file = multipart.getFiles()[0];
 
-            if (!g_customer_manager->find(stoll(id), &customer))
-                return UnauthorizedException("You're not logged in, please login!").response();
-
-            upload_file upload(&file, customer.getValueOfUsername(), "customers");
+            m_data["updatedAt"] = trantor::Date::now().toDbStringLocal();
 
             util::multipart_tojson(multipart, m_data);
 
-            if (!util::allowed_image(upload.get_image_filename()))
-                return BadRequestException("File type is not allowerd").response();
+            g_customer_manager->find(stoll(id), &customer);
 
-            m_data["imgPath"] = upload.get_image_path();
-            m_data["imgThumbPath"] = upload.get_thumbnail_path();
-            m_data["updatedAt"] = trantor::Date::now().toDbStringLocal();
+            upload_file upload(&file, customer.getValueOfUsername(), "customers");
+
+            if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
+            {
+                m_data["imagePath"] = upload.get_image_path();
+                m_data["thumbnailPath"] = upload.get_thumbnail_path();
+            }
 
             customer.updateByJson(m_data);
 
-            if (auto record = db().updateFuture(customer).get(); !record)
-                return BadRequestException("Unable to update non-existing record").response();
-
-            LOG(INFO) << "Image saved at " << upload.get_image_path() << " thumbnail saved at " << upload.get_thumbnail_path();
-
-            if (multipart.getFiles().size() != 0)
-                upload.save();
+            if (db().updateFuture(customer).get())
+            {
+                if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
+                {
+                    LOG_INFO << "File saved.";
+                    upload.save();
+                }
+            }
 
             m_response.m_message = "Success update customer data.";
             m_response.m_success = true;
-
-            g_customer_manager->remove(stoll(id));
 
             auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
             return response;
@@ -211,7 +210,7 @@ namespace gaboot
             LOG(WARNING) << fmt::format("Unable to update data, error caught on {}", e.what());
 
             m_response.m_message = fmt::format("Unable to update data, error caught on {}", e.what());
-            m_response.m_success = true;
+            m_response.m_success = false;
 
             auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
             response->setStatusCode(k500InternalServerError);

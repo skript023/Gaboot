@@ -15,7 +15,6 @@ namespace gaboot
 {
 	class customer : public drogon::HttpController<customer>
 	{
-		customer_service m_customer_service;
 	public:
 		METHOD_LIST_BEGIN
 		// use METHOD_ADD to add your custom processing function here;
@@ -23,10 +22,10 @@ namespace gaboot
 		// METHOD_ADD(user::your_method_name, "/{1}/{2}/list", Get); // path is /user/{arg1}/{arg2}/list
 		// ADD_METHOD_TO(user::your_method_name, "/absolute/path/{1}/{2}/list", Get); // path is /absolute/path/{arg1}/{arg2}/list
 		ADD_METHOD_TO(customer::create, "/customers", Post);
-		//ADD_METHOD_TO(customer::findAll, "/customers", Get, ADMIN_MIDDLEWARE);
+		ADD_METHOD_TO(customer::findAll, "/customers", Get, ADMIN_MIDDLEWARE);
 		ADD_METHOD_TO(customer::findOne, "/customers/{id}", Get, CUSTOMER_MIDDLEWARE);
 		ADD_METHOD_TO(customer::update, "/customers/{id}", Put, CUSTOMER_MIDDLEWARE);
-		//ADD_METHOD_TO(customer::remove, "/customers/{id}", Delete, ADMIN_MIDDLEWARE);
+		ADD_METHOD_TO(customer::remove, "/customers/{id}", Delete, ADMIN_MIDDLEWARE);
 		ADD_METHOD_TO(customer::getImage, "/customers/image/{id}", Get, CUSTOMER_MIDDLEWARE);
 		ADD_METHOD_TO(customer::getThumbnail, "/customers/thumbnail/{id}", Get, CUSTOMER_MIDDLEWARE);
 		ADD_METHOD_TO(customer::getProfile, "/customers/profile/{id}", Get, CUSTOMER_MIDDLEWARE);
@@ -42,5 +41,7 @@ namespace gaboot
 		void getImage(HttpRequestPtr const& req, response_t&& callback, std::string&& id);
 		void getThumbnail(HttpRequestPtr const& req, response_t&& callback, std::string&& id);
 		void getProfile(HttpRequestPtr const& req, response_t&& callback, std::string&& id);
+	private:
+		customer_service m_customer_service;
 	};
 }
