@@ -57,6 +57,7 @@ namespace gaboot
 				auto response = HttpResponse::newHttpResponse();
 				response->setContentTypeCode(CT_APPLICATION_JSON);
 				response->setBody(midtrans.dump());
+				response->setStatusCode(k201Created);
 
 				return response;
 			}

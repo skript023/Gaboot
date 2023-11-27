@@ -107,6 +107,7 @@ namespace gaboot
             m_response.m_success = true;
 
             auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+            response->setStatusCode(k201Created);
 
             return response;
         }

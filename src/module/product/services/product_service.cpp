@@ -103,6 +103,7 @@ namespace gaboot
 			m_response.m_success = true;
 
 			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+			response->setStatusCode(k201Created);
 
 			return response;
 		}
@@ -186,7 +187,7 @@ namespace gaboot
 			product.setId(stoll(id));
 			product.setUpdatedat(trantor::Date::now());
 
-			if (const auto record = db().update(product); !record)
+			if (const auto record = db().updateFuture(product).get(); !record)
 			{
 				return NotFoundException("Unable to update non-existing product").response();
 			}

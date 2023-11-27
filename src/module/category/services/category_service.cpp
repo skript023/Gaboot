@@ -46,6 +46,7 @@ namespace gaboot
 			m_response.m_success = true;
 
 			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+			response->setStatusCode(k201Created);
 
 			return response;
 		}
@@ -156,8 +157,6 @@ namespace gaboot
 
 			auto& file = multipart.getFiles()[0];
 
-			m_data["updatedAt"] = trantor::Date::now().toDbStringLocal();
-
 			util::multipart_tojson(multipart, m_data);
 
 			upload_file upload(&file, std::to_string(trantor::Date::now().microSecondsSinceEpoch()), "categories");
@@ -168,26 +167,12 @@ namespace gaboot
 				m_data["thumbnailPath"] = upload.get_thumbnail_path();
 			}
 
-			auto args = Criteria(Categories::Cols::_id, CompareOperator::EQ, stoll(id));
+			Categories categories(m_data);
+			categories.setId(stoll(id));
+			categories.setUpdatedat(trantor::Date::now());
 
-			// Loop through JSON members and update corresponding database columns
-			for (const auto& [column, request] : this->columnMapping)
-			{
-				if (m_data.isMember(request))
-				{
-					auto& jsonValue = m_data[request];
-
-					if (!jsonValue.isNull())
-					{
-						auto record = db().updateFutureBy(column, args, jsonValue.asString());
-
-						if (record.valid() && record.get())
-						{
-							m_response.m_data[request + "_updated"] = "success";
-						}
-					}
-				}
-			}
+			if (!db().updateFuture(categories).get())
+				return CustomException<k500InternalServerError>("Unable to update non-existing data").response();
 
 			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 			{
