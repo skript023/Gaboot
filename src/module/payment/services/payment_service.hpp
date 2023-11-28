@@ -1,5 +1,6 @@
 #pragma once
 #include <pch.h>
+#include <interfaces/fwddec.hpp>
 
 #include <interfaces/response.hpp>
 #include <payment/models/Payments.h>

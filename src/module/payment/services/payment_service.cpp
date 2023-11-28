@@ -25,7 +25,7 @@ namespace gaboot
 			m_customer.email = "elaina023@example.com";
 			m_customer.phone = "+62813131212";
 
-			money_formatter price = m_items.price;
+			Rupiah price = m_items.price;
 
 			g_payment_processing->item_details(&m_items);
 			g_payment_processing->customer_details(&m_customer);

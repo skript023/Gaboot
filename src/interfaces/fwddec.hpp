@@ -1,4 +1,5 @@
 #pragma once
+#include "money_formatter.hpp"
 
 namespace gaboot
 {
@@ -8,4 +9,6 @@ namespace gaboot
     struct shipping_address;
     struct billing_address;
     struct shipping_address;
+
+    using Rupiah = money_formatter;
 }
