@@ -20,6 +20,8 @@ namespace gaboot
         ADD_METHOD_TO(category::findOne, "/category/{id}", Get);
         ADD_METHOD_TO(category::update, "/category/{id}", Put);
         ADD_METHOD_TO(category::remove, "/category/{id}", Delete);
+        ADD_METHOD_TO(category::getImage, "/category/image/{id}", Get);
+        ADD_METHOD_TO(category::getThumbnail, "/category/thumbnail/{id}", Get);
         METHOD_LIST_END
         // your declaration of processing function maybe like this:
         // void get(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, int p1, std::string p2);
@@ -29,6 +31,8 @@ namespace gaboot
         void findOne(HttpRequestPtr const& req, response_t&& callback, std::string&& id);
         void update(HttpRequestPtr const& req, response_t&& callback, std::string&& id);
         void remove(HttpRequestPtr const& req, response_t&& callback, std::string&& id);
+        void getImage(HttpRequestPtr const& req, response_t&& callback, std::string&& id);
+        void getThumbnail(HttpRequestPtr const& req, response_t&& callback, std::string&& id);
     private:
         category_service m_category_service;
     };

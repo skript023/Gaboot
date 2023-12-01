@@ -6,6 +6,8 @@
 #include "interfaces/response.hpp"
 #include "category/models/Categories.h"
 
+#include "cache_handler.hpp"
+
 using namespace drogon;
 using namespace orm;
 using namespace drogon_model::gaboot;
@@ -15,17 +17,9 @@ namespace gaboot
 	class category_service
 	{
 		Mapper<Categories> db() { return Mapper<Categories>(DATABASE_CLIENT); }
-		std::map<Json::Value::Members, std::string> columnMapping = {
-			{{Categories::Cols::_name}, "name"},
-			{{Categories::Cols::_description}, "description"},
-			{{Categories::Cols::_imgPath}, "imagePath"},
-			{{Categories::Cols::_imgThumbPath}, "thumbnailPath"},
-			{{Categories::Cols::_updatedAt}, "updatedAt"},
-			{{Categories::Cols::_createdAt}, "createdAt"}
-		};
 	public:
-		explicit category_service() = default;
-		virtual ~category_service() = default;
+		explicit category_service();
+		~category_service();
 
 		category_service(category_service const& that) = delete;
 		category_service& operator=(category_service const& that) = delete;
@@ -38,9 +32,25 @@ namespace gaboot
 		HttpResponsePtr findOne(HttpRequestPtr const&, std::string&& id);
 		HttpResponsePtr update(HttpRequestPtr const&, std::string&& id);
 		HttpResponsePtr remove(HttpRequestPtr const&, std::string&& id);
+		HttpResponsePtr getImage(HttpRequestPtr const&, std::string&&);
+		HttpResponsePtr getThumbnail(HttpRequestPtr const&, std::string&&);
+	private:
+		void load_cache()
+		{
+			if (m_cache_category.empty())
+			{
+				auto categories = db().orderBy(Categories::Cols::_name).findFutureAll().get();
+				m_cache_category.cache_duration(1h);
+
+				std::ranges::for_each(categories.begin(), categories.end(), [this](Categories category) {
+					m_cache_category.insert(*category.getId(), &category);
+				});
+			}
+		}
 	private:
 		response_data m_response;
 		std::string m_error;
 		Json::Value m_data;
+		cache_handler<Categories> m_cache_category;
 	};
 }

@@ -13,11 +13,11 @@ namespace gaboot
 		explicit upload_file(const Multer* file, std::string filename, std::string folderName) : m_file(file)
 		{
 			if (!file)
-				throw std::runtime_error("File doesn't exist");
+				return;
 
 			auto folder = g_file_manager.get_project_folder(fmt::format("./{}", folderName));
 			m_raw_image = folder.get_file(fmt::format("./pictures/{}.{}", filename, m_file->getFileExtension()));
-			m_raw_thumbnail = folder.get_file(fmt::format("./pictures/thumbnail/{}.{}", filename, m_file->getFileExtension())).get_path();
+			m_raw_thumbnail = folder.get_file(fmt::format("./pictures/thumbnail/{}.{}", filename, m_file->getFileExtension()));
 
 			m_file_image = folder.get_file(fmt::format("./pictures/thumbnail/{}", filename)).relative_path();
 			m_file_thumbnail = folder.get_file(fmt::format("./pictures/thumbnail/{}", filename)).relative_path();
@@ -27,12 +27,16 @@ namespace gaboot
 		}
 		virtual ~upload_file() noexcept = default;
 
-		void save() const
+		bool save() const
 		{
 			if (this->save_image())
 			{
 				this->resize_thumbnail();
+
+				return true;
 			}
+
+			return false;
 		}
 
 		bool resize_thumbnail() const
@@ -125,8 +129,11 @@ namespace gaboot
 		{
 			try
 			{
-				m_file->saveAs(m_raw_thumbnail.absolute_path().string());
-				m_file->saveAs(m_raw_image.absolute_path().string());
+				if (!m_file)
+					return false;
+
+				m_file->saveAs(m_raw_thumbnail.get_path().string());
+				m_file->saveAs(m_raw_image.get_path().string());
 
 				LOG(INFO) << "Thumbnail saved at " << m_raw_thumbnail.absolute_path().string();
 				LOG(INFO) << "Image saved at " << m_raw_image.absolute_path().string();

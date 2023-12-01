@@ -1,10 +1,19 @@
 #include "category_service.hpp"
+
 #include <util/exception.hpp>
 #include <util/upload.hpp>
 
 namespace gaboot
 {
-    HttpResponsePtr category_service::create(HttpRequestPtr const& req)
+	category_service::category_service()
+	{
+		this->load_cache();
+	}
+	category_service::~category_service()
+	{
+		m_cache_category.clear();
+	}
+	HttpResponsePtr category_service::create(HttpRequestPtr const& req)
     {
 		try
 		{
@@ -20,13 +29,13 @@ namespace gaboot
 			if (!util::multipart_tojson(fileUpload, m_data)) return BadRequestException("Unknown error").response();
 
 			validator schema({
-				{"name", "type:string|required|alphabetOnly"},
-				{"description", "type:string|required|alphabetOnly"}
+				{"name", "type:string|required|alphanum"},
+				{"description", "type:string|required|alphanum"}
 			});
 
 			Categories category(m_data);
 
-			upload_file upload(&file, trantor::Date::now().toDbStringLocal(), "categories");
+			upload_file upload(&file, *category.getName(), "categories");
 
 			category.setCreatedat(trantor::Date::now());
 			category.setUpdatedat(trantor::Date::now());
@@ -40,9 +49,11 @@ namespace gaboot
 			
 			db().insert(category);
 
-			upload.save();
+			m_cache_category.clear();
 
-			m_response.m_message = "Create product success";
+			if (!upload.save()) return BadRequestException("Unable to save image").response();
+
+			m_response.m_message = "Create category success";
 			m_response.m_success = true;
 
 			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
@@ -73,7 +84,10 @@ namespace gaboot
 			const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
 			const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
-			const auto categories = db().orderBy(Categories::Cols::_name).limit(limit).offset(page * limit).findFutureAll().get();
+			if (m_cache_category.empty())
+				this->load_cache();
+
+			const auto categories = m_cache_category.find_all(limit, page * limit);
 
 			if (categories.empty())
 			{
@@ -118,19 +132,22 @@ namespace gaboot
 				return BadRequestException("Requirement doesn't match").response();
 			}
 
-			const auto user = db().findFutureByPrimaryKey(stoll(id)).get();
+			if (m_cache_category.empty())
+				this->load_cache();
 
-			if (!user.getId()) return NotFoundException("Unable retrieve customer detail").response();
+			const auto user = m_cache_category.find(stoll(id));
 
-			m_response.m_message = "Success retrieve user data";
+			if (!user) return NotFoundException("Unable retrieve category detail").response();
+
+			m_response.m_message = "Success retrieve category data";
 			m_response.m_success = true;
-			m_response.m_data = user.toJson();
+			m_response.m_data = user->toJson();
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		}
 		catch (const DrogonDbException& e)
 		{
-			m_response.m_message = fmt::format("Cannot retrieve user data, error caught on {}", e.base().what());
+			m_response.m_message = fmt::format("Cannot retrieve category data, error caught on {}", e.base().what());
 			m_response.m_success = false;
 
 			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
@@ -144,6 +161,9 @@ namespace gaboot
 		try
 		{
 			MultiPartParser multipart;
+
+			if (m_cache_category.empty())
+				this->load_cache();
 
 			if (id.empty() || !util::is_numeric(id))
 			{
@@ -159,19 +179,35 @@ namespace gaboot
 
 			util::multipart_tojson(multipart, m_data);
 
-			upload_file upload(&file, std::to_string(trantor::Date::now().microSecondsSinceEpoch()), "categories");
+			auto category = m_cache_category.find(stoll(id));
+			if (!category) return NotFoundException("Unable to update non-existing data").response();
+
+			category->updateByJson(m_data);
+			category->setId(stoll(id));
+			category->setUpdatedat(trantor::Date::now());
+
+			validator schema({
+				{"name", "type:string|required|alphanum"},
+				{"description", "type:string|required|alphanum"}
+			});
+
+			if (!schema.validate(category->toJson(), m_error))
+			{
+				return BadRequestException(m_error).response();
+			}
+
+			upload_file upload(&file, *category->getName(), "categories");
 
 			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 			{
-				m_data["imagePath"] = upload.get_image_path();
-				m_data["thumbnailPath"] = upload.get_thumbnail_path();
+				category->setImgpath(upload.get_image_path());
+				category->setImgthumbpath(upload.get_thumbnail_path());
 			}
 
-			Categories categories(m_data);
-			categories.setId(stoll(id));
-			categories.setUpdatedat(trantor::Date::now());
+			if (!m_cache_category.update(stoll(id), *category))
+				return CustomException<k500InternalServerError>("Unable to update non-existing cache").response();
 
-			if (!db().updateFuture(categories).get())
+			if (!db().updateFuture(*category).get())
 				return CustomException<k500InternalServerError>("Unable to update non-existing data").response();
 
 			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
@@ -180,20 +216,21 @@ namespace gaboot
 				upload.save();
 			}
 
-			m_response.m_message = "Success update customer data.";
+			m_response.m_message = "Success update category data.";
 			m_response.m_success = true;
 
 			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 			return response;
 		}
-		catch (const DrogonDbException& e)
+		catch (const std::exception& e)
 		{
-			m_response.m_message = fmt::format("Unable to update data, error caught on {}", e.base().what());
+			LOG(WARNING) << e.what();
+
+			m_response.m_message = fmt::format("Unable to update data, error caught on {}", e.what());
 			m_response.m_success = false;
 
 			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-
-			LOG(WARNING) << e.base().what();
+			response->setStatusCode(k500InternalServerError);
 
 			return response;
 		}
@@ -207,11 +244,16 @@ namespace gaboot
 				return BadRequestException("Parameters requirement doesn't match").response();
 			}
 
+			if (m_cache_category.empty())
+				this->load_cache();
+
 			const auto record = db().deleteFutureByPrimaryKey(stoll(id)).get();
 
 			if (record != 0)
 			{
-				m_response.m_message = fmt::format("Delete user on {} successfully", record);
+				m_cache_category.remove(stoll(id));
+
+				m_response.m_message = fmt::format("Delete category on {} successfully", record);
 				m_response.m_success = true;
 
 				auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
@@ -222,7 +264,7 @@ namespace gaboot
 		}
 		catch (const DrogonDbException& e)
 		{
-			m_response.m_message = fmt::format("Failed delete user, error caught on {}", e.base().what());
+			m_response.m_message = fmt::format("Failed delete category, error caught on {}", e.base().what());
 			m_response.m_success = false;
 
 			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
@@ -230,5 +272,95 @@ namespace gaboot
 
 			return response;
 		}
+	}
+	HttpResponsePtr category_service::getImage(HttpRequestPtr const& req, std::string&& id)
+	{
+		Categories category;
+
+		if (id.empty() || !util::is_numeric(id))
+		{
+			LOG(WARNING) << "ID is empty or ID is not numeric";
+
+			return BadRequestException("Parameters requirement doesn't match").response();
+		}
+
+		if (!m_cache_category.empty())
+			this->load_cache();
+
+		if (m_cache_category.find(stoll(id), &category))
+		{
+			std::filesystem::path file(*category.getImgpath());
+
+			if (!std::filesystem::exists(file))
+			{
+				LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
+
+				m_response.m_message = "Unable to retreive category picture, please upload your category picture";
+				m_response.m_success = false;
+
+				auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+				response->setStatusCode(k404NotFound);
+
+				return response;
+			}
+
+			if (auto image = category.getImgpath(); image && !image->empty())
+				return HttpResponse::newFileResponse(*category.getImgpath());
+		}
+
+		m_response.m_message = "Unable to retreive category image";
+		m_response.m_success = false;
+
+		auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+		response->setStatusCode(k404NotFound);
+
+		LOG(WARNING) << "Unable to retreive category image";
+
+		return response;
+	}
+	HttpResponsePtr category_service::getThumbnail(HttpRequestPtr const& req, std::string&& id)
+	{
+		Categories category;
+
+		if (id.empty() || !util::is_numeric(id))
+		{
+			LOG(WARNING) << "ID is empty or ID is not numeric";
+
+			return BadRequestException("Parameters requirement doesn't match").response();
+		}
+
+		if (!m_cache_category.empty())
+			this->load_cache();
+
+		if (m_cache_category.find(stoll(id), &category))
+		{
+			std::filesystem::path file(*category.getImgthumbpath());
+
+			if (!std::filesystem::exists(file))
+			{
+				LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
+
+				m_response.m_message = "Unable to retreive category picture, please upload your category picture";
+				m_response.m_success = false;
+
+				auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+				response->setStatusCode(k404NotFound);
+
+				return response;
+			}
+
+			if (auto image = category.getImgpath(); image && !image->empty())
+				return HttpResponse::newFileResponse(*category.getImgthumbpath());
+		}
+
+		m_response.m_message = "Unable to retreive category image";
+		m_response.m_success = false;
+
+		auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+		response->setStatusCode(k404NotFound);
+
+		LOG(WARNING) << "Unable to retreive category image";
+
+		return response;
 	}
 }

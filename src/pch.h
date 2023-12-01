@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <cstdint>
+#include <ranges>
 
 #ifdef _WIN32
 #include <Windows.h>

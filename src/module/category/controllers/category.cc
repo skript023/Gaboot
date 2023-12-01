@@ -23,4 +23,12 @@ namespace gaboot
     {
         callback(m_category_service.remove(req, std::move(id)));
     }
+    void category::getImage(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
+    {
+        callback(m_category_service.getImage(req, std::move(id)));
+    }
+    void category::getThumbnail(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
+    {
+        callback(m_category_service.getThumbnail(req, std::move(id)));
+    }
 }

@@ -19,12 +19,12 @@ namespace gaboot
 			if (!this->find(id))
 			{
 				auto customer = db().findFutureByPrimaryKey(id).get();
-				auto result = m_cache_auth.insert({ id, customer });
+				auto result = m_cache_auth.insert({ id, auth_cache(customer, 24h) });
 
 				if (result.second)
-					LOG(INFO_TO_FILE) << "Customer " << *result.first->second.getUsername() << " successfully inserted into authentication pool";
+					LOG(INFO_TO_FILE) << "Customer " << *result.first->second.m_customers.getUsername() << " successfully inserted into authentication pool";
 				else
-					LOG(INFO_TO_FILE) << "Customer " << *result.first->second.getUsername() << " is already exist in authentication pool";
+					LOG(INFO_TO_FILE) << "Customer " << *result.first->second.m_customers.getUsername() << " is already exist in authentication pool";
 
 				return true;
 			}
@@ -45,12 +45,12 @@ namespace gaboot
 		{
 			if (!this->find(id))
 			{
-				auto result = m_cache_auth.insert({ id, *customer });
+				auto result = m_cache_auth.insert({ id, auth_cache(*customer, 24h) });
 
 				if (result.second)
-					LOG(INFO_TO_FILE) << "Customer " << *result.first->second.getUsername() << " successfully inserted into authentication pool";
+					LOG(INFO_TO_FILE) << "Customer " << *result.first->second.m_customers.getUsername() << " successfully inserted into authentication pool";
 				else
-					LOG(INFO_TO_FILE) << "Customer " << *result.first->second.getUsername() << " is already exist in authentication pool";
+					LOG(INFO_TO_FILE) << "Customer " << *result.first->second.m_customers.getUsername() << " is already exist in authentication pool";
 
 				return true;
 			}
@@ -69,7 +69,7 @@ namespace gaboot
 	{
 		if (auto it = m_cache_auth.find(id); it != m_cache_auth.end())
 		{
-			*customer = it->second;
+			*customer = it->second.m_customers;
 
 			LOG(INFO_TO_FILE) << "Customer data found";
 
@@ -86,12 +86,23 @@ namespace gaboot
 		{
 			LOG(INFO_TO_FILE) << "Customer data found";
 
-			return &(it->second);
+			return &(it->second.m_customers);
 		}
 
 		LOG(WARNING) << "Customer data not found";
 
 		return nullptr;
+	}
+	bool customer_manager::update(int64_t id, MasterCustomers customer)
+	{
+		if (auto it = m_cache_auth.find(id); it != m_cache_auth.end())
+		{
+			it->second.m_customers = customer;
+
+			return true;
+		}
+
+		return false;
 	}
 	bool customer_manager::remove(int64_t id)
 	{
