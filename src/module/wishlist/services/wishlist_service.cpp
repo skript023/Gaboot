@@ -3,6 +3,14 @@
 
 namespace gaboot
 {
+	wishlist_service::wishlist_service()
+	{
+		this->load_cache();
+	}
+	wishlist_service::~wishlist_service()
+	{
+		m_cache_wishlist.clear();
+	}
 	HttpResponsePtr wishlist_service::create(HttpRequestPtr const& req)
 	{
 		try
@@ -12,22 +20,24 @@ namespace gaboot
 			if (!data) return BadRequestException().response();
 
 			validator schema({
-				{"name", "type:string|required|minLength:3|alphabetOnly"},
-				{"description", "type:string|required|minLength:3|alphabetOnly"},
-				{"price", "type:number|required|numberOnly"},
-				{"stock", "type:number|required|numberOnly"}
+				{"productId", "type:number|required|minLength:3|numberOnly"},
+				{"category", "type:string|required|minLength:3|aphabetOnly"}
 			});
 
-			Wishlists product(*data);
+			Wishlists wishlist(*data);
+			wishlist.setCreatedat(trantor::Date::now());
+			wishlist.setUpdatedat(trantor::Date::now());
 
-			if (!schema.validate(product.toJson(), m_error))
+			if (!schema.validate(wishlist.toJson(), m_error))
 			{
 				return BadRequestException(m_error).response();
 			}
 
-			db().insert(product);
+			db().insert(wishlist);
 
-			m_response.m_message = "Create product success";
+			m_cache_wishlist.clear();
+
+			m_response.m_message = "Create wishlist success";
 			m_response.m_success = true;
 
 			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
@@ -35,17 +45,11 @@ namespace gaboot
 
 			return response;
 		}
-		catch (const DrogonDbException& e)
+		catch (const std::exception& e)
 		{
-			LOG(WARNING) << e.base().what();
+			std::string error = fmt::format("Unable create wishlist data, error caught on {}", e.what());
 
-			m_response.m_message = e.base().what();
-			m_response.m_success = false;
-
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			response->setStatusCode(HttpStatusCode::k500InternalServerError);
-
-			return response;
+			return CustomException<k500InternalServerError>(error).response();
 		}
 	}
     HttpResponsePtr wishlist_service::findAll(HttpRequestPtr const& req)
@@ -58,7 +62,10 @@ namespace gaboot
 			const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
 			const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
-			const auto wishlists = db().orderBy(Wishlists::Cols::_category).limit(limit).offset(page * limit).findFutureAll().get();
+			if (m_cache_wishlist.empty())
+				this->load_cache();
+
+			const auto wishlists = m_cache_wishlist.find_all(limit, page * limit);
 
 			if (wishlists.empty())
 			{
@@ -76,7 +83,7 @@ namespace gaboot
 
 			const size_t lastPage = (wishlists.size() / (limit + (wishlists.size() % limit))) == 0 ? 0 : 1;
 
-			m_response.m_message = "Success retreive products data";
+			m_response.m_message = "Success retreive wishlists data";
 			m_response.m_success = true;
 			m_response.m_data = data;
 			m_response.m_last_page = lastPage;
@@ -85,15 +92,11 @@ namespace gaboot
 
 			return response;
 		}
-		catch (const DrogonDbException& e)
+		catch (const std::exception& e)
 		{
-			m_response.m_message = fmt::format("Unable retrieve products data, error caught on {}", e.base().what());
-			m_response.m_success = false;
+			std::string error = fmt::format("Unable retrieve products data, error caught on {}", e.what());
 
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			response->setStatusCode(k500InternalServerError);
-
-			return response;
+			return CustomException<k500InternalServerError>(error).response();
 		}
     }
 	HttpResponsePtr wishlist_service::findOne(HttpRequestPtr const& req, std::string&& id)
@@ -105,25 +108,24 @@ namespace gaboot
 				return BadRequestException("Requirement doesn't match").response();
 			}
 
-			const auto user = db().findByPrimaryKey(stoll(id));
+			if (m_cache_wishlist.empty())
+				this->load_cache();
 
-			if (!user.getId()) return NotFoundException("Unable retrieve wishlist detail").response();
+			const auto user = m_cache_wishlist.find(stoll(id));
+
+			if (!user) return NotFoundException("Unable retrieve wishlist detail").response();
 
 			m_response.m_message = "Success retrieve wishlist data";
 			m_response.m_success = true;
-			m_response.m_data = user.toJson();
+			m_response.m_data = user->toJson();
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		}
-		catch (const DrogonDbException& e)
+		catch (const std::exception& e)
 		{
-			m_response.m_message = fmt::format("Cannot retrieve wishlist data, error caught on {}", e.base().what());
-			m_response.m_success = false;
+			std::string error = fmt::format("Cannot retrieve wishlist data, error caught on {}", e.what());
 
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			response->setStatusCode(k500InternalServerError);
-
-			return response;
+			return CustomException<k500InternalServerError>(error).response();
 		}
 	}
 	HttpResponsePtr wishlist_service::update(HttpRequestPtr const& req, std::string&& id)
@@ -139,34 +141,33 @@ namespace gaboot
 				return BadRequestException("Parameters requirement doesn't match").response();
 			}
 
-			Wishlists product(*json);
-			product.setId(stoll(id));
-			product.setUpdatedat(trantor::Date::now());
+			const auto wishlist = m_cache_wishlist.find(stoll(id));
 
-			const auto record = db().updateFuture(product).get();
+			wishlist->updateByJson(*json);
+			wishlist->setId(stoll(id));
+			wishlist->setUpdatedat(trantor::Date::now());
 
-			if (!record)
-			{
-				return NotFoundException("Unable to update non-existing product").response();
-			}
+			if (m_cache_wishlist.empty())
+				this->load_cache();
 
-			m_response.m_data = product.toJson();
-			m_response.m_message = "Success update customer data.";
+			if (!m_cache_wishlist.update(stoll(id), *wishlist))
+				return BadRequestException("Unable to update non-existing record").response();
+
+			if (auto record = db().updateFuture(*wishlist).get(); !record)
+				return BadRequestException("Unable to update non-existing record").response();
+
+			m_response.m_data = wishlist->toJson();
+			m_response.m_message = "Success update wishlist data.";
 			m_response.m_success = true;
 
 			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 			return response;
 		}
-		catch (const DrogonDbException& e)
+		catch (const std::exception& e)
 		{
-			m_response.m_message = fmt::format("Unable to update data, error caught on {}", e.base().what());
-			m_response.m_success = false;
+			LOG(WARNING) << e.what();
 
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-
-			LOG(WARNING) << e.base().what();
-
-			return response;
+			return CustomException<k500InternalServerError>(fmt::format("Unable to update data, error caught on {}", e.what())).response();
 		}
 	}
 	HttpResponsePtr wishlist_service::remove(HttpRequestPtr const& req, std::string&& id)
@@ -178,20 +179,23 @@ namespace gaboot
 
 		try
 		{
-			const auto record = db().deleteByPrimaryKey(stoll(id));
-			if (record != 0)
-			{
-				m_response.m_message = fmt::format("Delete user on {} successfully", record);
-				m_response.m_success = true;
+			if (m_cache_wishlist.empty())
+				this->load_cache();
 
-				return HttpResponse::newHttpJsonResponse(m_response.to_json());
-			}
+			if (m_cache_wishlist.remove(stoll(id)))
+				return NotFoundException("Unable to delete non-existing record").response();
 
-			return NotFoundException("Record not found").response();
+			if (auto record = db().deleteByPrimaryKey(stoll(id)); !record)
+				return NotFoundException("Unable to delete non-existing record").response();
+
+			m_response.m_message = "Delete wishlist successfully";
+			m_response.m_success = true;
+
+			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		}
 		catch (const DrogonDbException& e)
 		{
-			m_response.m_message = fmt::format("Failed delete user, error caught on {}", e.base().what());
+			m_response.m_message = fmt::format("Failed delete wishlist, error caught on {}", e.base().what());
 			m_response.m_success = false;
 
 			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
