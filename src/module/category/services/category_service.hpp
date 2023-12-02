@@ -37,10 +37,10 @@ namespace gaboot
 	private:
 		void load_cache()
 		{
-			if (m_cache_category.empty())
+			if (m_cache_category.empty() || m_cache_category.expired())
 			{
 				auto categories = db().orderBy(Categories::Cols::_name).findFutureAll().get();
-				m_cache_category.cache_duration(10s);
+				m_cache_category.cache_duration(5min);
 
 				std::ranges::for_each(categories.begin(), categories.end(), [this](Categories category) {
 					m_cache_category.insert(*category.getId(), &category);

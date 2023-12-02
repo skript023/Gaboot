@@ -84,8 +84,7 @@ namespace gaboot
 			const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
 			const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
-			if (m_cache_category.empty())
-				this->load_cache();
+			this->load_cache();
 
 			const auto categories = m_cache_category.find_all(limit, page * limit);
 
@@ -132,8 +131,7 @@ namespace gaboot
 				return BadRequestException("Requirement doesn't match").response();
 			}
 
-			if (m_cache_category.empty())
-				this->load_cache();
+			this->load_cache();
 
 			const auto user = m_cache_category.find(stoll(id));
 
@@ -162,8 +160,7 @@ namespace gaboot
 		{
 			MultiPartParser multipart;
 
-			if (m_cache_category.empty())
-				this->load_cache();
+			this->load_cache();
 
 			if (id.empty() || !util::is_numeric(id))
 			{
@@ -244,8 +241,7 @@ namespace gaboot
 				return BadRequestException("Parameters requirement doesn't match").response();
 			}
 
-			if (m_cache_category.empty())
-				this->load_cache();
+			this->load_cache();
 
 			const auto record = db().deleteFutureByPrimaryKey(stoll(id)).get();
 
@@ -284,8 +280,7 @@ namespace gaboot
 			return BadRequestException("Parameters requirement doesn't match").response();
 		}
 
-		if (!m_cache_category.empty())
-			this->load_cache();
+		this->load_cache();
 
 		if (m_cache_category.find(stoll(id), &category))
 		{
@@ -329,8 +324,7 @@ namespace gaboot
 			return BadRequestException("Parameters requirement doesn't match").response();
 		}
 
-		if (!m_cache_category.empty())
-			this->load_cache();
+		this->load_cache();
 
 		if (m_cache_category.find(stoll(id), &category))
 		{

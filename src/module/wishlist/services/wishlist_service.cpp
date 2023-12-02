@@ -62,8 +62,7 @@ namespace gaboot
 			const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
 			const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
-			if (m_cache_wishlist.empty())
-				this->load_cache();
+			this->load_cache();
 
 			const auto wishlists = m_cache_wishlist.find_all(limit, page * limit);
 
@@ -108,8 +107,7 @@ namespace gaboot
 				return BadRequestException("Requirement doesn't match").response();
 			}
 
-			if (m_cache_wishlist.empty())
-				this->load_cache();
+			this->load_cache();
 
 			const auto user = m_cache_wishlist.find(stoll(id));
 
@@ -147,8 +145,7 @@ namespace gaboot
 			wishlist->setId(stoll(id));
 			wishlist->setUpdatedat(trantor::Date::now());
 
-			if (m_cache_wishlist.empty())
-				this->load_cache();
+			this->load_cache();
 
 			if (!m_cache_wishlist.update(stoll(id), *wishlist))
 				return BadRequestException("Unable to update non-existing record").response();
@@ -179,8 +176,7 @@ namespace gaboot
 
 		try
 		{
-			if (m_cache_wishlist.empty())
-				this->load_cache();
+			this->load_cache();
 
 			if (m_cache_wishlist.remove(stoll(id)))
 				return NotFoundException("Unable to delete non-existing record").response();

@@ -11,8 +11,6 @@ namespace gaboot
 		void cache_duration(std::chrono::high_resolution_clock::duration time)
 		{
 			m_duration = std::chrono::high_resolution_clock::now() + time;
-
-			g_schedule->task([this] { this->cleanup(); })->every(time)->call();
 		}
 		bool insert(int64_t id, T* cache)
 		{
@@ -122,12 +120,23 @@ namespace gaboot
 			return m_cache.size();
 		}
 		bool empty() { return m_cache.empty(); }
+		bool expired()
+		{
+			if (m_duration <= std::chrono::high_resolution_clock::now())
+			{
+				m_cache.clear();
+
+				LOG(INFO) << "Cache expired";
+
+				return true;
+			}
+
+			return false;
+		}
 
 		void cache_duration(std::chrono::high_resolution_clock::duration time) const
 		{
 			m_duration = std::chrono::high_resolution_clock::now() + time;
-
-			g_schedule->task([this] { this->cleanup(); })->every(time)->call();
 		}
 		bool insert(int64_t id, T* cache) const
 		{
@@ -223,6 +232,17 @@ namespace gaboot
 			return m_cache.size();
 		}
 		bool empty() const { return m_cache.empty(); }
+		bool expired() const
+		{
+			if (m_duration <= std::chrono::high_resolution_clock::now())
+			{
+				m_cache.clear();
+
+				return true;
+			}
+
+			return false;
+		}
 	private:
 		std::map<int64_t, T>m_cache;
 		std::chrono::high_resolution_clock::time_point m_duration;

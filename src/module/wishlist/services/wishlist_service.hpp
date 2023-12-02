@@ -35,10 +35,10 @@ namespace gaboot
 	private:
 		void load_cache()
 		{
-			if (m_cache_wishlist.empty())
+			if (m_cache_wishlist.empty() || m_cache_wishlist.expired())
 			{
 				auto categories = db().orderBy(Wishlists::Cols::_category).findFutureAll().get();
-				m_cache_wishlist.cache_duration(10s);
+				m_cache_wishlist.cache_duration(5min);
 
 				std::ranges::for_each(categories.begin(), categories.end(), [this](Wishlists wishlist) {
 					m_cache_wishlist.insert(*wishlist.getId(), &wishlist);
