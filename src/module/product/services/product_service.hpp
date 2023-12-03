@@ -5,6 +5,8 @@
 #include <module/product/models/MasterProducts.h>
 #include <module/product/models/ProductImages.h>
 
+#include "cache_handler.hpp"
+
 using namespace drogon;
 using namespace orm;
 using namespace drogon_model::gaboot;
@@ -16,8 +18,8 @@ namespace gaboot
 		Mapper<MasterProducts> db() { return Mapper<MasterProducts>(DATABASE_CLIENT); }
 		Mapper<ProductImages> db_images() { return Mapper<ProductImages>(DATABASE_CLIENT); }
 	public:
-		explicit product_service() = default;
-		virtual ~product_service() = default;
+		explicit product_service();
+		~product_service();
 
 		product_service(product_service const& that) = delete;
 		product_service& operator=(product_service const& that) = delete;
@@ -31,6 +33,20 @@ namespace gaboot
 		HttpResponsePtr update(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr remove(HttpRequestPtr const&, std::string&&);
 	private:
+		void load_cache()
+		{
+			if (m_cache_product.empty() || m_cache_product.expired())
+			{
+				auto categories = db().orderBy(MasterProducts::Cols::_name).findFutureAll().get();
+				m_cache_product.cache_duration(5min);
+
+				std::ranges::for_each(categories.begin(), categories.end(), [this](MasterProducts wishlist) {
+					m_cache_product.insert(*wishlist.getId(), &wishlist);
+				});
+			}
+		}
+	private:
+		cache_handler<MasterProducts> m_cache_product;
 		response_data m_response;
 		std::string m_error;
 		Json::Value m_data;

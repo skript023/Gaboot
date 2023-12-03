@@ -4,6 +4,14 @@
 
 namespace gaboot
 {
+	product_service::product_service()
+	{
+		this->load_cache();
+	}
+	product_service::~product_service()
+	{
+		m_cache_product.clear();
+	}
 	HttpResponsePtr product_service::findAll(HttpRequestPtr const& req)
 	{
 		try
@@ -14,7 +22,9 @@ namespace gaboot
 			const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
 			const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
-			const auto products = db().orderBy(MasterProducts::Cols::_name).limit(limit).offset(page * limit).findFutureAll().get();
+			this->load_cache();
+
+			const auto products = m_cache_product.find_all(limit, page * limit);
 
 			if (products.empty())
 			{
@@ -97,6 +107,8 @@ namespace gaboot
 			productImage.setProductid(product.getPrimaryKey());
 			db_images().insert(productImage);
 
+			m_cache_product.clear();
+
 			upload.save();
 
 			m_response.m_message = "Create product success";
@@ -129,13 +141,15 @@ namespace gaboot
 				return BadRequestException("Parameters requirement doesn't match").response();
 			}
 
-			const auto product = db().findFutureByPrimaryKey(stoll(id)).get();
+			this->load_cache();
 
-			if (!product.getId()) return NotFoundException("Product data is empty 0 data found").response();
+			const auto product = m_cache_product.find(stoull(id));
+
+			if (!product) return NotFoundException("Product data is empty 0 data found").response();
 
 			m_response.m_message = "Success retrieve products data";
 			m_response.m_success = true;
-			m_response.m_data = product.toJson();
+			m_response.m_data = product->toJson();
 
 			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 
@@ -187,10 +201,13 @@ namespace gaboot
 			product.setId(stoll(id));
 			product.setUpdatedat(trantor::Date::now());
 
-			if (const auto record = db().updateFuture(product).get(); !record)
-			{
+			this->load_cache();
+
+			if (!m_cache_product.update(stoull(id), product))
 				return NotFoundException("Unable to update non-existing product").response();
-			}
+
+			if (const auto record = db().updateFuture(product).get(); !record)
+				return NotFoundException("Unable to update non-existing product").response();
 
 			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 			{
@@ -235,7 +252,11 @@ namespace gaboot
 				return BadRequestException("Parameters requirement doesn't match").response();
 			}
 
+			this->load_cache();
+
 			const auto record = db().deleteFutureByPrimaryKey(stoll(id)).get();
+
+			m_cache_product.remove(stoull(id));
 
 			if (record != 0)
 			{
