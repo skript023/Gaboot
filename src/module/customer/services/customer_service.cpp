@@ -214,8 +214,9 @@ namespace gaboot
 
                 if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
                 {
-                    LOG_INFO << "File saved.";
                     upload.save();
+
+                    LOG(INFO) << "Image saved at " << upload.get_image_path() << " thumbnail saved at " << upload.get_thumbnail_path();
                 }
             }
 
