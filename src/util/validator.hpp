@@ -131,7 +131,7 @@ namespace gaboot
     private:
         nlohmann::json m_schema = {
             {"$schema", "http://json-schema.org/draft-07/schema#"},
-            {"title", "Customer Schema"},
+            {"title", "Gaboot Schema"},
             {"type", "object"}
         };
     };

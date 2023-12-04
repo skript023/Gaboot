@@ -86,16 +86,17 @@ namespace gaboot
 
             upload_file upload(&file, customer.getValueOfUsername(), "customers");
 
-            customer.setCreatedat(trantor::Date::now());
-            customer.setUpdatedat(trantor::Date::now());
-            customer.setImgpath(upload.get_image_path());
-            customer.setImgthumbpath(upload.get_thumbnail_path());
-            customer.setIsactive(true);
-
             if (!schema.validate(customer.toJson(), m_error))
             {
                 return BadRequestException(m_error).response();
             }
+
+            customer.setCreatedat(trantor::Date::now());
+            customer.setUpdatedat(trantor::Date::now());
+            customer.setImgpath(upload.get_image_path());
+            customer.setImgthumbpath(upload.get_thumbnail_path());
+            customer.setPassword(bcrypt::generateHash(customer.getValueOfPassword()));
+            customer.setIsactive(true);
 
             db().insertFuture(customer);
 
@@ -191,8 +192,26 @@ namespace gaboot
 
             customer.updateByJson(m_data);
 
+            validator schema({
+                {"firstname", "type:string|required|minLength:3|alphabetOnly"},
+                {"lastname", "type:string|required|minLength:3|alphabetOnly"},
+                {"username", "type:string|required|minLength:5|alphanum"},
+                {"email", "type:string|required|email"},
+                {"password", "type:string|required|minLength:8"}
+            });
+
+            if (!schema.validate(customer.toJson(), m_error))
+            {
+                return BadRequestException(m_error).response();
+            }
+
+            customer.setPassword(bcrypt::generateHash(customer.getValueOfPassword()));
+
             if (db().updateFuture(customer).get())
             {
+                if (!g_customer_manager->update(stoll(id), customer))
+                    LOG(WARNING) << "Authentication cache update failed.";
+
                 if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
                 {
                     LOG_INFO << "File saved.";
@@ -208,15 +227,9 @@ namespace gaboot
         }
         catch (const std::exception& e)
         {
-            LOG(WARNING) << fmt::format("Unable to update data, error caught on {}", e.what());
+            std::string error = fmt::format("Unable to update data, error caught on {}", e.what());
 
-            m_response.m_message = fmt::format("Unable to update data, error caught on {}", e.what());
-            m_response.m_success = false;
-
-            auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-            response->setStatusCode(k500InternalServerError);
-
-            return response;
+            return CustomException<k500InternalServerError>(error).response();
         }
     }
     HttpResponsePtr customer_service::remove(HttpRequestPtr const& req, std::string&& id)

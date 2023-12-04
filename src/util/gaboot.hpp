@@ -86,14 +86,7 @@ namespace gaboot::util
         {
             for (const auto& param : params)
             {
-                if (param.first == "password")
-                {
-                    json[param.first] = bcrypt::generateHash(param.second);
-                }
-                else
-                {
-                    json[param.first] = param.second;
-                }
+                json[param.first] = param.second;
             }
 
             return true;
