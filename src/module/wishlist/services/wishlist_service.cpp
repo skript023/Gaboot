@@ -64,7 +64,7 @@ namespace gaboot
 
 			this->load_cache();
 
-			const auto wishlists = m_cache_wishlist.find_all(limit, page * limit);
+			const auto wishlists = m_cache_wishlist.limit(limit).offset(page * limit).find_all();
 
 			if (wishlists.empty())
 			{

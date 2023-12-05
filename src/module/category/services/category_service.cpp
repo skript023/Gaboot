@@ -86,7 +86,7 @@ namespace gaboot
 
 			this->load_cache();
 
-			const auto categories = m_cache_category.find_all(limit, page * limit);
+			const auto categories = m_cache_category.limit(limit).offset(page * limit).find_all();
 
 			if (categories.empty())
 			{

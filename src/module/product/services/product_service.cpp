@@ -24,7 +24,7 @@ namespace gaboot
 
 			this->load_cache();
 
-			const auto products = m_cache_product.find_all(limit, page * limit);
+			const auto products = m_cache_product.limit(limit).offset(page * limit).find_all();
 
 			if (products.empty())
 			{

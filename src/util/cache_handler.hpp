@@ -66,6 +66,32 @@ namespace gaboot
 
 			return result;
 		}
+		std::vector<T> find_all()
+		{
+			std::vector<T> result;
+
+			auto start = m_cache.begin();
+			std::advance(start, std::min(m_offset, m_cache.size()));
+
+			auto end = start;
+			std::advance(end, std::min(m_limit, static_cast<int>(m_cache.size()) - m_offset));
+
+			std::transform(start, end, std::back_inserter(result), [](const auto& pair) { return pair.second; });
+
+			return result;
+		}
+		cache_handler limit(size_t limit)
+		{
+			m_limit = limit;
+
+			return *this;
+		}
+		cache_handler offset(size_t offset)
+		{
+			m_offset = offset;
+
+			return *this;
+		}
 		bool update(int64_t id, T cache)
 		{
 			if (auto it = m_cache.find(id); it != m_cache.end())
@@ -244,6 +270,8 @@ namespace gaboot
 			return false;
 		}
 	private:
+		size_t m_limit;
+		size_t m_offset;
 		std::map<int64_t, T>m_cache;
 		std::chrono::high_resolution_clock::time_point m_duration;
 	};
