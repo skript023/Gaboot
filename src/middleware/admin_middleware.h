@@ -14,7 +14,7 @@ namespace gaboot
     class admin_middleware : public HttpFilter<admin_middleware>
     {
     public:
-        admin_middleware() {}
+        admin_middleware() = default;
         void doFilter(const HttpRequestPtr& req,
             FilterCallback&& fcb,
             FilterChainCallback&& fccb) override;

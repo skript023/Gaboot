@@ -16,10 +16,8 @@ namespace gaboot
     class customer_middleware : public HttpFilter<customer_middleware>
     {
     public:
-        customer_middleware() {}
-        void doFilter(const HttpRequestPtr& req,
-            FilterCallback&& fcb,
-            FilterChainCallback&& fccb) override;
+        customer_middleware() = default;
+        void doFilter(const HttpRequestPtr& req, FilterCallback&& fcb, FilterChainCallback&& fccb) override;
     private:
         [[nodiscard]] bool parse_token_from_header(std::string const& header);
         [[nodiscard]] bool parse_token_from_cookie(std::string const& header);

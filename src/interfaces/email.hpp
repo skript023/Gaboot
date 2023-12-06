@@ -51,8 +51,7 @@ namespace gaboot
 
         ~Email() = default;
 
-        static std::unordered_map<std::string, std::shared_ptr<Email>>
-            m_emails; // Container for processing emails
+        static std::unordered_map<std::string, std::shared_ptr<Email>> m_emails; // Container for processing emails
     };
 
     std::unordered_map<std::string, std::shared_ptr<Email>> Email::m_emails;
@@ -72,7 +71,8 @@ namespace gaboot
         std::string responseCode(receivedMsg.begin(), receivedMsg.begin() + 3);
         //    std::string responseMsg(receivedMsg.begin() + 4, receivedMsg.end());
 
-        if (email->m_status == Email::Init && responseCode == "220") {
+        if (email->m_status == Email::Init && responseCode == "220") 
+        {
             std::string outMsg;
             trantor::MsgBuffer out;
 
@@ -85,7 +85,8 @@ namespace gaboot
 
             email->m_status = Email::HandShake;
         }
-        else if (email->m_status == Email::HandShake && responseCode == "220") {
+        else if (email->m_status == Email::HandShake && responseCode == "220") 
+        {
             std::string outMsg;
             trantor::MsgBuffer out;
 
@@ -104,7 +105,8 @@ namespace gaboot
 
             email->m_status = Email::Auth;
         }
-        else if (email->m_status == Email::HandShake && responseCode == "250") {
+        else if (email->m_status == Email::HandShake && responseCode == "250") 
+        {
             std::string outMsg;
             trantor::MsgBuffer out;
 
@@ -117,7 +119,8 @@ namespace gaboot
 
             email->m_status = Email::HandShake;
         }
-        else if (email->m_status == Email::Auth && responseCode == "250") {
+        else if (email->m_status == Email::Auth && responseCode == "250") 
+        {
             trantor::MsgBuffer out;
             std::string outMsg;
 
@@ -130,7 +133,8 @@ namespace gaboot
 
             email->m_status = Email::User;
         }
-        else if (email->m_status == Email::User && responseCode == "334") {
+        else if (email->m_status == Email::User && responseCode == "334") 
+        {
             trantor::MsgBuffer out;
             std::string outMsg;
 
@@ -150,7 +154,8 @@ namespace gaboot
 
             email->m_status = Email::Pass;
         }
-        else if (email->m_status == Email::Pass && responseCode == "334") {
+        else if (email->m_status == Email::Pass && responseCode == "334") 
+        {
             trantor::MsgBuffer out;
             std::string outMsg;
 
@@ -167,7 +172,8 @@ namespace gaboot
 
             email->m_status = Email::Mail;
         }
-        else if (email->m_status == Email::Mail && responseCode == "235") {
+        else if (email->m_status == Email::Mail && responseCode == "235") 
+        {
             trantor::MsgBuffer out;
             std::string outMsg;
 
@@ -181,7 +187,8 @@ namespace gaboot
 
             email->m_status = Email::Rcpt;
         }
-        else if (email->m_status == Email::Rcpt && responseCode == "250") {
+        else if (email->m_status == Email::Rcpt && responseCode == "250") 
+        {
             trantor::MsgBuffer out;
             std::string outMsg;
 
@@ -195,7 +202,8 @@ namespace gaboot
 
             email->m_status = Email::Data;
         }
-        else if (email->m_status == Email::Data && responseCode == "250") {
+        else if (email->m_status == Email::Data && responseCode == "250") 
+        {
             trantor::MsgBuffer out;
             std::string outMsg;
 
@@ -208,7 +216,8 @@ namespace gaboot
 
             email->m_status = Email::Body;
         }
-        else if (email->m_status == Email::Body && responseCode == "354") {
+        else if (email->m_status == Email::Body && responseCode == "354") 
+        {
             trantor::MsgBuffer out;
             std::string outMsg;
 
@@ -228,7 +237,8 @@ namespace gaboot
 
             email->m_status = Email::Quit;
         }
-        else if (email->m_status == Email::Quit && responseCode == "250") {
+        else if (email->m_status == Email::Quit && responseCode == "250") 
+        {
             trantor::MsgBuffer out;
             std::string outMsg;
 
@@ -241,12 +251,14 @@ namespace gaboot
 
             email->m_status = Email::Close;
         }
-        else if (email->m_status == Email::Close) {
+        else if (email->m_status == Email::Close) 
+        {
             /*Callback here for succeed delivery is probable*/
             cb("Email sent. ID : " + email->m_uuid);
             return;
         }
-        else {
+        else 
+        {
             email->m_status = Email::Close;
             /*Callback here for notification is probable*/
             cb(receivedMsg);
