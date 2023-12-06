@@ -61,7 +61,38 @@ else ()
   #add_compile_options(-Wa,-mbig-obj)
 endif ()
 
+set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+# Specify the destination directory (out/build/windows-x64)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    set(DESTINATION_DIR ${CMAKE_CURRENT_BINARY_DIR}/../build/Windows-x64)
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(DESTINATION_DIR ${CMAKE_CURRENT_BINARY_DIR}/../build/Linux-x64)
+endif()
+
+# Add a custom command to copy config.json to the build directory
+add_custom_command(
+    OUTPUT ${DESTINATION_DIR}/config.json
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SOURCE_DIR}/config.json ${DESTINATION_DIR}/config.json
+    DEPENDS ${SOURCE_DIR}/config.json
+    COMMENT "Copying config.json to ${DESTINATION_DIR}"
+)
+
+# Add a custom command to copy .env to the build directory
+add_custom_command(
+    OUTPUT ${DESTINATION_DIR}/.env
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SOURCE_DIR}/.env ${DESTINATION_DIR}/.env
+    DEPENDS ${SOURCE_DIR}/.env
+    COMMENT "Copying .env to ${DESTINATION_DIR}"
+)
+# Add a custom target to make sure the custom command is executed before building your main target
+add_custom_target(CopyConfigFiles DEPENDS ${DESTINATION_DIR}/config.json ${DESTINATION_DIR}/.env)
+
+# Compile main.cc as executable
 add_executable(Gaboot "${SRC_DIR}/main.cc" ${ICON})
+
+# Add dependencies to make sure the custom commands are executed before building YourTarget
+add_dependencies(Gaboot CopyConfigFiles)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_property(TARGET Gaboot PROPERTY CXX_STANDARD 20)
