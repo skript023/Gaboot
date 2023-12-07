@@ -28,7 +28,9 @@ namespace gaboot
         payment_service& operator=(payment_service&&) = delete;
 
         HttpResponsePtr create(HttpRequestPtr const&);
+        HttpResponsePtr notification(HttpRequestPtr const&);
     private:
+        Json::Value m_data;
         response_data m_response;
         item_detail m_items;
         customer_detail m_customer;

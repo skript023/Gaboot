@@ -59,7 +59,7 @@ namespace gaboot
 	{
 		std::string m_message;
 	public:
-		explicit NotFoundException(std::string const& message = "Unable to retrieve some data, 0 data found.") : GabootException(message, k404NotFound), m_message(message)
+		explicit NotFoundException(std::string const& message = "Not Found") : GabootException(message, k404NotFound), m_message(message)
 		{
 			LOG(WARNING) << m_message;
 		}
@@ -71,23 +71,12 @@ namespace gaboot
 	{
 		std::string m_message;
 	public:
-		explicit BadRequestException(std::string const& message = "Request requirement doesn't match, please check requirement.") : GabootException(message, k400BadRequest), m_message(message)
+		explicit BadRequestException(std::string const& message = "Bad Request") : GabootException(message, k400BadRequest), m_message(message)
 		{
 			LOG(WARNING) << m_message;
 		}
 
 		virtual ~BadRequestException() noexcept = default;
-
-		HttpResponsePtr response()
-		{
-			Json::Value json;
-			json["message"] = m_message;
-			json["success"] = false;
-			auto response = HttpResponse::newHttpJsonResponse(json);
-			response->setStatusCode(k400BadRequest);
-
-			return response;
-		}
 	};
 
 	class UnauthorizedException : public GabootException
@@ -98,6 +87,7 @@ namespace gaboot
 		{
 			LOG(WARNING) << m_message;
 		}
+
 		virtual ~UnauthorizedException() noexcept = default;
 	};
 }

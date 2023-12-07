@@ -1,5 +1,7 @@
 #include "payment_service.hpp"
 #include "payment_processing.hpp"
+
+#include "util/exception.hpp"
 #include "util/money_formatter.hpp"
 
 #include "interfaces/item_detail.hpp"
@@ -15,23 +17,12 @@ namespace gaboot
 
 		try
 		{
-			m_items.id = 1;
-			m_items.name = "RTX 4090";
-			m_items.price = 35000000.0;
-			m_items.quantity = 1;
+			m_items.from_json(json);
+			m_customer.from_json(json);
 
-			m_customer.first_name = "Elaina";
-			m_customer.last_name = "Celesteria";
-			m_customer.email = "elaina023@example.com";
-			m_customer.phone = "+62813131212";
-
-			Rupiah price = m_items.price;
-
-			g_payment_processing->item_details(&m_items);
+			g_payment_processing->item_details(m_items.to_json());
 			g_payment_processing->customer_details(&m_customer);
 			g_payment_processing->bank_transfer(json["order_id"].asString(), json["bank_type"].asString(), json["gross_amount"].asInt());
-
-			LOG(INFO) << price.get();
 
 			if (g_payment_processing->make_payment(midtrans))
 			{
@@ -71,13 +62,30 @@ namespace gaboot
 		}
 		catch (const std::exception& e)
 		{
-			LOG(WARNING) << e.what();
+			return CustomException<k500InternalServerError>(fmt::format("Unable to create payment, error caught on {}", e.what())).response();
+		}
+	}
+	HttpResponsePtr payment_service::notification(HttpRequestPtr const& req)
+	{
+		try
+		{
+			auto& json = *req->getJsonObject();
 
-			auto response = HttpResponse::newHttpResponse();
-			response->setStatusCode(k500InternalServerError);
-			response->setBody(e.what());
+			std::string transactionStatus = json["transaction_status"].asString();
 
-			return response;
+			auto args = Criteria(Payments::Cols::_transactionId, CompareOperator::EQ, json["transaction_id"].asString());
+
+			db().updateBy({ Payments::Cols::_transactionStatus }, args, transactionStatus);
+
+			m_response.m_message = "Payment status updated successfully";
+			m_response.m_success = true;
+			m_response.m_data = m_data;
+
+			return HttpResponse::newHttpJsonResponse(m_response.to_json());
+		}
+		catch (const std::exception& e)
+		{
+			return CustomException<k500InternalServerError>(fmt::format("Unable to update payment, error caught on {}", e.what())).response();
 		}
 	}
 }

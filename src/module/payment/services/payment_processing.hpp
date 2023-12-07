@@ -22,7 +22,11 @@ namespace gaboot
 
         void item_details(item_detail* itemDetail);
 
+        void item_details(nlohmann::json const& itemDetail);
+
         void customer_details(customer_detail* customerDetail);
+
+        void customer_details(nlohmann::json const& customerDetail);
 
         bool make_payment(nlohmann::ordered_json& midtrans);
     private:

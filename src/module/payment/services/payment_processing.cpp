@@ -44,6 +44,8 @@ namespace gaboot
 
     void payment_processing::item_details(item_detail* item)
     {
+        if (!item) return;
+
         auto items = nlohmann::json::object({
             {"id", item->id},
             {"name", item->name},
@@ -53,15 +55,31 @@ namespace gaboot
 
         m_json["item_details"] = nlohmann::json::array({ items });
     }
+    
+    void payment_processing::item_details(nlohmann::json const& item)
+    {
+        if (item.empty()) return;
+
+        m_json["item_details"] = item;
+    }
 
     void payment_processing::customer_details(customer_detail* customer)
     {
-        m_json["customer_detail"] = nlohmann::json::object({
+        if (!customer) return;
+
+        m_json["customer_details"] = nlohmann::json({
             {"first_name", customer->first_name},
             {"last_name", customer->last_name},
             {"email", customer->email},
             {"phone", customer->phone},
         });
+    }
+    
+    void payment_processing::customer_details(nlohmann::json const& customer)
+    {
+        if (customer.empty()) return;
+
+        m_json["customer_details"] = customer;
     }
 
     bool payment_processing::make_payment(nlohmann::ordered_json& midtrans)
