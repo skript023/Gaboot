@@ -4,7 +4,8 @@
 #include "util/gaboot.hpp"
 #include "util/exception.hpp"
 #include "util/file_manager.hpp"
-#include "module/customer/services/customer_manager.hpp"
+
+#include "customer/services/customer_manager.hpp"
 
 namespace gaboot
 {
@@ -43,18 +44,9 @@ namespace gaboot
 
             return HttpResponse::newHttpJsonResponse(m_response.to_json());
         }
-        catch (const DrogonDbException& e)
+        catch (const std::exception& e)
         {
-            LOG(WARNING) << fmt::format("Cannot retrieve customers data, error caught on {}", e.base().what());
-
-            m_response.m_message = fmt::format("Cannot retrieve customers data, error caught on {}", e.base().what());
-            m_response.m_success = false;
-            m_response.m_data = Json::arrayValue;
-
-            auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-            response->setStatusCode(k500InternalServerError);
-
-            return response;
+            return CustomException<k500InternalServerError>(fmt::format("Cannot retrieve customers data, error caught on {}", e.what())).response();
         }
 	}
     HttpResponsePtr customer_service::create(HttpRequestPtr const& req)
@@ -112,17 +104,9 @@ namespace gaboot
 
             return response;
         }
-        catch (const DrogonDbException& e)
+        catch (const std::exception& e)
         {
-            LOG(WARNING) << e.base().what();
-
-            m_response.m_message = e.base().what();
-            m_response.m_success = false;
-
-            auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-            response->setStatusCode(HttpStatusCode::k500InternalServerError);
-
-            return response;
+            return CustomException<k500InternalServerError>(fmt::format("Unable to register customer, error caught on {}", e.what())).response();
         }
     }
     HttpResponsePtr customer_service::findOne(HttpRequestPtr const& req, std::string&& id)
@@ -144,17 +128,9 @@ namespace gaboot
 
             return HttpResponse::newHttpJsonResponse(m_response.to_json());
         }
-        catch (const DrogonDbException& e)
+        catch (const std::exception& e)
         {
-            LOG(WARNING) << fmt::format("Cannot retrieve customers data, error caught on {}", e.base().what());
-
-            m_response.m_message = fmt::format("Cannot retrieve customers data, error caught on {}", e.base().what());
-            m_response.m_success = false;
-
-            auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-            response->setStatusCode(k500InternalServerError);
-
-            return response;
+            return CustomException<k500InternalServerError>(fmt::format("Cannot retrieve customers data, error caught on {}", e.what())).response();
         }
     }
     HttpResponsePtr customer_service::update(HttpRequestPtr const& req, std::string&& id) //bugged when upload file
@@ -255,17 +231,9 @@ namespace gaboot
 
             return NotFoundException("Record not found").response();
         }
-        catch (const DrogonDbException& e)
+        catch (const std::exception& e)
         {
-            LOG(WARNING) << fmt::format("Failed delete customers, error caught on {}", e.base().what());
-
-            m_response.m_message = fmt::format("Failed delete customers, error caught on {}", e.base().what());
-            m_response.m_success = false;
-
-            auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-            response->setStatusCode(k500InternalServerError);
-
-            return response;
+            return CustomException<k500InternalServerError>(fmt::format("Failed delete customers, error caught on {}", e.what())).response();
         }
     }
     HttpResponsePtr customer_service::getProfile(HttpRequestPtr const& req, std::string&& id)
@@ -296,13 +264,7 @@ namespace gaboot
             return response;
         }
 
-        m_response.m_message = "Unable to retreive customers profile";
-        m_response.m_success = false;
-
-        auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-        response->setStatusCode(k404NotFound);
-
-        return response;
+        return NotFoundException("Unable to retreive customers profile").response();
     }
     HttpResponsePtr customer_service::getImage(HttpRequestPtr const& req, std::string&& id)
     {
