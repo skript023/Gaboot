@@ -72,6 +72,16 @@ namespace gaboot
             {"last_name", customer->last_name},
             {"email", customer->email},
             {"phone", customer->phone},
+            {"billing_address",
+                {"first_name", customer->m_billing_address.first_name},
+                {"last_name", customer->m_billing_address.last_name},
+                {"email", customer->m_billing_address.email},
+                {"phone", customer->m_billing_address.phone},
+                {"address", customer->m_billing_address.address},
+                {"city", customer->m_billing_address.city},
+                {"postal_code", customer->m_billing_address.postal_code},
+                {"country_code", customer->m_billing_address.country_code}
+            }
         });
     }
     

@@ -17,7 +17,7 @@ namespace gaboot
         // METHOD_ADD(payment::your_method_name, "/{1}/{2}/list", Get); // path is /payment/{arg1}/{arg2}/list
         // ADD_METHOD_TO(payment::your_method_name, "/absolute/path/{1}/{2}/list", Get); // path is /absolute/path/{arg1}/{arg2}/list
         ADD_METHOD_TO(payment::create, "/payment", Post);
-        ADD_METHOD_TO(payment::onSuccess, "/notification", Post);
+        ADD_METHOD_TO(payment::notification, "/notification", Post);
         METHOD_LIST_END
         // your declaration of processing function maybe like this:
         // void get(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, int p1, std::string p2);

@@ -155,15 +155,11 @@ namespace gaboot
 
 			return response;
 		}
-		catch (const DrogonDbException& e)
+		catch (const std::exception& e)
 		{
-			m_response.m_message = fmt::format("Unable retrieve products data, error caught on {}", e.base().what());
-			m_response.m_success = false;
+			std::string error = fmt::format("Unable retrieve products data, error caught on {}", e.what());
 
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			response->setStatusCode(k500InternalServerError);
-
-			return response;
+			return CustomException<k500InternalServerError>(error).response();
 		}
 	}
 	HttpResponsePtr product_service::update(HttpRequestPtr const& req, std::string&& id)
@@ -230,17 +226,11 @@ namespace gaboot
 			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 			return response;
 		}
-		catch (const DrogonDbException& e)
+		catch (const std::exception& e)
 		{
-			m_response.m_message = fmt::format("Unable to update data, error caught on {}", e.base().what());
-			m_response.m_success = false;
+			std::string error = fmt::format("Unable to update data, error caught on {}", e.what());
 
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			response->setStatusCode(k500InternalServerError);
-
-			LOG(WARNING) << e.base().what();
-
-			return response;
+			return CustomException<k500InternalServerError>(error).response();
 		}
 	}
 	HttpResponsePtr product_service::remove(HttpRequestPtr const& req, std::string&& id)
