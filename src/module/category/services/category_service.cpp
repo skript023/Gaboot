@@ -113,7 +113,7 @@ namespace gaboot
 		}
 		catch (const std::exception& e)
 		{
-			std::string error = fmt::format("Unable retrieve categories data, error caught on {}", e.base().what());
+			std::string error = fmt::format("Unable retrieve categories data, error caught on {}", e.what());
 
 			return CustomException<k500InternalServerError>(error).response();
 		}
