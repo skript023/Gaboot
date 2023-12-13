@@ -19,8 +19,8 @@ namespace gaboot
 
 		HttpResponsePtr create(HttpRequestPtr const& req);
 		HttpResponsePtr findAll(HttpRequestPtr const& req);
-		HttpResponsePtr findOne(HttpRequestPtr const& req, std::string const& id);
-		HttpResponsePtr update(HttpRequestPtr const& req, std::string const& id);
-		HttpResponsePtr remove(HttpRequestPtr const& req, std::string const& id);
+		HttpResponsePtr findOne(HttpRequestPtr const& req, std::string&& id);
+		HttpResponsePtr update(HttpRequestPtr const& req, std::string&& id);
+		HttpResponsePtr remove(HttpRequestPtr const& req, std::string&& id);
 	};
 }
