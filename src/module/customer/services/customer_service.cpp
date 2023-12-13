@@ -340,14 +340,6 @@ namespace gaboot
                 return HttpResponse::newFileResponse(*customer.getImgthumbpath());
         }
 
-        m_response.m_message = "Unable to retreive customers image";
-        m_response.m_success = false;
-
-        auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-        response->setStatusCode(k404NotFound);
-
-        LOG(WARNING) << "Unable to retreive customers image";
-
-        return response;
+        return NotFoundException("Unable to retreive customers image").response();
     }
 }

@@ -162,8 +162,6 @@ namespace gaboot
 		}
 		catch (const std::exception& e)
 		{
-			LOG(WARNING) << e.what();
-
 			return CustomException<k500InternalServerError>(fmt::format("Unable to update data, error caught on {}", e.what())).response();
 		}
 	}

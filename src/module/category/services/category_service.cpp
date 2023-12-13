@@ -111,15 +111,11 @@ namespace gaboot
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		}
-		catch (const DrogonDbException& e)
+		catch (const std::exception& e)
 		{
-			m_response.m_message = fmt::format("Unable retrieve categories data, error caught on {}", e.base().what());
-			m_response.m_success = false;
+			std::string error = fmt::format("Unable retrieve categories data, error caught on {}", e.base().what());
 
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			response->setStatusCode(k500InternalServerError);
-
-			return response;
+			return CustomException<k500InternalServerError>(error).response();
 		}
     }
 	HttpResponsePtr category_service::findOne(HttpRequestPtr const& req, std::string&& id)
@@ -143,15 +139,11 @@ namespace gaboot
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		}
-		catch (const DrogonDbException& e)
+		catch (const std::exception& e)
 		{
-			m_response.m_message = fmt::format("Cannot retrieve category data, error caught on {}", e.base().what());
-			m_response.m_success = false;
+			std::string error = fmt::format("Cannot retrieve category data, error caught on {}", e.what());
 
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			response->setStatusCode(k500InternalServerError);
-
-			return response;
+			return CustomException<k500InternalServerError>(error).response();
 		}
 	}
 	HttpResponsePtr category_service::update(HttpRequestPtr const& req, std::string&& id)
@@ -209,7 +201,8 @@ namespace gaboot
 
 			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 			{
-				LOG_INFO << "File saved.";
+				LOG(INFO) << "File saved at " << upload.get_image_path();
+				
 				upload.save();
 			}
 
