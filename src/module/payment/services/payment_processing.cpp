@@ -46,12 +46,12 @@ namespace gaboot
     {
         if (!item) return;
 
-        auto items = nlohmann::json::object({
+        nlohmann::json items = {
             {"id", item->id},
             {"name", item->name},
             {"price", item->price},
             {"quantity", item->quantity}
-        });
+        };
 
         m_json["item_details"] = nlohmann::json::array({ items });
     }
