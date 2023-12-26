@@ -1,6 +1,6 @@
 #include "product_service.hpp"
-#include "util/exception.hpp"
-#include <util/upload.hpp>
+#include "uploader/upload.hpp"
+#include "exception/exception.hpp"
 
 namespace gaboot
 {

@@ -34,5 +34,5 @@ if(Git_FOUND)
         ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
 
     # generate version.cpp
-    configure_file("${SRC_DIR}/util/version.cpp.in" "${SRC_DIR}/util/version.cpp" @ONLY)
+    configure_file("${SRC_DIR}/version.cpp.in" "${SRC_DIR}/version.cpp" @ONLY)
 endif()

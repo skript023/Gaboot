@@ -1,12 +1,12 @@
 #pragma once
 
 #include <drogon/HttpController.h>
+#include "wishlist/models/Wishlists.h"
 
-#include "util/validator.hpp"
+#include "validator/validator.hpp"
 #include "interfaces/response.hpp"
-#include "module/wishlist/models/Wishlists.h"
+#include "cache_manager/cache_handler.hpp"
 
-#include "cache_handler.hpp"
 
 using namespace drogon;
 using namespace orm;

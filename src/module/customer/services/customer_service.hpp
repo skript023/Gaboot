@@ -2,7 +2,7 @@
 
 #include <drogon/HttpController.h>
 
-#include "util/validator.hpp"
+#include "validator/validator.hpp"
 #include "interfaces/response.hpp"
 #include "module/customer/models/MasterCustomers.h"
 

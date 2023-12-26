@@ -43,9 +43,9 @@
 #include <bcrypt.h>
 #pragma warning(pop)
 
-#include <util/gaboot.hpp>
-#include <util/logger.hpp>
-#include <util/validator.hpp>
+#include <gaboot.hpp>
+#include <logger.hpp>
+#include <validator/validator.hpp>
 
 //drogon::app().getLoop()->runEvery(std::chrono::milliseconds(1), [] { LOG(INFO) << "Looped"; });
 

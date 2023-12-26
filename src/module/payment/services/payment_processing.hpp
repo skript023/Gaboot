@@ -1,8 +1,8 @@
 #pragma once
 
 #include <pch.h>
-#include <util/validator.hpp>
-#include <util/jenkins.hpp>
+#include <validator/validator.hpp>
+#include <hash/jenkins.hpp>
 #include <interfaces/fwddec.hpp>
 
 namespace gaboot

@@ -6,8 +6,8 @@
 
 #include <pch.h>
 #include "cutomer_middleware.h"
-#include "util/exception.hpp"
-#include "module/customer/services/customer_manager.hpp"
+#include "exception/exception.hpp"
+#include "customer/services/customer_manager.hpp"
 
 using namespace drogon;
 

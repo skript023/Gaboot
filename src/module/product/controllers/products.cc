@@ -1,6 +1,4 @@
 #include "products.h"
-#include <util/upload.hpp>
-#include <util/exception.hpp>
 
 // Add definition of your processing function here
 namespace gaboot

@@ -1,9 +1,9 @@
 #include "customer_service.hpp"
 
-#include "util/upload.hpp"
+#include "uploader/upload.hpp"
 #include "util/gaboot.hpp"
-#include "util/exception.hpp"
-#include "util/file_manager.hpp"
+#include "exception/exception.hpp"
+#include "file_manager/file_manager.hpp"
 
 #include "customer/services/customer_manager.hpp"
 

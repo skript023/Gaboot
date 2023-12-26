@@ -1,5 +1,5 @@
 #include "wishlist_service.hpp"
-#include <util/exception.hpp>
+#include <exception/exception.hpp>
 
 namespace gaboot
 {

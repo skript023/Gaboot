@@ -1,5 +1,5 @@
 #pragma once
-#include "money_formatter.hpp"
+#include "formatter/money_formatter.hpp"
 
 namespace gaboot
 {

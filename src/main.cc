@@ -1,10 +1,10 @@
 #include <pch.h>
 
-#include "util/thread.hpp" 
-#include "util/version.hpp"
+#include "version.hpp"
 #include "scheduler/tasks.hpp"
-#include "util/file_manager.hpp"
 #include "scheduler/schedule.hpp"
+#include "thread_pool/thread.hpp" 
+#include "file_manager/file_manager.hpp"
 
 #include "hardware/memory.hpp"
 #include "hardware/processor.hpp"

@@ -1,7 +1,7 @@
 #include "category_service.hpp"
 
-#include <util/exception.hpp>
-#include <util/upload.hpp>
+#include <exception/exception.hpp>
+#include <uploader/upload.hpp>
 
 namespace gaboot
 {

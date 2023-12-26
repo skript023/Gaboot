@@ -2,11 +2,11 @@
 
 #include <pch.h>
 
-#include "util/validator.hpp"
+#include "validator/validator.hpp"
 #include "interfaces/response.hpp"
-#include "category/models/Categories.h"
 
-#include "cache_handler.hpp"
+#include "category/models/Categories.h"
+#include "cache_manager/cache_handler.hpp"
 
 using namespace drogon;
 using namespace orm;

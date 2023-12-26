@@ -5,7 +5,7 @@
  */
 
 #include "admin_middleware.h"
-#include "util/exception.hpp"
+#include "exception/exception.hpp"
 
 using namespace drogon;
 

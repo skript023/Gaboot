@@ -1,8 +1,8 @@
 #include "payment_service.hpp"
 #include "payment_processing.hpp"
 
-#include "util/exception.hpp"
-#include "util/money_formatter.hpp"
+#include "exception/exception.hpp"
+#include "formatter/money_formatter.hpp"
 
 #include "interfaces/item_detail.hpp"
 #include "interfaces/customer_detail.hpp"

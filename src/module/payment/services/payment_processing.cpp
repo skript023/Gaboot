@@ -1,6 +1,4 @@
 #include "payment_processing.hpp"
-#include "thread.hpp"
-
 #include "interfaces/item_detail.hpp"
 #include "interfaces/customer_detail.hpp"
 

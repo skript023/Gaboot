@@ -2,10 +2,10 @@
 
 #include <pch.h>
 #include <interfaces/response.hpp>
-#include <module/product/models/MasterProducts.h>
-#include <module/product/models/ProductImages.h>
+#include <cache_manager/cache_handler.hpp>
+#include <product/models/MasterProducts.h>
+#include <product/models/ProductImages.h>
 
-#include "cache_handler.hpp"
 
 using namespace drogon;
 using namespace orm;

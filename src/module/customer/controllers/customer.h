@@ -6,8 +6,8 @@
 
 #include <drogon/HttpController.h>
 
-#include "util/validator.hpp"
-#include "module/customer/services/customer_service.hpp"
+#include "validator/validator.hpp"
+#include "customer/services/customer_service.hpp"
 
 using namespace drogon;
 

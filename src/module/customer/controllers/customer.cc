@@ -1,8 +1,8 @@
 #include "customer.h"
-#include "util/upload.hpp"
 #include "util/gaboot.hpp"
-#include "util/exception.hpp"
-#include "util/file_manager.hpp"
+#include "uploader/upload.hpp"
+#include "exception/exception.hpp"
+#include "file_manager/file_manager.hpp"
 #include "module/customer/services/customer_manager.hpp"
 
 // Add definition of your processing function here
