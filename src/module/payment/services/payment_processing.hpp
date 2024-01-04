@@ -31,7 +31,11 @@ namespace gaboot
         bool make_payment(nlohmann::ordered_json& midtrans);
     private:
         nlohmann::json m_json;
+#ifdef _DEV
         cpr::Url m_url = "https://api.sandbox.midtrans.com/v2/charge";
+#elif _PROD
+        cpr::Url m_url = "https://api.midtrans.com/v2/charge";
+#endif
     };
 
     inline payment_processing* g_payment_processing{};

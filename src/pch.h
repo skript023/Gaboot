@@ -85,6 +85,8 @@
 #define OS_NAME "Unknown"
 #endif
 
+#define _DEV
+
 using response_t = std::function<void(drogon::HttpResponsePtr const&)>;
 using Multer = drogon::HttpFile;
 
