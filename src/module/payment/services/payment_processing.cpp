@@ -51,7 +51,10 @@ namespace gaboot
             {"quantity", item->quantity}
         };
 
-        m_json["item_details"] = nlohmann::json::array({ items });
+        auto json = nlohmann::json::array();
+        json.push_back(items);
+
+        m_json["item_details"] = json;
     }
     
     void payment_processing::item_details(nlohmann::json const& item)
