@@ -7,13 +7,13 @@ namespace gaboot
 {
     struct billing_address
     {
-        std::string first_name;
-        std::string last_name;
-        std::string email;
-        std::string phone;
-        std::string address;
-        std::string city;
-        std::string postal_code;
-        std::string country_code;
+        std::string m_first_name;
+        std::string m_last_name;
+        std::string m_email;
+        std::string m_phone;
+        std::string m_address;
+        std::string m_city;
+        std::string m_postal_code;
+        std::string m_country_code;
     };
 }
