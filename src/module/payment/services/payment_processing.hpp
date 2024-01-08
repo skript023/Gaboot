@@ -1,9 +1,10 @@
 #pragma once
 
 #include <pch.h>
-#include <validator/validator.hpp>
 #include <hash/jenkins.hpp>
 #include <interfaces/fwddec.hpp>
+#include <validator/validator.hpp>
+#include <interfaces/transaction.hpp>
 
 namespace gaboot
 {
@@ -28,9 +29,12 @@ namespace gaboot
 
         void customer_details(nlohmann::json const& customerDetail);
 
+        void start_payment(Json::Value const& json);
+
         bool make_payment(nlohmann::ordered_json& midtrans);
     private:
         nlohmann::json m_json;
+        transaction m_transaction;
 #ifdef _DEV
         cpr::Url m_url = "https://api.sandbox.midtrans.com/v2/charge";
 #elif _PROD
@@ -39,4 +43,7 @@ namespace gaboot
     };
 
     inline payment_processing* g_payment_processing{};
+
+    #define TRANSACTION_BEGIN_CLAUSE(json, midtrans) g_payment_processing->start_payment(json); if (g_payment_processing->make_payment(midtrans)) {
+    #define TRANSACTION_END_CLAUSE }
 }

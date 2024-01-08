@@ -17,14 +17,7 @@ namespace gaboot
 
 		try
 		{
-			m_items.from_json(json);
-			m_customer.from_json(json);
-
-			g_payment_processing->item_details(m_items.to_json());
-			g_payment_processing->customer_details(&m_customer);
-			g_payment_processing->bank_transfer(json["order_id"].asString(), json["bank_type"].asString(), json["gross_amount"].asInt());
-
-			if (g_payment_processing->make_payment(midtrans))
+			TRANSACTION_BEGIN_CLAUSE(json, midtrans)
 			{
 				Payments payments;
 				payments.setBank(midtrans["va_numbers"][0]["bank"]);
@@ -51,8 +44,8 @@ namespace gaboot
 				response->setStatusCode(k201Created);
 
 				return response;
-			}
-
+			} TRANSACTION_END_CLAUSE
+			
 			auto response = HttpResponse::newHttpResponse();
 			response->setStatusCode((HttpStatusCode)std::stoi(midtrans["status_code"].get<std::string>()));
 			response->setContentTypeCode(CT_APPLICATION_JSON);

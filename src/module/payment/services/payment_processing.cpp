@@ -93,6 +93,12 @@ namespace gaboot
         m_json["customer_details"] = customer;
     }
 
+    void payment_processing::start_payment(Json::Value const &json)
+    {
+        m_transaction.from_json(json);
+        m_json = m_transaction.to_json();
+    }
+
     bool payment_processing::make_payment(nlohmann::ordered_json& midtrans)
     {
         std::string token = fmt::format("Basic {}", SERVER_KEY);

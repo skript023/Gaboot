@@ -41,19 +41,19 @@ namespace gaboot
 			json["transaction_details"]["order_id"] = m_transaction_details.order_id;
 			json["transaction_details"]["gross_amount"] = m_transaction_details.order_id;
 			json["bank_transfer"]["bank"] = m_bank_transfer.m_bank;
-			
-            json["customer"]["first_name"] = m_customer_detail.m_first_name;
-            json["customer"]["last_name"] = m_customer_detail.m_last_name;
-            json["customer"]["email"] = m_customer_detail.m_email;
-            json["customer"]["phone"] = m_customer_detail.m_phone;
-            json["customer"]["billing_address"]["first_name"] = m_customer_detail.m_billing_address.m_first_name;
-            json["customer"]["billing_address"]["last_name"] = m_customer_detail.m_billing_address.m_last_name;
-            json["customer"]["billing_address"]["email"] = m_customer_detail.m_billing_address.m_email;
-            json["customer"]["billing_address"]["phone"] = m_customer_detail.m_billing_address.m_phone;
-            json["customer"]["billing_address"]["address"] = m_customer_detail.m_billing_address.m_address;
-            json["customer"]["billing_address"]["city"] = m_customer_detail.m_billing_address.m_city;
-            json["customer"]["billing_address"]["postal_code"] = m_customer_detail.m_billing_address.m_postal_code;
-            json["customer"]["billing_address"]["country_code"] = m_customer_detail.m_billing_address.m_country_code;
+
+            json["customer_details"]["first_name"] = m_customer_detail.m_first_name;
+            json["customer_details"]["last_name"] = m_customer_detail.m_last_name;
+            json["customer_details"]["email"] = m_customer_detail.m_email;
+            json["customer_details"]["phone"] = m_customer_detail.m_phone;
+            json["customer_details"]["billing_address"]["first_name"] = m_customer_detail.m_billing_address.m_first_name;
+            json["customer_details"]["billing_address"]["last_name"] = m_customer_detail.m_billing_address.m_last_name;
+            json["customer_details"]["billing_address"]["email"] = m_customer_detail.m_billing_address.m_email;
+            json["customer_details"]["billing_address"]["phone"] = m_customer_detail.m_billing_address.m_phone;
+            json["customer_details"]["billing_address"]["address"] = m_customer_detail.m_billing_address.m_address;
+            json["customer_details"]["billing_address"]["city"] = m_customer_detail.m_billing_address.m_city;
+            json["customer_details"]["billing_address"]["postal_code"] = m_customer_detail.m_billing_address.m_postal_code;
+            json["customer_details"]["billing_address"]["country_code"] = m_customer_detail.m_billing_address.m_country_code;
 
             return json;
 		}
