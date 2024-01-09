@@ -31,7 +31,7 @@ namespace gaboot
 
         void start_payment(Json::Value const& json);
 
-        bool make_payment(midtrans_response* midtrans);
+        bool make_payment(payment_gataway* midtrans);
     private:
         nlohmann::json m_json;
         transaction m_transaction;

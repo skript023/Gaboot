@@ -6,7 +6,7 @@
 
 #include "payments/item_detail.hpp"
 #include "payments/customer_detail.hpp"
-#include "payments/midtrans_response.hpp"
+#include "payments/payment_gataway.hpp"
 
 namespace gaboot
 {
@@ -14,23 +14,23 @@ namespace gaboot
 	{
 		auto& json = *req->getJsonObject();
 
-		midtrans_response midtrans;
+		payment_gataway payment;
 
 		try
 		{
-			TRANSACTION_BEGIN_CLAUSE(json, &midtrans)
+			TRANSACTION_BEGIN_CLAUSE(json, &payment)
 			{
 				Payments payments;
-				payments.setBank(midtrans.m_va_numbers[0].m_bank);
-				payments.setVanumber(midtrans.m_va_numbers[0].m_va_number);
-				payments.setCurrency(midtrans.m_currency);
-				payments.setExpiryTime(midtrans.m_expiry_time);
-				payments.setMerchantid(midtrans.m_merchant_id);
-				payments.setPaymenttype(midtrans.m_payment_type);
-				payments.setTransactionid(midtrans.m_transaction_id);
-				payments.setTransactionstatus(midtrans.m_transaction_status);
-				payments.setTransactiontime(midtrans.m_transaction_time);
-				payments.setFraudstatus(midtrans.m_fraud_status);
+				payments.setBank(payment.m_va_numbers[0].m_bank);
+				payments.setVanumber(payment.m_va_numbers[0].m_va_number);
+				payments.setCurrency(payment.m_currency);
+				payments.setExpiryTime(payment.m_expiry_time);
+				payments.setMerchantid(payment.m_merchant_id);
+				payments.setPaymenttype(payment.m_payment_type);
+				payments.setTransactionid(payment.m_transaction_id);
+				payments.setTransactionstatus(payment.m_transaction_status);
+				payments.setTransactiontime(payment.m_transaction_time);
+				payments.setFraudstatus(payment.m_fraud_status);
 				payments.setName(json["name"].asString());
 				payments.setDescription(json["description"].asString());
 
@@ -39,11 +39,11 @@ namespace gaboot
 
 				db().insert(payments);
 
-				TRANSACTION_SUCCESS(midtrans);
+				TRANSACTION_SUCCESS(payment);
 
 			} TRANSACTION_END_CLAUSE
 
-			TRANSACTION_FAILED(midtrans);
+			TRANSACTION_FAILED(payment);
 		}
 		catch (const std::exception& e)
 		{

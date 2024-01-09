@@ -9,7 +9,7 @@ namespace gaboot
     struct shipping_address;
     struct billing_address;
     struct shipping_address;
-    struct midtrans_response;
+    struct payment_gataway;
 
     using Rupiah = money_formatter;
 }

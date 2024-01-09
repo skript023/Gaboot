@@ -10,7 +10,7 @@ namespace gaboot
 		std::string m_va_number;
 	};
 
-	struct midtrans_response
+	struct payment_gataway
 	{
 		int m_status_code;
 		std::string m_status_message;

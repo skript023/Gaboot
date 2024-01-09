@@ -1,7 +1,7 @@
 #include "payment_processing.hpp"
 #include "payments/item_detail.hpp"
 #include "payments/customer_detail.hpp"
-#include "payments/midtrans_response.hpp"
+#include "payments/payment_gataway.hpp"
 
 namespace gaboot
 {
@@ -100,7 +100,7 @@ namespace gaboot
         m_json = m_transaction.to_json();
     }
 
-    bool payment_processing::make_payment(midtrans_response* midtrans)
+    bool payment_processing::make_payment(payment_gataway* midtrans)
     {
         std::string token = fmt::format("Basic {}", SERVER_KEY);
 
