@@ -4,7 +4,7 @@
 #include <hash/jenkins.hpp>
 #include <interfaces/fwddec.hpp>
 #include <validator/validator.hpp>
-#include <interfaces/transaction.hpp>
+#include <payments/transaction.hpp>
 
 namespace gaboot
 {

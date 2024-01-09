@@ -106,6 +106,7 @@ target_include_directories(Gaboot PRIVATE
   "${SRC_DIR}/util"
   "${SRC_DIR}/middleware"
   "${SRC_DIR}/interfaces"
+  "${SRC_DIR}/interfaces/payments"
   ${DROGON_INCLUDE_DIRS}
   ${openssl_INCLUDE_DIRS}
   "${fmtlib_SOURCE_DIR}/include"

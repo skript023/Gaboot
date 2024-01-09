@@ -4,8 +4,8 @@
 
 #include <interfaces/fwddec.hpp>
 #include <interfaces/response.hpp>
-#include <interfaces/item_detail.hpp>
-#include <interfaces/customer_detail.hpp>
+#include <payments/item_detail.hpp>
+#include <payments/customer_detail.hpp>
 
 using namespace drogon;
 using namespace orm;

@@ -4,8 +4,8 @@
 #include "exception/exception.hpp"
 #include "formatter/money_formatter.hpp"
 
-#include "interfaces/item_detail.hpp"
-#include "interfaces/customer_detail.hpp"
+#include "payments/item_detail.hpp"
+#include "payments/customer_detail.hpp"
 
 namespace gaboot
 {
