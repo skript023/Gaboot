@@ -1,6 +1,7 @@
 #include "payment_processing.hpp"
 #include "payments/item_detail.hpp"
 #include "payments/customer_detail.hpp"
+#include "payments/midtrans_response.hpp"
 
 namespace gaboot
 {
@@ -99,7 +100,7 @@ namespace gaboot
         m_json = m_transaction.to_json();
     }
 
-    bool payment_processing::make_payment(nlohmann::ordered_json& midtrans)
+    bool payment_processing::make_payment(midtrans_response* midtrans)
     {
         std::string token = fmt::format("Basic {}", SERVER_KEY);
 
@@ -113,11 +114,13 @@ namespace gaboot
 
         auto res = cpr::PostAsync(m_url, body, header).get();
 
+        if (res.text.empty()) throw std::runtime_error("UNKNOWN ERROR 01 - Check your internet access");
+
         auto json = nlohmann::ordered_json::parse(res.text);
 
         json["status_code"] = std::stol(json["status_code"].get<std::string>());
 
-        midtrans = json;
+        midtrans->from_json(json);
 
         if (json["status_code"] == 201 && res.status_code == 200)
         {

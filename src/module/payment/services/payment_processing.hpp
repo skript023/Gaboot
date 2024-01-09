@@ -31,7 +31,7 @@ namespace gaboot
 
         void start_payment(Json::Value const& json);
 
-        bool make_payment(nlohmann::ordered_json& midtrans);
+        bool make_payment(midtrans_response* midtrans);
     private:
         nlohmann::json m_json;
         transaction m_transaction;
@@ -46,6 +46,6 @@ namespace gaboot
 
     #define TRANSACTION_BEGIN_CLAUSE(json, midtrans) g_payment_processing->start_payment(json); if (g_payment_processing->make_payment(midtrans)) {
     #define TRANSACTION_END_CLAUSE }
-    #define TRANSACTION_FAILED(midtrans) auto response = HttpResponse::newHttpResponse(); response->setStatusCode((HttpStatusCode)midtrans["status_code"].get<int>()); response->setContentTypeCode(CT_APPLICATION_JSON); response->setBody(midtrans.dump()); return response;
-    #define TRANSACTION_SUCCESS(midtrans) auto response = HttpResponse::newHttpResponse(); response->setContentTypeCode(CT_APPLICATION_JSON); response->setBody(midtrans.dump()); response->setStatusCode(k201Created); return response;
+    #define TRANSACTION_FAILED(midtrans) auto response = HttpResponse::newHttpJsonResponse(midtrans.to_json()); response->setStatusCode((HttpStatusCode)midtrans.m_status_code); return response;
+    #define TRANSACTION_SUCCESS(midtrans) auto response = HttpResponse::newHttpJsonResponse(midtrans.to_json()); response->setStatusCode(k201Created); return response;
 }

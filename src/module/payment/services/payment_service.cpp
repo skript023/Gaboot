@@ -6,6 +6,7 @@
 
 #include "payments/item_detail.hpp"
 #include "payments/customer_detail.hpp"
+#include "payments/midtrans_response.hpp"
 
 namespace gaboot
 {
@@ -13,23 +14,23 @@ namespace gaboot
 	{
 		auto& json = *req->getJsonObject();
 
-		nlohmann::ordered_json midtrans;
+		midtrans_response midtrans;
 
 		try
 		{
-			TRANSACTION_BEGIN_CLAUSE(json, midtrans)
+			TRANSACTION_BEGIN_CLAUSE(json, &midtrans)
 			{
 				Payments payments;
-				payments.setBank(midtrans["va_numbers"][0]["bank"]);
-				payments.setVanumber(midtrans["va_numbers"][0]["va_number"]);
-				payments.setCurrency(midtrans["currency"]);
-				payments.setExpiryTime(midtrans["expiry_time"]);
-				payments.setMerchantid(midtrans["merchant_id"]);
-				payments.setPaymenttype(midtrans["payment_type"]);
-				payments.setTransactionid(midtrans["transaction_id"]);
-				payments.setTransactionstatus(midtrans["transaction_status"]);
-				payments.setTransactiontime(midtrans["transaction_time"]);
-				payments.setFraudstatus(midtrans["fraud_status"]);
+				payments.setBank(midtrans.m_va_numbers[0].m_bank);
+				payments.setVanumber(midtrans.m_va_numbers[0].m_va_number);
+				payments.setCurrency(midtrans.m_currency);
+				payments.setExpiryTime(midtrans.m_expiry_time);
+				payments.setMerchantid(midtrans.m_merchant_id);
+				payments.setPaymenttype(midtrans.m_payment_type);
+				payments.setTransactionid(midtrans.m_transaction_id);
+				payments.setTransactionstatus(midtrans.m_transaction_status);
+				payments.setTransactiontime(midtrans.m_transaction_time);
+				payments.setFraudstatus(midtrans.m_fraud_status);
 				payments.setName(json["name"].asString());
 				payments.setDescription(json["description"].asString());
 

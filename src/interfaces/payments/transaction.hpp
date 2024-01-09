@@ -112,8 +112,6 @@ namespace gaboot
 				}
 			}
 
-			LOG(INFO) << json.dump();
-
             return json;
 		}
 	};
