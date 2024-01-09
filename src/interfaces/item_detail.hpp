@@ -8,7 +8,7 @@ namespace gaboot
     struct item_detail
     {
         int64_t m_id;
-        double m_price;
+        int64_t m_price;
         uint64_t m_quantity;
         std::string m_name;
 

@@ -5,6 +5,6 @@ namespace gaboot
 	struct order
 	{
 		std::string order_id;
-		int gross_amount;
+		uint64_t gross_amount;
 	};
 }
