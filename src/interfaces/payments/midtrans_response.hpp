@@ -91,7 +91,9 @@ namespace gaboot
 
 			json["status_code"] = this->m_status_code;
 			json["status_message"] = this->m_status_message;
-			json["id"] = this->m_id;
+			
+			if (!m_is_success)
+				json["id"] = this->m_id;
 
 			LOG(INFO) << json.toStyledString();
 
