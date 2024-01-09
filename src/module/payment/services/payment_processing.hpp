@@ -46,4 +46,6 @@ namespace gaboot
 
     #define TRANSACTION_BEGIN_CLAUSE(json, midtrans) g_payment_processing->start_payment(json); if (g_payment_processing->make_payment(midtrans)) {
     #define TRANSACTION_END_CLAUSE }
+    #define TRANSACTION_FAILED(midtrans) auto response = HttpResponse::newHttpResponse(); response->setStatusCode((HttpStatusCode)std::stoi(midtrans["status_code"].get<std::string>())); response->setContentTypeCode(CT_APPLICATION_JSON); response->setBody(midtrans.dump()); return response;
+    #define TRANSACTION_SUCCESS(midtrans) auto response = HttpResponse::newHttpResponse(); response->setContentTypeCode(CT_APPLICATION_JSON); response->setBody(midtrans.dump()); response->setStatusCode(k201Created); return response;
 }

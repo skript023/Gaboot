@@ -38,20 +38,11 @@ namespace gaboot
 
 				db().insert(payments);
 
-				auto response = HttpResponse::newHttpResponse();
-				response->setContentTypeCode(CT_APPLICATION_JSON);
-				response->setBody(midtrans.dump());
-				response->setStatusCode(k201Created);
+				TRANSACTION_SUCCESS(midtrans);
 
-				return response;
 			} TRANSACTION_END_CLAUSE
-			
-			auto response = HttpResponse::newHttpResponse();
-			response->setStatusCode((HttpStatusCode)std::stoi(midtrans["status_code"].get<std::string>()));
-			response->setContentTypeCode(CT_APPLICATION_JSON);
-			response->setBody(midtrans.dump());
 
-			return response;
+			TRANSACTION_FAILED(midtrans);
 		}
 		catch (const std::exception& e)
 		{

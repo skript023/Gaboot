@@ -12,6 +12,7 @@ namespace gaboot
 		order m_transaction_details;
 		customer_detail m_customer_detail;
 		bank_transfer m_bank_transfer;
+		bool m_is_customer_detail;
 
 		void from_json(Json::Value const& json)
 		{
@@ -20,18 +21,23 @@ namespace gaboot
 			this->m_transaction_details.gross_amount = json["transaction_details"]["gross_amount"].asInt();
 			this->m_bank_transfer.m_bank = json["bank_transfer"]["bank"].asString();
 
-			this->m_customer_detail.m_first_name = json["customer"]["first_name"].asString();
-            this->m_customer_detail.m_last_name = json["customer"]["last_name"].asString();
-            this->m_customer_detail.m_email = json["customer"]["email"].asString();
-            this->m_customer_detail.m_phone = json["customer"]["phone"].asString();
-            this->m_customer_detail.m_billing_address.m_first_name = json["customer"]["billing"]["first_name"].asString();
-            this->m_customer_detail.m_billing_address.m_last_name = json["customer"]["billing"]["last_name"].asString();
-            this->m_customer_detail.m_billing_address.m_email = json["customer"]["billing"]["email"].asString();
-            this->m_customer_detail.m_billing_address.m_phone = json["customer"]["billing"]["phone"].asString();
-            this->m_customer_detail.m_billing_address.m_address = json["customer"]["billing"]["address"].asString();
-            this->m_customer_detail.m_billing_address.m_city = json["customer"]["billing"]["city"].asString();
-            this->m_customer_detail.m_billing_address.m_postal_code = json["customer"]["billing"]["postal_code"].asString();
-            this->m_customer_detail.m_billing_address.m_country_code = json["customer"]["billing"]["country_code"].asString();
+			if (json.isMember("customer"))
+			{
+				this->m_customer_detail.m_first_name = json["customer"]["first_name"].asString();
+				this->m_customer_detail.m_last_name = json["customer"]["last_name"].asString();
+				this->m_customer_detail.m_email = json["customer"]["email"].asString();
+				this->m_customer_detail.m_phone = json["customer"]["phone"].asString();
+				this->m_customer_detail.m_billing_address.m_first_name = json["customer"]["billing"]["first_name"].asString();
+				this->m_customer_detail.m_billing_address.m_last_name = json["customer"]["billing"]["last_name"].asString();
+				this->m_customer_detail.m_billing_address.m_email = json["customer"]["billing"]["email"].asString();
+				this->m_customer_detail.m_billing_address.m_phone = json["customer"]["billing"]["phone"].asString();
+				this->m_customer_detail.m_billing_address.m_address = json["customer"]["billing"]["address"].asString();
+				this->m_customer_detail.m_billing_address.m_city = json["customer"]["billing"]["city"].asString();
+				this->m_customer_detail.m_billing_address.m_postal_code = json["customer"]["billing"]["postal_code"].asString();
+				this->m_customer_detail.m_billing_address.m_country_code = json["customer"]["billing"]["country_code"].asString();
+
+				m_is_customer_detail = true;
+			}
 		}
 
 		nlohmann::json to_json()
@@ -42,18 +48,21 @@ namespace gaboot
 			json["transaction_details"]["gross_amount"] = m_transaction_details.order_id;
 			json["bank_transfer"]["bank"] = m_bank_transfer.m_bank;
 
-            json["customer_details"]["first_name"] = m_customer_detail.m_first_name;
-            json["customer_details"]["last_name"] = m_customer_detail.m_last_name;
-            json["customer_details"]["email"] = m_customer_detail.m_email;
-            json["customer_details"]["phone"] = m_customer_detail.m_phone;
-            json["customer_details"]["billing_address"]["first_name"] = m_customer_detail.m_billing_address.m_first_name;
-            json["customer_details"]["billing_address"]["last_name"] = m_customer_detail.m_billing_address.m_last_name;
-            json["customer_details"]["billing_address"]["email"] = m_customer_detail.m_billing_address.m_email;
-            json["customer_details"]["billing_address"]["phone"] = m_customer_detail.m_billing_address.m_phone;
-            json["customer_details"]["billing_address"]["address"] = m_customer_detail.m_billing_address.m_address;
-            json["customer_details"]["billing_address"]["city"] = m_customer_detail.m_billing_address.m_city;
-            json["customer_details"]["billing_address"]["postal_code"] = m_customer_detail.m_billing_address.m_postal_code;
-            json["customer_details"]["billing_address"]["country_code"] = m_customer_detail.m_billing_address.m_country_code;
+			if (m_is_customer_detail)
+			{
+				json["customer_details"]["first_name"] = m_customer_detail.m_first_name;
+				json["customer_details"]["last_name"] = m_customer_detail.m_last_name;
+				json["customer_details"]["email"] = m_customer_detail.m_email;
+				json["customer_details"]["phone"] = m_customer_detail.m_phone;
+				json["customer_details"]["billing_address"]["first_name"] = m_customer_detail.m_billing_address.m_first_name;
+				json["customer_details"]["billing_address"]["last_name"] = m_customer_detail.m_billing_address.m_last_name;
+				json["customer_details"]["billing_address"]["email"] = m_customer_detail.m_billing_address.m_email;
+				json["customer_details"]["billing_address"]["phone"] = m_customer_detail.m_billing_address.m_phone;
+				json["customer_details"]["billing_address"]["address"] = m_customer_detail.m_billing_address.m_address;
+				json["customer_details"]["billing_address"]["city"] = m_customer_detail.m_billing_address.m_city;
+				json["customer_details"]["billing_address"]["postal_code"] = m_customer_detail.m_billing_address.m_postal_code;
+				json["customer_details"]["billing_address"]["country_code"] = m_customer_detail.m_billing_address.m_country_code;
+			}
 
             return json;
 		}
