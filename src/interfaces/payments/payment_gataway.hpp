@@ -28,8 +28,18 @@ namespace gaboot
 
 		void from_json(nlohmann::json const& json)
 		{
-			if (!json.contains("id"))
+			if (json.contains("id"))
 			{
+				m_status_code = json.contains("status_code") ? json["status_code"] : "";
+				m_status_message = json.contains("status_message") ? json["status_message"] : "";
+				m_id = json.contains("id") ? json["id"] : "";
+
+				m_is_success = false;
+			}
+			else
+			{
+				m_status_code = json.contains("status_code") ? json["status_code"] : "";
+				m_status_message = json.contains("status_message") ? json["status_message"] : "";
 				m_currency = json.contains("currency") ? json["currency"] : "";
 				m_expiry_time = json.contains("expiry_time") ? json["expiry_time"] : "";
 				m_merchant_id = json.contains("merchant_id") ? json["merchant_id"] : "";
@@ -54,12 +64,6 @@ namespace gaboot
 
 				m_is_success = true;
 			}
-
-			m_status_code = json.contains("status_code") ? json["status_code"] : "";
-			m_status_message = json.contains("status_message") ? json["status_message"] : "";
-			m_id = json.contains("id") ? json["id"] : "";
-
-			LOG(INFO) << json.dump();
 		}
 
 		Json::Value to_json()
