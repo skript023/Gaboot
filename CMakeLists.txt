@@ -71,7 +71,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 endif()
 
 # Add a custom command to copy config.json to the build directory
-if (EXISTS "${SOURCE_DIR}/config.json" AND EXISTS "${SOURCE_DIR}/.env")
+if (EXISTS "${SOURCE_DIR}/config.json")
   add_custom_command(
     OUTPUT ${DESTINATION_DIR}/config.json
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SOURCE_DIR}/config.json ${DESTINATION_DIR}/config.json
@@ -81,12 +81,14 @@ if (EXISTS "${SOURCE_DIR}/config.json" AND EXISTS "${SOURCE_DIR}/.env")
 endif()
 
 # Add a custom command to copy .env to the build directory
-add_custom_command(
-    OUTPUT ${DESTINATION_DIR}/.env
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SOURCE_DIR}/.env ${DESTINATION_DIR}/.env
-    DEPENDS ${SOURCE_DIR}/.env
-    COMMENT "Copying .env to ${DESTINATION_DIR}"
-)
+if (EXISTS "${SOURCE_DIR}/.env")
+  add_custom_command(
+      OUTPUT ${DESTINATION_DIR}/.env
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SOURCE_DIR}/.env ${DESTINATION_DIR}/.env
+      DEPENDS ${SOURCE_DIR}/.env
+      COMMENT "Copying .env to ${DESTINATION_DIR}"
+  )
+endif()
 # Add a custom target to make sure the custom command is executed before building your main target
 add_custom_target(CopyConfigFiles DEPENDS ${DESTINATION_DIR}/config.json ${DESTINATION_DIR}/.env)
 
