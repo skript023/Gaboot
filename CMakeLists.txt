@@ -71,12 +71,14 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 endif()
 
 # Add a custom command to copy config.json to the build directory
-add_custom_command(
+if (EXISTS "${SOURCE_DIR}/config.json" AND EXISTS "${SOURCE_DIR}/.env")
+  add_custom_command(
     OUTPUT ${DESTINATION_DIR}/config.json
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SOURCE_DIR}/config.json ${DESTINATION_DIR}/config.json
     DEPENDS ${SOURCE_DIR}/config.json
     COMMENT "Copying config.json to ${DESTINATION_DIR}"
-)
+  )
+endif()
 
 # Add a custom command to copy .env to the build directory
 add_custom_command(
