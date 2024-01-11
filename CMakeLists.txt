@@ -65,9 +65,9 @@ set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Specify the destination directory (out/build/windows-x64)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    set(DESTINATION_DIR ${CMAKE_CURRENT_BINARY_DIR}/../build/Windows-x64)
+    set(DESTINATION_DIR ${CMAKE_CURRENT_BINARY_DIR}/../Windows-x64)
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    set(DESTINATION_DIR ${CMAKE_CURRENT_BINARY_DIR}/../build/Linux-x64)
+    set(DESTINATION_DIR ${CMAKE_CURRENT_BINARY_DIR}/../Linux-x64)
 endif()
 
 # Add a custom command to copy config.json to the build directory

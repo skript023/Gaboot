@@ -99,8 +99,6 @@ namespace gaboot
 			if (!m_is_success)
 				json["id"] = this->m_id;
 
-			LOG(INFO) << json.toStyledString();
-
 			return json;
 		}
 	}; 
