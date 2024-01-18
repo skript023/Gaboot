@@ -34,17 +34,14 @@ namespace gaboot
 				return HttpResponse::newHttpJsonResponse(m_response.to_json());
 			}
 
-			Json::Value data(Json::arrayValue);
-
-			std::ranges::for_each(products.begin(), products.end(), [&data](MasterProducts const& product) {
-				data.append(product.toJson());
+			std::ranges::for_each(products.begin(), products.end(), [this](MasterProducts const& product) {
+				m_response.m_data.append(product.toJson());
 			});
 
 			const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
 
 			m_response.m_message = "Success retreive products data";
 			m_response.m_success = true;
-			m_response.m_data = data;
 			m_response.m_last_page = lastPage;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
