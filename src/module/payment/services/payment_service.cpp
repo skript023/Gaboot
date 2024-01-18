@@ -47,7 +47,7 @@ namespace gaboot
 		}
 		catch (const std::exception& e)
 		{
-			return CustomException<k500InternalServerError>(fmt::format("Unable to create payment, error caught on {}", e.what())).response();
+			TRANSACTION_ERROR(e.what());
 		}
 	}
 	HttpResponsePtr payment_service::notification(HttpRequestPtr const& req)
