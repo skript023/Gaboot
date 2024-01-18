@@ -8,10 +8,12 @@ namespace gaboot
         this->get_current_memory();
 #ifdef _WIN32
 		LOG(INFO) << "Memory used by app : " << this->bytes_to_megabytes(m_process_memory_counter.PrivateUsage) << "MB";
-		LOG(INFO) << "Available memory : " << this->bytes_to_gigabytes(m_total_virtual_memory) << " Gigabytes/" << this->bytes_to_gigabytes(m_memory_info.ullTotalPhys - m_memory_info.ullAvailPhys) << " Gigabytes";
+        LOG(INFO) << "Memory used : " << this->bytes_to_gigabytes(m_memory_info.ullTotalPhys - m_memory_info.ullAvailPhys) << " Gigabytes";
+        LOG(INFO) << "Total memory : " << this->bytes_to_gigabytes(m_total_virtual_memory) << " Gigabytes";
 #elif __linux__
         LOG(INFO) << "Memory used by app : " << this->kilobytes_to_megabytes(m_personal_usage) << "MB";
-        LOG(INFO) << "Available memory : " << this->kilobytes_to_gigabytes(m_total_memory) << " Gigabytes/" << this->kilobytes_to_gigabytes(m_total_memory - m_free_memory) << " Gigabytes";
+        LOG(INFO) << "Available memory : " << this->kilobytes_to_gigabytes(m_total_memory) << " Gigabytes";
+        LOG(INFO) << "Total memory : " << this->kilobytes_to_gigabytes(m_total_memory - m_free_memory) << " Gigabytes";
 #endif
 
 		g_virtual_memory = this;
