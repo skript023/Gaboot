@@ -18,6 +18,31 @@ namespace gaboot
 		bool m_is_item_detail = false;
 		bool m_is_billing_address = false;
 
+		void clear()
+		{
+			this->m_payment_type.clear();
+			this->m_transaction_details.order_id.clear();
+			this->m_transaction_details.gross_amount = 0;
+			this->m_bank_transfer.m_bank.clear();
+			this->m_item_details.clear();
+			this->m_customer_detail.m_first_name.clear();
+			this->m_customer_detail.m_last_name.clear();
+			this->m_customer_detail.m_email.clear();
+			this->m_customer_detail.m_phone.clear();
+
+			this->m_customer_detail.m_billing_address.m_first_name.clear();
+			this->m_customer_detail.m_billing_address.m_last_name.clear();
+			this->m_customer_detail.m_billing_address.m_email.clear();
+			this->m_customer_detail.m_billing_address.m_phone.clear();
+			this->m_customer_detail.m_billing_address.m_address.clear();
+			this->m_customer_detail.m_billing_address.m_city.clear();
+			this->m_customer_detail.m_billing_address.m_postal_code.clear();
+			this->m_customer_detail.m_billing_address.m_country_code.clear();
+			bool m_is_customer_detail = false;
+			bool m_is_item_detail = false;
+			bool m_is_billing_address = false;
+		}
+
 		void from_json(Json::Value const& json)
 		{
 			this->m_payment_type = "bank_transfer";
@@ -111,6 +136,8 @@ namespace gaboot
 					json["customer_details"]["billing_address"]["country_code"] = m_customer_detail.m_billing_address.m_country_code;
 				}
 			}
+
+			this->clear();
 
             return json;
 		}

@@ -112,6 +112,8 @@ namespace gaboot
 
         cpr::Body body = m_json.dump();
 
+        LOG(INFO) << m_json.dump();
+
         auto res = cpr::PostAsync(m_url, body, header).get();
 
         if (res.text.empty()) throw std::runtime_error("UNKNOWN ERROR 01 - Check your internet access");
