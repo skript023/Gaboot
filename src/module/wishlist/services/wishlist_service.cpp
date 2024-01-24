@@ -68,16 +68,16 @@ namespace gaboot
 
 			if (wishlists.empty())
 			{
-				m_response.m_message = "No data retrieved";
-				m_response.m_success = false;
+				m_response.m_message = "Wishlist is empty";
+				m_response.m_success = true;
 
 				return HttpResponse::newHttpJsonResponse(m_response.to_json());
 			}
 
 			Json::Value data(Json::arrayValue);
 
-			std::ranges::for_each(wishlists.begin(), wishlists.end(), [&data](Wishlists const& wishlist) {
-				data.append(wishlist.toJson());
+			std::ranges::for_each(wishlists.begin(), wishlists.end(), [this](Wishlists const& wishlist) {
+				m_response.m_data.append(wishlist.toJson());
 			});
 
 			const size_t lastPage = (wishlists.size() / (limit + (wishlists.size() % limit))) == 0 ? 0 : 1;

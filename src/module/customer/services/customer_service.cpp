@@ -23,16 +23,16 @@ namespace gaboot
 
             if (customers.empty())
             {
-                m_response.m_message = "No data retrieved";
-                m_response.m_success = false;
+                m_response.m_message = "Customer empty";
+                m_response.m_success = true;
 
                 return HttpResponse::newHttpJsonResponse(m_response.to_json());
             }
 
             Json::Value data(Json::arrayValue);
 
-            std::ranges::for_each(customers.begin(), customers.end(), [&data](MasterCustomers const& customer) {
-                data.append(customer.toJson());
+            std::ranges::for_each(customers.begin(), customers.end(), [this](MasterCustomers const& customer) {
+                m_response.m_data.append(customer.toJson());
             });
 
             const size_t lastPage = customers.size() / limit + (customers.size() % limit) == 0 ? 0 : 1;

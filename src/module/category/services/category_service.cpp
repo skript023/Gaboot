@@ -90,23 +90,22 @@ namespace gaboot
 
 			if (categories.empty())
 			{
-				m_response.m_message = "No data retrieved";
-				m_response.m_success = false;
+				m_response.m_message = "0 category found";
+				m_response.m_success = true;
 
 				return HttpResponse::newHttpJsonResponse(m_response.to_json());
 			}
 
 			Json::Value data(Json::arrayValue);
 
-			std::ranges::for_each(categories.begin(), categories.end(), [&data](Categories const& category) {
-				data.append(category.toJson());
+			std::ranges::for_each(categories.begin(), categories.end(), [this](Categories const& category) {
+				m_response.m_data.append(category.toJson());
 			});
 
 			const size_t lastPage = (categories.size() / (limit + (categories.size() % limit))) == 0 ? 0 : 1;
 
 			m_response.m_message = "Success retreive categories data";
 			m_response.m_success = true;
-			m_response.m_data = data;
 			m_response.m_last_page = lastPage;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
@@ -129,13 +128,13 @@ namespace gaboot
 
 			this->load_cache();
 
-			const auto user = m_cache_category.find(stoll(id));
+			const auto category = m_cache_category.find(stoll(id));
 
-			if (!user) return NotFoundException("Unable retrieve category detail").response();
+			if (!category) return NotFoundException("Unable retrieve category detail").response();
 
 			m_response.m_message = "Success retrieve category data";
 			m_response.m_success = true;
-			m_response.m_data = user->toJson();
+			m_response.m_data = category->toJson();
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		}

@@ -29,7 +29,7 @@ namespace gaboot
 			if (products.empty())
 			{
 				m_response.m_message = "Product data is empty 0 data found";
-				m_response.m_success = false;
+				m_response.m_success = true;
 
 				return HttpResponse::newHttpJsonResponse(m_response.to_json());
 			}
