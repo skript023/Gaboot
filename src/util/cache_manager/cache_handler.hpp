@@ -204,6 +204,20 @@ namespace gaboot
 
 			return nullptr;
 		}
+		std::vector<T> find(std::function<bool(const std::pair<const int64_t, T>&)> callback)
+		{
+			std::vector<T> result;
+
+			for (auto& entry : m_cache)
+			{
+				if (callback(entry))
+				{
+					result.push_back(entry.second);
+				}
+			}
+
+			return result;
+		}
 		bool update(int64_t id, T cache) const
 		{
 			if (auto it = m_cache.find(id); it != m_cache.end())

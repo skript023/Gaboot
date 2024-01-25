@@ -32,6 +32,7 @@ namespace gaboot
 		HttpResponsePtr findOne(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr update(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr remove(HttpRequestPtr const&, std::string&&);
+		HttpResponsePtr getProductByCategory(HttpRequestPtr const&, std::string&&);
 	private:
 		void load_cache()
 		{

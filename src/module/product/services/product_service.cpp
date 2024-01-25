@@ -18,13 +18,14 @@ namespace gaboot
 		{
 			auto& limitParam = req->getParameter("limit");
 			auto& pageParam = req->getParameter("page");
+			auto& categoryId = req->getParameter("categoryId");
 
 			const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
 			const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
 			this->load_cache();
 
-			const auto products = m_cache_product.limit(limit).offset(page * limit).find_all();
+			const auto products = categoryId.empty() ? m_cache_product.limit(limit).offset(page * limit).find_all() : m_cache_product.find([categoryId](const std::pair<const int64_t, MasterProducts>& entry) -> bool { return entry.second.getValueOfCategoryid() == stoi(categoryId); });
 
 			if (products.empty())
 			{
@@ -232,11 +233,11 @@ namespace gaboot
 	}
 	HttpResponsePtr product_service::remove(HttpRequestPtr const& req, std::string&& id)
 	{
-		try
+		TRY_CLAUSE
 		{
 			if (id.empty() || !util::is_numeric(id))
 			{
-				return BadRequestException("Parameters requirement doesn't match").response();
+				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
 			this->load_cache();
@@ -245,26 +246,59 @@ namespace gaboot
 
 			m_cache_product.remove(stoull(id));
 
-			if (record != 0)
+			if (!record)
 			{
-				m_response.m_message = fmt::format("Delete user on {} successfully", record);
-				m_response.m_success = true;
-
-				auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-				return response;
+				throw NotFoundException("Unable to delete non-existing data");
 			}
-			
-			return NotFoundException("Unable to delete non-existing data").response();
-		}
-		catch (const DrogonDbException& e)
-		{
-			m_response.m_message = fmt::format("Failed delete user, error caught on {}", e.base().what());
-			m_response.m_success = false;
 
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			response->setStatusCode(k500InternalServerError);
+			m_response.m_message = fmt::format("Delete user on {} successfully", record);
+			m_response.m_success = true;
 
-			return response;
-		}
+			return HttpResponse::newHttpJsonResponse(m_response.to_json());
+		} EXCEPT_CLAUSE
 	}
+
+	HttpResponsePtr product_service::getProductByCategory(HttpRequestPtr const& req, std::string&& id)
+	{
+		TRY_CLAUSE
+		{
+			auto& limitParam = req->getParameter("limit");
+			auto& pageParam = req->getParameter("page");
+
+			const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
+			const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
+
+			if (id.empty() || !util::is_numeric(id))
+			{
+				throw BadRequestException("Parameters requirement doesn't match");
+			}
+
+			this->load_cache();
+
+			auto args = Criteria(MasterProducts::Cols::_categoryId, CompareOperator::EQ, stoull(id));
+
+			const auto products = m_cache_product.find([id](const std::pair<const int64_t, MasterProducts>& entry) -> bool {
+				return entry.second.getValueOfCategoryid() == stoi(id);
+			});
+
+			if (products.empty())
+			{
+				throw NotFoundException("Product which related to that category not found");
+			}
+
+			std::ranges::for_each(products.begin(), products.end(), [this](MasterProducts const& product) {
+				m_response.m_data.append(product.toJson());
+			});
+
+			const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
+
+			m_response.m_message = "Success retreive products data";
+			m_response.m_success = true;
+			m_response.m_last_page = lastPage;
+
+			return HttpResponse::newHttpJsonResponse(m_response.to_json());
+		}
+		EXCEPT_CLAUSE
+	}
+
 }
