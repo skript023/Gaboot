@@ -14,7 +14,7 @@ namespace gaboot
 	}
 	HttpResponsePtr product_service::findAll(HttpRequestPtr const& req)
 	{
-		try
+		TRY_CLAUSE
 		{
 			auto& limitParam = req->getParameter("limit");
 			auto& pageParam = req->getParameter("page");
@@ -46,27 +46,17 @@ namespace gaboot
 			m_response.m_last_page = lastPage;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
-		}
-		catch (const DrogonDbException& e)
-		{
-			m_response.m_message = fmt::format("Unable retrieve products data, error caught on {}", e.base().what());
-			m_response.m_success = false;
-
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			response->setStatusCode(k500InternalServerError);
-
-			return response;
-		}
+		} EXCEPT_CLAUSE
 	}
 	HttpResponsePtr product_service::create(HttpRequestPtr const& req)
 	{
-		try
+		TRY_CLAUSE
 		{
 			MultiPartParser fileUpload;
 
 			if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0)
 			{
-				return BadRequestException("Requirement doesn't match").response();
+				throw BadRequestException("Requirement doesn't match");
 			}
 
 			auto& file = fileUpload.getFiles()[0];
@@ -88,7 +78,7 @@ namespace gaboot
 			upload_file upload(&file, product.getValueOfName(), "products");
 			productImage.setImagepath(upload.get_image_path());
 			productImage.setThumbnailpath(upload.get_thumbnail_path());
-			
+
 			productImage.setCreatedAt(trantor::Date::now());
 			productImage.setUpdatedAt(trantor::Date::now());
 
@@ -98,7 +88,7 @@ namespace gaboot
 
 			if (!schema.validate(product.toJson(), m_error))
 			{
-				return BadRequestException(m_error).response();
+				throw BadRequestException(m_error);
 			}
 
 			db().insert(product);
@@ -116,64 +106,44 @@ namespace gaboot
 			response->setStatusCode(k201Created);
 
 			return response;
-		}
-		catch (const DrogonDbException& e)
-		{
-			LOG(WARNING) << e.base().what();
-
-			m_response.m_message = e.base().what();
-			m_response.m_success = false;
-
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			response->setStatusCode(HttpStatusCode::k500InternalServerError);
-
-			return response;
-		}
+		} EXCEPT_CLAUSE
 	}
 	HttpResponsePtr product_service::findOne(HttpRequestPtr const& req, std::string&& id)
 	{
-		try
+		TRY_CLAUSE
 		{
 			if (id.empty() || !util::is_numeric(id))
 			{
-				return BadRequestException("Parameters requirement doesn't match").response();
+				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
 			this->load_cache();
 
 			const auto product = m_cache_product.find(stoull(id));
 
-			if (!product) return NotFoundException("Product data is empty 0 data found").response();
+			if (!product) throw NotFoundException("Product data is empty 0 data found");
 
 			m_response.m_message = "Success retrieve products data";
 			m_response.m_success = true;
 			m_response.m_data = product->toJson();
 
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-
-			return response;
-		}
-		catch (const std::exception& e)
-		{
-			std::string error = fmt::format("Unable retrieve products data, error caught on {}", e.what());
-
-			return CustomException<k500InternalServerError>(error).response();
-		}
+			return HttpResponse::newHttpJsonResponse(m_response.to_json());
+		} EXCEPT_CLAUSE
 	}
 	HttpResponsePtr product_service::update(HttpRequestPtr const& req, std::string&& id)
 	{
-		try
+		TRY_CLAUSE
 		{
 			MultiPartParser multipart;
 
 			if (id.empty() || !util::is_numeric(id))
 			{
-				return BadRequestException("Parameters requirement doesn't match").response();
+				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
 			if (multipart.parse(req) != 0)
 			{
-				return BadRequestException("Requirement doesn't match").response();
+				throw BadRequestException("Requirement doesn't match");
 			}
 
 			auto& file = multipart.getFiles()[0];
@@ -198,10 +168,10 @@ namespace gaboot
 			this->load_cache();
 
 			if (!m_cache_product.update(stoull(id), product))
-				return NotFoundException("Unable to update non-existing product").response();
+				throw NotFoundException("Unable to update non-existing product");
 
 			if (const auto record = db().updateFuture(product).get(); !record)
-				return NotFoundException("Unable to update non-existing product").response();
+				throw NotFoundException("Unable to update non-existing product");
 
 			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 			{
@@ -212,7 +182,7 @@ namespace gaboot
 					trantor::Date::now()
 				); !record2)
 				{
-					return NotFoundException("Unable to update non-existing product").response();
+					throw NotFoundException("Unable to update non-existing product");
 				}
 				upload.save();
 			}
@@ -221,15 +191,8 @@ namespace gaboot
 			m_response.m_message = "Success update customer data.";
 			m_response.m_success = true;
 
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			return response;
-		}
-		catch (const std::exception& e)
-		{
-			std::string error = fmt::format("Unable to update data, error caught on {}", e.what());
-
-			return CustomException<k500InternalServerError>(error).response();
-		}
+			return HttpResponse::newHttpJsonResponse(m_response.to_json());
+		} EXCEPT_CLAUSE
 	}
 	HttpResponsePtr product_service::remove(HttpRequestPtr const& req, std::string&& id)
 	{
