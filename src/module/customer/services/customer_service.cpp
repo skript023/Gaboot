@@ -11,14 +11,14 @@ namespace gaboot
 {
 	HttpResponsePtr customer_service::findAll(HttpRequestPtr const& req)
 	{
-        auto& limitParam = req->getParameter("limit");
-        auto& pageParam = req->getParameter("page");
-
-        const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
-        const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
-
-        try
+        TRY_CLAUSE
         {
+            auto& limitParam = req->getParameter("limit");
+            auto& pageParam = req->getParameter("page");
+
+            const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
+            const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
+
             const auto customers = db().orderBy(MasterCustomers::Cols::_firstname).limit(limit).offset(page * limit).findFutureAll().get();
 
             if (customers.empty())
@@ -43,18 +43,13 @@ namespace gaboot
             m_response.m_last_page = lastPage;
 
             return HttpResponse::newHttpJsonResponse(m_response.to_json());
-        }
-        catch (const std::exception& e)
-        {
-            return CustomException<k500InternalServerError>(fmt::format("Cannot retrieve customers data, error caught on {}", e.what())).response();
-        }
+        } EXCEPT_CLAUSE
 	}
     HttpResponsePtr customer_service::create(HttpRequestPtr const& req)
     {
-        Json::Value data;
-
-        try
+        TRY_CLAUSE
         {
+            Json::Value data;
             MultiPartParser fileUpload;
 
             if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0)
@@ -90,7 +85,7 @@ namespace gaboot
             customer.setPassword(bcrypt::generateHash(customer.getValueOfPassword()));
             customer.setIsactive(true);
 
-            db().insertFuture(customer);
+            db().insert(customer);
 
             LOG(INFO) << "Image saved at " << upload.get_image_path() << " thumbnail saved at " << upload.get_thumbnail_path();
 
@@ -103,15 +98,11 @@ namespace gaboot
             response->setStatusCode(k201Created);
 
             return response;
-        }
-        catch (const std::exception& e)
-        {
-            return CustomException<k500InternalServerError>(fmt::format("Unable to register customer, error caught on {}", e.what())).response();
-        }
+        } EXCEPT_CLAUSE
     }
     HttpResponsePtr customer_service::findOne(HttpRequestPtr const& req, std::string&& id)
     {
-        try
+        TRY_CLAUSE
         {
             if (id.empty() || !util::is_numeric(id))
             {
@@ -127,15 +118,11 @@ namespace gaboot
             m_response.m_data = user.toJson();
 
             return HttpResponse::newHttpJsonResponse(m_response.to_json());
-        }
-        catch (const std::exception& e)
-        {
-            return CustomException<k500InternalServerError>(fmt::format("Cannot retrieve customers data, error caught on {}", e.what())).response();
-        }
+        } EXCEPT_CLAUSE
     }
     HttpResponsePtr customer_service::update(HttpRequestPtr const& req, std::string&& id) //bugged when upload file
     {
-        try
+        TRY_CLAUSE
         {
             MultiPartParser multipart;
             MasterCustomers customer;
@@ -163,7 +150,7 @@ namespace gaboot
             if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
             {
                 m_data["imagePath"] = upload.get_image_path();
-                m_data["thumbnailPath"] = upload.get_thumbnail_path(); 
+                m_data["thumbnailPath"] = upload.get_thumbnail_path();
             }
 
             customer.updateByJson(m_data);
@@ -199,27 +186,20 @@ namespace gaboot
             m_response.m_message = "Success update customer data.";
             m_response.m_success = true;
 
-            auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-            return response;
-        }
-        catch (const std::exception& e)
-        {
-            std::string error = fmt::format("Unable to update data, error caught on {}", e.what());
-
-            return CustomException<k500InternalServerError>(error).response();
-        }
+            return HttpResponse::newHttpJsonResponse(m_response.to_json());
+        } EXCEPT_CLAUSE
     }
     HttpResponsePtr customer_service::remove(HttpRequestPtr const& req, std::string&& id)
     {
-        if (id.empty() || !util::is_numeric(id))
+        TRY_CLAUSE
         {
-            LOG(WARNING) << "ID is empty or ID is not numeric";
+            if (id.empty() || !util::is_numeric(id))
+            {
+                LOG(WARNING) << "ID is empty or ID is not numeric";
 
-            return BadRequestException("Parameters requirement doesn't match").response();
-        }
+                return BadRequestException("Parameters requirement doesn't match").response();
+            }
 
-        try
-        {
             const auto record = db().deleteByPrimaryKey(stoll(id));
             if (record != 0)
             {
@@ -230,25 +210,26 @@ namespace gaboot
             }
 
             return NotFoundException("Record not found").response();
-        }
-        catch (const std::exception& e)
-        {
-            return CustomException<k500InternalServerError>(fmt::format("Failed delete customers, error caught on {}", e.what())).response();
-        }
+        } EXCEPT_CLAUSE
     }
     HttpResponsePtr customer_service::getProfile(HttpRequestPtr const& req, std::string&& id)
     {
-        MasterCustomers customer;
-
-        if (id.empty() || !util::is_numeric(id))
+        TRY_CLAUSE
         {
-            LOG(WARNING) << "ID is empty or ID is not numeric";
+            MasterCustomers customer;
 
-            return BadRequestException().response();
-        }
+            if (id.empty() || !util::is_numeric(id))
+            {
+                LOG(WARNING) << "ID is empty or ID is not numeric";
 
-        if (g_customer_manager->find(stoll(id), &customer))
-        {
+                throw BadRequestException();
+            }
+
+            if (!g_customer_manager->find(stoll(id), &customer))
+            {
+                throw NotFoundException("Unable to retreive customers profile");
+            }
+
             auto customer_data = customer.toJson();
             customer_data.removeMember("password");
             customer_data.removeMember("updatedAt");
@@ -259,87 +240,63 @@ namespace gaboot
             m_response.m_message = "Success retreive customers profile";
             m_response.m_success = true;
 
-            auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-
-            return response;
-        }
-
-        return NotFoundException("Unable to retreive customers profile").response();
+            return HttpResponse::newHttpJsonResponse(m_response.to_json());
+        } EXCEPT_CLAUSE
     }
     HttpResponsePtr customer_service::getImage(HttpRequestPtr const& req, std::string&& id)
     {
-        MasterCustomers customer;
-
-        if (id.empty() || !util::is_numeric(id))
+        TRY_CLAUSE
         {
-            LOG(WARNING) << "ID is empty or ID is not numeric";
+            MasterCustomers customer;
 
-            return BadRequestException("Parameters requirement doesn't match").response();
-        }
-
-        if (g_customer_manager->find(stoll(id), &customer))
-        {
-            std::filesystem::path file(*customer.getImgpath());
-
-            if (!std::filesystem::exists(file))
+            if (id.empty() || !util::is_numeric(id))
             {
-                LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
+                LOG(WARNING) << "ID is empty or ID is not numeric";
 
-                m_response.m_message = "Unable to retreive profile picture, please upload your profile picture";
-                m_response.m_success = false;
-
-                   auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-                response->setStatusCode(k404NotFound);
-
-                return response;
+                throw BadRequestException("Parameters requirement doesn't match");
             }
 
-            if (auto image = customer.getImgpath(); image && !image->empty())
-                return HttpResponse::newFileResponse(*customer.getImgpath());
-        }
+            if (g_customer_manager->find(stoll(id), &customer))
+            {
+                std::filesystem::path file(*customer.getImgpath());
 
-        m_response.m_message = "Unable to retreive customers image";
-        m_response.m_success = false;
+                if (!std::filesystem::exists(file))
+                    throw NotFoundException("Unable to retreive profile picture, please upload your profile picture");
+                if (auto image = customer.getImgpath(); image && !image->empty())
+                    return HttpResponse::newFileResponse(*customer.getImgpath());
+            }
 
-        auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-        response->setStatusCode(k404NotFound);
-
-        LOG(WARNING) << "Unable to retreive customers image";
-
-        return response;
+            throw NotFoundException("Unable to retreive customers image");
+        } EXCEPT_CLAUSE
     }
     HttpResponsePtr customer_service::getThumbnail(HttpRequestPtr const& req, std::string&& id)
     {
-        MasterCustomers customer;
-
-        if (id.empty() || !util::is_numeric(id))
+        TRY_CLAUSE
         {
-            LOG(WARNING) << "ID is empty or ID is not numeric";
+            MasterCustomers customer;
 
-            return BadRequestException("Parameters requirement doesn't match").response();
-        }
-
-        if (g_customer_manager->find(stoll(id), &customer))
-        {
-            std::filesystem::path file(*customer.getImgthumbpath());
-
-            if (!std::filesystem::exists(file))
+            if (id.empty() || !util::is_numeric(id))
             {
-                LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
+                LOG(WARNING) << "ID is empty or ID is not numeric";
 
-                m_response.m_message = "Unable to retreive profile picture, please upload your profile picture";
-                m_response.m_success = false;
-
-                auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-                response->setStatusCode(k404NotFound);
-
-                return response;
+                throw BadRequestException("Parameters requirement doesn't match");
             }
 
-            if (auto image = customer.getImgpath(); image && !image->empty())
-                return HttpResponse::newFileResponse(*customer.getImgthumbpath());
-        }
+            if (g_customer_manager->find(stoll(id), &customer))
+            {
+                std::filesystem::path file(*customer.getImgthumbpath());
 
-        return NotFoundException("Unable to retreive customers image").response();
+                if (!std::filesystem::exists(file))
+                {
+                    LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
+
+                    throw NotFoundException("Unable to retreive profile picture, please upload your profile picture");
+                }
+                if (auto image = customer.getImgpath(); image && !image->empty())
+                    return HttpResponse::newFileResponse(*customer.getImgthumbpath());
+            }
+
+            throw NotFoundException("Unable to retreive customers image");
+        } EXCEPT_CLAUSE
     }
 }

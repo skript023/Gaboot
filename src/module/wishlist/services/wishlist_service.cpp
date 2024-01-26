@@ -13,11 +13,11 @@ namespace gaboot
 	}
 	HttpResponsePtr wishlist_service::create(HttpRequestPtr const& req)
 	{
-		try
+		TRY_CLAUSE
 		{
 			const auto& data = req->getJsonObject();
 
-			if (!data) return BadRequestException().response();
+			if (!data) throw BadRequestException();
 
 			validator schema({
 				{"productId", "type:number|required|minLength:3|numberOnly"},
@@ -30,7 +30,7 @@ namespace gaboot
 
 			if (!schema.validate(wishlist.toJson(), m_error))
 			{
-				return BadRequestException(m_error).response();
+				throw BadRequestException(m_error);
 			}
 
 			db().insert(wishlist);
@@ -44,17 +44,11 @@ namespace gaboot
 			response->setStatusCode(k201Created);
 
 			return response;
-		}
-		catch (const std::exception& e)
-		{
-			std::string error = fmt::format("Unable create wishlist data, error caught on {}", e.what());
-
-			return CustomException<k500InternalServerError>(error).response();
-		}
+		} EXCEPT_CLAUSE
 	}
     HttpResponsePtr wishlist_service::findAll(HttpRequestPtr const& req)
     {
-		try
+		TRY_CLAUSE
 		{
 			auto& limitParam = req->getParameter("limit");
 			auto& pageParam = req->getParameter("page");
@@ -74,8 +68,6 @@ namespace gaboot
 				return HttpResponse::newHttpJsonResponse(m_response.to_json());
 			}
 
-			Json::Value data(Json::arrayValue);
-
 			std::ranges::for_each(wishlists.begin(), wishlists.end(), [this](Wishlists const& wishlist) {
 				m_response.m_data.append(wishlist.toJson());
 			});
@@ -84,59 +76,44 @@ namespace gaboot
 
 			m_response.m_message = "Success retreive wishlists data";
 			m_response.m_success = true;
-			m_response.m_data = data;
 			m_response.m_last_page = lastPage;
 
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-
-			return response;
-		}
-		catch (const std::exception& e)
-		{
-			std::string error = fmt::format("Unable retrieve products data, error caught on {}", e.what());
-
-			return CustomException<k500InternalServerError>(error).response();
-		}
+			return HttpResponse::newHttpJsonResponse(m_response.to_json());
+		} EXCEPT_CLAUSE
     }
 	HttpResponsePtr wishlist_service::findOne(HttpRequestPtr const& req, std::string&& id)
 	{
-		try
+		TRY_CLAUSE
 		{
 			if (id.empty() || !util::is_numeric(id))
 			{
-				return BadRequestException("Requirement doesn't match").response();
+				throw BadRequestException("Requirement doesn't match");
 			}
 
 			this->load_cache();
 
 			const auto user = m_cache_wishlist.find(stoll(id));
 
-			if (!user) return NotFoundException("Unable retrieve wishlist detail").response();
+			if (!user) throw NotFoundException("Unable retrieve wishlist detail");
 
 			m_response.m_message = "Success retrieve wishlist data";
 			m_response.m_success = true;
 			m_response.m_data = user->toJson();
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
-		}
-		catch (const std::exception& e)
-		{
-			std::string error = fmt::format("Cannot retrieve wishlist data, error caught on {}", e.what());
-
-			return CustomException<k500InternalServerError>(error).response();
-		}
+		} EXCEPT_CLAUSE
 	}
 	HttpResponsePtr wishlist_service::update(HttpRequestPtr const& req, std::string&& id)
 	{
-		try
+		TRY_CLAUSE
 		{
 			const auto& json = req->getJsonObject();
 
-			if (!json) return BadRequestException().response();
+			if (!json) throw BadRequestException();
 
 			if (id.empty() || !util::is_numeric(id))
 			{
-				return BadRequestException("Parameters requirement doesn't match").response();
+				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
 			const auto wishlist = m_cache_wishlist.find(stoll(id));
@@ -148,54 +125,40 @@ namespace gaboot
 			this->load_cache();
 
 			if (!m_cache_wishlist.update(stoll(id), *wishlist))
-				return BadRequestException("Unable to update non-existing record").response();
+				throw BadRequestException("Unable to update non-existing record");
 
 			if (auto record = db().updateFuture(*wishlist).get(); !record)
-				return BadRequestException("Unable to update non-existing record").response();
+				throw BadRequestException("Unable to update non-existing record");
 
 			m_response.m_data = wishlist->toJson();
 			m_response.m_message = "Success update wishlist data.";
 			m_response.m_success = true;
 
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			return response;
-		}
-		catch (const std::exception& e)
-		{
-			return CustomException<k500InternalServerError>(fmt::format("Unable to update data, error caught on {}", e.what())).response();
-		}
+			return HttpResponse::newHttpJsonResponse(m_response.to_json());
+		} EXCEPT_CLAUSE
 	}
 	HttpResponsePtr wishlist_service::remove(HttpRequestPtr const& req, std::string&& id)
 	{
-		if (id.empty() || !util::is_numeric(id))
-		{
-			return BadRequestException("Parameters requirement doesn't match").response();
-		}
 
-		try
+		TRY_CLAUSE
 		{
+			if (id.empty() || !util::is_numeric(id))
+			{
+				throw BadRequestException("Parameters requirement doesn't match");
+			}
+
 			this->load_cache();
 
 			if (m_cache_wishlist.remove(stoll(id)))
-				return NotFoundException("Unable to delete non-existing record").response();
+				throw NotFoundException("Unable to delete non-existing record");
 
 			if (auto record = db().deleteByPrimaryKey(stoll(id)); !record)
-				return NotFoundException("Unable to delete non-existing record").response();
+				throw NotFoundException("Unable to delete non-existing record");
 
 			m_response.m_message = "Delete wishlist successfully";
 			m_response.m_success = true;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
-		}
-		catch (const DrogonDbException& e)
-		{
-			m_response.m_message = fmt::format("Failed delete wishlist, error caught on {}", e.base().what());
-			m_response.m_success = false;
-
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			response->setStatusCode(k500InternalServerError);
-
-			return response;
-		}
+		} EXCEPT_CLAUSE
 	}
 }

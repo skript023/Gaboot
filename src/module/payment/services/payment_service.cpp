@@ -52,7 +52,7 @@ namespace gaboot
 	}
 	HttpResponsePtr payment_service::notification(HttpRequestPtr const& req)
 	{
-		try
+		TRY_CLAUSE
 		{
 			auto& json = *req->getJsonObject();
 
@@ -60,17 +60,14 @@ namespace gaboot
 
 			auto args = Criteria(Payments::Cols::_transactionId, CompareOperator::EQ, json["transaction_id"].asString());
 
-			db().updateBy({ Payments::Cols::_transactionStatus }, args, transactionStatus);
+			if (auto record = db().updateBy({ Payments::Cols::_transactionStatus }, args, transactionStatus); !record)
+				throw CustomException<k500InternalServerError>("Failed update transaction");
 
 			m_response.m_message = "Payment status updated successfully";
 			m_response.m_success = true;
 			m_response.m_data = m_data;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
-		}
-		catch (const std::exception& e)
-		{
-			return CustomException<k500InternalServerError>(fmt::format("Unable to update payment, error caught on {}", e.what())).response();
-		}
+		} EXCEPT_CLAUSE
 	}
 }

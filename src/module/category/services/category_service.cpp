@@ -15,7 +15,7 @@ namespace gaboot
 	}
 	HttpResponsePtr category_service::create(HttpRequestPtr const& req)
     {
-		try
+		TRY_CLAUSE
 		{
 			MultiPartParser fileUpload;
 
@@ -44,14 +44,14 @@ namespace gaboot
 
 			if (!schema.validate(category.toJson(), m_error))
 			{
-				return BadRequestException(m_error).response();
+				throw BadRequestException(m_error);
 			}
-			
+
 			db().insert(category);
 
 			m_cache_category.clear();
 
-			if (!upload.save()) return BadRequestException("Unable to save image").response();
+			if (!upload.save()) throw BadRequestException("Unable to save image");
 
 			m_response.m_message = "Create category success";
 			m_response.m_success = true;
@@ -60,23 +60,11 @@ namespace gaboot
 			response->setStatusCode(k201Created);
 
 			return response;
-		}
-		catch (const DrogonDbException& e)
-		{
-			LOG(WARNING) << e.base().what();
-
-			m_response.m_message = e.base().what();
-			m_response.m_success = false;
-
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			response->setStatusCode(HttpStatusCode::k500InternalServerError);
-
-			return response;
-		}
+		} EXCEPT_CLAUSE
     }
     HttpResponsePtr category_service::findAll(HttpRequestPtr const& req)
     {
-		try
+		TRY_CLAUSE
 		{
 			auto& limitParam = req->getParameter("limit");
 			auto& pageParam = req->getParameter("page");
@@ -109,45 +97,33 @@ namespace gaboot
 			m_response.m_last_page = lastPage;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
-		}
-		catch (const std::exception& e)
-		{
-			std::string error = fmt::format("Unable retrieve categories data, error caught on {}", e.what());
-
-			return CustomException<k500InternalServerError>(error).response();
-		}
+		} EXCEPT_CLAUSE
     }
 	HttpResponsePtr category_service::findOne(HttpRequestPtr const& req, std::string&& id)
 	{
-		try
+		TRY_CLAUSE
 		{
 			if (id.empty() || !util::is_numeric(id))
 			{
-				return BadRequestException("Requirement doesn't match").response();
+				throw BadRequestException("Requirement doesn't match");
 			}
 
 			this->load_cache();
 
 			const auto category = m_cache_category.find(stoll(id));
 
-			if (!category) return NotFoundException("Unable retrieve category detail").response();
+			if (!category) throw NotFoundException("Unable retrieve category detail");
 
 			m_response.m_message = "Success retrieve category data";
 			m_response.m_success = true;
 			m_response.m_data = category->toJson();
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
-		}
-		catch (const std::exception& e)
-		{
-			std::string error = fmt::format("Cannot retrieve category data, error caught on {}", e.what());
-
-			return CustomException<k500InternalServerError>(error).response();
-		}
+		} EXCEPT_CLAUSE
 	}
 	HttpResponsePtr category_service::update(HttpRequestPtr const& req, std::string&& id)
 	{
-		try
+		TRY_CLAUSE
 		{
 			MultiPartParser multipart;
 
@@ -155,12 +131,12 @@ namespace gaboot
 
 			if (id.empty() || !util::is_numeric(id))
 			{
-				return BadRequestException("Parameters requirement doesn't match").response();
+				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
 			if (multipart.parse(req) != 0)
 			{
-				return BadRequestException("Requirement doesn't match").response();
+				throw BadRequestException("Requirement doesn't match");
 			}
 
 			auto& file = multipart.getFiles()[0];
@@ -168,7 +144,7 @@ namespace gaboot
 			util::multipart_tojson(multipart, m_data);
 
 			auto category = m_cache_category.find(stoll(id));
-			if (!category) return NotFoundException("Unable to update non-existing data").response();
+			if (!category) throw NotFoundException("Unable to update non-existing data");
 
 			category->updateByJson(m_data);
 			category->setId(stoll(id));
@@ -181,7 +157,7 @@ namespace gaboot
 
 			if (!schema.validate(category->toJson(), m_error))
 			{
-				return BadRequestException(m_error).response();
+				throw BadRequestException(m_error);
 			}
 
 			upload_file upload(&file, *category->getName(), "categories");
@@ -193,160 +169,126 @@ namespace gaboot
 			}
 
 			if (!m_cache_category.update(stoll(id), *category))
-				return CustomException<k500InternalServerError>("Unable to update non-existing cache").response();
+				throw CustomException<k500InternalServerError>("Unable to update non-existing cache");
 
 			if (!db().updateFuture(*category).get())
-				return CustomException<k500InternalServerError>("Unable to update non-existing data").response();
+				throw CustomException<k500InternalServerError>("Unable to update non-existing data");
 
 			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 			{
 				LOG(INFO) << "File saved at " << upload.get_image_path();
-				
+
 				upload.save();
 			}
 
 			m_response.m_message = "Success update category data.";
 			m_response.m_success = true;
 
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			return response;
-		}
-		catch (const std::exception& e)
-		{
-			LOG(WARNING) << e.what();
-
-			m_response.m_message = fmt::format("Unable to update data, error caught on {}", e.what());
-			m_response.m_success = false;
-
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			response->setStatusCode(k500InternalServerError);
-
-			return response;
-		}
+			return HttpResponse::newHttpJsonResponse(m_response.to_json());
+		} EXCEPT_CLAUSE
 	}
 	HttpResponsePtr category_service::remove(HttpRequestPtr const& req, std::string&& id)
 	{
-		try
+		TRY_CLAUSE
 		{
 			if (id.empty() || !util::is_numeric(id))
 			{
-				return BadRequestException("Parameters requirement doesn't match").response();
+				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
 			this->load_cache();
 
 			const auto record = db().deleteFutureByPrimaryKey(stoll(id)).get();
 
-			if (record != 0)
+			if (!record)
 			{
-				m_cache_category.remove(stoll(id));
-
-				m_response.m_message = fmt::format("Delete category on {} successfully", record);
-				m_response.m_success = true;
-
-				auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-				return response;
+				throw NotFoundException("Unable to delete non-existing data");
 			}
 
-			return NotFoundException("Unable to delete non-existing data").response();
-		}
-		catch (const DrogonDbException& e)
-		{
-			m_response.m_message = fmt::format("Failed delete category, error caught on {}", e.base().what());
-			m_response.m_success = false;
+			m_cache_category.remove(stoll(id));
 
-			auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-			response->setStatusCode(k500InternalServerError);
+			m_response.m_message = fmt::format("Delete category on {} successfully", record);
+			m_response.m_success = true;
 
-			return response;
-		}
+			return HttpResponse::newHttpJsonResponse(m_response.to_json());
+		} EXCEPT_CLAUSE
 	}
 	HttpResponsePtr category_service::getImage(HttpRequestPtr const& req, std::string&& id)
 	{
-		Categories category;
-
-		if (id.empty() || !util::is_numeric(id))
+		TRY_CLAUSE
 		{
-			LOG(WARNING) << "ID is empty or ID is not numeric";
+			Categories category;
 
-			return BadRequestException("Parameters requirement doesn't match").response();
-		}
-
-		this->load_cache();
-
-		if (m_cache_category.find(stoll(id), &category))
-		{
-			std::filesystem::path file(*category.getImgpath());
-
-			if (!std::filesystem::exists(file))
+			if (id.empty() || !util::is_numeric(id))
 			{
-				LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
+				LOG(WARNING) << "ID is empty or ID is not numeric";
 
-				m_response.m_message = "Unable to retreive category picture, please upload your category picture";
-				m_response.m_success = false;
-
-				auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-				response->setStatusCode(k404NotFound);
-
-				return response;
+				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
-			if (auto image = category.getImgpath(); image && !image->empty())
-				return HttpResponse::newFileResponse(*category.getImgpath());
-		}
+			this->load_cache();
 
-		m_response.m_message = "Unable to retreive category image";
-		m_response.m_success = false;
+			if (!m_cache_category.find(stoll(id), &category))
+			{
+				std::filesystem::path file(*category.getImgpath());
 
-		auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-		response->setStatusCode(k404NotFound);
+				if (!std::filesystem::exists(file))
+				{
+					LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
 
-		LOG(WARNING) << "Unable to retreive category image";
+					m_response.m_message = "Unable to retreive category picture, please upload your category picture";
+					m_response.m_success = false;
 
-		return response;
+					auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+					response->setStatusCode(k404NotFound);
+
+					return response;
+				}
+
+				if (auto image = category.getImgpath(); image && !image->empty())
+					return HttpResponse::newFileResponse(*category.getImgpath());
+			}
+
+			throw NotFoundException("Unable to retreive category image");
+		} EXCEPT_CLAUSE
 	}
 	HttpResponsePtr category_service::getThumbnail(HttpRequestPtr const& req, std::string&& id)
 	{
-		Categories category;
-
-		if (id.empty() || !util::is_numeric(id))
+		TRY_CLAUSE
 		{
-			LOG(WARNING) << "ID is empty or ID is not numeric";
+			Categories category;
 
-			return BadRequestException("Parameters requirement doesn't match").response();
-		}
-
-		this->load_cache();
-
-		if (m_cache_category.find(stoll(id), &category))
-		{
-			std::filesystem::path file(*category.getImgthumbpath());
-
-			if (!std::filesystem::exists(file))
+			if (id.empty() || !util::is_numeric(id))
 			{
-				LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
+				LOG(WARNING) << "ID is empty or ID is not numeric";
 
-				m_response.m_message = "Unable to retreive category picture, please upload your category picture";
-				m_response.m_success = false;
-
-				auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-				response->setStatusCode(k404NotFound);
-
-				return response;
+				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
-			if (auto image = category.getImgpath(); image && !image->empty())
-				return HttpResponse::newFileResponse(*category.getImgthumbpath());
-		}
+			this->load_cache();
 
-		m_response.m_message = "Unable to retreive category image";
-		m_response.m_success = false;
+			if (m_cache_category.find(stoll(id), &category))
+			{
+				std::filesystem::path file(*category.getImgthumbpath());
 
-		auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-		response->setStatusCode(k404NotFound);
+				if (!std::filesystem::exists(file))
+				{
+					LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
 
-		LOG(WARNING) << "Unable to retreive category image";
+					m_response.m_message = "Unable to retreive category picture, please upload your category picture";
+					m_response.m_success = false;
 
-		return response;
+					auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+					response->setStatusCode(k404NotFound);
+
+					return response;
+				}
+
+				if (auto image = category.getImgpath(); image && !image->empty())
+					return HttpResponse::newFileResponse(*category.getImgthumbpath());
+			}
+
+			throw NotFoundException("Unable to retreive category image");
+		} EXCEPT_CLAUSE
 	}
 }
