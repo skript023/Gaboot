@@ -124,10 +124,7 @@ namespace gaboot
 
 			this->load_cache();
 
-			if (!m_cache_wishlist.update(stoll(id), *wishlist))
-				throw BadRequestException("Unable to update non-existing record");
-
-			if (auto record = db().updateFuture(*wishlist).get(); !record)
+			if (!m_cache_wishlist.update(stoll(id), *wishlist) || !db().updateFuture(*wishlist).get())
 				throw BadRequestException("Unable to update non-existing record");
 
 			m_response.m_data = wishlist->toJson();

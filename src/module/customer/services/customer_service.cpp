@@ -54,12 +54,12 @@ namespace gaboot
 
             if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0)
             {
-                return BadRequestException("Data is empty or file requirement doesn't match").response();
+                throw BadRequestException("Data is empty or file requirement doesn't match");
             }
 
             auto& file = fileUpload.getFiles()[0];
 
-            if (!util::multipart_tojson(fileUpload, data)) return BadRequestException("Unknown error").response();
+            if (!util::multipart_tojson(fileUpload, data)) throw BadRequestException("Unknown error");
 
             validator schema({
                 {"firstname", "type:string|required|minLength:3|alphabetOnly"},
@@ -75,7 +75,7 @@ namespace gaboot
 
             if (!schema.validate(customer.toJson(), m_error))
             {
-                return BadRequestException(m_error).response();
+                throw BadRequestException(m_error);
             }
 
             customer.setCreatedat(trantor::Date::now());
@@ -106,12 +106,12 @@ namespace gaboot
         {
             if (id.empty() || !util::is_numeric(id))
             {
-                return BadRequestException("Requirement doesn't match").response();
+                throw BadRequestException("Requirement doesn't match");
             }
 
             const auto user = db().findByPrimaryKey(stoll(id));
 
-            if (!user.getId()) return NotFoundException("Unable retrieve customer detail").response();
+            if (!user.getId()) throw NotFoundException("Unable retrieve customer detail");
 
             m_response.m_message = "Success retrieve customers data";
             m_response.m_success = true;
@@ -129,12 +129,12 @@ namespace gaboot
 
             if (id.empty() || !util::is_numeric(id))
             {
-                return BadRequestException("Parameters requirement doesn't match").response();
+                throw BadRequestException("Parameters requirement doesn't match");
             }
 
             if (multipart.parse(req) != 0)
             {
-                return BadRequestException("Requirement doesn't match").response();
+                throw BadRequestException("Requirement doesn't match");
             }
 
             auto& file = multipart.getFiles()[0];
@@ -165,22 +165,24 @@ namespace gaboot
 
             if (!schema.validate(customer.toJson(), m_error))
             {
-                return BadRequestException(m_error).response();
+                throw BadRequestException(m_error);
             }
 
             customer.setPassword(bcrypt::generateHash(customer.getValueOfPassword()));
 
-            if (db().updateFuture(customer).get())
+            if (!db().update(customer))
             {
-                if (!g_customer_manager->update(stoll(id), customer))
-                    LOG(WARNING) << "Authentication cache update failed.";
+                throw InternalServerErrorException("Unable to update non-existing data");
+            }
 
-                if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
-                {
-                    upload.save();
+            if (!g_customer_manager->update(stoll(id), customer))
+                LOG(WARNING) << "Authentication cache update failed.";
 
-                    LOG(INFO) << "Image saved at " << upload.get_image_path() << " thumbnail saved at " << upload.get_thumbnail_path();
-                }
+            if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
+            {
+                upload.save();
+
+                LOG(INFO) << "Image saved at " << upload.get_image_path() << " thumbnail saved at " << upload.get_thumbnail_path();
             }
 
             m_response.m_message = "Success update customer data.";
@@ -197,19 +199,18 @@ namespace gaboot
             {
                 LOG(WARNING) << "ID is empty or ID is not numeric";
 
-                return BadRequestException("Parameters requirement doesn't match").response();
+                throw BadRequestException("Parameters requirement doesn't match");
             }
 
-            const auto record = db().deleteByPrimaryKey(stoll(id));
-            if (record != 0)
+            if (!db().deleteByPrimaryKey(stoll(id)))
             {
-                m_response.m_message = fmt::format("Delete customers on {} successfully", record);
-                m_response.m_success = true;
-
-                return HttpResponse::newHttpJsonResponse(m_response.to_json());
+                throw BadRequestException("Unable delete non-existing data");
             }
 
-            return NotFoundException("Record not found").response();
+            m_response.m_message = fmt::format("Delete customers on {} successfully", id);
+            m_response.m_success = true;
+
+            return HttpResponse::newHttpJsonResponse(m_response.to_json());
         } EXCEPT_CLAUSE
     }
     HttpResponsePtr customer_service::getProfile(HttpRequestPtr const& req, std::string&& id)

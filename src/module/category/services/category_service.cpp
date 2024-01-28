@@ -21,12 +21,12 @@ namespace gaboot
 
 			if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0)
 			{
-				return BadRequestException("Requirement doesn't match").response();
+				throw BadRequestException("Requirement doesn't match");
 			}
 
 			auto& file = fileUpload.getFiles()[0];
 
-			if (!util::multipart_tojson(fileUpload, m_data)) return BadRequestException("Unknown error").response();
+			if (!util::multipart_tojson(fileUpload, m_data)) throw BadRequestException("Unknown error");
 
 			validator schema({
 				{"name", "type:string|required|alphanum"},

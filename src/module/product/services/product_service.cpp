@@ -61,7 +61,7 @@ namespace gaboot
 
 			auto& file = fileUpload.getFiles()[0];
 
-			if (!util::multipart_tojson(fileUpload, m_data)) return BadRequestException("Unknown error").response();
+			if (!util::multipart_tojson(fileUpload, m_data)) throw BadRequestException("Unknown error");
 
 			validator schema({
 				{"name", "type:string|required|minLength:3|alphanum"},
@@ -138,12 +138,12 @@ namespace gaboot
 
 			if (id.empty() || !util::is_numeric(id))
 			{
-				throw BadRequestException("Parameters requirement doesn't match");
+				throw NotFoundException("Parameters invalid");
 			}
 
 			if (multipart.parse(req) != 0)
 			{
-				throw BadRequestException("Requirement doesn't match");
+				throw BadRequestException("Make sure form filled up");
 			}
 
 			auto& file = multipart.getFiles()[0];

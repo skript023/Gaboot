@@ -90,6 +90,18 @@ namespace gaboot
 
 		virtual ~UnauthorizedException() noexcept = default;
 	};
+	
+	class InternalServerErrorException : public GabootException
+	{
+		std::string m_message;
+	public:
+		explicit InternalServerErrorException(std::string const& message = "Internal Server Error") : GabootException(message, k500InternalServerError), m_message(message)
+		{
+			LOG(WARNING) << m_message;
+		}
+
+		virtual ~InternalServerErrorException() noexcept = default;
+	};
 
 #define TRY_CLAUSE try {
 #define EXCEPT_CLAUSE } catch (GabootException const& ex) { return ex.response(); } catch(DrogonDbException const& ex) { return CustomException<k500InternalServerError>(fmt::format("error caught on {}", ex.base().what())).response(); } catch(std::exception const& ex) { return CustomException<k500InternalServerError>(fmt::format("error caught on {}", ex.what())).response(); }
