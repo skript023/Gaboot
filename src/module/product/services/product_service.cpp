@@ -79,8 +79,8 @@ namespace gaboot
 			productImage.setImagepath(upload.get_image_path());
 			productImage.setThumbnailpath(upload.get_thumbnail_path());
 
-			productImage.setCreatedAt(trantor::Date::now());
-			productImage.setUpdatedAt(trantor::Date::now());
+			productImage.setCreatedat(trantor::Date::now());
+			productImage.setUpdatedat(trantor::Date::now());
 
 			product.setPrice(m_data["price"].asDouble());
 			product.setCreatedat(trantor::Date::now());

@@ -6,9 +6,12 @@
  */
 
 #include "MasterProducts.h"
+#include "cart/models/Carts.h"
 #include "category/models/Categories.h"
+#include "wishlist/models/Wishlists.h"
 #include <drogon/utils/Utilities.h>
 #include <string>
+#include <order/models/OrderDetails.h>
 
 using namespace drogon;
 using namespace drogon::orm;
@@ -23,6 +26,8 @@ const std::string MasterProducts::Cols::_dimension = "dimension";
 const std::string MasterProducts::Cols::_weight = "weight";
 const std::string MasterProducts::Cols::_weightUnit = "weightUnit";
 const std::string MasterProducts::Cols::_categoryId = "categoryId";
+const std::string MasterProducts::Cols::_totalSales = "totalSales";
+const std::string MasterProducts::Cols::_isActive = "isActive";
 const std::string MasterProducts::Cols::_createdAt = "createdAt";
 const std::string MasterProducts::Cols::_updatedAt = "updatedAt";
 const std::string MasterProducts::primaryKeyName = "id";
@@ -39,6 +44,8 @@ const std::vector<typename MasterProducts::MetaData> MasterProducts::metaData_={
 {"weight","double","double unsigned",8,0,0,1},
 {"weightUnit","std::string","varchar(20)",20,0,0,1},
 {"categoryId","int32_t","int(11)",4,0,0,1},
+{"totalSales","int32_t","int(11)",4,0,0,1},
+{"isActive","int8_t","tinyint(1)",1,0,0,1},
 {"createdAt","::trantor::Date","datetime",0,0,0,1},
 {"updatedAt","::trantor::Date","datetime",0,0,0,1}
 };
@@ -86,6 +93,14 @@ MasterProducts::MasterProducts(const Row &r, const ssize_t indexOffset) noexcept
         if(!r["categoryId"].isNull())
         {
             categoryid_=std::make_shared<int32_t>(r["categoryId"].as<int32_t>());
+        }
+        if(!r["totalSales"].isNull())
+        {
+            totalsales_=std::make_shared<int32_t>(r["totalSales"].as<int32_t>());
+        }
+        if(!r["isActive"].isNull())
+        {
+            isactive_=std::make_shared<int8_t>(r["isActive"].as<int8_t>());
         }
         if(!r["createdAt"].isNull())
         {
@@ -135,7 +150,7 @@ MasterProducts::MasterProducts(const Row &r, const ssize_t indexOffset) noexcept
     else
     {
         size_t offset = (size_t)indexOffset;
-        if(offset + 11 > r.size())
+        if(offset + 13 > r.size())
         {
             LOG_FATAL << "Invalid SQL result for this model";
             return;
@@ -189,6 +204,16 @@ MasterProducts::MasterProducts(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 9;
         if(!r[index].isNull())
         {
+            totalsales_=std::make_shared<int32_t>(r[index].as<int32_t>());
+        }
+        index = offset + 10;
+        if(!r[index].isNull())
+        {
+            isactive_=std::make_shared<int8_t>(r[index].as<int8_t>());
+        }
+        index = offset + 11;
+        if(!r[index].isNull())
+        {
             auto timeStr = r[index].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
@@ -209,7 +234,7 @@ MasterProducts::MasterProducts(const Row &r, const ssize_t indexOffset) noexcept
                 createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        index = offset + 10;
+        index = offset + 12;
         if(!r[index].isNull())
         {
             auto timeStr = r[index].as<std::string>();
@@ -238,7 +263,7 @@ MasterProducts::MasterProducts(const Row &r, const ssize_t indexOffset) noexcept
 
 MasterProducts::MasterProducts(const Json::Value &pJson, const std::vector<std::string> &pMasqueradingVector) noexcept(false)
 {
-    if(pMasqueradingVector.size() != 11)
+    if(pMasqueradingVector.size() != 13)
     {
         LOG_ERROR << "Bad masquerading vector";
         return;
@@ -312,7 +337,23 @@ MasterProducts::MasterProducts(const Json::Value &pJson, const std::vector<std::
         dirtyFlag_[9] = true;
         if(!pJson[pMasqueradingVector[9]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[9]].asString();
+            totalsales_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[9]].asInt64());
+        }
+    }
+    if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
+    {
+        dirtyFlag_[10] = true;
+        if(!pJson[pMasqueradingVector[10]].isNull())
+        {
+            isactive_=std::make_shared<int8_t>((int8_t)pJson[pMasqueradingVector[10]].asInt64());
+        }
+    }
+    if(!pMasqueradingVector[11].empty() && pJson.isMember(pMasqueradingVector[11]))
+    {
+        dirtyFlag_[11] = true;
+        if(!pJson[pMasqueradingVector[11]].isNull())
+        {
+            auto timeStr = pJson[pMasqueradingVector[11]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -333,12 +374,12 @@ MasterProducts::MasterProducts(const Json::Value &pJson, const std::vector<std::
             }
         }
     }
-    if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
+    if(!pMasqueradingVector[12].empty() && pJson.isMember(pMasqueradingVector[12]))
     {
-        dirtyFlag_[10] = true;
-        if(!pJson[pMasqueradingVector[10]].isNull())
+        dirtyFlag_[12] = true;
+        if(!pJson[pMasqueradingVector[12]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[10]].asString();
+            auto timeStr = pJson[pMasqueradingVector[12]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -427,9 +468,25 @@ MasterProducts::MasterProducts(const Json::Value &pJson) noexcept(false)
             categoryid_=std::make_shared<int32_t>((int32_t)pJson["categoryId"].asInt64());
         }
     }
-    if(pJson.isMember("createdAt"))
+    if(pJson.isMember("totalSales"))
     {
         dirtyFlag_[9]=true;
+        if(!pJson["totalSales"].isNull())
+        {
+            totalsales_=std::make_shared<int32_t>((int32_t)pJson["totalSales"].asInt64());
+        }
+    }
+    if(pJson.isMember("isActive"))
+    {
+        dirtyFlag_[10]=true;
+        if(!pJson["isActive"].isNull())
+        {
+            isactive_=std::make_shared<int8_t>((int8_t)pJson["isActive"].asInt64());
+        }
+    }
+    if(pJson.isMember("createdAt"))
+    {
+        dirtyFlag_[11]=true;
         if(!pJson["createdAt"].isNull())
         {
             auto timeStr = pJson["createdAt"].asString();
@@ -455,7 +512,7 @@ MasterProducts::MasterProducts(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("updatedAt"))
     {
-        dirtyFlag_[10]=true;
+        dirtyFlag_[12]=true;
         if(!pJson["updatedAt"].isNull())
         {
             auto timeStr = pJson["updatedAt"].asString();
@@ -484,7 +541,7 @@ MasterProducts::MasterProducts(const Json::Value &pJson) noexcept(false)
 void MasterProducts::updateByMasqueradedJson(const Json::Value &pJson,
                                             const std::vector<std::string> &pMasqueradingVector) noexcept(false)
 {
-    if(pMasqueradingVector.size() != 11)
+    if(pMasqueradingVector.size() != 13)
     {
         LOG_ERROR << "Bad masquerading vector";
         return;
@@ -557,7 +614,23 @@ void MasterProducts::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[9] = true;
         if(!pJson[pMasqueradingVector[9]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[9]].asString();
+            totalsales_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[9]].asInt64());
+        }
+    }
+    if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
+    {
+        dirtyFlag_[10] = true;
+        if(!pJson[pMasqueradingVector[10]].isNull())
+        {
+            isactive_=std::make_shared<int8_t>((int8_t)pJson[pMasqueradingVector[10]].asInt64());
+        }
+    }
+    if(!pMasqueradingVector[11].empty() && pJson.isMember(pMasqueradingVector[11]))
+    {
+        dirtyFlag_[11] = true;
+        if(!pJson[pMasqueradingVector[11]].isNull())
+        {
+            auto timeStr = pJson[pMasqueradingVector[11]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -578,12 +651,12 @@ void MasterProducts::updateByMasqueradedJson(const Json::Value &pJson,
             }
         }
     }
-    if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
+    if(!pMasqueradingVector[12].empty() && pJson.isMember(pMasqueradingVector[12]))
     {
-        dirtyFlag_[10] = true;
-        if(!pJson[pMasqueradingVector[10]].isNull())
+        dirtyFlag_[12] = true;
+        if(!pJson[pMasqueradingVector[12]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[10]].asString();
+            auto timeStr = pJson[pMasqueradingVector[12]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -671,9 +744,25 @@ void MasterProducts::updateByJson(const Json::Value &pJson) noexcept(false)
             categoryid_=std::make_shared<int32_t>((int32_t)pJson["categoryId"].asInt64());
         }
     }
-    if(pJson.isMember("createdAt"))
+    if(pJson.isMember("totalSales"))
     {
         dirtyFlag_[9] = true;
+        if(!pJson["totalSales"].isNull())
+        {
+            totalsales_=std::make_shared<int32_t>((int32_t)pJson["totalSales"].asInt64());
+        }
+    }
+    if(pJson.isMember("isActive"))
+    {
+        dirtyFlag_[10] = true;
+        if(!pJson["isActive"].isNull())
+        {
+            isactive_=std::make_shared<int8_t>((int8_t)pJson["isActive"].asInt64());
+        }
+    }
+    if(pJson.isMember("createdAt"))
+    {
+        dirtyFlag_[11] = true;
         if(!pJson["createdAt"].isNull())
         {
             auto timeStr = pJson["createdAt"].asString();
@@ -699,7 +788,7 @@ void MasterProducts::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("updatedAt"))
     {
-        dirtyFlag_[10] = true;
+        dirtyFlag_[12] = true;
         if(!pJson["updatedAt"].isNull())
         {
             auto timeStr = pJson["updatedAt"].asString();
@@ -903,6 +992,40 @@ void MasterProducts::setCategoryid(const int32_t &pCategoryid) noexcept
     dirtyFlag_[8] = true;
 }
 
+const int32_t &MasterProducts::getValueOfTotalsales() const noexcept
+{
+    const static int32_t defaultValue = int32_t();
+    if(totalsales_)
+        return *totalsales_;
+    return defaultValue;
+}
+const std::shared_ptr<int32_t> &MasterProducts::getTotalsales() const noexcept
+{
+    return totalsales_;
+}
+void MasterProducts::setTotalsales(const int32_t &pTotalsales) noexcept
+{
+    totalsales_ = std::make_shared<int32_t>(pTotalsales);
+    dirtyFlag_[9] = true;
+}
+
+const int8_t &MasterProducts::getValueOfIsactive() const noexcept
+{
+    const static int8_t defaultValue = int8_t();
+    if(isactive_)
+        return *isactive_;
+    return defaultValue;
+}
+const std::shared_ptr<int8_t> &MasterProducts::getIsactive() const noexcept
+{
+    return isactive_;
+}
+void MasterProducts::setIsactive(const int8_t &pIsactive) noexcept
+{
+    isactive_ = std::make_shared<int8_t>(pIsactive);
+    dirtyFlag_[10] = true;
+}
+
 const ::trantor::Date &MasterProducts::getValueOfCreatedat() const noexcept
 {
     const static ::trantor::Date defaultValue = ::trantor::Date();
@@ -917,7 +1040,7 @@ const std::shared_ptr<::trantor::Date> &MasterProducts::getCreatedat() const noe
 void MasterProducts::setCreatedat(const ::trantor::Date &pCreatedat) noexcept
 {
     createdat_ = std::make_shared<::trantor::Date>(pCreatedat);
-    dirtyFlag_[9] = true;
+    dirtyFlag_[11] = true;
 }
 
 const ::trantor::Date &MasterProducts::getValueOfUpdatedat() const noexcept
@@ -934,7 +1057,7 @@ const std::shared_ptr<::trantor::Date> &MasterProducts::getUpdatedat() const noe
 void MasterProducts::setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept
 {
     updatedat_ = std::make_shared<::trantor::Date>(pUpdatedat);
-    dirtyFlag_[10] = true;
+    dirtyFlag_[12] = true;
 }
 
 void MasterProducts::updateId(const uint64_t id)
@@ -953,6 +1076,8 @@ const std::vector<std::string> &MasterProducts::insertColumns() noexcept
         "weight",
         "weightUnit",
         "categoryId",
+        "totalSales",
+        "isActive",
         "createdAt",
         "updatedAt"
     };
@@ -1051,6 +1176,28 @@ void MasterProducts::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[9])
     {
+        if(getTotalsales())
+        {
+            binder << getValueOfTotalsales();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[10])
+    {
+        if(getIsactive())
+        {
+            binder << getValueOfIsactive();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[11])
+    {
         if(getCreatedat())
         {
             binder << getValueOfCreatedat();
@@ -1060,7 +1207,7 @@ void MasterProducts::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[10])
+    if(dirtyFlag_[12])
     {
         if(getUpdatedat())
         {
@@ -1115,6 +1262,14 @@ const std::vector<std::string> MasterProducts::updateColumns() const
     if(dirtyFlag_[10])
     {
         ret.push_back(getColumnName(10));
+    }
+    if(dirtyFlag_[11])
+    {
+        ret.push_back(getColumnName(11));
+    }
+    if(dirtyFlag_[12])
+    {
+        ret.push_back(getColumnName(12));
     }
     return ret;
 }
@@ -1211,6 +1366,28 @@ void MasterProducts::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[9])
     {
+        if(getTotalsales())
+        {
+            binder << getValueOfTotalsales();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[10])
+    {
+        if(getIsactive())
+        {
+            binder << getValueOfIsactive();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[11])
+    {
         if(getCreatedat())
         {
             binder << getValueOfCreatedat();
@@ -1220,7 +1397,7 @@ void MasterProducts::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[10])
+    if(dirtyFlag_[12])
     {
         if(getUpdatedat())
         {
@@ -1307,6 +1484,22 @@ Json::Value MasterProducts::toJson() const
     {
         ret["categoryId"]=Json::Value();
     }
+    if(getTotalsales())
+    {
+        ret["totalSales"]=getValueOfTotalsales();
+    }
+    else
+    {
+        ret["totalSales"]=Json::Value();
+    }
+    if(getIsactive())
+    {
+        ret["isActive"]=getValueOfIsactive();
+    }
+    else
+    {
+        ret["isActive"]=Json::Value();
+    }
     if(getCreatedat())
     {
         ret["createdAt"]=getCreatedat()->toDbStringLocal();
@@ -1330,7 +1523,7 @@ Json::Value MasterProducts::toMasqueradedJson(
     const std::vector<std::string> &pMasqueradingVector) const
 {
     Json::Value ret;
-    if(pMasqueradingVector.size() == 11)
+    if(pMasqueradingVector.size() == 13)
     {
         if(!pMasqueradingVector[0].empty())
         {
@@ -1433,9 +1626,9 @@ Json::Value MasterProducts::toMasqueradedJson(
         }
         if(!pMasqueradingVector[9].empty())
         {
-            if(getCreatedat())
+            if(getTotalsales())
             {
-                ret[pMasqueradingVector[9]]=getCreatedat()->toDbStringLocal();
+                ret[pMasqueradingVector[9]]=getValueOfTotalsales();
             }
             else
             {
@@ -1444,13 +1637,35 @@ Json::Value MasterProducts::toMasqueradedJson(
         }
         if(!pMasqueradingVector[10].empty())
         {
-            if(getUpdatedat())
+            if(getIsactive())
             {
-                ret[pMasqueradingVector[10]]=getUpdatedat()->toDbStringLocal();
+                ret[pMasqueradingVector[10]]=getValueOfIsactive();
             }
             else
             {
                 ret[pMasqueradingVector[10]]=Json::Value();
+            }
+        }
+        if(!pMasqueradingVector[11].empty())
+        {
+            if(getCreatedat())
+            {
+                ret[pMasqueradingVector[11]]=getCreatedat()->toDbStringLocal();
+            }
+            else
+            {
+                ret[pMasqueradingVector[11]]=Json::Value();
+            }
+        }
+        if(!pMasqueradingVector[12].empty())
+        {
+            if(getUpdatedat())
+            {
+                ret[pMasqueradingVector[12]]=getUpdatedat()->toDbStringLocal();
+            }
+            else
+            {
+                ret[pMasqueradingVector[12]]=Json::Value();
             }
         }
         return ret;
@@ -1527,6 +1742,22 @@ Json::Value MasterProducts::toMasqueradedJson(
     else
     {
         ret["categoryId"]=Json::Value();
+    }
+    if(getTotalsales())
+    {
+        ret["totalSales"]=getValueOfTotalsales();
+    }
+    else
+    {
+        ret["totalSales"]=Json::Value();
+    }
+    if(getIsactive())
+    {
+        ret["isActive"]=getValueOfIsactive();
+    }
+    else
+    {
+        ret["isActive"]=Json::Value();
     }
     if(getCreatedat())
     {
@@ -1634,14 +1865,24 @@ bool MasterProducts::validateJsonForCreation(const Json::Value &pJson, std::stri
         err="The categoryId column cannot be null";
         return false;
     }
+    if(pJson.isMember("totalSales"))
+    {
+        if(!validJsonOfField(9, "totalSales", pJson["totalSales"], err, true))
+            return false;
+    }
+    if(pJson.isMember("isActive"))
+    {
+        if(!validJsonOfField(10, "isActive", pJson["isActive"], err, true))
+            return false;
+    }
     if(pJson.isMember("createdAt"))
     {
-        if(!validJsonOfField(9, "createdAt", pJson["createdAt"], err, true))
+        if(!validJsonOfField(11, "createdAt", pJson["createdAt"], err, true))
             return false;
     }
     if(pJson.isMember("updatedAt"))
     {
-        if(!validJsonOfField(10, "updatedAt", pJson["updatedAt"], err, true))
+        if(!validJsonOfField(12, "updatedAt", pJson["updatedAt"], err, true))
             return false;
     }
     return true;
@@ -1650,7 +1891,7 @@ bool MasterProducts::validateMasqueradedJsonForCreation(const Json::Value &pJson
                                                         const std::vector<std::string> &pMasqueradingVector,
                                                         std::string &err)
 {
-    if(pMasqueradingVector.size() != 11)
+    if(pMasqueradingVector.size() != 13)
     {
         err = "Bad masquerading vector";
         return false;
@@ -1784,6 +2025,22 @@ bool MasterProducts::validateMasqueradedJsonForCreation(const Json::Value &pJson
                   return false;
           }
       }
+      if(!pMasqueradingVector[11].empty())
+      {
+          if(pJson.isMember(pMasqueradingVector[11]))
+          {
+              if(!validJsonOfField(11, pMasqueradingVector[11], pJson[pMasqueradingVector[11]], err, true))
+                  return false;
+          }
+      }
+      if(!pMasqueradingVector[12].empty())
+      {
+          if(pJson.isMember(pMasqueradingVector[12]))
+          {
+              if(!validJsonOfField(12, pMasqueradingVector[12], pJson[pMasqueradingVector[12]], err, true))
+                  return false;
+          }
+      }
     }
     catch(const Json::LogicError &e)
     {
@@ -1844,14 +2101,24 @@ bool MasterProducts::validateJsonForUpdate(const Json::Value &pJson, std::string
         if(!validJsonOfField(8, "categoryId", pJson["categoryId"], err, false))
             return false;
     }
+    if(pJson.isMember("totalSales"))
+    {
+        if(!validJsonOfField(9, "totalSales", pJson["totalSales"], err, false))
+            return false;
+    }
+    if(pJson.isMember("isActive"))
+    {
+        if(!validJsonOfField(10, "isActive", pJson["isActive"], err, false))
+            return false;
+    }
     if(pJson.isMember("createdAt"))
     {
-        if(!validJsonOfField(9, "createdAt", pJson["createdAt"], err, false))
+        if(!validJsonOfField(11, "createdAt", pJson["createdAt"], err, false))
             return false;
     }
     if(pJson.isMember("updatedAt"))
     {
-        if(!validJsonOfField(10, "updatedAt", pJson["updatedAt"], err, false))
+        if(!validJsonOfField(12, "updatedAt", pJson["updatedAt"], err, false))
             return false;
     }
     return true;
@@ -1860,7 +2127,7 @@ bool MasterProducts::validateMasqueradedJsonForUpdate(const Json::Value &pJson,
                                                       const std::vector<std::string> &pMasqueradingVector,
                                                       std::string &err)
 {
-    if(pMasqueradingVector.size() != 11)
+    if(pMasqueradingVector.size() != 13)
     {
         err = "Bad masquerading vector";
         return false;
@@ -1924,6 +2191,16 @@ bool MasterProducts::validateMasqueradedJsonForUpdate(const Json::Value &pJson,
       if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
       {
           if(!validJsonOfField(10, pMasqueradingVector[10], pJson[pMasqueradingVector[10]], err, false))
+              return false;
+      }
+      if(!pMasqueradingVector[11].empty() && pJson.isMember(pMasqueradingVector[11]))
+      {
+          if(!validJsonOfField(11, pMasqueradingVector[11], pJson[pMasqueradingVector[11]], err, false))
+              return false;
+      }
+      if(!pMasqueradingVector[12].empty() && pJson.isMember(pMasqueradingVector[12]))
+      {
+          if(!validJsonOfField(12, pMasqueradingVector[12], pJson[pMasqueradingVector[12]], err, false))
               return false;
       }
     }
@@ -2088,13 +2365,37 @@ bool MasterProducts::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(!pJson.isString())
+            if(!pJson.isInt())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
             }
             break;
         case 10:
+            if(pJson.isNull())
+            {
+                err="The " + fieldName + " column cannot be null";
+                return false;
+            }
+            if(!pJson.isInt())
+            {
+                err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            break;
+        case 11:
+            if(pJson.isNull())
+            {
+                err="The " + fieldName + " column cannot be null";
+                return false;
+            }
+            if(!pJson.isString())
+            {
+                err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            break;
+        case 12:
             if(pJson.isNull())
             {
                 err="The " + fieldName + " column cannot be null";
@@ -2147,6 +2448,119 @@ void MasterProducts::getCategories(const DbClientPtr &clientPtr,
                     else
                     {
                         rcb(Categories(r[0]));
+                    }
+               }
+               >> ecb;
+}
+std::vector<Wishlists> MasterProducts::getWishlists(const drogon::orm::DbClientPtr &clientPtr) const {
+    std::shared_ptr<std::promise<std::vector<Wishlists>>> pro(new std::promise<std::vector<Wishlists>>);
+    std::future<std::vector<Wishlists>> f = pro->get_future();
+    getWishlists(clientPtr, [&pro] (std::vector<Wishlists> result) {
+        try {
+            pro->set_value(result);
+        }
+        catch (...) {
+            pro->set_exception(std::current_exception());
+        }
+    }, [&pro] (const DrogonDbException &err) {
+        pro->set_exception(std::make_exception_ptr(err));
+    });
+    return f.get();
+}
+void MasterProducts::getWishlists(const DbClientPtr &clientPtr,
+                                  const std::function<void(std::vector<Wishlists>)> &rcb,
+                                  const ExceptionCallback &ecb) const
+{
+    const static std::string sql = "select * from wishlists where productId = ?";
+    *clientPtr << sql
+               << *id_
+               >> [rcb = std::move(rcb)](const Result &r){
+                   std::vector<Wishlists> ret;
+                   ret.reserve(r.size());
+                   for (auto const &row : r)
+                   {
+                       ret.emplace_back(Wishlists(row));
+                   }
+                   rcb(ret);
+               }
+               >> ecb;
+}
+
+Carts MasterProducts::getCarts(const drogon::orm::DbClientPtr &clientPtr) const {
+    std::shared_ptr<std::promise<Carts>> pro(new std::promise<Carts>);
+    std::future<Carts> f = pro->get_future();
+    getCarts(clientPtr, [&pro] (Carts result) {
+        try {
+            pro->set_value(result);
+        }
+        catch (...) {
+            pro->set_exception(std::current_exception());
+        }
+    }, [&pro] (const DrogonDbException &err) {
+        pro->set_exception(std::make_exception_ptr(err));
+    });
+    return f.get();
+}
+void MasterProducts::getCarts(const DbClientPtr &clientPtr,
+                              const std::function<void(Carts)> &rcb,
+                              const ExceptionCallback &ecb) const
+{
+    const static std::string sql = "select * from carts where productId = ?";
+    *clientPtr << sql
+               << *id_
+               >> [rcb = std::move(rcb), ecb](const Result &r){
+                    if (r.size() == 0)
+                    {
+                        ecb(UnexpectedRows("0 rows found"));
+                    }
+                    else if (r.size() > 1)
+                    {
+                        ecb(UnexpectedRows("Found more than one row"));
+                    }
+                    else
+                    {
+                        rcb(Carts(r[0]));
+                    }
+               }
+               >> ecb;
+}
+
+/*
+Wishlists MasterProducts::getWishlists(const drogon::orm::DbClientPtr &clientPtr) const {
+    std::shared_ptr<std::promise<Wishlists>> pro(new std::promise<Wishlists>);
+    std::future<Wishlists> f = pro->get_future();
+    getWishlists(clientPtr, [&pro] (Wishlists result) {
+        try {
+            pro->set_value(result);
+        }
+        catch (...) {
+            pro->set_exception(std::current_exception());
+        }
+    }, [&pro] (const DrogonDbException &err) {
+        pro->set_exception(std::make_exception_ptr(err));
+    });
+    return f.get();
+}
+*/
+void MasterProducts::getWishlists(const DbClientPtr &clientPtr,
+                                  const std::function<void(Wishlists)> &rcb,
+                                  const ExceptionCallback &ecb) const
+{
+    const static std::string sql = "select * from wishlists where productId = ?";
+    *clientPtr << sql
+               << *id_
+               >> [rcb = std::move(rcb), ecb](const Result &r){
+                    if (r.size() == 0)
+                    {
+                        ecb(UnexpectedRows("0 rows found"));
+                    }
+                    else if (r.size() > 1)
+                    {
+                        ecb(UnexpectedRows("Found more than one row"));
+                    }
+                    else
+                    {
+                        rcb(Wishlists(r[0]));
                     }
                }
                >> ecb;

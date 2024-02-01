@@ -1496,6 +1496,46 @@ bool Categories::validJsonOfField(size_t index,
     }
     return true;
 }
+
+MasterProducts Categories::getMaster_products(const drogon::orm::DbClientPtr &clientPtr) const {
+    std::shared_ptr<std::promise<MasterProducts>> pro(new std::promise<MasterProducts>);
+    std::future<MasterProducts> f = pro->get_future();
+    getMaster_products(clientPtr, [&pro] (MasterProducts result) {
+        try {
+            pro->set_value(result);
+        }
+        catch (...) {
+            pro->set_exception(std::current_exception());
+        }
+    }, [&pro] (const DrogonDbException &err) {
+        pro->set_exception(std::make_exception_ptr(err));
+    });
+    return f.get();
+}
+void Categories::getMaster_products(const DbClientPtr &clientPtr,
+                                    const std::function<void(MasterProducts)> &rcb,
+                                    const ExceptionCallback &ecb) const
+{
+    const static std::string sql = "select * from master_products where categoryId = ?";
+    *clientPtr << sql
+               << *id_
+               >> [rcb = std::move(rcb), ecb](const Result &r){
+                    if (r.size() == 0)
+                    {
+                        ecb(UnexpectedRows("0 rows found"));
+                    }
+                    else if (r.size() > 1)
+                    {
+                        ecb(UnexpectedRows("Found more than one row"));
+                    }
+                    else
+                    {
+                        rcb(MasterProducts(r[0]));
+                    }
+               }
+               >> ecb;
+}
+/*
 std::vector<MasterProducts> Categories::getMaster_products(const drogon::orm::DbClientPtr &clientPtr) const {
     std::shared_ptr<std::promise<std::vector<MasterProducts>>> pro(new std::promise<std::vector<MasterProducts>>);
     std::future<std::vector<MasterProducts>> f = pro->get_future();
@@ -1511,6 +1551,7 @@ std::vector<MasterProducts> Categories::getMaster_products(const drogon::orm::Db
     });
     return f.get();
 }
+*/
 void Categories::getMaster_products(const DbClientPtr &clientPtr,
                                     const std::function<void(std::vector<MasterProducts>)> &rcb,
                                     const ExceptionCallback &ecb) const

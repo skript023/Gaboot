@@ -6,6 +6,7 @@
  */
 
 #include "Wishlists.h"
+#include "product/models/MasterProducts.h"
 #include <drogon/utils/Utilities.h>
 #include <string>
 
@@ -1155,4 +1156,43 @@ bool Wishlists::validJsonOfField(size_t index,
             return false;
     }
     return true;
+}
+
+MasterProducts Wishlists::getMaster_products(const drogon::orm::DbClientPtr &clientPtr) const {
+    std::shared_ptr<std::promise<MasterProducts>> pro(new std::promise<MasterProducts>);
+    std::future<MasterProducts> f = pro->get_future();
+    getMaster_products(clientPtr, [&pro] (MasterProducts result) {
+        try {
+            pro->set_value(result);
+        }
+        catch (...) {
+            pro->set_exception(std::current_exception());
+        }
+    }, [&pro] (const DrogonDbException &err) {
+        pro->set_exception(std::make_exception_ptr(err));
+    });
+    return f.get();
+}
+void Wishlists::getMaster_products(const DbClientPtr &clientPtr,
+                                   const std::function<void(MasterProducts)> &rcb,
+                                   const ExceptionCallback &ecb) const
+{
+    const static std::string sql = "select * from master_products where orderId = ?";
+    *clientPtr << sql
+               << *productid_
+               >> [rcb = std::move(rcb), ecb](const Result &r){
+                    if (r.size() == 0)
+                    {
+                        ecb(UnexpectedRows("0 rows found"));
+                    }
+                    else if (r.size() > 1)
+                    {
+                        ecb(UnexpectedRows("Found more than one row"));
+                    }
+                    else
+                    {
+                        rcb(MasterProducts(r[0]));
+                    }
+               }
+               >> ecb;
 }

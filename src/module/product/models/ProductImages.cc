@@ -6,6 +6,7 @@
  */
 
 #include "ProductImages.h"
+#include "MasterProducts.h"
 #include <drogon/utils/Utilities.h>
 #include <string>
 
@@ -17,8 +18,9 @@ const std::string ProductImages::Cols::_id = "id";
 const std::string ProductImages::Cols::_imagePath = "imagePath";
 const std::string ProductImages::Cols::_thumbnailPath = "thumbnailPath";
 const std::string ProductImages::Cols::_productId = "productId";
-const std::string ProductImages::Cols::_created_at = "created_at";
-const std::string ProductImages::Cols::_updated_at = "updated_at";
+const std::string ProductImages::Cols::_isCover = "isCover";
+const std::string ProductImages::Cols::_createdAt = "createdAt";
+const std::string ProductImages::Cols::_updatedAt = "updatedAt";
 const std::string ProductImages::primaryKeyName = "id";
 const bool ProductImages::hasPrimaryKey = true;
 const std::string ProductImages::tableName = "product_images";
@@ -28,8 +30,9 @@ const std::vector<typename ProductImages::MetaData> ProductImages::metaData_={
 {"imagePath","std::string","varchar(255)",255,0,0,1},
 {"thumbnailPath","std::string","varchar(255)",255,0,0,1},
 {"productId","int32_t","int(11)",4,0,0,1},
-{"created_at","::trantor::Date","timestamp",0,0,0,0},
-{"updated_at","::trantor::Date","timestamp",0,0,0,0}
+{"isCover","int8_t","tinyint(1)",1,0,0,1},
+{"createdAt","::trantor::Date","timestamp",0,0,0,0},
+{"updatedAt","::trantor::Date","timestamp",0,0,0,0}
 };
 const std::string &ProductImages::getColumnName(size_t index) noexcept(false)
 {
@@ -56,9 +59,13 @@ ProductImages::ProductImages(const Row &r, const ssize_t indexOffset) noexcept
         {
             productid_=std::make_shared<int32_t>(r["productId"].as<int32_t>());
         }
-        if(!r["created_at"].isNull())
+        if(!r["isCover"].isNull())
         {
-            auto timeStr = r["created_at"].as<std::string>();
+            iscover_=std::make_shared<int8_t>(r["isCover"].as<int8_t>());
+        }
+        if(!r["createdAt"].isNull())
+        {
+            auto timeStr = r["createdAt"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -75,12 +82,12 @@ ProductImages::ProductImages(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        if(!r["updated_at"].isNull())
+        if(!r["updatedAt"].isNull())
         {
-            auto timeStr = r["updated_at"].as<std::string>();
+            auto timeStr = r["updatedAt"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -97,14 +104,14 @@ ProductImages::ProductImages(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
     else
     {
         size_t offset = (size_t)indexOffset;
-        if(offset + 6 > r.size())
+        if(offset + 7 > r.size())
         {
             LOG_FATAL << "Invalid SQL result for this model";
             return;
@@ -133,25 +140,7 @@ ProductImages::ProductImages(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 4;
         if(!r[index].isNull())
         {
-            auto timeStr = r[index].as<std::string>();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
+            iscover_=std::make_shared<int8_t>(r[index].as<int8_t>());
         }
         index = offset + 5;
         if(!r[index].isNull())
@@ -173,7 +162,30 @@ ProductImages::ProductImages(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+            }
+        }
+        index = offset + 6;
+        if(!r[index].isNull())
+        {
+            auto timeStr = r[index].as<std::string>();
+            struct tm stm;
+            memset(&stm,0,sizeof(stm));
+            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
+            time_t t = mktime(&stm);
+            size_t decimalNum = 0;
+            if(p)
+            {
+                if(*p=='.')
+                {
+                    std::string decimals(p+1,&timeStr[timeStr.length()]);
+                    while(decimals.length()<6)
+                    {
+                        decimals += "0";
+                    }
+                    decimalNum = (size_t)atol(decimals.c_str());
+                }
+                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -182,7 +194,7 @@ ProductImages::ProductImages(const Row &r, const ssize_t indexOffset) noexcept
 
 ProductImages::ProductImages(const Json::Value &pJson, const std::vector<std::string> &pMasqueradingVector) noexcept(false)
 {
-    if(pMasqueradingVector.size() != 6)
+    if(pMasqueradingVector.size() != 7)
     {
         LOG_ERROR << "Bad masquerading vector";
         return;
@@ -224,25 +236,7 @@ ProductImages::ProductImages(const Json::Value &pJson, const std::vector<std::st
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[4]].asString();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
+            iscover_=std::make_shared<int8_t>((int8_t)pJson[pMasqueradingVector[4]].asInt64());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -267,7 +261,33 @@ ProductImages::ProductImages(const Json::Value &pJson, const std::vector<std::st
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+            }
+        }
+    }
+    if(!pMasqueradingVector[6].empty() && pJson.isMember(pMasqueradingVector[6]))
+    {
+        dirtyFlag_[6] = true;
+        if(!pJson[pMasqueradingVector[6]].isNull())
+        {
+            auto timeStr = pJson[pMasqueradingVector[6]].asString();
+            struct tm stm;
+            memset(&stm,0,sizeof(stm));
+            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
+            time_t t = mktime(&stm);
+            size_t decimalNum = 0;
+            if(p)
+            {
+                if(*p=='.')
+                {
+                    std::string decimals(p+1,&timeStr[timeStr.length()]);
+                    while(decimals.length()<6)
+                    {
+                        decimals += "0";
+                    }
+                    decimalNum = (size_t)atol(decimals.c_str());
+                }
+                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -307,12 +327,20 @@ ProductImages::ProductImages(const Json::Value &pJson) noexcept(false)
             productid_=std::make_shared<int32_t>((int32_t)pJson["productId"].asInt64());
         }
     }
-    if(pJson.isMember("created_at"))
+    if(pJson.isMember("isCover"))
     {
         dirtyFlag_[4]=true;
-        if(!pJson["created_at"].isNull())
+        if(!pJson["isCover"].isNull())
         {
-            auto timeStr = pJson["created_at"].asString();
+            iscover_=std::make_shared<int8_t>((int8_t)pJson["isCover"].asInt64());
+        }
+    }
+    if(pJson.isMember("createdAt"))
+    {
+        dirtyFlag_[5]=true;
+        if(!pJson["createdAt"].isNull())
+        {
+            auto timeStr = pJson["createdAt"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -329,16 +357,16 @@ ProductImages::ProductImages(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
-    if(pJson.isMember("updated_at"))
+    if(pJson.isMember("updatedAt"))
     {
-        dirtyFlag_[5]=true;
-        if(!pJson["updated_at"].isNull())
+        dirtyFlag_[6]=true;
+        if(!pJson["updatedAt"].isNull())
         {
-            auto timeStr = pJson["updated_at"].asString();
+            auto timeStr = pJson["updatedAt"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -355,7 +383,7 @@ ProductImages::ProductImages(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -364,7 +392,7 @@ ProductImages::ProductImages(const Json::Value &pJson) noexcept(false)
 void ProductImages::updateByMasqueradedJson(const Json::Value &pJson,
                                             const std::vector<std::string> &pMasqueradingVector) noexcept(false)
 {
-    if(pMasqueradingVector.size() != 6)
+    if(pMasqueradingVector.size() != 7)
     {
         LOG_ERROR << "Bad masquerading vector";
         return;
@@ -405,25 +433,7 @@ void ProductImages::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[4]].asString();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
+            iscover_=std::make_shared<int8_t>((int8_t)pJson[pMasqueradingVector[4]].asInt64());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -448,7 +458,33 @@ void ProductImages::updateByMasqueradedJson(const Json::Value &pJson,
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+            }
+        }
+    }
+    if(!pMasqueradingVector[6].empty() && pJson.isMember(pMasqueradingVector[6]))
+    {
+        dirtyFlag_[6] = true;
+        if(!pJson[pMasqueradingVector[6]].isNull())
+        {
+            auto timeStr = pJson[pMasqueradingVector[6]].asString();
+            struct tm stm;
+            memset(&stm,0,sizeof(stm));
+            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
+            time_t t = mktime(&stm);
+            size_t decimalNum = 0;
+            if(p)
+            {
+                if(*p=='.')
+                {
+                    std::string decimals(p+1,&timeStr[timeStr.length()]);
+                    while(decimals.length()<6)
+                    {
+                        decimals += "0";
+                    }
+                    decimalNum = (size_t)atol(decimals.c_str());
+                }
+                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -487,12 +523,20 @@ void ProductImages::updateByJson(const Json::Value &pJson) noexcept(false)
             productid_=std::make_shared<int32_t>((int32_t)pJson["productId"].asInt64());
         }
     }
-    if(pJson.isMember("created_at"))
+    if(pJson.isMember("isCover"))
     {
         dirtyFlag_[4] = true;
-        if(!pJson["created_at"].isNull())
+        if(!pJson["isCover"].isNull())
         {
-            auto timeStr = pJson["created_at"].asString();
+            iscover_=std::make_shared<int8_t>((int8_t)pJson["isCover"].asInt64());
+        }
+    }
+    if(pJson.isMember("createdAt"))
+    {
+        dirtyFlag_[5] = true;
+        if(!pJson["createdAt"].isNull())
+        {
+            auto timeStr = pJson["createdAt"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -509,16 +553,16 @@ void ProductImages::updateByJson(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
-    if(pJson.isMember("updated_at"))
+    if(pJson.isMember("updatedAt"))
     {
-        dirtyFlag_[5] = true;
-        if(!pJson["updated_at"].isNull())
+        dirtyFlag_[6] = true;
+        if(!pJson["updatedAt"].isNull())
         {
-            auto timeStr = pJson["updated_at"].asString();
+            auto timeStr = pJson["updatedAt"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -535,7 +579,7 @@ void ProductImages::updateByJson(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -624,48 +668,65 @@ void ProductImages::setProductid(const int32_t &pProductid) noexcept
     dirtyFlag_[3] = true;
 }
 
-const ::trantor::Date &ProductImages::getValueOfCreatedAt() const noexcept
+const int8_t &ProductImages::getValueOfIscover() const noexcept
 {
-    const static ::trantor::Date defaultValue = ::trantor::Date();
-    if(createdAt_)
-        return *createdAt_;
+    const static int8_t defaultValue = int8_t();
+    if(iscover_)
+        return *iscover_;
     return defaultValue;
 }
-const std::shared_ptr<::trantor::Date> &ProductImages::getCreatedAt() const noexcept
+const std::shared_ptr<int8_t> &ProductImages::getIscover() const noexcept
 {
-    return createdAt_;
+    return iscover_;
 }
-void ProductImages::setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept
+void ProductImages::setIscover(const int8_t &pIscover) noexcept
 {
-    createdAt_ = std::make_shared<::trantor::Date>(pCreatedAt);
-    dirtyFlag_[4] = true;
-}
-void ProductImages::setCreatedAtToNull() noexcept
-{
-    createdAt_.reset();
+    iscover_ = std::make_shared<int8_t>(pIscover);
     dirtyFlag_[4] = true;
 }
 
-const ::trantor::Date &ProductImages::getValueOfUpdatedAt() const noexcept
+const ::trantor::Date &ProductImages::getValueOfCreatedat() const noexcept
 {
     const static ::trantor::Date defaultValue = ::trantor::Date();
-    if(updatedAt_)
-        return *updatedAt_;
+    if(createdat_)
+        return *createdat_;
     return defaultValue;
 }
-const std::shared_ptr<::trantor::Date> &ProductImages::getUpdatedAt() const noexcept
+const std::shared_ptr<::trantor::Date> &ProductImages::getCreatedat() const noexcept
 {
-    return updatedAt_;
+    return createdat_;
 }
-void ProductImages::setUpdatedAt(const ::trantor::Date &pUpdatedAt) noexcept
+void ProductImages::setCreatedat(const ::trantor::Date &pCreatedat) noexcept
 {
-    updatedAt_ = std::make_shared<::trantor::Date>(pUpdatedAt);
+    createdat_ = std::make_shared<::trantor::Date>(pCreatedat);
     dirtyFlag_[5] = true;
 }
-void ProductImages::setUpdatedAtToNull() noexcept
+void ProductImages::setCreatedatToNull() noexcept
 {
-    updatedAt_.reset();
+    createdat_.reset();
     dirtyFlag_[5] = true;
+}
+
+const ::trantor::Date &ProductImages::getValueOfUpdatedat() const noexcept
+{
+    const static ::trantor::Date defaultValue = ::trantor::Date();
+    if(updatedat_)
+        return *updatedat_;
+    return defaultValue;
+}
+const std::shared_ptr<::trantor::Date> &ProductImages::getUpdatedat() const noexcept
+{
+    return updatedat_;
+}
+void ProductImages::setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept
+{
+    updatedat_ = std::make_shared<::trantor::Date>(pUpdatedat);
+    dirtyFlag_[6] = true;
+}
+void ProductImages::setUpdatedatToNull() noexcept
+{
+    updatedat_.reset();
+    dirtyFlag_[6] = true;
 }
 
 void ProductImages::updateId(const uint64_t id)
@@ -679,8 +740,9 @@ const std::vector<std::string> &ProductImages::insertColumns() noexcept
         "imagePath",
         "thumbnailPath",
         "productId",
-        "created_at",
-        "updated_at"
+        "isCover",
+        "createdAt",
+        "updatedAt"
     };
     return inCols;
 }
@@ -722,9 +784,9 @@ void ProductImages::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[4])
     {
-        if(getCreatedAt())
+        if(getIscover())
         {
-            binder << getValueOfCreatedAt();
+            binder << getValueOfIscover();
         }
         else
         {
@@ -733,9 +795,20 @@ void ProductImages::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[5])
     {
-        if(getUpdatedAt())
+        if(getCreatedat())
         {
-            binder << getValueOfUpdatedAt();
+            binder << getValueOfCreatedat();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[6])
+    {
+        if(getUpdatedat())
+        {
+            binder << getValueOfUpdatedat();
         }
         else
         {
@@ -766,6 +839,10 @@ const std::vector<std::string> ProductImages::updateColumns() const
     if(dirtyFlag_[5])
     {
         ret.push_back(getColumnName(5));
+    }
+    if(dirtyFlag_[6])
+    {
+        ret.push_back(getColumnName(6));
     }
     return ret;
 }
@@ -807,9 +884,9 @@ void ProductImages::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[4])
     {
-        if(getCreatedAt())
+        if(getIscover())
         {
-            binder << getValueOfCreatedAt();
+            binder << getValueOfIscover();
         }
         else
         {
@@ -818,9 +895,20 @@ void ProductImages::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[5])
     {
-        if(getUpdatedAt())
+        if(getCreatedat())
         {
-            binder << getValueOfUpdatedAt();
+            binder << getValueOfCreatedat();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[6])
+    {
+        if(getUpdatedat())
+        {
+            binder << getValueOfUpdatedat();
         }
         else
         {
@@ -863,21 +951,29 @@ Json::Value ProductImages::toJson() const
     {
         ret["productId"]=Json::Value();
     }
-    if(getCreatedAt())
+    if(getIscover())
     {
-        ret["created_at"]=getCreatedAt()->toDbStringLocal();
+        ret["isCover"]=getValueOfIscover();
     }
     else
     {
-        ret["created_at"]=Json::Value();
+        ret["isCover"]=Json::Value();
     }
-    if(getUpdatedAt())
+    if(getCreatedat())
     {
-        ret["updated_at"]=getUpdatedAt()->toDbStringLocal();
+        ret["createdAt"]=getCreatedat()->toDbStringLocal();
     }
     else
     {
-        ret["updated_at"]=Json::Value();
+        ret["createdAt"]=Json::Value();
+    }
+    if(getUpdatedat())
+    {
+        ret["updatedAt"]=getUpdatedat()->toDbStringLocal();
+    }
+    else
+    {
+        ret["updatedAt"]=Json::Value();
     }
     return ret;
 }
@@ -886,7 +982,7 @@ Json::Value ProductImages::toMasqueradedJson(
     const std::vector<std::string> &pMasqueradingVector) const
 {
     Json::Value ret;
-    if(pMasqueradingVector.size() == 6)
+    if(pMasqueradingVector.size() == 7)
     {
         if(!pMasqueradingVector[0].empty())
         {
@@ -934,9 +1030,9 @@ Json::Value ProductImages::toMasqueradedJson(
         }
         if(!pMasqueradingVector[4].empty())
         {
-            if(getCreatedAt())
+            if(getIscover())
             {
-                ret[pMasqueradingVector[4]]=getCreatedAt()->toDbStringLocal();
+                ret[pMasqueradingVector[4]]=getValueOfIscover();
             }
             else
             {
@@ -945,13 +1041,24 @@ Json::Value ProductImages::toMasqueradedJson(
         }
         if(!pMasqueradingVector[5].empty())
         {
-            if(getUpdatedAt())
+            if(getCreatedat())
             {
-                ret[pMasqueradingVector[5]]=getUpdatedAt()->toDbStringLocal();
+                ret[pMasqueradingVector[5]]=getCreatedat()->toDbStringLocal();
             }
             else
             {
                 ret[pMasqueradingVector[5]]=Json::Value();
+            }
+        }
+        if(!pMasqueradingVector[6].empty())
+        {
+            if(getUpdatedat())
+            {
+                ret[pMasqueradingVector[6]]=getUpdatedat()->toDbStringLocal();
+            }
+            else
+            {
+                ret[pMasqueradingVector[6]]=Json::Value();
             }
         }
         return ret;
@@ -989,21 +1096,29 @@ Json::Value ProductImages::toMasqueradedJson(
     {
         ret["productId"]=Json::Value();
     }
-    if(getCreatedAt())
+    if(getIscover())
     {
-        ret["created_at"]=getCreatedAt()->toDbStringLocal();
+        ret["isCover"]=getValueOfIscover();
     }
     else
     {
-        ret["created_at"]=Json::Value();
+        ret["isCover"]=Json::Value();
     }
-    if(getUpdatedAt())
+    if(getCreatedat())
     {
-        ret["updated_at"]=getUpdatedAt()->toDbStringLocal();
+        ret["createdAt"]=getCreatedat()->toDbStringLocal();
     }
     else
     {
-        ret["updated_at"]=Json::Value();
+        ret["createdAt"]=Json::Value();
+    }
+    if(getUpdatedat())
+    {
+        ret["updatedAt"]=getUpdatedat()->toDbStringLocal();
+    }
+    else
+    {
+        ret["updatedAt"]=Json::Value();
     }
     return ret;
 }
@@ -1045,14 +1160,19 @@ bool ProductImages::validateJsonForCreation(const Json::Value &pJson, std::strin
         err="The productId column cannot be null";
         return false;
     }
-    if(pJson.isMember("created_at"))
+    if(pJson.isMember("isCover"))
     {
-        if(!validJsonOfField(4, "created_at", pJson["created_at"], err, true))
+        if(!validJsonOfField(4, "isCover", pJson["isCover"], err, true))
             return false;
     }
-    if(pJson.isMember("updated_at"))
+    if(pJson.isMember("createdAt"))
     {
-        if(!validJsonOfField(5, "updated_at", pJson["updated_at"], err, true))
+        if(!validJsonOfField(5, "createdAt", pJson["createdAt"], err, true))
+            return false;
+    }
+    if(pJson.isMember("updatedAt"))
+    {
+        if(!validJsonOfField(6, "updatedAt", pJson["updatedAt"], err, true))
             return false;
     }
     return true;
@@ -1061,7 +1181,7 @@ bool ProductImages::validateMasqueradedJsonForCreation(const Json::Value &pJson,
                                                        const std::vector<std::string> &pMasqueradingVector,
                                                        std::string &err)
 {
-    if(pMasqueradingVector.size() != 6)
+    if(pMasqueradingVector.size() != 7)
     {
         err = "Bad masquerading vector";
         return false;
@@ -1130,6 +1250,14 @@ bool ProductImages::validateMasqueradedJsonForCreation(const Json::Value &pJson,
                   return false;
           }
       }
+      if(!pMasqueradingVector[6].empty())
+      {
+          if(pJson.isMember(pMasqueradingVector[6]))
+          {
+              if(!validJsonOfField(6, pMasqueradingVector[6], pJson[pMasqueradingVector[6]], err, true))
+                  return false;
+          }
+      }
     }
     catch(const Json::LogicError &e)
     {
@@ -1165,14 +1293,19 @@ bool ProductImages::validateJsonForUpdate(const Json::Value &pJson, std::string 
         if(!validJsonOfField(3, "productId", pJson["productId"], err, false))
             return false;
     }
-    if(pJson.isMember("created_at"))
+    if(pJson.isMember("isCover"))
     {
-        if(!validJsonOfField(4, "created_at", pJson["created_at"], err, false))
+        if(!validJsonOfField(4, "isCover", pJson["isCover"], err, false))
             return false;
     }
-    if(pJson.isMember("updated_at"))
+    if(pJson.isMember("createdAt"))
     {
-        if(!validJsonOfField(5, "updated_at", pJson["updated_at"], err, false))
+        if(!validJsonOfField(5, "createdAt", pJson["createdAt"], err, false))
+            return false;
+    }
+    if(pJson.isMember("updatedAt"))
+    {
+        if(!validJsonOfField(6, "updatedAt", pJson["updatedAt"], err, false))
             return false;
     }
     return true;
@@ -1181,7 +1314,7 @@ bool ProductImages::validateMasqueradedJsonForUpdate(const Json::Value &pJson,
                                                      const std::vector<std::string> &pMasqueradingVector,
                                                      std::string &err)
 {
-    if(pMasqueradingVector.size() != 6)
+    if(pMasqueradingVector.size() != 7)
     {
         err = "Bad masquerading vector";
         return false;
@@ -1220,6 +1353,11 @@ bool ProductImages::validateMasqueradedJsonForUpdate(const Json::Value &pJson,
       if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
       {
           if(!validJsonOfField(5, pMasqueradingVector[5], pJson[pMasqueradingVector[5]], err, false))
+              return false;
+      }
+      if(!pMasqueradingVector[6].empty() && pJson.isMember(pMasqueradingVector[6]))
+      {
+          if(!validJsonOfField(6, pMasqueradingVector[6], pJson[pMasqueradingVector[6]], err, false))
               return false;
       }
     }
@@ -1312,9 +1450,10 @@ bool ProductImages::validJsonOfField(size_t index,
         case 4:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
-            if(!pJson.isString())
+            if(!pJson.isInt())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -1331,9 +1470,53 @@ bool ProductImages::validJsonOfField(size_t index,
                 return false;
             }
             break;
+        case 6:
+            if(pJson.isNull())
+            {
+                return true;
+            }
+            if(!pJson.isString())
+            {
+                err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            break;
         default:
             err="Internal error in the server";
             return false;
     }
     return true;
+}
+std::vector<MasterProducts> ProductImages::getMaster_products(const drogon::orm::DbClientPtr &clientPtr) const {
+    std::shared_ptr<std::promise<std::vector<MasterProducts>>> pro(new std::promise<std::vector<MasterProducts>>);
+    std::future<std::vector<MasterProducts>> f = pro->get_future();
+    getMaster_products(clientPtr, [&pro] (std::vector<MasterProducts> result) {
+        try {
+            pro->set_value(result);
+        }
+        catch (...) {
+            pro->set_exception(std::current_exception());
+        }
+    }, [&pro] (const DrogonDbException &err) {
+        pro->set_exception(std::make_exception_ptr(err));
+    });
+    return f.get();
+}
+void ProductImages::getMaster_products(const DbClientPtr &clientPtr,
+                                       const std::function<void(std::vector<MasterProducts>)> &rcb,
+                                       const ExceptionCallback &ecb) const
+{
+    const static std::string sql = "select * from master_products where id = ?";
+    *clientPtr << sql
+               << *productid_
+               >> [rcb = std::move(rcb)](const Result &r){
+                   std::vector<MasterProducts> ret;
+                   ret.reserve(r.size());
+                   for (auto const &row : r)
+                   {
+                       ret.emplace_back(MasterProducts(row));
+                   }
+                   rcb(ret);
+               }
+               >> ecb;
 }

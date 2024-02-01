@@ -19,6 +19,7 @@
 #include <trantor/utils/Logger.h>
 #include <json/json.h>
 #include <string>
+#include <string_view>
 #include <memory>
 #include <vector>
 #include <tuple>
@@ -37,6 +38,8 @@ namespace drogon_model
 {
 namespace gaboot
 {
+class MasterCustomers;
+class OrderDetails;
 
 class Orders
 {
@@ -45,8 +48,11 @@ class Orders
     {
         static const std::string _id;
         static const std::string _name;
-        static const std::string _cartId;
         static const std::string _customerId;
+        static const std::string _totalPrice;
+        static const std::string _discount;
+        static const std::string _grandTotal;
+        static const std::string _totalItem;
         static const std::string _status;
         static const std::string _expired;
         static const std::string _createdAt;
@@ -120,15 +126,6 @@ class Orders
     void setName(std::string &&pName) noexcept;
     void setNameToNull() noexcept;
 
-    /**  For column cartId  */
-    ///Get the value of the column cartId, returns the default value if the column is null
-    const int32_t &getValueOfCartid() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getCartid() const noexcept;
-    ///Set the value of the column cartId
-    void setCartid(const int32_t &pCartid) noexcept;
-    void setCartidToNull() noexcept;
-
     /**  For column customerId  */
     ///Get the value of the column customerId, returns the default value if the column is null
     const int32_t &getValueOfCustomerid() const noexcept;
@@ -137,6 +134,42 @@ class Orders
     ///Set the value of the column customerId
     void setCustomerid(const int32_t &pCustomerid) noexcept;
     void setCustomeridToNull() noexcept;
+
+    /**  For column totalPrice  */
+    ///Get the value of the column totalPrice, returns the default value if the column is null
+    const double &getValueOfTotalprice() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<double> &getTotalprice() const noexcept;
+    ///Set the value of the column totalPrice
+    void setTotalprice(const double &pTotalprice) noexcept;
+    void setTotalpriceToNull() noexcept;
+
+    /**  For column discount  */
+    ///Get the value of the column discount, returns the default value if the column is null
+    const double &getValueOfDiscount() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<double> &getDiscount() const noexcept;
+    ///Set the value of the column discount
+    void setDiscount(const double &pDiscount) noexcept;
+    void setDiscountToNull() noexcept;
+
+    /**  For column grandTotal  */
+    ///Get the value of the column grandTotal, returns the default value if the column is null
+    const double &getValueOfGrandtotal() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<double> &getGrandtotal() const noexcept;
+    ///Set the value of the column grandTotal
+    void setGrandtotal(const double &pGrandtotal) noexcept;
+    void setGrandtotalToNull() noexcept;
+
+    /**  For column totalItem  */
+    ///Get the value of the column totalItem, returns the default value if the column is null
+    const int32_t &getValueOfTotalitem() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<int32_t> &getTotalitem() const noexcept;
+    ///Set the value of the column totalItem
+    void setTotalitem(const int32_t &pTotalitem) noexcept;
+    void setTotalitemToNull() noexcept;
 
     /**  For column status  */
     ///Get the value of the column status, returns the default value if the column is null
@@ -175,12 +208,20 @@ class Orders
     void setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept;
 
 
-    static size_t getColumnNumber() noexcept {  return 8;  }
+    static size_t getColumnNumber() noexcept {  return 11;  }
     static const std::string &getColumnName(size_t index) noexcept(false);
 
     Json::Value toJson() const;
     Json::Value toMasqueradedJson(const std::vector<std::string> &pMasqueradingVector) const;
     /// Relationship interfaces
+    MasterCustomers getMaster_customers(const drogon::orm::DbClientPtr &clientPtr) const;
+    void getMaster_customers(const drogon::orm::DbClientPtr &clientPtr,
+                             const std::function<void(MasterCustomers)> &rcb,
+                             const drogon::orm::ExceptionCallback &ecb) const;
+    std::vector<OrderDetails> getOrder_details(const drogon::orm::DbClientPtr &clientPtr) const;
+    void getOrder_details(const drogon::orm::DbClientPtr &clientPtr,
+                          const std::function<void(std::vector<OrderDetails>)> &rcb,
+                          const drogon::orm::ExceptionCallback &ecb) const;
   private:
     friend drogon::orm::Mapper<Orders>;
     friend drogon::orm::BaseBuilder<Orders, true, true>;
@@ -198,8 +239,11 @@ class Orders
     void updateId(const uint64_t id);
     std::shared_ptr<int32_t> id_;
     std::shared_ptr<std::string> name_;
-    std::shared_ptr<int32_t> cartid_;
     std::shared_ptr<int32_t> customerid_;
+    std::shared_ptr<double> totalprice_;
+    std::shared_ptr<double> discount_;
+    std::shared_ptr<double> grandtotal_;
+    std::shared_ptr<int32_t> totalitem_;
     std::shared_ptr<std::string> status_;
     std::shared_ptr<std::string> expired_;
     std::shared_ptr<::trantor::Date> createdat_;
@@ -215,7 +259,7 @@ class Orders
         const bool notNull_;
     };
     static const std::vector<MetaData> metaData_;
-    bool dirtyFlag_[8]={ false };
+    bool dirtyFlag_[11]={ false };
   public:
     static const std::string &sqlForFindingByPrimaryKey()
     {
@@ -242,30 +286,48 @@ class Orders
         }
         if(dirtyFlag_[2])
         {
-            sql += "cartId,";
+            sql += "customerId,";
             ++parametersCount;
         }
         if(dirtyFlag_[3])
         {
-            sql += "customerId,";
+            sql += "totalPrice,";
             ++parametersCount;
         }
-        if(dirtyFlag_[4])
+        sql += "discount,";
+        ++parametersCount;
+        if(!dirtyFlag_[4])
+        {
+            needSelection=true;
+        }
+        sql += "grandTotal,";
+        ++parametersCount;
+        if(!dirtyFlag_[5])
+        {
+            needSelection=true;
+        }
+        sql += "totalItem,";
+        ++parametersCount;
+        if(!dirtyFlag_[6])
+        {
+            needSelection=true;
+        }
+        if(dirtyFlag_[7])
         {
             sql += "status,";
             ++parametersCount;
         }
-        if(dirtyFlag_[5])
+        if(dirtyFlag_[8])
         {
             sql += "expired,";
             ++parametersCount;
         }
-        if(dirtyFlag_[6])
+        if(dirtyFlag_[9])
         {
             sql += "createdAt,";
             ++parametersCount;
         }
-        if(dirtyFlag_[7])
+        if(dirtyFlag_[10])
         {
             sql += "updatedAt,";
             ++parametersCount;
@@ -300,17 +362,44 @@ class Orders
             sql.append("?,");
 
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[5])
         {
             sql.append("?,");
 
+        }
+        else
+        {
+            sql +="default,";
         }
         if(dirtyFlag_[6])
         {
             sql.append("?,");
 
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[7])
+        {
+            sql.append("?,");
+
+        }
+        if(dirtyFlag_[8])
+        {
+            sql.append("?,");
+
+        }
+        if(dirtyFlag_[9])
+        {
+            sql.append("?,");
+
+        }
+        if(dirtyFlag_[10])
         {
             sql.append("?,");
 

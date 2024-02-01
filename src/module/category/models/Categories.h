@@ -19,6 +19,7 @@
 #include <trantor/utils/Logger.h>
 #include <json/json.h>
 #include <string>
+#include <string_view>
 #include <memory>
 #include <vector>
 #include <tuple>
@@ -171,7 +172,11 @@ class Categories
     Json::Value toJson() const;
     Json::Value toMasqueradedJson(const std::vector<std::string> &pMasqueradingVector) const;
     /// Relationship interfaces
-    std::vector<MasterProducts> getMaster_products(const drogon::orm::DbClientPtr &clientPtr) const;
+    MasterProducts getMaster_products(const drogon::orm::DbClientPtr &clientPtr) const;
+    void getMaster_products(const drogon::orm::DbClientPtr &clientPtr,
+                            const std::function<void(MasterProducts)> &rcb,
+                            const drogon::orm::ExceptionCallback &ecb) const;
+    //std::vector<MasterProducts> getMaster_products(const drogon::orm::DbClientPtr &clientPtr) const;
     void getMaster_products(const drogon::orm::DbClientPtr &clientPtr,
                             const std::function<void(std::vector<MasterProducts>)> &rcb,
                             const drogon::orm::ExceptionCallback &ecb) const;

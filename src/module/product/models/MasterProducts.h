@@ -19,6 +19,7 @@
 #include <trantor/utils/Logger.h>
 #include <json/json.h>
 #include <string>
+#include <string_view>
 #include <memory>
 #include <vector>
 #include <tuple>
@@ -37,7 +38,9 @@ namespace drogon_model
 {
 namespace gaboot
 {
+class Carts;
 class Categories;
+class Wishlists;
 
 class MasterProducts
 {
@@ -53,6 +56,8 @@ class MasterProducts
         static const std::string _weight;
         static const std::string _weightUnit;
         static const std::string _categoryId;
+        static const std::string _totalSales;
+        static const std::string _isActive;
         static const std::string _createdAt;
         static const std::string _updatedAt;
     };
@@ -182,6 +187,22 @@ class MasterProducts
     ///Set the value of the column categoryId
     void setCategoryid(const int32_t &pCategoryid) noexcept;
 
+    /**  For column totalSales  */
+    ///Get the value of the column totalSales, returns the default value if the column is null
+    const int32_t &getValueOfTotalsales() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<int32_t> &getTotalsales() const noexcept;
+    ///Set the value of the column totalSales
+    void setTotalsales(const int32_t &pTotalsales) noexcept;
+
+    /**  For column isActive  */
+    ///Get the value of the column isActive, returns the default value if the column is null
+    const int8_t &getValueOfIsactive() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<int8_t> &getIsactive() const noexcept;
+    ///Set the value of the column isActive
+    void setIsactive(const int8_t &pIsactive) noexcept;
+
     /**  For column createdAt  */
     ///Get the value of the column createdAt, returns the default value if the column is null
     const ::trantor::Date &getValueOfCreatedat() const noexcept;
@@ -199,7 +220,7 @@ class MasterProducts
     void setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept;
 
 
-    static size_t getColumnNumber() noexcept {  return 11;  }
+    static size_t getColumnNumber() noexcept {  return 13;  }
     static const std::string &getColumnName(size_t index) noexcept(false);
 
     Json::Value toJson() const;
@@ -209,6 +230,18 @@ class MasterProducts
     void getCategories(const drogon::orm::DbClientPtr &clientPtr,
                        const std::function<void(Categories)> &rcb,
                        const drogon::orm::ExceptionCallback &ecb) const;
+    std::vector<Wishlists> getWishlists(const drogon::orm::DbClientPtr &clientPtr) const;
+    void getWishlists(const drogon::orm::DbClientPtr &clientPtr,
+                      const std::function<void(std::vector<Wishlists>)> &rcb,
+                      const drogon::orm::ExceptionCallback &ecb) const;
+    Carts getCarts(const drogon::orm::DbClientPtr &clientPtr) const;
+    void getCarts(const drogon::orm::DbClientPtr &clientPtr,
+                  const std::function<void(Carts)> &rcb,
+                  const drogon::orm::ExceptionCallback &ecb) const;
+    //Wishlists getWishlists(const drogon::orm::DbClientPtr &clientPtr) const;
+    void getWishlists(const drogon::orm::DbClientPtr &clientPtr,
+                      const std::function<void(Wishlists)> &rcb,
+                      const drogon::orm::ExceptionCallback &ecb) const;
   private:
     friend drogon::orm::Mapper<MasterProducts>;
     friend drogon::orm::BaseBuilder<MasterProducts, true, true>;
@@ -233,6 +266,8 @@ class MasterProducts
     std::shared_ptr<double> weight_;
     std::shared_ptr<std::string> weightunit_;
     std::shared_ptr<int32_t> categoryid_;
+    std::shared_ptr<int32_t> totalsales_;
+    std::shared_ptr<int8_t> isactive_;
     std::shared_ptr<::trantor::Date> createdat_;
     std::shared_ptr<::trantor::Date> updatedat_;
     struct MetaData
@@ -246,7 +281,7 @@ class MasterProducts
         const bool notNull_;
     };
     static const std::vector<MetaData> metaData_;
-    bool dirtyFlag_[11]={ false };
+    bool dirtyFlag_[13]={ false };
   public:
     static const std::string &sqlForFindingByPrimaryKey()
     {
@@ -306,15 +341,27 @@ class MasterProducts
             sql += "categoryId,";
             ++parametersCount;
         }
-        sql += "createdAt,";
+        sql += "totalSales,";
         ++parametersCount;
         if(!dirtyFlag_[9])
         {
             needSelection=true;
         }
-        sql += "updatedAt,";
+        sql += "isActive,";
         ++parametersCount;
         if(!dirtyFlag_[10])
+        {
+            needSelection=true;
+        }
+        sql += "createdAt,";
+        ++parametersCount;
+        if(!dirtyFlag_[11])
+        {
+            needSelection=true;
+        }
+        sql += "updatedAt,";
+        ++parametersCount;
+        if(!dirtyFlag_[12])
         {
             needSelection=true;
         }
@@ -378,6 +425,24 @@ class MasterProducts
             sql +="default,";
         }
         if(dirtyFlag_[10])
+        {
+            sql.append("?,");
+
+        }
+        else
+        {
+            sql +="default,";
+        }
+        if(dirtyFlag_[11])
+        {
+            sql.append("?,");
+
+        }
+        else
+        {
+            sql +="default,";
+        }
+        if(dirtyFlag_[12])
         {
             sql.append("?,");
 

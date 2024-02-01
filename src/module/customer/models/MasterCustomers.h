@@ -19,6 +19,7 @@
 #include <trantor/utils/Logger.h>
 #include <json/json.h>
 #include <string>
+#include <string_view>
 #include <memory>
 #include <vector>
 #include <tuple>
@@ -37,6 +38,8 @@ namespace drogon_model
 {
 namespace gaboot
 {
+class Carts;
+class Orders;
 
 class MasterCustomers
 {
@@ -260,6 +263,14 @@ class MasterCustomers
     Json::Value toJson() const;
     Json::Value toMasqueradedJson(const std::vector<std::string> &pMasqueradingVector) const;
     /// Relationship interfaces
+    Carts getCarts(const drogon::orm::DbClientPtr &clientPtr) const;
+    void getCarts(const drogon::orm::DbClientPtr &clientPtr,
+                  const std::function<void(Carts)> &rcb,
+                  const drogon::orm::ExceptionCallback &ecb) const;
+    Orders getOrders(const drogon::orm::DbClientPtr &clientPtr) const;
+    void getOrders(const drogon::orm::DbClientPtr &clientPtr,
+                   const std::function<void(Orders)> &rcb,
+                   const drogon::orm::ExceptionCallback &ecb) const;
   private:
     friend drogon::orm::Mapper<MasterCustomers>;
     friend drogon::orm::BaseBuilder<MasterCustomers, true, true>;

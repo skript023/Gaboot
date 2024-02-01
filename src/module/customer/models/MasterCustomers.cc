@@ -6,6 +6,8 @@
  */
 
 #include "MasterCustomers.h"
+#include "cart/models/Carts.h"
+#include "order/models/Orders.h"
 #include <drogon/utils/Utilities.h>
 #include <string>
 
@@ -2981,4 +2983,82 @@ bool MasterCustomers::validJsonOfField(size_t index,
             return false;
     }
     return true;
+}
+
+Carts MasterCustomers::getCarts(const drogon::orm::DbClientPtr &clientPtr) const {
+    std::shared_ptr<std::promise<Carts>> pro(new std::promise<Carts>);
+    std::future<Carts> f = pro->get_future();
+    getCarts(clientPtr, [&pro] (Carts result) {
+        try {
+            pro->set_value(result);
+        }
+        catch (...) {
+            pro->set_exception(std::current_exception());
+        }
+    }, [&pro] (const DrogonDbException &err) {
+        pro->set_exception(std::make_exception_ptr(err));
+    });
+    return f.get();
+}
+void MasterCustomers::getCarts(const DbClientPtr &clientPtr,
+                               const std::function<void(Carts)> &rcb,
+                               const ExceptionCallback &ecb) const
+{
+    const static std::string sql = "select * from carts where customerId = ?";
+    *clientPtr << sql
+               << *id_
+               >> [rcb = std::move(rcb), ecb](const Result &r){
+                    if (r.size() == 0)
+                    {
+                        ecb(UnexpectedRows("0 rows found"));
+                    }
+                    else if (r.size() > 1)
+                    {
+                        ecb(UnexpectedRows("Found more than one row"));
+                    }
+                    else
+                    {
+                        rcb(Carts(r[0]));
+                    }
+               }
+               >> ecb;
+}
+
+Orders MasterCustomers::getOrders(const drogon::orm::DbClientPtr &clientPtr) const {
+    std::shared_ptr<std::promise<Orders>> pro(new std::promise<Orders>);
+    std::future<Orders> f = pro->get_future();
+    getOrders(clientPtr, [&pro] (Orders result) {
+        try {
+            pro->set_value(result);
+        }
+        catch (...) {
+            pro->set_exception(std::current_exception());
+        }
+    }, [&pro] (const DrogonDbException &err) {
+        pro->set_exception(std::make_exception_ptr(err));
+    });
+    return f.get();
+}
+void MasterCustomers::getOrders(const DbClientPtr &clientPtr,
+                                const std::function<void(Orders)> &rcb,
+                                const ExceptionCallback &ecb) const
+{
+    const static std::string sql = "select * from orders where customerId = ?";
+    *clientPtr << sql
+               << *id_
+               >> [rcb = std::move(rcb), ecb](const Result &r){
+                    if (r.size() == 0)
+                    {
+                        ecb(UnexpectedRows("0 rows found"));
+                    }
+                    else if (r.size() > 1)
+                    {
+                        ecb(UnexpectedRows("Found more than one row"));
+                    }
+                    else
+                    {
+                        rcb(Orders(r[0]));
+                    }
+               }
+               >> ecb;
 }
