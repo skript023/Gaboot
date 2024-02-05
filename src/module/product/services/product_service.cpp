@@ -25,7 +25,7 @@ namespace gaboot
 
 			this->load_cache();
 
-			const auto products = categoryId.empty() ? m_cache_product.limit(limit).offset(page * limit).find_all() : m_cache_product.find([categoryId](const std::pair<const int64_t, MasterProducts>& entry) -> bool { return entry.second.getValueOfCategoryid() == stoi(categoryId); });
+			const auto products = categoryId.empty() ? m_cache_product.limit(limit).offset(page * limit).find_all() : m_cache_product.find([categoryId](const MasterProducts& entry) -> bool { return entry.getValueOfCategoryid() == stoi(categoryId); });
 
 			if (products.empty())
 			{
@@ -240,8 +240,8 @@ namespace gaboot
 
 			auto args = Criteria(MasterProducts::Cols::_categoryId, CompareOperator::EQ, stoull(id));
 
-			const auto products = m_cache_product.find([id](const std::pair<const int64_t, MasterProducts>& entry) -> bool {
-				return entry.second.getValueOfCategoryid() == stoi(id);
+			const auto products = m_cache_product.find([id](const MasterProducts& entry) -> bool {
+				return entry.getValueOfCategoryid() == stoi(id);
 			});
 
 			if (products.empty())

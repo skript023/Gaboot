@@ -7,13 +7,15 @@
 #include <pch.h>
 #include "cutomer_middleware.h"
 #include "exception/exception.hpp"
-#include "customer/services/customer_manager.hpp"
+#include "auth/cache/auth_manager.hpp"
 
 using namespace drogon;
 
 namespace gaboot
 {
     using traits = jwt::traits::nlohmann_json;
+    using jwt_exception = jwt::error::token_verification_exception;
+
     void customer_middleware::doFilter(const HttpRequestPtr& req, FilterCallback&& fcb,  FilterChainCallback&& fccb)
     {
         std::string param = req->getHeader("Authorization");
@@ -25,7 +27,7 @@ namespace gaboot
                 auto json = this->verify_token();
                 auto id = json["id"].get<int64_t>();
                 
-                g_customer_manager->insert(id);
+                g_auth_manager->insert(id);
                 req->setBody(std::to_string(id));
 
                 return fccb();
@@ -33,7 +35,7 @@ namespace gaboot
 
             return fcb(UnauthorizedException("You're currently not logged in, please login!").response());
         }
-        catch (const jwt::error::token_verification_exception& e)
+        catch (const jwt_exception& e)
         {
             LOG(WARNING) << e.what();
 

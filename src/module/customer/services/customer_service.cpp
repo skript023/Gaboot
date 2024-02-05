@@ -5,7 +5,7 @@
 #include "exception/exception.hpp"
 #include "file_manager/file_manager.hpp"
 
-#include "customer/services/customer_manager.hpp"
+#include "auth/cache/auth_manager.hpp"
 
 namespace gaboot
 {
@@ -143,7 +143,7 @@ namespace gaboot
 
             util::multipart_tojson(multipart, m_data);
 
-            g_customer_manager->find(stoll(id), &customer);
+            g_auth_manager->find(stoll(id), &customer);
 
             upload_file upload(&file, customer.getValueOfUsername(), "customers");
 
@@ -175,7 +175,7 @@ namespace gaboot
                 throw InternalServerErrorException("Unable to update non-existing data");
             }
 
-            if (!g_customer_manager->update(stoll(id), customer))
+            if (!g_auth_manager->update(stoll(id), customer))
                 LOG(WARNING) << "Authentication cache update failed.";
 
             if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
@@ -226,7 +226,7 @@ namespace gaboot
                 throw BadRequestException();
             }
 
-            if (!g_customer_manager->find(stoll(id), &customer))
+            if (!g_auth_manager->find(stoll(id), &customer))
             {
                 throw NotFoundException("Unable to retreive customers profile");
             }
@@ -257,7 +257,7 @@ namespace gaboot
                 throw BadRequestException("Parameters requirement doesn't match");
             }
 
-            if (g_customer_manager->find(stoll(id), &customer))
+            if (g_auth_manager->find(stoll(id), &customer))
             {
                 std::filesystem::path file(*customer.getImgpath());
 
@@ -283,7 +283,7 @@ namespace gaboot
                 throw BadRequestException("Parameters requirement doesn't match");
             }
 
-            if (g_customer_manager->find(stoll(id), &customer))
+            if (g_auth_manager->find(stoll(id), &customer))
             {
                 std::filesystem::path file(*customer.getImgthumbpath());
 

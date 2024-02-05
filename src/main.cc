@@ -9,7 +9,7 @@
 #include "hardware/memory.hpp"
 #include "hardware/processor.hpp"
 
-#include "customer/services/customer_manager.hpp"
+#include "auth/cache/auth_manager.hpp"
 #include "payment/services/payment_processing.hpp"
 
 int main() 
@@ -43,8 +43,8 @@ int main()
     auto tasks_instance = std::make_unique<tasks>();
     LOG(INFO) << "Schedule task initialized.";
 
-    auto customer_manager_instance = std::make_unique<customer_manager>();
-    LOG(INFO) << "Customer manager initialized.";
+    auto auth_instance = std::make_unique<auth_manager>();
+    LOG(INFO) << "Authentication manager initialized.";
 
     auto payment_processing_instance = std::make_unique<payment_processing>();
     LOG(INFO) << "Payment processing initialized.";
@@ -82,8 +82,8 @@ int main()
     payment_processing_instance.reset();
     LOG(INFO) << "Payment processing uninitialized.";
 
-    customer_manager_instance.reset();
-    LOG(INFO) << "Customer manager uninitialized.";
+    auth_instance.reset();
+    LOG(INFO) << "Authentication manager uninitialized.";
 
     tasks_instance.reset();
     schedule_instance.reset();

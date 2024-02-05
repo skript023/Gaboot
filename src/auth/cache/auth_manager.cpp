@@ -1,18 +1,18 @@
-#include "customer_manager.hpp"
+#include "auth_manager.hpp"
 
 namespace gaboot
 {
-	customer_manager::~customer_manager()
+	auth_manager::~auth_manager()
 	{
-		g_customer_manager = nullptr;
+		g_auth_manager = nullptr;
 	}
 
-	customer_manager::customer_manager()
+	auth_manager::auth_manager()
 	{
-		g_customer_manager = this;
+		g_auth_manager = this;
 	}
 
-	bool customer_manager::insert(int64_t id)
+	bool auth_manager::insert(int64_t id)
 	{
 		try
 		{
@@ -39,7 +39,7 @@ namespace gaboot
 		}
 	}
 	
-	bool customer_manager::insert(int64_t id, MasterCustomers* customer)
+	bool auth_manager::insert(int64_t id, MasterCustomers* customer)
 	{
 		try
 		{
@@ -65,7 +65,7 @@ namespace gaboot
 		}
 	}
 
-	bool customer_manager::find(int64_t id, MasterCustomers* customer)
+	bool auth_manager::find(int64_t id, MasterCustomers* customer)
 	{
 		if (auto it = m_cache_auth.find(id); it != m_cache_auth.end())
 		{
@@ -80,7 +80,7 @@ namespace gaboot
 
 		return false;
 	}
-	MasterCustomers* customer_manager::find(int64_t id)
+	MasterCustomers* auth_manager::find(int64_t id)
 	{
 		if (auto it = m_cache_auth.find(id); it != m_cache_auth.end())
 		{
@@ -93,7 +93,33 @@ namespace gaboot
 
 		return nullptr;
 	}
-	bool customer_manager::update(int64_t id, MasterCustomers customer)
+	std::vector<MasterCustomers> auth_manager::find(std::function<bool(MasterCustomers const&)> callback)
+	{
+		std::vector<MasterCustomers> result;
+
+		for (auto& entry : m_cache_auth)
+		{
+			if (callback(entry.second.m_customers))
+			{
+				result.push_back(entry.second.m_customers);
+			}
+		}
+
+		return result;
+	}
+	MasterCustomers* auth_manager::find_one(std::function<bool(MasterCustomers const&)> callback)
+	{
+		for (auto& entry : m_cache_auth)
+		{
+			if (callback(entry.second.m_customers))
+			{
+				return &(entry.second.m_customers);
+			}
+		}
+
+		return nullptr;
+	}
+	bool auth_manager::update(int64_t id, MasterCustomers customer)
 	{
 		if (auto it = m_cache_auth.find(id); it != m_cache_auth.end())
 		{
@@ -104,7 +130,7 @@ namespace gaboot
 
 		return false;
 	}
-	bool customer_manager::remove(int64_t id)
+	bool auth_manager::remove(int64_t id)
 	{
 		if (auto it = m_cache_auth.find(id); it != m_cache_auth.end())
 		{

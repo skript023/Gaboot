@@ -1,19 +1,19 @@
 #include "auth_service.hpp"
 #include "util/gaboot.hpp"
 #include "auth/generate_token.hpp"
-#include "customer/services/customer_manager.hpp"
+#include "auth/cache/auth_manager.hpp"
 
 namespace gaboot
 {
     HttpResponsePtr auth_service::login(HttpRequestPtr const& req)
 	{
-        auto& json = req->getJsonObject();
-
-        std::string username = (*json)["username"].asString();
-        std::string password = (*json)["password"].asString();
-
         try
         {
+            auto& json = req->getJsonObject();
+
+            std::string username = (*json)["username"].asString();
+            std::string password = (*json)["password"].asString();
+
             MasterCustomers user = db().findOne(Criteria(MasterCustomers::Cols::_username, CompareOperator::EQ, username));
 
             if (auto valid = bcrypt::validatePassword(password, *user.getPassword()); valid && !user.getPassword()->empty())
@@ -27,7 +27,7 @@ namespace gaboot
                 m_response.m_success = true;
                 m_response.m_data = jwt.result();
 
-                g_customer_manager->insert(*user.getId(), &user);
+                g_auth_manager->insert(*user.getId(), &user);
 
                 auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
 
@@ -61,7 +61,7 @@ namespace gaboot
 
         if (auto body = req->getBody(); util::is_numeric(body))
         {
-            if (g_customer_manager->remove(std::stoi(body.data())))
+            if (g_auth_manager->remove(std::stoi(body.data())))
             {
                 token = jwt_generator::parse_token(token);
                 jwt_generator::remove(token);

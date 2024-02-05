@@ -1,7 +1,6 @@
 #include "auth.h"
 #include "util/gaboot.hpp"
 #include "auth/generate_token.hpp"
-#include "customer/services/customer_manager.hpp"
 // Add definition of your processing function here
 namespace gaboot
 {
