@@ -12,11 +12,13 @@ services:
         ports:
             - 3306:3306
         expose:
-            - 3306
+            - 3306:3306
         volumes:
             - ./out/dump:/var/www/public
     gaboot-api:
-        build: .
+        build:
+            context: .
+            dockerfile: Dockerfile
         container_name: gaboot-shop-server
         environment:
             MYSQL_HOST: "mysql"
@@ -25,7 +27,7 @@ services:
         depends_on:
             - mysql
         volumes:
-            - ./out/Gaboot:/var/www/public
+            - /mnt/k/Coding/2024/Gaboot Shop/gaboot-shop-backends/out/build/Linux-x64:/var/www/public
     nginx:
         image: nginx:latest
         container_name: nginx
@@ -34,6 +36,6 @@ services:
         restart: unless-stopped
         volumes:
             - "/mnt/k/Coding/2024/Gaboot Shop/gaboot-shop-backends/nginx/default.conf:/mnt/k/Coding/2024/Gaboot Shop/gaboot-shop-backends/etc/nginx/conf.d/default.conf"
-            - ./app:/var/www/public
+            - /mnt/k/Coding/2024/Gaboot Shop/gaboot-shop-backends/out/build/Linux-x64:/var/www/public
         depends_on:
             - gaboot-api
