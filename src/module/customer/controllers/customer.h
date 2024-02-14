@@ -24,8 +24,9 @@ namespace gaboot
 		ADD_METHOD_TO(customer::create, "/customers", Post);
 		ADD_METHOD_TO(customer::findAll, "/customers", Get, ADMIN_MIDDLEWARE);
 		ADD_METHOD_TO(customer::findOne, "/customers/{id}", Get, CUSTOMER_MIDDLEWARE);
-		ADD_METHOD_TO(customer::update, "/customers/{id}", Put, CUSTOMER_MIDDLEWARE);
+		ADD_METHOD_TO(customer::update, "/customers/{id}", Patch, CUSTOMER_MIDDLEWARE);
 		ADD_METHOD_TO(customer::remove, "/customers/{id}", Delete, ADMIN_MIDDLEWARE);
+		ADD_METHOD_TO(customer::updateImage, "/customers/image/{id}", Put, CUSTOMER_MIDDLEWARE);
 		ADD_METHOD_TO(customer::getImage, "/customers/image/{id}", Get, CUSTOMER_MIDDLEWARE);
 		ADD_METHOD_TO(customer::getThumbnail, "/customers/thumbnail/{id}", Get, CUSTOMER_MIDDLEWARE);
 		ADD_METHOD_TO(customer::getProfile, "/customers/profile/{id}", Get, CUSTOMER_MIDDLEWARE);
@@ -38,6 +39,7 @@ namespace gaboot
 		void create(HttpRequestPtr const& req, response_t&& callback);
 		void update(HttpRequestPtr const& req, response_t&& callback, std::string&& id);
 		void remove(HttpRequestPtr const& req, response_t&& callback, std::string&& id);
+		void updateImage(HttpRequestPtr const& req, response_t&& callback, std::string&& id);
 		void getImage(HttpRequestPtr const& req, response_t&& callback, std::string&& id);
 		void getThumbnail(HttpRequestPtr const& req, response_t&& callback, std::string&& id);
 		void getProfile(HttpRequestPtr const& req, response_t&& callback, std::string&& id);

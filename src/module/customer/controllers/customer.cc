@@ -32,6 +32,11 @@ namespace gaboot
         callback(m_customer_service.remove(req, std::move(id)));
     }
 
+    void customer::updateImage(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
+    {
+        callback(m_customer_service.updateImage(req, std::move(id)));
+    }
+
     void customer::getImage(HttpRequestPtr const& req, response_t&& callback, std::string&& id)
     {
         callback(m_customer_service.getImage(req, std::move(id)));

@@ -124,66 +124,36 @@ namespace gaboot
     {
         TRY_CLAUSE
         {
-            MultiPartParser multipart;
-            MasterCustomers customer;
+            const auto& json = req->getJsonObject();
+
+            if (!json) throw BadRequestException("Requested body can't be empty");
 
             if (id.empty() || !util::is_numeric(id))
             {
                 throw BadRequestException("Parameters requirement doesn't match");
             }
 
-            if (multipart.parse(req) != 0)
-            {
-                throw BadRequestException("Requirement doesn't match");
-            }
-
-            auto& file = multipart.getFiles()[0];
-
-            m_data["updatedAt"] = trantor::Date::now().toDbStringLocal();
-
-            util::multipart_tojson(multipart, m_data);
-
-            g_auth_manager->find(stoll(id), &customer);
-
-            upload_file upload(&file, customer.getValueOfUsername(), "customers");
-
-            if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
-            {
-                m_data["imagePath"] = upload.get_image_path();
-                m_data["thumbnailPath"] = upload.get_thumbnail_path();
-            }
-
-            customer.updateByJson(m_data);
-
             validator schema({
-                {"firstname", "type:string|required|minLength:3|alphabetOnly"},
-                {"lastname", "type:string|required|minLength:3|alphabetOnly"},
-                {"username", "type:string|required|minLength:5|alphanum"},
-                {"email", "type:string|required|email"},
-                {"password", "type:string|required|minLength:8"}
-            });
+                {"firstname", "minLength:3|alphabetOnly"},
+                {"lastname", "minLength:3|alphabetOnly"},
+                {"username", "minLength:5|alphanum"},
+                {"email", "email"},
+                {"password", "minLength:8"}
+                });
 
-            if (!schema.validate(customer.toJson(), m_error))
+            if (!schema.validate(*json, m_error))
             {
                 throw BadRequestException(m_error);
             }
 
-            customer.setPassword(bcrypt::generateHash(customer.getValueOfPassword()));
+            MasterCustomers customer = db().findByPrimaryKey(stoull(id));
+
+            customer.updateByJson(*json);
+            customer.setId(stoll(id));
+            customer.setUpdatedat(trantor::Date::now());
 
             if (!db().update(customer))
-            {
-                throw InternalServerErrorException("Unable to update non-existing data");
-            }
-
-            if (!g_auth_manager->update(stoll(id), customer))
-                LOG(WARNING) << "Authentication cache update failed.";
-
-            if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
-            {
-                upload.save();
-
-                LOG(INFO) << "Image saved at " << upload.get_image_path() << " thumbnail saved at " << upload.get_thumbnail_path();
-            }
+                throw BadRequestException("Unable to update non-existing record");
 
             m_response.m_message = "Success update customer data.";
             m_response.m_success = true;
@@ -212,6 +182,39 @@ namespace gaboot
 
             return HttpResponse::newHttpJsonResponse(m_response.to_json());
         } EXCEPT_CLAUSE
+    }
+    HttpResponsePtr customer_service::updateImage(HttpRequestPtr const& req, std::string&& id)
+    {
+        MultiPartParser fileUpload;
+        MasterCustomers customer = db().findByPrimaryKey(stoull(id));
+
+        if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0)
+        {
+            throw BadRequestException("Data is empty or file requirement doesn't match");
+        }
+
+        auto& file = fileUpload.getFiles()[0];
+
+        upload_file upload(&file, customer.getValueOfUsername(), "customers");
+
+        if (!util::allowed_image(file.getFileExtension().data()))
+            throw BadRequestException("File type doesn't allowed");
+
+        m_data["imgPath"] = upload.get_image_path();
+        m_data["imgThumbPath"] = upload.get_thumbnail_path();
+        m_data["updatedAt"] = trantor::Date::now().toDbStringLocal();
+
+        customer.updateByJson(m_data);
+
+        if (!db().update(customer))
+        {
+            throw InternalServerErrorException("Unable to update non-existing data");
+        }
+
+        m_response.m_message = "Success update customer data.";
+        m_response.m_success = true;
+
+        return HttpResponse::newHttpJsonResponse(m_response.to_json());
     }
     HttpResponsePtr customer_service::getProfile(HttpRequestPtr const& req, std::string&& id)
     {
