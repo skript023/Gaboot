@@ -6,10 +6,10 @@ namespace gaboot
 {
     void auth::login(HttpRequestPtr const& req, response_t&& callback)
     {
-        callback(m_auth_service.login(req));
+        callback(m_auth_service.basic_login(req));
     }
     void auth::logout(HttpRequestPtr const& req, response_t&& callback)
     {
-        callback(m_auth_service.logout(req));
+        callback(m_auth_service.basic_login(req));
     }
 }

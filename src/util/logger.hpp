@@ -201,11 +201,12 @@ namespace gaboot
 
 			static std::string format_console(const g3::LogMessage& msg)
 			{
+				std::string file_name_with_line = "[" + msg.file() + ":" + msg.line() + "]";
 				std::stringstream out;
 #ifdef _WIN32
-				out << "[WINDOWS] " << "[" << msg.timestamp("%H:%M:%S") << "] [" << std::left << std::setw(level_padding_length) << msg.level().append("]") << std::setw(max_padding_length);
+				out << "[WINDOWS] " << "[" << msg.timestamp("%H:%M:%S") << "] [" << std::left << std::setw(level_padding_length) << msg.level().append("]") << std::setw(max_padding_length) << file_name_with_line;
 #elif __linux__
-				out << "[LINUX] " << "[" << msg.timestamp("%H:%M:%S") << "] [" << std::left << std::setw(level_padding_length) << msg.level().append("]") << std::setw(max_padding_length);
+				out << "[LINUX] " << "[" << msg.timestamp("%H:%M:%S") << "] [" << std::left << std::setw(level_padding_length) << msg.level().append("]") << std::setw(max_padding_length) << file_name_with_line;
 #endif
 				return out.str();
 			}

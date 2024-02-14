@@ -21,6 +21,8 @@ namespace gaboot
 		response_data m_response;
 	public:
 		HttpResponsePtr login(HttpRequestPtr const& req);
+		HttpResponsePtr basic_login(HttpRequestPtr const& req);
+		HttpResponsePtr basic_logout(HttpRequestPtr const& req);
 		HttpResponsePtr logout(HttpRequestPtr const& req);
 	};
 }
