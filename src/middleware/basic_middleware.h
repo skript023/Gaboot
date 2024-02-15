@@ -16,14 +16,14 @@ using namespace drogon_model::gaboot;
 
 namespace gaboot
 {
-    class admin_middleware : public HttpFilter<admin_middleware>
+    class basic_middleware : public HttpFilter<basic_middleware>
     {
         Mapper<MasterCustomers> customer()
         {
             return Mapper<MasterCustomers>(DATABASE_CLIENT);
         }
     public:
-        admin_middleware() = default;
+        basic_middleware() = default;
         void doFilter(const HttpRequestPtr& req,
             FilterCallback&& fcb,
             FilterChainCallback&& fccb) override;

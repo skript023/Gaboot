@@ -11,7 +11,7 @@ using namespace drogon;
 
 namespace gaboot
 {
-    void admin_middleware::doFilter(const HttpRequestPtr& req, FilterCallback&& fcb, FilterChainCallback&& fccb)
+    void basic_middleware::doFilter(const HttpRequestPtr& req, FilterCallback&& fcb, FilterChainCallback&& fccb)
     {
         try
         {
@@ -32,7 +32,7 @@ namespace gaboot
         }
     }
 
-    bool admin_middleware::parse_token_from_header(std::string const& header)
+    bool basic_middleware::parse_token_from_header(std::string const& header)
     {
         if (auto it = header.find("Basic"); it != std::string::npos)
         {
