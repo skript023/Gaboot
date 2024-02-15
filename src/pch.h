@@ -61,12 +61,12 @@
 #define SECRET util::get_env("SECRET")
 #define SERVER_KEY util::get_env("SERVER_KEY")
 
-#ifdef ADMIN_MIDDLEWARE_DISABLE
-#define ADMIN_MIDDLEWARE
-#define ADMIN_MIDDLEWARE_STATUS "Deactivated"
+#ifdef BASIC_MIDDLEWARE_DISABLE
+#define BASIC_MIDDLEWARE
+#define BASIC_MIDDLEWARE_STATUS "Deactivated"
 #else
-#define ADMIN_MIDDLEWARE "gaboot::admin_middleware"
-#define ADMIN_MIDDLEWARE_STATUS "Activated"
+#define BASIC_MIDDLEWARE "gaboot::basic_middleware"
+#define BASIC_MIDDLEWARE_STATUS "Activated"
 #endif
 
 #ifdef CUSTOMER_MIDDLEWARE_DISABLE

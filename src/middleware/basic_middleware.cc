@@ -35,7 +35,7 @@ namespace gaboot
     bool basic_middleware::parse_token_from_header(std::string const& header)
     {
         if (auto it = header.find("Basic"); it != std::string::npos)
-        {
+        {   
             m_token = header.substr(sizeof("Basic") - 1);
 
             return true;

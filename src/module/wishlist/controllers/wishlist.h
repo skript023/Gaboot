@@ -15,11 +15,11 @@ namespace gaboot
         // METHOD_ADD(wishlist::get, "/{2}/{1}", Get); // path is /wishlist/{arg2}/{arg1}
         // METHOD_ADD(wishlist::your_method_name, "/{1}/{2}/list", Get); // path is /wishlist/{arg1}/{arg2}/list
         // ADD_METHOD_TO(wishlist::your_method_name, "/absolute/path/{1}/{2}/list", Get); // path is /absolute/path/{arg1}/{arg2}/list
-        ADD_METHOD_TO(wishlist::create, "/wishlist", Post);
-        ADD_METHOD_TO(wishlist::findAll, "/wishlist", Get);
-        ADD_METHOD_TO(wishlist::findOne, "/wishlist/{id}", Get);
-        ADD_METHOD_TO(wishlist::update, "/wishlist/{id}", Patch);
-        ADD_METHOD_TO(wishlist::remove, "/wishlist/{id}", Delete);
+        ADD_METHOD_TO(wishlist::create, "/wishlist", Post, BASIC_MIDDLEWARE);
+        ADD_METHOD_TO(wishlist::findAll, "/wishlist", Get, BASIC_MIDDLEWARE);
+        ADD_METHOD_TO(wishlist::findOne, "/wishlist/{id}", Get, BASIC_MIDDLEWARE);
+        ADD_METHOD_TO(wishlist::update, "/wishlist/{id}", Patch, BASIC_MIDDLEWARE);
+        ADD_METHOD_TO(wishlist::remove, "/wishlist/{id}", Delete, BASIC_MIDDLEWARE);
         METHOD_LIST_END
         // your declaration of processing function maybe like this:
         // void get(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, int p1, std::string p2);

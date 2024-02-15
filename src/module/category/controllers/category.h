@@ -15,11 +15,11 @@ namespace gaboot
         // METHOD_ADD(category::get, "/{2}/{1}", Get); // path is /category/{arg2}/{arg1}
         // METHOD_ADD(category::your_method_name, "/{1}/{2}/list", Get); // path is /category/{arg1}/{arg2}/list
         // ADD_METHOD_TO(category::your_method_name, "/absolute/path/{1}/{2}/list", Get); // path is /absolute/path/{arg1}/{arg2}/list
-        ADD_METHOD_TO(category::create, "/category", Post);
+        //ADD_METHOD_TO(category::create, "/category", Post);
         ADD_METHOD_TO(category::findAll, "/category", Get);
         ADD_METHOD_TO(category::findOne, "/category/{id}", Get);
-        ADD_METHOD_TO(category::update, "/category/{id}", Put);
-        ADD_METHOD_TO(category::remove, "/category/{id}", Delete);
+        //ADD_METHOD_TO(category::update, "/category/{id}", Put);
+        //ADD_METHOD_TO(category::remove, "/category/{id}", Delete);
         ADD_METHOD_TO(category::getImage, "/category/image/{id}", Get);
         ADD_METHOD_TO(category::getThumbnail, "/category/thumbnail/{id}", Get);
         METHOD_LIST_END

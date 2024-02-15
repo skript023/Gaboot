@@ -1,6 +1,4 @@
 #pragma once
-#define ADMIN_MIDDLEWARE_ACTIVE
-#define CUSTOMER_MIDDLEWARE_ACTIVE
 
 #include "pch.h"
 
@@ -22,14 +20,14 @@ namespace gaboot
 		// METHOD_ADD(user::your_method_name, "/{1}/{2}/list", Get); // path is /user/{arg1}/{arg2}/list
 		// ADD_METHOD_TO(user::your_method_name, "/absolute/path/{1}/{2}/list", Get); // path is /absolute/path/{arg1}/{arg2}/list
 		ADD_METHOD_TO(customer::create, "/customers", Post);
-		ADD_METHOD_TO(customer::findAll, "/customers", Get, ADMIN_MIDDLEWARE);
-		ADD_METHOD_TO(customer::findOne, "/customers/{id}", Get, CUSTOMER_MIDDLEWARE);
-		ADD_METHOD_TO(customer::update, "/customers/{id}", Patch, CUSTOMER_MIDDLEWARE);
-		ADD_METHOD_TO(customer::remove, "/customers/{id}", Delete, ADMIN_MIDDLEWARE);
-		ADD_METHOD_TO(customer::updateImage, "/customers/image/{id}", Put, CUSTOMER_MIDDLEWARE);
-		ADD_METHOD_TO(customer::getImage, "/customers/image/{id}", Get, CUSTOMER_MIDDLEWARE);
-		ADD_METHOD_TO(customer::getThumbnail, "/customers/thumbnail/{id}", Get, CUSTOMER_MIDDLEWARE);
-		ADD_METHOD_TO(customer::getProfile, "/customers/profile/{id}", Get, CUSTOMER_MIDDLEWARE);
+		//ADD_METHOD_TO(customer::findAll, "/customers", Get, ADMIN_MIDDLEWARE);
+		ADD_METHOD_TO(customer::findOne, "/customers/{id}", Get, BASIC_MIDDLEWARE);
+		ADD_METHOD_TO(customer::update, "/customers/{id}", Patch, BASIC_MIDDLEWARE);
+		//ADD_METHOD_TO(customer::remove, "/customers/{id}", Delete, ADMIN_MIDDLEWARE);
+		ADD_METHOD_TO(customer::updateImage, "/customers/image/{id}", Put, BASIC_MIDDLEWARE);
+		ADD_METHOD_TO(customer::getImage, "/customers/image/{id}", Get, BASIC_MIDDLEWARE);
+		ADD_METHOD_TO(customer::getThumbnail, "/customers/thumbnail/{id}", Get, BASIC_MIDDLEWARE);
+		ADD_METHOD_TO(customer::getProfile, "/customers/profile/{id}", Get, BASIC_MIDDLEWARE);
 		METHOD_LIST_END
 		// your declaration of processing function maybe like this:
 		// void get(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, int p1, std::string p2);
