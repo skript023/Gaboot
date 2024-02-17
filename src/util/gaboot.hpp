@@ -1,5 +1,6 @@
 #pragma once
 #include <logger.hpp>
+#include <chrono>
 
 namespace gaboot::util
 {
@@ -96,4 +97,28 @@ namespace gaboot::util
 
         return false;
     }
+
+#ifdef _WIN32
+    inline std::string current_datetime()
+    {
+        auto const time = std::chrono::current_zone()->to_local(std::chrono::system_clock::now());
+        return std::format("{:%Y-%m-%d %X}", time);
+    }
+
+    inline std::string current_datetime_plus_24_hours() {
+        // Get the current time
+        auto now = std::chrono::system_clock::now();
+
+        // Add 24 hours to the current time
+        auto in_24_hours = now + std::chrono::hours(24);
+
+        // Convert to local time
+        auto time = std::chrono::current_zone()->to_local(in_24_hours);
+
+        // Format the time
+        std::ostringstream oss;
+        oss << std::format("{:%Y-%m-%d %X}", time);
+        return oss.str();
+    }
+#endif
 }

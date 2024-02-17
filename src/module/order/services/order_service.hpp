@@ -5,6 +5,7 @@
 #include "validator/validator.hpp"
 #include "interfaces/response.hpp"
 #include "order/models/Orders.h"
+#include <cache_manager/cache_handler.hpp>
 
 using namespace drogon;
 using namespace orm;
@@ -14,10 +15,10 @@ namespace gaboot
 {
 	class order_service
 	{
-		Mapper<Orders> db() { return Mapper<Orders>(DATABASE_CLIENT); }
+		Mapper<Orders> orders() { return Mapper<Orders>(DATABASE_CLIENT); }
 	public:
-		explicit order_service() = default;
-		~order_service() noexcept = default;
+		explicit order_service();
+		~order_service() noexcept;
 
 		order_service(order_service const& that) = delete;
 		order_service& operator=(order_service const& that) = delete;
@@ -31,6 +32,20 @@ namespace gaboot
 		HttpResponsePtr update(HttpRequestPtr const&, std::string&& id);
 		HttpResponsePtr remove(HttpRequestPtr const&, std::string&& id);
 	private:
+		void load_cache()
+		{
+			if (m_cache_order.empty() || m_cache_order.expired())
+			{
+				auto categories = orders().orderBy(Orders::Cols::_name).findAll();
+				m_cache_order.cache_duration(5min);
+
+				std::ranges::for_each(categories.begin(), categories.end(), [this](Orders order) {
+					m_cache_order.insert(*order.getId(), &order);
+				});
+			}
+		}
+	private:
+		cache_handler<Orders> m_cache_order;
 		response_data m_response;
 		std::string m_error;
 		Json::Value m_data;

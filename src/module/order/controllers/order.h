@@ -2,6 +2,7 @@
 #include "pch.h"
 
 #include <drogon/HttpController.h>
+#include "order/services/order_service.hpp"
 
 using namespace drogon;
 
@@ -9,6 +10,7 @@ namespace gaboot
 {
 	class order : public drogon::HttpController<order>
 	{
+		order_service m_order_service;
 	public:
 		METHOD_LIST_BEGIN
 		// use METHOD_ADD to add your custom processing function here;
@@ -21,5 +23,8 @@ namespace gaboot
 		// void get(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, int p1, std::string p2);
 		// void your_method_name(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, double p1, int p2) const;
 		void create(HttpRequestPtr const& req, response_t&& callback);
+		void findAll(HttpRequestPtr const& req, response_t&& callback);
+		void findOne(HttpRequestPtr const& req, response_t&& callback, std::string&& id);
+		void update(HttpRequestPtr const& req, response_t&& callback, std::string&& id);
 	};
 }
