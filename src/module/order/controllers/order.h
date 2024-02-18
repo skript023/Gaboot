@@ -18,6 +18,9 @@ namespace gaboot
 		// METHOD_ADD(order::your_method_name, "/{1}/{2}/list", Get); // path is /order/{arg1}/{arg2}/list
 		// ADD_METHOD_TO(order::your_method_name, "/absolute/path/{1}/{2}/list", Get); // path is /absolute/path/{arg1}/{arg2}/list
 		ADD_METHOD_TO(order::create, "/order", Post, CUSTOMER_MIDDLEWARE);
+		ADD_METHOD_TO(order::findAll, "/order", Get, CUSTOMER_MIDDLEWARE);
+		ADD_METHOD_TO(order::findOne, "/order/{id}", Get, CUSTOMER_MIDDLEWARE);
+		ADD_METHOD_TO(order::update, "/order/{id}", Patch, CUSTOMER_MIDDLEWARE);
 		METHOD_LIST_END
 		// your declaration of processing function maybe like this:
 		// void get(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, int p1, std::string p2);
