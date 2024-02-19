@@ -133,13 +133,13 @@ namespace gaboot::util
                     Json::Value array(Json::arrayValue);
                     for (const auto& element : value)
                     {
-                        array.append(nlohmannJsonToCppJson(element));
+                        array.append(to_jsoncpp(element));
                     }
                     cppJson[key] = array;
                 }
                 else if (value.is_object())
                 {
-                    cppJson[key] = nlohmannJsonToCppJson(value);
+                    cppJson[key] = to_jsoncpp(value);
                 }
             }
         }
@@ -147,7 +147,7 @@ namespace gaboot::util
         {
             for (size_t i = 0; i < nlohmannJson.size(); ++i) 
             {
-                cppJson.append(nlohmannJsonToCppJson(nlohmannJson[i]));
+                cppJson.append(to_jsoncpp(nlohmannJson[i]));
             }
         }
 
@@ -188,13 +188,13 @@ namespace gaboot::util
                     nlohmann::json array;
                     for (int i = 0; i < value.size(); ++i) 
                     {
-                        array.push_back(cppJsonToNlohmannJson(value[i]));
+                        array.push_back(to_nlohmann_json(value[i]));
                     }
                     nlohmannJson[key] = array;
                 }
                 else if (value.isObject())
                 {
-                    nlohmannJson[key] = cppJsonToNlohmannJson(value);
+                    nlohmannJson[key] = to_nlohmann_json(value);
                 }
             }
         }
@@ -202,7 +202,7 @@ namespace gaboot::util
         {
             for (int i = 0; i < cppJson.size(); ++i) 
             {
-                nlohmannJson.push_back(cppJsonToNlohmannJson(cppJson[i]));
+                nlohmannJson.push_back(to_nlohmann_json(cppJson[i]));
             }
         }
 
