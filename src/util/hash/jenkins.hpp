@@ -81,5 +81,5 @@ namespace jenkins
 	}
 }
 
-#define JENKINS_HASH_IMPL(str) (::rage::constexpr_joaat<sizeof(str) - 1>((str), std::make_index_sequence<sizeof(str) - 1>())())
-#define JENKINS_HASH(str) (std::integral_constant<rage::Hash, RAGE_JOAAT_IMPL(str)>::value)
+#define JENKINS_HASH_IMPL(str) (::jenkins::constexpr_hash<sizeof(str) - 1>((str), std::make_index_sequence<sizeof(str) - 1>())())
+#define JENKINS_HASH(str) (std::integral_constant<jenkins::Hash, JENKINS_HASH_IMPL(str)>::value)

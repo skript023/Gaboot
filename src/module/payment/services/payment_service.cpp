@@ -8,6 +8,8 @@
 #include "payments/customer_detail.hpp"
 #include "payments/payment_gataway.hpp"
 
+#include "util/hash/jenkins.hpp"
+
 namespace gaboot
 {
 	HttpResponsePtr gaboot::payment_service::create(HttpRequestPtr const& req)
@@ -57,17 +59,39 @@ namespace gaboot
 			auto& json = *req->getJsonObject();
 
 			std::string transactionStatus = json["transaction_status"].asString();
+			std::string transactionId = json["transaction_id"].asString();
 
-			auto args = Criteria(Payments::Cols::_transactionId, CompareOperator::EQ, json["transaction_id"].asString());
+			switch (jenkins::hash(transactionStatus))
+			{
+			case JENKINS_HASH("settlement"):
+			{
+				auto args = Criteria(Payments::Cols::_transactionId, CompareOperator::EQ, transactionId);
 
-			if (auto record = db().updateBy({ Payments::Cols::_transactionStatus }, args, transactionStatus); !record)
-				throw CustomException<k500InternalServerError>("Failed update transaction");
+				if (auto record = db().updateBy({ Payments::Cols::_transactionStatus }, args, transactionStatus); !record)
+					throw CustomException<k500InternalServerError>("Failed update transaction");
 
-			m_response.m_message = "Payment status updated successfully";
-			m_response.m_success = true;
-			m_response.m_data = m_data;
+				m_response.m_message = "Payment status updated as paid";
+				m_response.m_success = true;
+				m_response.m_data = m_data;
 
-			return HttpResponse::newHttpJsonResponse(m_response.to_json());
+				return HttpResponse::newHttpJsonResponse(m_response.to_json());
+			}
+			case JENKINS_HASH("expired"):
+			{
+				auto args = Criteria(Payments::Cols::_transactionId, CompareOperator::EQ, transactionId);
+
+				if (auto record = db().updateBy({ Payments::Cols::_transactionStatus }, args, transactionStatus); !record)
+					throw CustomException<k500InternalServerError>("Failed update transaction");
+
+				m_response.m_message = "Payment status updated as expired";
+				m_response.m_success = true;
+				m_response.m_data = m_data;
+
+				return HttpResponse::newHttpJsonResponse(m_response.to_json());
+			}
+			default:
+				break;
+			}
 		} EXCEPT_CLAUSE
 	}
 }
