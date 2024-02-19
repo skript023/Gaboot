@@ -62,12 +62,11 @@ namespace gaboot
 
 			payment.from_json(util::to_nlohmann_json(json));
 
+			auto args = Criteria(Payments::Cols::_transactionId, CompareOperator::EQ, payment.m_transaction_id);
+
 			switch (jenkins::hash(payment.m_transaction_status))
 			{
 				case JENKINS_HASH("settlement"):
-				{
-					auto args = Criteria(Payments::Cols::_transactionId, CompareOperator::EQ, payment.m_transaction_id);
-
 					if (auto record = db().updateBy({ Payments::Cols::_transactionStatus }, args, payment.m_transaction_status); !record)
 						throw CustomException<k500InternalServerError>("Failed update transaction");
 
@@ -75,11 +74,7 @@ namespace gaboot
 					m_response.m_success = true;
 
 					return HttpResponse::newHttpJsonResponse(m_response.to_json());
-				}
 				case JENKINS_HASH("expired"):
-				{
-					auto args = Criteria(Payments::Cols::_transactionId, CompareOperator::EQ, payment.m_transaction_id);
-
 					if (auto record = db().updateBy({ Payments::Cols::_transactionStatus }, args, payment.m_transaction_status); !record)
 						throw CustomException<k500InternalServerError>("Failed update transaction");
 
@@ -87,7 +82,6 @@ namespace gaboot
 					m_response.m_success = true;
 
 					return HttpResponse::newHttpJsonResponse(m_response.to_json());
-				}
 			}
 
 			m_response.m_message = "Payment callback called successfully, but nothing to be updated";
