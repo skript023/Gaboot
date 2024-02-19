@@ -50,7 +50,7 @@ namespace gaboot
 			TRANSACTION_ERROR(e.what());
 		}
 	}
-	HttpResponsePtr payment_service::notification(HttpRequestPtr const& req)
+	HttpResponsePtr payment_service::callback(HttpRequestPtr const& req)
 	{
 		TRY_CLAUSE
 		{

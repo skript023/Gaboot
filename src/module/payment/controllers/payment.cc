@@ -7,8 +7,8 @@ namespace gaboot
 	{
 		callback(m_payment_service.create(req));
 	}
-	void payment::notification(HttpRequestPtr const& req, response_t&& callback)
+	void payment::callback(HttpRequestPtr const& req, response_t&& callback)
 	{
-		callback(m_payment_service.notification(req));
+		callback(m_payment_service.callback(req));
 	}
 }
