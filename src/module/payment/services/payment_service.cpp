@@ -58,16 +58,17 @@ namespace gaboot
 		{
 			auto& json = *req->getJsonObject();
 
-			std::string transactionStatus = json["transaction_status"].asString();
-			std::string transactionId = json["transaction_id"].asString();
+			payment_gataway payment;
 
-			switch (jenkins::hash(transactionStatus))
+			payment.from_json(util::to_nlohmann_json(json));
+
+			switch (jenkins::hash(payment.m_transaction_status))
 			{
 				case JENKINS_HASH("settlement"):
 				{
-					auto args = Criteria(Payments::Cols::_transactionId, CompareOperator::EQ, transactionId);
+					auto args = Criteria(Payments::Cols::_transactionId, CompareOperator::EQ, payment.m_transaction_id);
 
-					if (auto record = db().updateBy({ Payments::Cols::_transactionStatus }, args, transactionStatus); !record)
+					if (auto record = db().updateBy({ Payments::Cols::_transactionStatus }, args, payment.m_transaction_status); !record)
 						throw CustomException<k500InternalServerError>("Failed update transaction");
 
 					m_response.m_message = "Payment status updated as paid";
@@ -77,9 +78,9 @@ namespace gaboot
 				}
 				case JENKINS_HASH("expired"):
 				{
-					auto args = Criteria(Payments::Cols::_transactionId, CompareOperator::EQ, transactionId);
+					auto args = Criteria(Payments::Cols::_transactionId, CompareOperator::EQ, payment.m_transaction_id);
 
-					if (auto record = db().updateBy({ Payments::Cols::_transactionStatus }, args, transactionStatus); !record)
+					if (auto record = db().updateBy({ Payments::Cols::_transactionStatus }, args, payment.m_transaction_status); !record)
 						throw CustomException<k500InternalServerError>("Failed update transaction");
 
 					m_response.m_message = "Payment status updated as expired";

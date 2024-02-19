@@ -98,6 +98,117 @@ namespace gaboot::util
         return false;
     }
 
+    inline Json::Value to_jsoncpp(const nlohmann::json& nlohmannJson)
+    {
+        Json::Value cppJson;
+
+        if (nlohmannJson.is_object()) {
+            for (auto it = nlohmannJson.begin(); it != nlohmannJson.end(); ++it) 
+            {
+                const auto& key = it.key();
+                const auto& value = it.value();
+
+                if (value.is_null())
+                {
+                    cppJson[key] = Json::nullValue;
+                }
+                else if (value.is_boolean())
+                {
+                    cppJson[key] = value.get<bool>();
+                }
+                else if (value.is_number_integer()) 
+                {
+                    cppJson[key] = value.get<int>();
+                }
+                else if (value.is_number_float())
+                {
+                    cppJson[key] = value.get<double>();
+                }
+                else if (value.is_string()) 
+                {
+                    cppJson[key] = value.get<std::string>();
+                }
+                else if (value.is_array()) 
+                {
+                    Json::Value array(Json::arrayValue);
+                    for (const auto& element : value)
+                    {
+                        array.append(nlohmannJsonToCppJson(element));
+                    }
+                    cppJson[key] = array;
+                }
+                else if (value.is_object())
+                {
+                    cppJson[key] = nlohmannJsonToCppJson(value);
+                }
+            }
+        }
+        else if (nlohmannJson.is_array())
+        {
+            for (size_t i = 0; i < nlohmannJson.size(); ++i) 
+            {
+                cppJson.append(nlohmannJsonToCppJson(nlohmannJson[i]));
+            }
+        }
+
+        return cppJson;
+    }
+
+    inline nlohmann::json to_nlohmann_json(const Json::Value& cppJson) 
+    {
+        nlohmann::json nlohmannJson;
+
+        if (cppJson.isObject()) {
+            for (const auto& key : cppJson.getMemberNames()) 
+            {
+                const auto& value = cppJson[key];
+
+                if (value.isNull())
+                {
+                    nlohmannJson[key] = nullptr;
+                }
+                else if (value.isBool()) 
+                {
+                    nlohmannJson[key] = value.asBool();
+                }
+                else if (value.isInt())
+                {
+                    nlohmannJson[key] = value.asInt();
+                }
+                else if (value.isDouble()) 
+                {
+                    nlohmannJson[key] = value.asDouble();
+                }
+                else if (value.isString()) 
+                {
+                    nlohmannJson[key] = value.asString();
+                }
+                else if (value.isArray()) 
+                {
+                    nlohmann::json array;
+                    for (int i = 0; i < value.size(); ++i) 
+                    {
+                        array.push_back(cppJsonToNlohmannJson(value[i]));
+                    }
+                    nlohmannJson[key] = array;
+                }
+                else if (value.isObject())
+                {
+                    nlohmannJson[key] = cppJsonToNlohmannJson(value);
+                }
+            }
+        }
+        else if (cppJson.isArray()) 
+        {
+            for (int i = 0; i < cppJson.size(); ++i) 
+            {
+                nlohmannJson.push_back(cppJsonToNlohmannJson(cppJson[i]));
+            }
+        }
+
+        return nlohmannJson;
+    }
+
 #ifdef _WIN32
     inline std::string current_datetime()
     {
