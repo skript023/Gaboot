@@ -8,7 +8,7 @@ namespace gaboot
 	class benchmark
 	{
 	public:
-		explicit benchmark(std::string name = "") :
+		explicit benchmark(std::string name = "execution") :
 			m_start(high_resolution_clock::now()), m_name(name) {}
 
 		void get_runtime()

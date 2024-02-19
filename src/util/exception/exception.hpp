@@ -1,5 +1,6 @@
 #pragma once
 #include <pch.h>
+#include <benchmark.hpp>
 
 namespace gaboot
 {
@@ -103,6 +104,14 @@ namespace gaboot
 		virtual ~InternalServerErrorException() noexcept = default;
 	};
 
-#define TRY_CLAUSE try {
-#define EXCEPT_CLAUSE } catch (GabootException const& ex) { return ex.response(); } catch(DrogonDbException const& ex) { return CustomException<k500InternalServerError>(fmt::format("error caught on {}", ex.base().what())).response(); } catch(std::exception const& ex) { return CustomException<k500InternalServerError>(fmt::format("error caught on {}", ex.what())).response(); }
+#define TRY_CLAUSE \
+	benchmark bench; \
+	try {
+#define EXCEPT_CLAUSE \
+	bench.get_runtime(); \
+	bench.reset(); \
+	} \
+	catch (GabootException const& ex) { return ex.response(); } \
+	catch(DrogonDbException const& ex) { return CustomException<k500InternalServerError>(fmt::format("error caught on {}", ex.base().what())).response(); } \
+	catch(std::exception const& ex) { return CustomException<k500InternalServerError>(fmt::format("error caught on {}", ex.what())).response(); }
 }
