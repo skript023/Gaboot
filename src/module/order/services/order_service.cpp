@@ -62,8 +62,8 @@ namespace gaboot
 				return HttpResponse::newHttpJsonResponse(m_response.to_json());
 			}
 
-			std::ranges::for_each(orders.begin(), orders.end(), [this](Orders const& product) {
-				m_response.m_data.append(product.toJson());
+			std::ranges::for_each(orders.begin(), orders.end(), [this](Orders const& order) {
+				m_response.m_data.append(order.toJson());
 			});
 
 			m_response.m_message = "Success retreive orders data";
