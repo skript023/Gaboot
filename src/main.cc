@@ -31,7 +31,7 @@ int main()
 
     LOG(INFO) << fmt::format("\n\tGit Info\n\tBranch:\t{}\n\tHash:\t{}\n\tDate:\t{}", server_version::GIT_BRANCH, server_version::GIT_SHA1, server_version::GIT_DATE);
 
-    LOG(INFO) << "Admin middleware is " << ADMIN_MIDDLEWARE_STATUS;
+    LOG(INFO) << "Admin middleware is " << BASIC_MIDDLEWARE_STATUS;
     LOG(INFO) << "Customer middleware is " << CUSTOMER_MIDDLEWARE_STATUS;
 
     g_file_manager.init(UPLOAD_PATH);

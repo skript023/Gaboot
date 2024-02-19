@@ -9,5 +9,5 @@ namespace gaboot
         static constexpr const char* SUCCESS = "SUCCESS";
         static constexpr const char* CANCELLED = "CANCELLED";
         static constexpr const char* EXPIRED = "EXPIRED";
-    }
+    };
 }
