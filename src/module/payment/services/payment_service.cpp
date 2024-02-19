@@ -58,6 +58,8 @@ namespace gaboot
 		{
 			auto& json = *req->getJsonObject();
 
+			json["status_code"] = stoi(json["status_code"].asString());
+
 			payment_gataway payment;
 
 			payment.from_json(util::to_nlohmann_json(json));
