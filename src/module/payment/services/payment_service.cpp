@@ -52,8 +52,32 @@ namespace gaboot
 			TRANSACTION_ERROR(e.what());
 		}
 	}
-	HttpResponsePtr payment_service::callback(HttpRequestPtr const& req)
-	{
+    HttpResponsePtr payment_service::findOne(HttpRequestPtr const& req, std::string &&transactionId)
+    {
+        TRY_CLAUSE
+		{
+			if (transactionId.empty() || util::is_numeric(transactionId))
+			{
+				throw BadRequestException("Parameter is invalid");
+			}
+
+			auto args = Criteria(Payments::Cols::_transactionId, CompareOperator::EQ, transactionId);
+			auto transaction = db().findBy(args);
+
+			if (transaction.empty())
+			{
+				throw NotFoundException(fmt::format("Unable found transaction id {}", transactionId));
+			}
+
+			m_response.m_message = "Transaction found";
+			m_response.m_success = true;
+			m_response.m_data = transaction[0].toJson();
+
+			return HttpResponse::newHttpJsonResponse(m_response.to_json());
+		} EXCEPT_CLAUSE
+    }
+    HttpResponsePtr payment_service::callback(HttpRequestPtr const &req)
+    {
 		TRY_CLAUSE
 		{
 			auto& json = *req->getJsonObject();
