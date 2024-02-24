@@ -70,7 +70,7 @@ namespace gaboot
 			{
 				case JENKINS_HASH("settlement"):
 					if (auto record = db().updateBy({ Payments::Cols::_transactionStatus }, args, payment.m_transaction_status); !record)
-						throw CustomException<k500InternalServerError>("Failed update transaction");
+						throw InternalServerErrorException("Failed update transaction");
 
 					m_response.m_message = "Payment status updated as paid";
 					m_response.m_success = true;
@@ -78,7 +78,7 @@ namespace gaboot
 					return HttpResponse::newHttpJsonResponse(m_response.to_json());
 				case JENKINS_HASH("expired"):
 					if (auto record = db().updateBy({ Payments::Cols::_transactionStatus }, args, payment.m_transaction_status); !record)
-						throw CustomException<k500InternalServerError>("Failed update transaction");
+						throw InternalServerErrorException("Failed update transaction");
 
 					m_response.m_message = "Payment status updated as expired";
 					m_response.m_success = true;
