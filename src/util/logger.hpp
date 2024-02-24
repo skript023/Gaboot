@@ -146,6 +146,20 @@ namespace gaboot
 			g_logger = nullptr;
 		}
 
+		void reset()
+		{
+			m_file_out.close();
+            m_drogon_event_file_out.close();
+
+            // Reset log file paths
+            m_file_path /= "Drogon.log";
+            m_event_file_path /= "Drogon Events.log";
+
+            // Open new log file streams
+            m_file_out.open(m_file_path, std::ios_base::out | std::ios_base::trunc);
+            m_drogon_event_file_out.open(m_event_file_path, std::ios_base::out | std::ios_base::trunc);
+		}
+
 		struct log_sink
 		{
 			std::map<std::string, log_color> log_colors = {
