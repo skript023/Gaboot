@@ -80,7 +80,7 @@ namespace gaboot
 #endif
 
 			m_file_path /= "Drogon Log";
-			std::filesystem::path m_backup_path = m_file_path;
+			m_backup_path = m_file_path;
 			m_backup_path /= "Backup";
 			try
 			{
@@ -152,8 +152,23 @@ namespace gaboot
             m_drogon_event_file_out.close();
 
             // Reset log file paths
-            m_file_path /= "Drogon.log";
-            m_event_file_path /= "Drogon Events.log";
+
+			if (std::filesystem::exists(m_file_path))
+			{
+				auto file_time = std::filesystem::last_write_time(m_file_path);
+				auto timet = to_time_t(file_time);
+				auto local_time = std::localtime(&timet);
+
+				auto bigbase_timestamp = fmt::format("{:0>2}-{:0>2}-{}-{:0>2}-{:0>2}-{:0>2} Drogon.log", local_time->tm_mon + 1, local_time->tm_mday, local_time->tm_year + 1900, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
+				auto drogon_events_timestamp = fmt::format("{:0>2}-{:0>2}-{}-{:0>2}-{:0>2}-{:0>2} DrogonEvents.log", local_time->tm_mon + 1, local_time->tm_mday, local_time->tm_year + 1900, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
+
+				if (!std::filesystem::copy_file(m_file_path, m_backup_path / bigbase_timestamp))
+					LOG(INFO) << "Log file failed copy";
+				if (std::filesystem::exists(m_event_file_path) && !std::filesystem::is_empty(m_event_file_path))
+					std::filesystem::copy_file(m_event_file_path, m_backup_path / drogon_events_timestamp);
+
+				LOG(INFO) << "Log successfully reset at " << bigbase_timestamp;
+			}
 
             // Open new log file streams
             m_file_out.open(m_file_path, std::ios_base::out | std::ios_base::trunc);
@@ -248,6 +263,7 @@ namespace gaboot
 #endif
 		std::ofstream m_console_out;
 		std::filesystem::path m_file_path;
+		std::filesystem::path m_backup_path;
 		std::filesystem::path m_event_file_path;
 		std::ofstream m_file_out;
 		std::ofstream m_drogon_event_file_out;
