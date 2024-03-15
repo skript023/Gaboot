@@ -100,7 +100,7 @@ namespace gaboot
         m_json = m_transaction.to_json();
     }
 
-    bool payment_processing::make_payment(payment_gataway* midtrans)
+    bool payment_processing::make_payment(payment_gateway* midtrans)
     {
         std::string token = fmt::format("Basic {}", SERVER_KEY);
 
@@ -114,7 +114,7 @@ namespace gaboot
 
         LOG(INFO) << m_json.dump();
 
-        auto res = cpr::PostAsync(m_url, body, header).get();
+        auto res = cpr::Post(m_url, body, header);
 
         if (res.text.empty()) throw std::runtime_error("UNKNOWN ERROR 01 - Check your internet access");
 

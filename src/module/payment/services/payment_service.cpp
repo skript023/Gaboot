@@ -16,7 +16,7 @@ namespace gaboot
 	{
 		auto& json = *req->getJsonObject();
 
-		payment_gataway payment;
+		payment_gateway payment;
 
 		try
 		{
