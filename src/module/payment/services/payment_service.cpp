@@ -84,7 +84,7 @@ namespace gaboot
 
 			json["status_code"] = stoi(json["status_code"].asString());
 
-			payment_gataway payment;
+			payment_gateway payment;
 
 			payment.from_json(util::to_nlohmann_json(json));
 

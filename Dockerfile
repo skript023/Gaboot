@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM nginx:latest
 
 WORKDIR /var/www
 
