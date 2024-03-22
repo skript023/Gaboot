@@ -1,7 +1,7 @@
-FROM ubuntu:latest
+FROM fedora:latest
 
 # Install Supervisor
-RUN apt-get update && apt-get install -y supervisor
+RUN dnf install -y supervisor
 
 WORKDIR /usr/local/bin/gaboot
 
@@ -10,10 +10,9 @@ COPY out/build/Linux-x64/Gaboot .
 COPY out/build/Linux-x64/config.json .
 COPY out/build/Linux-x64/.env .
 COPY out/build/Linux-x64/uploads/ ./uploads
-#COPY gaboot.service /etc/systemd/system/gaboot.service
 
 # Set permissions
-RUN chmod +x /usr/local/bin/gaboot/Gaboot
+RUN chmod +x Gaboot
 
 # Copy Supervisor configuration file
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -21,4 +20,5 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Start Supervisor
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
+# Expose port
 EXPOSE 8080
