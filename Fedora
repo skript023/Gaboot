@@ -1,3 +1,4 @@
+# fedora:30 make C++ not running due to unsupported lib
 FROM fedora:latest
 
 # Install Supervisor

@@ -18,7 +18,7 @@ services:
      gaboot-api:
         build: 
             context: .
-            dockerfile: Fedora
+            dockerfile: Dockerfile
         container_name: gaboot-shop-server
         init: true
         ports:
