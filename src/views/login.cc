@@ -25,7 +25,7 @@ std::string login::genText(const DrTemplateData& login_view_data)
 	login_tmp_stream << "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\"/>\n";
 	login_tmp_stream << "  <meta name=\"description\" content=\"\"/>\n";
 	login_tmp_stream << "  <meta name=\"author\" content=\"\"/>\n";
-	login_tmp_stream << "  <title>Dashtreme Admin - Free Dashboard for Bootstrap 4 by Codervent</title>\n";
+	login_tmp_stream << "  <title>Admin Only</title>\n";
 	login_tmp_stream << "  <!-- loader-->\n";
 	login_tmp_stream << "  <link href=\"assets/css/pace.min.css\" rel=\"stylesheet\"/>\n";
 	login_tmp_stream << "  <script src=\"assets/js/pace.min.js\"></script>\n";
