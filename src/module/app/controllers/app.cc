@@ -5,9 +5,7 @@ namespace gaboot
 {
 	void app::main(HttpRequestPtr const& req, response_t&& callback)
 	{
-		auto response = HttpResponse::newHttpResponse();
-		response->setBody("Hello World!");
-		response->setStatusCode(k200OK);
+        auto response = HttpResponse::newHttpViewResponse("login");
 
 		return callback(response);
 	}

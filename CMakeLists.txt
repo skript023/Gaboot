@@ -72,28 +72,37 @@ endif()
 
 # Add a custom command to copy config.json to the build directory
 if (EXISTS "${SOURCE_DIR}/config.json")
-  add_custom_command(
-    OUTPUT ${DESTINATION_DIR}/config.json
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SOURCE_DIR}/config.json ${DESTINATION_DIR}/config.json
-    DEPENDS ${SOURCE_DIR}/config.json
-    COMMENT "Copying config.json to ${DESTINATION_DIR}"
-  )
+    add_custom_command(
+        OUTPUT ${DESTINATION_DIR}/config.json
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SOURCE_DIR}/config.json ${DESTINATION_DIR}/config.json
+        DEPENDS ${SOURCE_DIR}/config.json
+        COMMENT "Copying config.json to build directory"
+    )
 endif()
 
 # Add a custom command to copy .env to the build directory
 if (EXISTS "${SOURCE_DIR}/.env")
-  add_custom_command(
-      OUTPUT ${DESTINATION_DIR}/.env
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SOURCE_DIR}/.env ${DESTINATION_DIR}/.env
-      DEPENDS ${SOURCE_DIR}/.env
-      COMMENT "Copying .env to ${DESTINATION_DIR}"
-  )
+    add_custom_command(
+        OUTPUT ${DESTINATION_DIR}/.env
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SOURCE_DIR}/.env ${DESTINATION_DIR}/.env
+        DEPENDS ${SOURCE_DIR}/.env
+        COMMENT "Copying .env to build directory"
+    )
 endif()
+
+# Add a custom command to copy the folder and its contents
+if (EXISTS "${SOURCE_DIR}/src/assets")
+    add_custom_target(copy_folder_to_build ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${SOURCE_DIR}/src/assets" "${DESTINATION_DIR}/assets"
+        COMMENT "Copying assets to build directory"
+    )
+endif()
+
 # Add a custom target to make sure the custom command is executed before building your main target
 add_custom_target(CopyConfigFiles DEPENDS ${DESTINATION_DIR}/config.json ${DESTINATION_DIR}/.env)
 
 # Compile main.cc as executable
-add_executable(Gaboot "${SRC_DIR}/main.cc" ${ICON})
+add_executable(Gaboot "${SRC_DIR}/main.cc" ${VIEWSRC} ${ICON})
 
 # Add dependencies to make sure the custom commands are executed before building YourTarget
 add_dependencies(Gaboot CopyConfigFiles)
