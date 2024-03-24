@@ -99,7 +99,7 @@ if (EXISTS "${SOURCE_DIR}/src/assets")
 endif()
 
 # Add a custom target to make sure the custom command is executed before building your main target
-if (EXISTS "${SOURCE_DIR}/config.json" AND EXISTS "${SOURCE_DIR}/.env")
+if (EXISTS "${DESTINATION_DIR}/config.json" AND EXISTS "${DESTINATION_DIR}/.env")
     add_custom_target(CopyConfigFiles DEPENDS ${DESTINATION_DIR}/config.json ${DESTINATION_DIR}/.env)
 endif()
 
