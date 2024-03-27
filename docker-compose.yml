@@ -1,6 +1,6 @@
 version: "3.5"
 services:
-     mysql:
+     gaboot-database:
         image: mariadb:latest
         restart: on-failure
         container_name: gaboot-shop-database
@@ -13,6 +13,8 @@ services:
             - 3316:3306
         expose:
             - 3306
+        networks:
+            - gaboot
         volumes:
             - ./out/dump:/var/lib/mysql
      gaboot-api:
@@ -24,18 +26,15 @@ services:
         ports:
             - 5000:8080
         depends_on:
-            - mysql
+            - gaboot-database
+        networks:
+            - gaboot
+        links:
+            - gaboot-database
         volumes:
             - ./out/build/Linux-x64/uploads:/usr/local/bin/gaboot/uploads
             - ./out/build/Linux-x64/Drogon Log:/usr/local/bin/gaboot/Drogon Log
             - ./out/build/Linux-x64/Service:/var/log/
-     #nginx:
-        #image: nginx:latest
-        #container_name: nginx
-        #ports:
-            #- "8556:8000"
-        #restart: unless-stopped
-        #volumes:
-            #- "./nginx/default.conf:/mnt/k/Coding/2024/Gaboot Shop/gaboot-shop-backends/etc/nginx/conf.d/default.conf"
-        #depends_on:
-            #- gaboot-api
+networks:
+   gaboot:
+    driver: bridge
