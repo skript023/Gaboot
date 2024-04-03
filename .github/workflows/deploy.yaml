@@ -26,6 +26,11 @@ jobs:
         ./bootstrap-vcpkg.sh
         ./vcpkg integrate install
 
+    - name: Install Vcpkg dependencies
+      run: |
+        ./vcpkg/vcpkg install opencv --clean-after-build  # Replace <your_dependency_here> with your actual dependency name
+        ./vcpkg/vcpkg install drogon[core,ctl,orm,mysql] --clean-after-build # Replace <your_dependency_here> with your actual dependency name
+
     - name: Configure and build
       run: |
         mkdir build
