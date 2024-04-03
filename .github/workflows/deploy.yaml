@@ -1,4 +1,4 @@
-name: build
+name: build_and_upload_to_vps
 
 on: [push, pull_request]
 
@@ -8,11 +8,21 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: build
+    name: Build and Upload Artifact
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
       # Add other necessary steps like installing dependencies, building, etc.
+
+      - name: Build Executable
+        run: cmake --build ./build --config Release --target Gaboot --
+
+      - name: Check if Executable got built
+        run: test -f ./build/Gaboot
+
+      - name: Rename Executable
+        run: mv ./build/Gaboot ./build/Gaboot-dev-${GITHUB_SHA}.exe
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
@@ -34,4 +44,4 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key.pem
           chmod 600 ssh_key.pem
-          scp -i ssh_key.pem -o StrictHostKeyChecking=no build/Gaboot-dev-${GITHUB_SHA}.exe ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/skript023/gbt-backend/Linux/
+          scp -i ssh_key.pem -o StrictHostKeyChecking=no build/Gaboot-dev-${GITHUB_SHA}.exe ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/skript023/gbt-backend/Linux/Gaboot
