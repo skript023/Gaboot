@@ -25,8 +25,8 @@ jobs:
         sudo apt-get install bison &&
         sudo apt-get install gperf &&
         sudo apt-get install libgles2-mesa-dev &&
-        sudo apt install libxext-dev &&
-        sudo apt install libxrandr-dev &&
+        sudo apt-get install libxext-dev &&
+        sudo apt-get install libxrandr-dev &&
         sudo apt-get install libxi-dev &&
         sudo apt-get install libxcursor-dev &&
         sudo apt-get install libxdamage-dev &&
