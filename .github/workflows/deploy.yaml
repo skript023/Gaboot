@@ -1,53 +1,41 @@
-name: build_and_upload_to_vps
+name: C++ Build and Artifact Upload
 
-on: [push, pull_request]
-
-env:
-  VCPKG_FOLDER: ./vcpkg
+on:
+  push:
+    branches:
+      - main  # Adjust branch name if necessary
+  pull_request:
+    branches:
+      - main  # Adjust branch name if necessary
 
 jobs:
-  build:
+  build_and_upload:
     runs-on: ubuntu-latest
-    name: Build and Upload Artifact
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      # Add other necessary steps like installing dependencies, building, etc.
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y build-essential cmake
 
-      - name: Setup vcpkg toolchain
-        run: cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
-        
-      - name: Build 64bit release Executable
-        run: cmake --build ./build --config Release --target Gaboot --
+    - name: Configure and build
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        make
 
-      - name: Check if Executable got built
-        run: if (-Not (Test-Path -path "build/Gaboot.exe")) {throw 1}
+    - name: Run tests
+      run: |
+        cd build
+        ctest --verbose
 
-      - name: Rename Executable to Gaboot-dev-{GITHUB_SHA}.exe
-        run: |
-          del Gaboot-dev-*.exe
-          ren Gaboot.exe Gaboot-dev-${{github.sha}}.exe
-        working-directory: build/
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: binary
-          path: build/Gaboot-dev-*.exe
-
-  upload_to_vps:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Download Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: binary
-          path: build/
-
-      - name: Upload Artifact to VPS
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key.pem
-          chmod 600 ssh_key.pem
-          scp -i ssh_key.pem -o StrictHostKeyChecking=no build/Gaboot-dev-${GITHUB_SHA}.exe ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/skript023/gbt-backend/Linux/Gaboot
+    - name: Upload artifact to VPS
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}  # Use SSH private key for authentication
+        source: "build/"  # Adjust this to the directory containing your built binaries
+        target: "/home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/Gaboot"
