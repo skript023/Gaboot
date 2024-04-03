@@ -57,8 +57,11 @@ endif()
 
 if (MSVC)
   add_compile_options(/bigobj)
+  add_compile_options(/utf-8)
 else ()
   #add_compile_options(-Wa,-mbig-obj)
+  add_compile_options(-finput-charset=UTF-8)
+  add_compile_options(-fexec-charset=UTF-8)
 endif ()
 
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
@@ -70,23 +73,20 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(DESTINATION_DIR ${CMAKE_CURRENT_BINARY_DIR}/../Linux-x64)
 endif()
 
-# Add a custom command to copy config.json to the build directory
-if (EXISTS "${SOURCE_DIR}/config.json")
-    add_custom_command(
-        OUTPUT ${DESTINATION_DIR}/config.json
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SOURCE_DIR}/config.json ${DESTINATION_DIR}/config.json
-        DEPENDS ${SOURCE_DIR}/config.json
-        COMMENT "Copying config.json to build directory"
-    )
-endif()
-
-# Add a custom command to copy .env to the build directory
-if (EXISTS "${SOURCE_DIR}/.env")
+# Add a custom command to copy .env and config.json to the build directory
+if (EXISTS "${DESTINATION_DIR}/config.json" AND EXISTS "${DESTINATION_DIR}/.env")
     add_custom_command(
         OUTPUT ${DESTINATION_DIR}/.env
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SOURCE_DIR}/.env ${DESTINATION_DIR}/.env
         DEPENDS ${SOURCE_DIR}/.env
         COMMENT "Copying .env to build directory"
+    )
+
+    add_custom_command(
+        OUTPUT ${DESTINATION_DIR}/config.json
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SOURCE_DIR}/config.json ${DESTINATION_DIR}/config.json
+        DEPENDS ${SOURCE_DIR}/config.json
+        COMMENT "Copying config.json to build directory"
     )
 endif()
 
