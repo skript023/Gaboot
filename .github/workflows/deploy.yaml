@@ -1,0 +1,34 @@
+name: build
+
+on: [push, pull_request]
+
+env:
+  VCPKG_FOLDER: ./vcpkg
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: build
+    steps:
+      - uses: actions/checkout@v3
+
+      # Add other necessary steps like installing dependencies, building, etc.
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: binary
+          path: build/Gaboot-dev-${GITHUB_SHA}.exe
+
+  upload_to_vps:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: binary
+          path: build/
+
+      - name: Upload Artifact to VPS
+        run: scp -P ${{ secrets.SSH_PORT }} build/Gaboot-dev-${GITHUB_SHA}.exe ${{ secrets.SSH_USER }}@${{ secrets.VPS_IP }}:${{ secrets.VPS_DESTINATION_PATH }}
