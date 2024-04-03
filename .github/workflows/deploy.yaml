@@ -15,20 +15,26 @@ jobs:
 
       # Add other necessary steps like installing dependencies, building, etc.
 
-      - name: Build Executable
+      - name: Setup vcpkg toolchain
+        run: cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
+        
+      - name: Build 64bit release Executable
         run: cmake --build ./build --config Release --target Gaboot --
 
       - name: Check if Executable got built
-        run: test -f ./build/Gaboot
+        run: if (-Not (Test-Path -path "build/Gaboot.exe")) {throw 1}
 
-      - name: Rename Executable
-        run: mv ./build/Gaboot ./build/Gaboot-dev-${GITHUB_SHA}.exe
+      - name: Rename Executable to Gaboot-dev-{GITHUB_SHA}.exe
+        run: |
+          del Gaboot-dev-*.exe
+          ren Gaboot.exe Gaboot-dev-${{github.sha}}.exe
+        working-directory: build/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: binary
-          path: build/Gaboot-dev-${GITHUB_SHA}.exe
+          path: build/Gaboot-dev-*.exe
 
   upload_to_vps:
     runs-on: ubuntu-latest
