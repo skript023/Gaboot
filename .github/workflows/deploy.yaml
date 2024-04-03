@@ -31,4 +31,7 @@ jobs:
           path: build/
 
       - name: Upload Artifact to VPS
-        run: scp -P ${{ secrets.SSH_PORT }} build/Gaboot-dev-${GITHUB_SHA}.exe ${{ secrets.SSH_USER }}@${{ secrets.VPS_IP }}:${{ secrets.VPS_DESTINATION_PATH }}
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key.pem
+          chmod 600 ssh_key.pem
+          scp -i ssh_key.pem -o StrictHostKeyChecking=no build/Gaboot-dev-${GITHUB_SHA}.exe ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/skript023/gbt-backend/Linux/
