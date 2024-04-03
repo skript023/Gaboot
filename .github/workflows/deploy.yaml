@@ -19,17 +19,15 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update && sudo apt-get install -y build-essential cmake
-        sudo mkdir -p /mnt/j/database/Tools/vcpkg  # Ensure the directory exists
-        sudo chown -R $USER:$USER /mnt/j/database/Tools/vcpkg  # Change ownership to current user
-        git clone https://github.com/Microsoft/vcpkg.git /mnt/j/database/Tools/vcpkg/vcpkg
-        cd /mnt/j/database/Tools/vcpkg/vcpkg
+        git clone https://github.com/Microsoft/vcpkg.git
+        cd vcpkg
         ./bootstrap-vcpkg.sh
         ./vcpkg integrate install
 
     - name: Install Vcpkg dependencies
       run: |
-        /mnt/j/database/Tools/vcpkg/vcpkg install opencv --clean-after-build
-        /mnt/j/database/Tools/vcpkg/vcpkg install drogon[core,ctl,orm,mysql] --clean-after-build
+        ./vcpkg/vcpkg install opencv --clean-after-build  # Replace <your_dependency_here> with your actual dependency name
+        ./vcpkg/vcpkg install drogon[core,ctl,orm,mysql] --clean-after-build # Replace <your_dependency_here> with your actual dependency name
 
     - name: Configure and build
       run: |
