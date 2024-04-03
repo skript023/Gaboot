@@ -19,7 +19,8 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update && sudo apt-get install -y build-essential cmake
-        mkdir -p /mnt/j/database/Tools/vcpkg  # Ensure the directory exists
+        sudo mkdir -p /mnt/j/database/Tools/vcpkg  # Ensure the directory exists
+        sudo chown -R $USER:$USER /mnt/j/database/Tools/vcpkg  # Change ownership to current user
         git clone https://github.com/Microsoft/vcpkg.git /mnt/j/database/Tools/vcpkg/vcpkg
         cd /mnt/j/database/Tools/vcpkg/vcpkg
         ./bootstrap-vcpkg.sh
