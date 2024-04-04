@@ -19,7 +19,31 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update && 
-        sudo apt-get install -y build-essential  cmake git libgtk2.0-dev pkg-config libavcodec-dev  libavformat-dev  libswscale-dev  libx11-dev  libxft-dev autoconf libtool bison gperf libgles2-mesa-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxdamage-dev libxinerama-dev libxkbcommon-x11-dev libx11-xcb-dev
+        sudo apt-get install -y \
+        build-essential \
+        cmake \
+        git \
+        libgtk2.0-dev \
+        pkg-config \
+        libavcodec-dev  \
+        libavformat-dev  \
+        libswscale-dev  \
+        libx11-dev  \
+        libxft-dev \
+        autoconf \
+        libtool \
+        bison \
+        gperf \
+        libgles2-mesa-dev \
+        libxext-dev \
+        libxrandr-dev \
+        libxi-dev \
+        libxcursor-dev \
+        libxdamage-dev \
+        libxinerama-dev \
+        libxkbcommon-x11-dev \
+        libx11-xcb-dev \
+        liblzma-dev
         git clone https://github.com/Microsoft/vcpkg.git
         cd vcpkg
         ./bootstrap-vcpkg.sh
@@ -27,7 +51,6 @@ jobs:
 
     - name: Install Vcpkg dependencies
       run: |
-        ./vcpkg/vcpkg install liblzma:x64-linux
         ./vcpkg/vcpkg install opencv:x64-linux --clean-after-build  # Replace <your_dependency_here> with your actual dependency name
         ./vcpkg/vcpkg install drogon[core,ctl,orm,mysql]:x64-linux --clean-after-build # Replace <your_dependency_here> with your actual dependency name
 
