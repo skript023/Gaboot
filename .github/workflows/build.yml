@@ -27,8 +27,9 @@ jobs:
 
     - name: Install Vcpkg dependencies
       run: |
-        ./vcpkg/vcpkg install opencv --clean-after-build  # Replace <your_dependency_here> with your actual dependency name
-        ./vcpkg/vcpkg install drogon[core,ctl,orm,mysql] --clean-after-build # Replace <your_dependency_here> with your actual dependency name
+        ./vcpkg/vcpkg install liblzma:x64-linux
+        ./vcpkg/vcpkg install opencv:x64-linux --clean-after-build  # Replace <your_dependency_here> with your actual dependency name
+        ./vcpkg/vcpkg install drogon[core,ctl,orm,mysql]:x64-linux --clean-after-build # Replace <your_dependency_here> with your actual dependency name
 
     - name: Configure and build
       run: |
