@@ -61,7 +61,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake .. -DCMAKE_TOOLCHAIN_FILE=/mnt/j/database/Tools/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake
+        cmake .. -DCMAKE_TOOLCHAIN_FILE=${VCPKG_FOLDER}/scripts/buildsystems/vcpkg.cmake
         make
 
     - name: Run tests
