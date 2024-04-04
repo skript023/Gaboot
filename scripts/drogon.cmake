@@ -2,9 +2,9 @@ message("\nInstalling drogon library")
 
 if (MSVC)
     # Set the path to vcpkg for Windows
-    set(VCPKG_EXECUTABLE "$ENV{VCPKG_ROOT}/vcpkg.exe")
+    set(VCPKG_EXECUTABLE "$ENV{VCPKG_FOLDER}/vcpkg.exe")
 else()
-    set(VCPKG_EXECUTABLE "$ENV{VCPKG_ROOT}/vcpkg")
+    set(VCPKG_EXECUTABLE "$ENV{VCPKG_FOLDER}/vcpkg")
     message("GCC is used")
 endif()
 

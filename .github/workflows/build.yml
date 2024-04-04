@@ -8,6 +8,9 @@ on:
     branches:
       - main  # Adjust branch name if necessary
 
+env:
+  VCPKG_FOLDER: ./vcpkg
+
 jobs:
   build_and_upload:
     runs-on: ubuntu-latest
@@ -49,10 +52,10 @@ jobs:
         ./bootstrap-vcpkg.sh
         ./vcpkg integrate install
 
-    - name: Install Vcpkg dependencies
-      run: |
-        ./vcpkg/vcpkg install opencv:x64-linux --clean-after-build  # Replace <your_dependency_here> with your actual dependency name
-        ./vcpkg/vcpkg install drogon[core,ctl,orm,mysql]:x64-linux --clean-after-build # Replace <your_dependency_here> with your actual dependency name
+    #- name: Install Vcpkg dependencies
+     # run: |
+      #  ./vcpkg/vcpkg install opencv:x64-linux --clean-after-build  # Replace <your_dependency_here> with your actual dependency name
+      #  ./vcpkg/vcpkg install drogon[core,ctl,orm,mysql]:x64-linux --clean-after-build # Replace <your_dependency_here> with your actual dependency name
 
     - name: Configure and build
       run: |
