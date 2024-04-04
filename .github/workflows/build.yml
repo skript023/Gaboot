@@ -18,19 +18,27 @@ jobs:
 
     - name: Install dependencies
       run: |
-        sudo apt-get update && sudo apt-get install -y build-essential cmake &&
-        sudo apt install libx11-dev libxft-dev &&
-        sudo apt-get install autoconf &&
-        sudo apt-get install libtool &&
-        sudo apt-get install bison &&
-        sudo apt-get install gperf &&
-        sudo apt-get install libgles2-mesa-dev &&
-        sudo apt-get install libxext-dev &&
-        sudo apt-get install libxrandr-dev &&
-        sudo apt-get install libxi-dev &&
-        sudo apt-get install libxcursor-dev &&
-        sudo apt-get install libxdamage-dev &&
-        sudo apt-get install libxinerama-dev &&
+        sudo apt-get update && 
+        sudo apt-get install -y build-essential 
+        cmake 
+        libgtk2.0-dev 
+        pkg-config 
+        libavcodec-dev 
+        libavformat-dev 
+        libswscale-dev  
+        libx11-dev 
+        libxft-dev
+        autoconf
+        libtool
+        bison
+        gperf
+        libgles2-mesa-dev
+        libxext-dev
+        libxrandr-dev
+        libxi-dev
+        libxcursor-dev
+        libxdamage-dev
+        libxinerama-dev
         git clone https://github.com/Microsoft/vcpkg.git
         cd vcpkg
         ./bootstrap-vcpkg.sh
