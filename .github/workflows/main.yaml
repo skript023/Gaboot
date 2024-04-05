@@ -23,15 +23,7 @@ jobs:
       - name: Install Conan
         run: |
           pip install conan
-          conan profile detect
-          conan profile show -s:a settings.arch=x86_64 default
-          conan profile show -s:a settings.build_type=Release default
-          conan profile show -s:a settings.compiler=msvc default
-          conan profile show -s:a settings.compiler.cppstd=20 default
-          conan profile show -s:a settings.compiler.runtime=dynamic default
-          conan profile show -s:a settings.compiler.version=193 default
-          conan profile show -s:a settings.os=Windows default
-          conan profile show -c:a tools.cmake.cmaketoolchain:generator=Ninja
+          conan config install https://bbuseruploads.s3.amazonaws.com/1c1b93ab-2ba2-4689-b1de-ae7f6421f8fe/downloads/9050c8e5-08c2-42fe-a90e-d86fe1df18de/config.zip?response-content-disposition=attachment%3B%20filename%3D%22config.zip%22&AWSAccessKeyId=ASIA6KOSE3BNIO5E2WNB&Signature=dW6xg6nDaEA0dYz5cENI5VGN1zg%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEHQaCXVzLWVhc3QtMSJIMEYCIQC5GHHfDSHbQzBT%2BHNxMochaUKReVEK%2FaQaTiYXNQ5mVQIhAMTFz%2FOmDaLQzrgl8ULPkAoUEbi28oXJaj%2Fa4k%2FZdfg7KrACCJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMOTg0NTI1MTAxMTQ2Igxk5pJaK%2BlQQkCHfsMqhAKFVzkwRm7yg8PtahKYki57XaSRPKiJv322i5xbdPxwceYU5kzwnKcNT7VLl3bCyjBLuUCN7vKZVkyU8XNIetBU6e1s5eBbZ180H1dEdn99Uxa20WNPWX80pzUA8cDJhq6y4pLHwrxkDPODprgxHB45EOdmTu7%2FIU3UIsttPuQ8TTluEBqJh41BrGZzowZmZ%2FNePxBbAG3SB0JCQsRTXsSQTNpw%2Bi3mTxboSz%2FXy9GrOMn1PteP23oBtLr%2B34qXW%2Fw1rHcv%2Bxm4vg7A03%2F9BIu7ntlgBbLAse9D2VbMJO31bCUOypO%2B8CUUuclM2qdXoNSF7Ervl82QHdHBseVbzOrVxVJxPjDs472wBjqcAV3ax1EVNke2JTmtwZULFb%2FU%2BibZurhotlrbAfApjbG9AnhN%2FXkfyHgFvs%2FfRUNr%2FVXflgBWHebLuU0C%2BiTgmxRRge4dQu4yaNtmEeG853NvxBSQmxDWNU1FVlqtam90Q8FGUIolu462P3%2F4KJ8l%2BSIXbhwsJTCfb1lcpVJ528%2BQI0nr1qDDcZQS0cENS1p0oy8hMqIY0RguhHndbQ%3D%3D&Expires=1712290036
 
       - name: Install Package
         run: conan install conanfile.txt -of=conan/Windows --build=missing
