@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v3
   
       - name: Install dependencies
-        run: sudo apt-get update &&  sudo apt-get install -y  build-essential  cmake ninja-build gcc
+        run: sudo apt-get update &&  sudo apt-get install -y  build-essential cmake g++ gdb make ninja-build rsync zip
 
       - name: Check CMake version
         run: cmake --version
@@ -31,7 +31,10 @@ jobs:
           pip install conan
           conan config install https://bitbucket.org/telkom-workspace/gaboot-backend/downloads/config.zip
 
-      - name: Setup vcpkg toolchain
+      - name: Install Package
+        run: conan install conanfile.txt -of=conan/Windows --build=missing
+
+      - name: Configure CMakeList
         run: cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
         
       - name: Build 64bit release Executable
