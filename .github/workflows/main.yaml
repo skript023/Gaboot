@@ -23,15 +23,15 @@ jobs:
       - name: Install Conan
         run: |
           pip install conan
-          conan config set general.revisions_enabled=1
-          conan profile new default --detect
-          conan profile update settings.arch=x86_64 default
-          conan profile update settings.build_type=Release default
-          conan profile update settings.compiler=msvc default
-          conan profile update settings.compiler.cppstd=20 default
-          conan profile update settings.compiler.runtime=dynamic default
-          conan profile update settings.compiler.version=193 default
-          conan profile update settings.os=Windows default
+          conan profile detect
+          conan profile show -s:a settings.arch=x86_64 default
+          conan profile show -s:a settings.build_type=Release default
+          conan profile show -s:a settings.compiler=msvc default
+          conan profile show -s:a settings.compiler.cppstd=20 default
+          conan profile show -s:a settings.compiler.runtime=dynamic default
+          conan profile show -s:a settings.compiler.version=193 default
+          conan profile show -s:a settings.os=Windows default
+          conan profile show -c:a tools.cmake.cmaketoolchain:generator=Ninja
 
       - name: Install Package
         run: conan install conanfile.txt -of=conan/Windows --build=missing
