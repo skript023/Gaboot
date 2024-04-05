@@ -14,7 +14,7 @@ if (WIN32)
     include("${PROJECT_SOURCE_DIR}/conan/Windows/build/Release/generators/conan_toolchain.cmake")
 elseif (UNIX)
     message("Linux detected, add linux toolchain from ${PROJECT_SOURCE_DIR}/conan/Linux/build/Release/generators/conan_toolchain.cmake")
-    include("${PROJECT_SOURCE_DIR}/conan/Linux/build/Release/generators/conan_toolchain.cmake")
+    set(CMAKE_TOOLCHAIN_FILE "${PROJECT_SOURCE_DIR}/conan/Linux/build/Release/generators/conan_toolchain.cmake")
 endif()
 
 #include vcpkg dependencies
