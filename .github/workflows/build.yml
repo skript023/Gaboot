@@ -29,10 +29,10 @@ jobs:
       - name: Install Conan
         run: |
           sudo pip install conan
-          sudo conan config install https://bitbucket.org/telkom-workspace/gaboot-backend/downloads/Linux.zip
+          conan config install https://bitbucket.org/telkom-workspace/gaboot-backend/downloads/Linux.zip
 
       - name: Install Package
-        run: sudo conan install conanfile.txt -of=conan/Linux --build=missing
+        run: conan install conanfile.txt -of=conan/Linux --build=missing
 
       - name: Echo list of files before removal
         run: ls
@@ -44,10 +44,7 @@ jobs:
         run: ls
 
       - name: Configure CMakeList
-        run: |
-            mkdir -p build
-            cd build
-            cmake -D CMAKE_BUILD_TYPE=Release -S.. -B. build -G Ninja
+        run: cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
         
       - name: Build 64bit release Executable
         run: cmake --build ./build --config Release --target Gaboot --
