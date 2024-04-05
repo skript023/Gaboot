@@ -176,7 +176,7 @@ namespace gaboot
 			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 			{
 				if (const auto record2 = db_images().updateBy(m_data_image.getMemberNames(),
-					Criteria(ProductImages::Cols::_productId, CompareOperator::EQ, id),
+					Criteria(ProductImages::Cols::_productid, CompareOperator::EQ, id),
 					upload.get_image_path(),
 					upload.get_thumbnail_path(),
 					trantor::Date::now()
@@ -238,7 +238,7 @@ namespace gaboot
 
 			this->load_cache();
 
-			auto args = Criteria(MasterProducts::Cols::_categoryId, CompareOperator::EQ, stoull(id));
+			auto args = Criteria(MasterProducts::Cols::_categoryid, CompareOperator::EQ, stoull(id));
 
 			const auto products = m_cache_product.find([id](const MasterProducts& entry) -> bool {
 				return entry.getValueOfCategoryid() == stoi(id);

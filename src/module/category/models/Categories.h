@@ -48,17 +48,17 @@ class Categories
         static const std::string _id;
         static const std::string _name;
         static const std::string _description;
-        static const std::string _imgPath;
-        static const std::string _imgThumbPath;
-        static const std::string _createdAt;
-        static const std::string _updatedAt;
+        static const std::string _imgpath;
+        static const std::string _imgthumbpath;
+        static const std::string _createdat;
+        static const std::string _updatedat;
     };
 
     const static int primaryKeyNumber;
     const static std::string tableName;
     const static bool hasPrimaryKey;
     const static std::string primaryKeyName;
-    using PrimaryKeyType = uint64_t;
+    using PrimaryKeyType = int32_t;
     const PrimaryKeyType &getPrimaryKey() const;
 
     /**
@@ -105,11 +105,11 @@ class Categories
 
     /**  For column id  */
     ///Get the value of the column id, returns the default value if the column is null
-    const uint64_t &getValueOfId() const noexcept;
+    const int32_t &getValueOfId() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<uint64_t> &getId() const noexcept;
+    const std::shared_ptr<int32_t> &getId() const noexcept;
     ///Set the value of the column id
-    void setId(const uint64_t &pId) noexcept;
+    void setId(const int32_t &pId) noexcept;
 
     /**  For column name  */
     ///Get the value of the column name, returns the default value if the column is null
@@ -129,40 +129,40 @@ class Categories
     void setDescription(const std::string &pDescription) noexcept;
     void setDescription(std::string &&pDescription) noexcept;
 
-    /**  For column imgPath  */
-    ///Get the value of the column imgPath, returns the default value if the column is null
+    /**  For column imgpath  */
+    ///Get the value of the column imgpath, returns the default value if the column is null
     const std::string &getValueOfImgpath() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<std::string> &getImgpath() const noexcept;
-    ///Set the value of the column imgPath
+    ///Set the value of the column imgpath
     void setImgpath(const std::string &pImgpath) noexcept;
     void setImgpath(std::string &&pImgpath) noexcept;
     void setImgpathToNull() noexcept;
 
-    /**  For column imgThumbPath  */
-    ///Get the value of the column imgThumbPath, returns the default value if the column is null
+    /**  For column imgthumbpath  */
+    ///Get the value of the column imgthumbpath, returns the default value if the column is null
     const std::string &getValueOfImgthumbpath() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<std::string> &getImgthumbpath() const noexcept;
-    ///Set the value of the column imgThumbPath
+    ///Set the value of the column imgthumbpath
     void setImgthumbpath(const std::string &pImgthumbpath) noexcept;
     void setImgthumbpath(std::string &&pImgthumbpath) noexcept;
     void setImgthumbpathToNull() noexcept;
 
-    /**  For column createdAt  */
-    ///Get the value of the column createdAt, returns the default value if the column is null
+    /**  For column createdat  */
+    ///Get the value of the column createdat, returns the default value if the column is null
     const ::trantor::Date &getValueOfCreatedat() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<::trantor::Date> &getCreatedat() const noexcept;
-    ///Set the value of the column createdAt
+    ///Set the value of the column createdat
     void setCreatedat(const ::trantor::Date &pCreatedat) noexcept;
 
-    /**  For column updatedAt  */
-    ///Get the value of the column updatedAt, returns the default value if the column is null
+    /**  For column updatedat  */
+    ///Get the value of the column updatedat, returns the default value if the column is null
     const ::trantor::Date &getValueOfUpdatedat() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<::trantor::Date> &getUpdatedat() const noexcept;
-    ///Set the value of the column updatedAt
+    ///Set the value of the column updatedat
     void setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept;
 
 
@@ -172,11 +172,11 @@ class Categories
     Json::Value toJson() const;
     Json::Value toMasqueradedJson(const std::vector<std::string> &pMasqueradingVector) const;
     /// Relationship interfaces
-    MasterProducts getMaster_products(const drogon::orm::DbClientPtr &clientPtr) const;
-    void getMaster_products(const drogon::orm::DbClientPtr &clientPtr,
+    MasterProducts getMaster_product(const drogon::orm::DbClientPtr &clientPtr) const;
+    void getMaster_product(const drogon::orm::DbClientPtr &clientPtr,
                             const std::function<void(MasterProducts)> &rcb,
                             const drogon::orm::ExceptionCallback &ecb) const;
-    //std::vector<MasterProducts> getMaster_products(const drogon::orm::DbClientPtr &clientPtr) const;
+    std::vector<MasterProducts> getMaster_products(const drogon::orm::DbClientPtr &clientPtr) const;
     void getMaster_products(const drogon::orm::DbClientPtr &clientPtr,
                             const std::function<void(std::vector<MasterProducts>)> &rcb,
                             const drogon::orm::ExceptionCallback &ecb) const;
@@ -195,7 +195,7 @@ class Categories
     void updateArgs(drogon::orm::internal::SqlBinder &binder) const;
     ///For mysql or sqlite3
     void updateId(const uint64_t id);
-    std::shared_ptr<uint64_t> id_;
+    std::shared_ptr<int32_t> id_;
     std::shared_ptr<std::string> name_;
     std::shared_ptr<std::string> description_;
     std::shared_ptr<std::string> imgpath_;
@@ -217,13 +217,13 @@ class Categories
   public:
     static const std::string &sqlForFindingByPrimaryKey()
     {
-        static const std::string sql="select * from " + tableName + " where id = ?";
+        static const std::string sql="select * from " + tableName + " where id = $1";
         return sql;
     }
 
     static const std::string &sqlForDeletingByPrimaryKey()
     {
-        static const std::string sql="delete from " + tableName + " where id = ?";
+        static const std::string sql="delete from " + tableName + " where id = $1";
         return sql;
     }
     std::string sqlForInserting(bool &needSelection) const
@@ -245,21 +245,21 @@ class Categories
         }
         if(dirtyFlag_[3])
         {
-            sql += "imgPath,";
+            sql += "imgpath,";
             ++parametersCount;
         }
         if(dirtyFlag_[4])
         {
-            sql += "imgThumbPath,";
+            sql += "imgthumbpath,";
             ++parametersCount;
         }
-        sql += "createdAt,";
+        sql += "createdat,";
         ++parametersCount;
         if(!dirtyFlag_[5])
         {
             needSelection=true;
         }
-        sql += "updatedAt,";
+        sql += "updatedat,";
         ++parametersCount;
         if(!dirtyFlag_[6])
         {
@@ -274,31 +274,34 @@ class Categories
         else
             sql += ") values (";
 
+        int placeholder=1;
+        char placeholderStr[64];
+        size_t n=0;
         sql +="default,";
         if(dirtyFlag_[1])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[2])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[3])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[4])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[5])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         else
         {
@@ -306,8 +309,8 @@ class Categories
         }
         if(dirtyFlag_[6])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         else
         {
@@ -317,7 +320,14 @@ class Categories
         {
             sql.resize(sql.length() - 1);
         }
-        sql.append(1, ')');
+        if(needSelection)
+        {
+            sql.append(") returning *");
+        }
+        else
+        {
+            sql.append(1, ')');
+        }
         LOG_TRACE << sql;
         return sql;
     }

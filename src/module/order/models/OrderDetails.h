@@ -46,14 +46,14 @@ class OrderDetails
     struct Cols
     {
         static const std::string _id;
-        static const std::string _orderId;
-        static const std::string _productId;
+        static const std::string _orderid;
+        static const std::string _productid;
         static const std::string _price;
         static const std::string _discount;
         static const std::string _quantity;
         static const std::string _total;
-        static const std::string _createdAt;
-        static const std::string _updatedAt;
+        static const std::string _createdat;
+        static const std::string _updatedat;
     };
 
     const static int primaryKeyNumber;
@@ -113,20 +113,20 @@ class OrderDetails
     ///Set the value of the column id
     void setId(const int32_t &pId) noexcept;
 
-    /**  For column orderId  */
-    ///Get the value of the column orderId, returns the default value if the column is null
+    /**  For column orderid  */
+    ///Get the value of the column orderid, returns the default value if the column is null
     const int32_t &getValueOfOrderid() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<int32_t> &getOrderid() const noexcept;
-    ///Set the value of the column orderId
+    ///Set the value of the column orderid
     void setOrderid(const int32_t &pOrderid) noexcept;
 
-    /**  For column productId  */
-    ///Get the value of the column productId, returns the default value if the column is null
+    /**  For column productid  */
+    ///Get the value of the column productid, returns the default value if the column is null
     const int32_t &getValueOfProductid() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<int32_t> &getProductid() const noexcept;
-    ///Set the value of the column productId
+    ///Set the value of the column productid
     void setProductid(const int32_t &pProductid) noexcept;
 
     /**  For column price  */
@@ -161,20 +161,20 @@ class OrderDetails
     ///Set the value of the column total
     void setTotal(const double &pTotal) noexcept;
 
-    /**  For column createdAt  */
-    ///Get the value of the column createdAt, returns the default value if the column is null
+    /**  For column createdat  */
+    ///Get the value of the column createdat, returns the default value if the column is null
     const ::trantor::Date &getValueOfCreatedat() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<::trantor::Date> &getCreatedat() const noexcept;
-    ///Set the value of the column createdAt
+    ///Set the value of the column createdat
     void setCreatedat(const ::trantor::Date &pCreatedat) noexcept;
 
-    /**  For column updatedAt  */
-    ///Get the value of the column updatedAt, returns the default value if the column is null
+    /**  For column updatedat  */
+    ///Get the value of the column updatedat, returns the default value if the column is null
     const ::trantor::Date &getValueOfUpdatedat() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<::trantor::Date> &getUpdatedat() const noexcept;
-    ///Set the value of the column updatedAt
+    ///Set the value of the column updatedat
     void setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept;
 
 
@@ -227,13 +227,13 @@ class OrderDetails
   public:
     static const std::string &sqlForFindingByPrimaryKey()
     {
-        static const std::string sql="select * from " + tableName + " where id = ?";
+        static const std::string sql="select * from " + tableName + " where id = $1";
         return sql;
     }
 
     static const std::string &sqlForDeletingByPrimaryKey()
     {
-        static const std::string sql="delete from " + tableName + " where id = ?";
+        static const std::string sql="delete from " + tableName + " where id = $1";
         return sql;
     }
     std::string sqlForInserting(bool &needSelection) const
@@ -245,12 +245,12 @@ class OrderDetails
             ++parametersCount;
         if(dirtyFlag_[1])
         {
-            sql += "orderId,";
+            sql += "orderid,";
             ++parametersCount;
         }
         if(dirtyFlag_[2])
         {
-            sql += "productId,";
+            sql += "productid,";
             ++parametersCount;
         }
         sql += "price,";
@@ -277,13 +277,13 @@ class OrderDetails
         {
             needSelection=true;
         }
-        sql += "createdAt,";
+        sql += "createdat,";
         ++parametersCount;
         if(!dirtyFlag_[7])
         {
             needSelection=true;
         }
-        sql += "updatedAt,";
+        sql += "updatedat,";
         ++parametersCount;
         if(!dirtyFlag_[8])
         {
@@ -298,21 +298,24 @@ class OrderDetails
         else
             sql += ") values (";
 
+        int placeholder=1;
+        char placeholderStr[64];
+        size_t n=0;
         sql +="default,";
         if(dirtyFlag_[1])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[2])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[3])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         else
         {
@@ -320,8 +323,8 @@ class OrderDetails
         }
         if(dirtyFlag_[4])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         else
         {
@@ -329,8 +332,8 @@ class OrderDetails
         }
         if(dirtyFlag_[5])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         else
         {
@@ -338,8 +341,8 @@ class OrderDetails
         }
         if(dirtyFlag_[6])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         else
         {
@@ -347,8 +350,8 @@ class OrderDetails
         }
         if(dirtyFlag_[7])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         else
         {
@@ -356,8 +359,8 @@ class OrderDetails
         }
         if(dirtyFlag_[8])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         else
         {
@@ -367,7 +370,14 @@ class OrderDetails
         {
             sql.resize(sql.length() - 1);
         }
-        sql.append(1, ')');
+        if(needSelection)
+        {
+            sql.append(") returning *");
+        }
+        else
+        {
+            sql.append(1, ')');
+        }
         LOG_TRACE << sql;
         return sql;
     }

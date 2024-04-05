@@ -6,7 +6,7 @@
  */
 
 #include "Wishlists.h"
-#include "product/models/MasterProducts.h"
+#include "MasterProducts.h"
 #include <drogon/utils/Utilities.h>
 #include <string>
 
@@ -15,20 +15,20 @@ using namespace drogon::orm;
 using namespace drogon_model::gaboot;
 
 const std::string Wishlists::Cols::_id = "id";
-const std::string Wishlists::Cols::_productId = "productId";
+const std::string Wishlists::Cols::_productid = "productid";
 const std::string Wishlists::Cols::_category = "category";
-const std::string Wishlists::Cols::_createdAt = "createdAt";
-const std::string Wishlists::Cols::_updatedAt = "updatedAt";
+const std::string Wishlists::Cols::_createdat = "createdat";
+const std::string Wishlists::Cols::_updatedat = "updatedat";
 const std::string Wishlists::primaryKeyName = "id";
 const bool Wishlists::hasPrimaryKey = true;
 const std::string Wishlists::tableName = "wishlists";
 
 const std::vector<typename Wishlists::MetaData> Wishlists::metaData_={
-{"id","uint64_t","bigint(20) unsigned",8,1,1,1},
-{"productId","uint32_t","int(10) unsigned",4,0,0,1},
-{"category","std::string","varchar(100)",100,0,0,1},
-{"createdAt","::trantor::Date","datetime",0,0,0,1},
-{"updatedAt","::trantor::Date","datetime",0,0,0,1}
+{"id","int32_t","integer",4,1,1,1},
+{"productid","int32_t","integer",4,0,0,1},
+{"category","std::string","character varying",100,0,0,1},
+{"createdat","::trantor::Date","timestamp without time zone",0,0,0,1},
+{"updatedat","::trantor::Date","timestamp without time zone",0,0,0,1}
 };
 const std::string &Wishlists::getColumnName(size_t index) noexcept(false)
 {
@@ -41,19 +41,19 @@ Wishlists::Wishlists(const Row &r, const ssize_t indexOffset) noexcept
     {
         if(!r["id"].isNull())
         {
-            id_=std::make_shared<uint64_t>(r["id"].as<uint64_t>());
+            id_=std::make_shared<int32_t>(r["id"].as<int32_t>());
         }
-        if(!r["productId"].isNull())
+        if(!r["productid"].isNull())
         {
-            productid_=std::make_shared<uint32_t>(r["productId"].as<uint32_t>());
+            productid_=std::make_shared<int32_t>(r["productid"].as<int32_t>());
         }
         if(!r["category"].isNull())
         {
             category_=std::make_shared<std::string>(r["category"].as<std::string>());
         }
-        if(!r["createdAt"].isNull())
+        if(!r["createdat"].isNull())
         {
-            auto timeStr = r["createdAt"].as<std::string>();
+            auto timeStr = r["createdat"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -73,9 +73,9 @@ Wishlists::Wishlists(const Row &r, const ssize_t indexOffset) noexcept
                 createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        if(!r["updatedAt"].isNull())
+        if(!r["updatedat"].isNull())
         {
-            auto timeStr = r["updatedAt"].as<std::string>();
+            auto timeStr = r["updatedat"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -108,12 +108,12 @@ Wishlists::Wishlists(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 0;
         if(!r[index].isNull())
         {
-            id_=std::make_shared<uint64_t>(r[index].as<uint64_t>());
+            id_=std::make_shared<int32_t>(r[index].as<int32_t>());
         }
         index = offset + 1;
         if(!r[index].isNull())
         {
-            productid_=std::make_shared<uint32_t>(r[index].as<uint32_t>());
+            productid_=std::make_shared<int32_t>(r[index].as<int32_t>());
         }
         index = offset + 2;
         if(!r[index].isNull())
@@ -182,7 +182,7 @@ Wishlists::Wishlists(const Json::Value &pJson, const std::vector<std::string> &p
         dirtyFlag_[0] = true;
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<uint64_t>((uint64_t)pJson[pMasqueradingVector[0]].asUInt64());
+            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -190,7 +190,7 @@ Wishlists::Wishlists(const Json::Value &pJson, const std::vector<std::string> &p
         dirtyFlag_[1] = true;
         if(!pJson[pMasqueradingVector[1]].isNull())
         {
-            productid_=std::make_shared<uint32_t>((uint32_t)pJson[pMasqueradingVector[1]].asUInt64());
+            productid_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[1]].asInt64());
         }
     }
     if(!pMasqueradingVector[2].empty() && pJson.isMember(pMasqueradingVector[2]))
@@ -262,15 +262,15 @@ Wishlists::Wishlists(const Json::Value &pJson) noexcept(false)
         dirtyFlag_[0]=true;
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<uint64_t>((uint64_t)pJson["id"].asUInt64());
+            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
         }
     }
-    if(pJson.isMember("productId"))
+    if(pJson.isMember("productid"))
     {
         dirtyFlag_[1]=true;
-        if(!pJson["productId"].isNull())
+        if(!pJson["productid"].isNull())
         {
-            productid_=std::make_shared<uint32_t>((uint32_t)pJson["productId"].asUInt64());
+            productid_=std::make_shared<int32_t>((int32_t)pJson["productid"].asInt64());
         }
     }
     if(pJson.isMember("category"))
@@ -281,12 +281,12 @@ Wishlists::Wishlists(const Json::Value &pJson) noexcept(false)
             category_=std::make_shared<std::string>(pJson["category"].asString());
         }
     }
-    if(pJson.isMember("createdAt"))
+    if(pJson.isMember("createdat"))
     {
         dirtyFlag_[3]=true;
-        if(!pJson["createdAt"].isNull())
+        if(!pJson["createdat"].isNull())
         {
-            auto timeStr = pJson["createdAt"].asString();
+            auto timeStr = pJson["createdat"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -307,12 +307,12 @@ Wishlists::Wishlists(const Json::Value &pJson) noexcept(false)
             }
         }
     }
-    if(pJson.isMember("updatedAt"))
+    if(pJson.isMember("updatedat"))
     {
         dirtyFlag_[4]=true;
-        if(!pJson["updatedAt"].isNull())
+        if(!pJson["updatedat"].isNull())
         {
-            auto timeStr = pJson["updatedAt"].asString();
+            auto timeStr = pJson["updatedat"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -347,7 +347,7 @@ void Wishlists::updateByMasqueradedJson(const Json::Value &pJson,
     {
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<uint64_t>((uint64_t)pJson[pMasqueradingVector[0]].asUInt64());
+            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -355,7 +355,7 @@ void Wishlists::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[1] = true;
         if(!pJson[pMasqueradingVector[1]].isNull())
         {
-            productid_=std::make_shared<uint32_t>((uint32_t)pJson[pMasqueradingVector[1]].asUInt64());
+            productid_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[1]].asInt64());
         }
     }
     if(!pMasqueradingVector[2].empty() && pJson.isMember(pMasqueradingVector[2]))
@@ -426,15 +426,15 @@ void Wishlists::updateByJson(const Json::Value &pJson) noexcept(false)
     {
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<uint64_t>((uint64_t)pJson["id"].asUInt64());
+            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
         }
     }
-    if(pJson.isMember("productId"))
+    if(pJson.isMember("productid"))
     {
         dirtyFlag_[1] = true;
-        if(!pJson["productId"].isNull())
+        if(!pJson["productid"].isNull())
         {
-            productid_=std::make_shared<uint32_t>((uint32_t)pJson["productId"].asUInt64());
+            productid_=std::make_shared<int32_t>((int32_t)pJson["productid"].asInt64());
         }
     }
     if(pJson.isMember("category"))
@@ -445,12 +445,12 @@ void Wishlists::updateByJson(const Json::Value &pJson) noexcept(false)
             category_=std::make_shared<std::string>(pJson["category"].asString());
         }
     }
-    if(pJson.isMember("createdAt"))
+    if(pJson.isMember("createdat"))
     {
         dirtyFlag_[3] = true;
-        if(!pJson["createdAt"].isNull())
+        if(!pJson["createdat"].isNull())
         {
-            auto timeStr = pJson["createdAt"].asString();
+            auto timeStr = pJson["createdat"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -471,12 +471,12 @@ void Wishlists::updateByJson(const Json::Value &pJson) noexcept(false)
             }
         }
     }
-    if(pJson.isMember("updatedAt"))
+    if(pJson.isMember("updatedat"))
     {
         dirtyFlag_[4] = true;
-        if(!pJson["updatedAt"].isNull())
+        if(!pJson["updatedat"].isNull())
         {
-            auto timeStr = pJson["updatedAt"].asString();
+            auto timeStr = pJson["updatedat"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -499,20 +499,20 @@ void Wishlists::updateByJson(const Json::Value &pJson) noexcept(false)
     }
 }
 
-const uint64_t &Wishlists::getValueOfId() const noexcept
+const int32_t &Wishlists::getValueOfId() const noexcept
 {
-    const static uint64_t defaultValue = uint64_t();
+    const static int32_t defaultValue = int32_t();
     if(id_)
         return *id_;
     return defaultValue;
 }
-const std::shared_ptr<uint64_t> &Wishlists::getId() const noexcept
+const std::shared_ptr<int32_t> &Wishlists::getId() const noexcept
 {
     return id_;
 }
-void Wishlists::setId(const uint64_t &pId) noexcept
+void Wishlists::setId(const int32_t &pId) noexcept
 {
-    id_ = std::make_shared<uint64_t>(pId);
+    id_ = std::make_shared<int32_t>(pId);
     dirtyFlag_[0] = true;
 }
 const typename Wishlists::PrimaryKeyType & Wishlists::getPrimaryKey() const
@@ -521,20 +521,20 @@ const typename Wishlists::PrimaryKeyType & Wishlists::getPrimaryKey() const
     return *id_;
 }
 
-const uint32_t &Wishlists::getValueOfProductid() const noexcept
+const int32_t &Wishlists::getValueOfProductid() const noexcept
 {
-    const static uint32_t defaultValue = uint32_t();
+    const static int32_t defaultValue = int32_t();
     if(productid_)
         return *productid_;
     return defaultValue;
 }
-const std::shared_ptr<uint32_t> &Wishlists::getProductid() const noexcept
+const std::shared_ptr<int32_t> &Wishlists::getProductid() const noexcept
 {
     return productid_;
 }
-void Wishlists::setProductid(const uint32_t &pProductid) noexcept
+void Wishlists::setProductid(const int32_t &pProductid) noexcept
 {
-    productid_ = std::make_shared<uint32_t>(pProductid);
+    productid_ = std::make_shared<int32_t>(pProductid);
     dirtyFlag_[1] = true;
 }
 
@@ -596,16 +596,15 @@ void Wishlists::setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept
 
 void Wishlists::updateId(const uint64_t id)
 {
-    id_ = std::make_shared<uint64_t>(id);
 }
 
 const std::vector<std::string> &Wishlists::insertColumns() noexcept
 {
     static const std::vector<std::string> inCols={
-        "productId",
+        "productid",
         "category",
-        "createdAt",
-        "updatedAt"
+        "createdat",
+        "updatedat"
     };
     return inCols;
 }
@@ -732,7 +731,7 @@ Json::Value Wishlists::toJson() const
     Json::Value ret;
     if(getId())
     {
-        ret["id"]=(Json::UInt64)getValueOfId();
+        ret["id"]=getValueOfId();
     }
     else
     {
@@ -740,11 +739,11 @@ Json::Value Wishlists::toJson() const
     }
     if(getProductid())
     {
-        ret["productId"]=getValueOfProductid();
+        ret["productid"]=getValueOfProductid();
     }
     else
     {
-        ret["productId"]=Json::Value();
+        ret["productid"]=Json::Value();
     }
     if(getCategory())
     {
@@ -756,19 +755,19 @@ Json::Value Wishlists::toJson() const
     }
     if(getCreatedat())
     {
-        ret["createdAt"]=getCreatedat()->toDbStringLocal();
+        ret["createdat"]=getCreatedat()->toDbStringLocal();
     }
     else
     {
-        ret["createdAt"]=Json::Value();
+        ret["createdat"]=Json::Value();
     }
     if(getUpdatedat())
     {
-        ret["updatedAt"]=getUpdatedat()->toDbStringLocal();
+        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
     }
     else
     {
-        ret["updatedAt"]=Json::Value();
+        ret["updatedat"]=Json::Value();
     }
     return ret;
 }
@@ -783,7 +782,7 @@ Json::Value Wishlists::toMasqueradedJson(
         {
             if(getId())
             {
-                ret[pMasqueradingVector[0]]=(Json::UInt64)getValueOfId();
+                ret[pMasqueradingVector[0]]=getValueOfId();
             }
             else
             {
@@ -839,7 +838,7 @@ Json::Value Wishlists::toMasqueradedJson(
     LOG_ERROR << "Masquerade failed";
     if(getId())
     {
-        ret["id"]=(Json::UInt64)getValueOfId();
+        ret["id"]=getValueOfId();
     }
     else
     {
@@ -847,11 +846,11 @@ Json::Value Wishlists::toMasqueradedJson(
     }
     if(getProductid())
     {
-        ret["productId"]=getValueOfProductid();
+        ret["productid"]=getValueOfProductid();
     }
     else
     {
-        ret["productId"]=Json::Value();
+        ret["productid"]=Json::Value();
     }
     if(getCategory())
     {
@@ -863,19 +862,19 @@ Json::Value Wishlists::toMasqueradedJson(
     }
     if(getCreatedat())
     {
-        ret["createdAt"]=getCreatedat()->toDbStringLocal();
+        ret["createdat"]=getCreatedat()->toDbStringLocal();
     }
     else
     {
-        ret["createdAt"]=Json::Value();
+        ret["createdat"]=Json::Value();
     }
     if(getUpdatedat())
     {
-        ret["updatedAt"]=getUpdatedat()->toDbStringLocal();
+        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
     }
     else
     {
-        ret["updatedAt"]=Json::Value();
+        ret["updatedat"]=Json::Value();
     }
     return ret;
 }
@@ -887,14 +886,14 @@ bool Wishlists::validateJsonForCreation(const Json::Value &pJson, std::string &e
         if(!validJsonOfField(0, "id", pJson["id"], err, true))
             return false;
     }
-    if(pJson.isMember("productId"))
+    if(pJson.isMember("productid"))
     {
-        if(!validJsonOfField(1, "productId", pJson["productId"], err, true))
+        if(!validJsonOfField(1, "productid", pJson["productid"], err, true))
             return false;
     }
     else
     {
-        err="The productId column cannot be null";
+        err="The productid column cannot be null";
         return false;
     }
     if(pJson.isMember("category"))
@@ -907,14 +906,14 @@ bool Wishlists::validateJsonForCreation(const Json::Value &pJson, std::string &e
         err="The category column cannot be null";
         return false;
     }
-    if(pJson.isMember("createdAt"))
+    if(pJson.isMember("createdat"))
     {
-        if(!validJsonOfField(3, "createdAt", pJson["createdAt"], err, true))
+        if(!validJsonOfField(3, "createdat", pJson["createdat"], err, true))
             return false;
     }
-    if(pJson.isMember("updatedAt"))
+    if(pJson.isMember("updatedat"))
     {
-        if(!validJsonOfField(4, "updatedAt", pJson["updatedAt"], err, true))
+        if(!validJsonOfField(4, "updatedat", pJson["updatedat"], err, true))
             return false;
     }
     return true;
@@ -999,9 +998,9 @@ bool Wishlists::validateJsonForUpdate(const Json::Value &pJson, std::string &err
         err = "The value of primary key must be set in the json object for update";
         return false;
     }
-    if(pJson.isMember("productId"))
+    if(pJson.isMember("productid"))
     {
-        if(!validJsonOfField(1, "productId", pJson["productId"], err, false))
+        if(!validJsonOfField(1, "productid", pJson["productid"], err, false))
             return false;
     }
     if(pJson.isMember("category"))
@@ -1009,14 +1008,14 @@ bool Wishlists::validateJsonForUpdate(const Json::Value &pJson, std::string &err
         if(!validJsonOfField(2, "category", pJson["category"], err, false))
             return false;
     }
-    if(pJson.isMember("createdAt"))
+    if(pJson.isMember("createdat"))
     {
-        if(!validJsonOfField(3, "createdAt", pJson["createdAt"], err, false))
+        if(!validJsonOfField(3, "createdat", pJson["createdat"], err, false))
             return false;
     }
-    if(pJson.isMember("updatedAt"))
+    if(pJson.isMember("updatedat"))
     {
-        if(!validJsonOfField(4, "updatedAt", pJson["updatedAt"], err, false))
+        if(!validJsonOfField(4, "updatedat", pJson["updatedat"], err, false))
             return false;
     }
     return true;
@@ -1088,7 +1087,7 @@ bool Wishlists::validJsonOfField(size_t index,
                 err="The automatic primary key cannot be set";
                 return false;
             }
-            if(!pJson.isUInt64())
+            if(!pJson.isInt())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -1100,7 +1099,7 @@ bool Wishlists::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(!pJson.isUInt())
+            if(!pJson.isInt())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -1177,7 +1176,7 @@ void Wishlists::getMaster_products(const DbClientPtr &clientPtr,
                                    const std::function<void(MasterProducts)> &rcb,
                                    const ExceptionCallback &ecb) const
 {
-    const static std::string sql = "select * from master_products where orderId = ?";
+    const static std::string sql = "select * from master_products where orderId = $1";
     *clientPtr << sql
                << *productid_
                >> [rcb = std::move(rcb), ecb](const Result &r){

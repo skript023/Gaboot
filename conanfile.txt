@@ -8,7 +8,7 @@ CMakeToolchain
 cmake_layout
 [options]
 drogon*:shared=False
-drogon*:with_ctl=False
+drogon*:with_ctl=True
 drogon*:with_orm=True
 drogon*:with_boost=True
 drogon*:with_mysql=False

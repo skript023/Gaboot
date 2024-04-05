@@ -46,19 +46,19 @@ class Payments
     {
         static const std::string _id;
         static const std::string _name;
-        static const std::string _transactionId;
-        static const std::string _merchantId;
-        static const std::string _paymentType;
+        static const std::string _transactionid;
+        static const std::string _merchantid;
+        static const std::string _paymenttype;
         static const std::string _description;
-        static const std::string _transactionTime;
-        static const std::string _transactionStatus;
-        static const std::string _fraudStatus;
+        static const std::string _transactiontime;
+        static const std::string _transactionstatus;
+        static const std::string _fraudstatus;
         static const std::string _bank;
-        static const std::string _vaNumber;
+        static const std::string _vanumber;
         static const std::string _currency;
         static const std::string _expiry_time;
-        static const std::string _createdAt;
-        static const std::string _updatedAt;
+        static const std::string _createdat;
+        static const std::string _updatedat;
     };
 
     const static int primaryKeyNumber;
@@ -128,32 +128,32 @@ class Payments
     void setName(std::string &&pName) noexcept;
     void setNameToNull() noexcept;
 
-    /**  For column transactionId  */
-    ///Get the value of the column transactionId, returns the default value if the column is null
+    /**  For column transactionid  */
+    ///Get the value of the column transactionid, returns the default value if the column is null
     const std::string &getValueOfTransactionid() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<std::string> &getTransactionid() const noexcept;
-    ///Set the value of the column transactionId
+    ///Set the value of the column transactionid
     void setTransactionid(const std::string &pTransactionid) noexcept;
     void setTransactionid(std::string &&pTransactionid) noexcept;
     void setTransactionidToNull() noexcept;
 
-    /**  For column merchantId  */
-    ///Get the value of the column merchantId, returns the default value if the column is null
+    /**  For column merchantid  */
+    ///Get the value of the column merchantid, returns the default value if the column is null
     const std::string &getValueOfMerchantid() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<std::string> &getMerchantid() const noexcept;
-    ///Set the value of the column merchantId
+    ///Set the value of the column merchantid
     void setMerchantid(const std::string &pMerchantid) noexcept;
     void setMerchantid(std::string &&pMerchantid) noexcept;
     void setMerchantidToNull() noexcept;
 
-    /**  For column paymentType  */
-    ///Get the value of the column paymentType, returns the default value if the column is null
+    /**  For column paymenttype  */
+    ///Get the value of the column paymenttype, returns the default value if the column is null
     const std::string &getValueOfPaymenttype() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<std::string> &getPaymenttype() const noexcept;
-    ///Set the value of the column paymentType
+    ///Set the value of the column paymenttype
     void setPaymenttype(const std::string &pPaymenttype) noexcept;
     void setPaymenttype(std::string &&pPaymenttype) noexcept;
     void setPaymenttypeToNull() noexcept;
@@ -168,32 +168,32 @@ class Payments
     void setDescription(std::string &&pDescription) noexcept;
     void setDescriptionToNull() noexcept;
 
-    /**  For column transactionTime  */
-    ///Get the value of the column transactionTime, returns the default value if the column is null
+    /**  For column transactiontime  */
+    ///Get the value of the column transactiontime, returns the default value if the column is null
     const std::string &getValueOfTransactiontime() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<std::string> &getTransactiontime() const noexcept;
-    ///Set the value of the column transactionTime
+    ///Set the value of the column transactiontime
     void setTransactiontime(const std::string &pTransactiontime) noexcept;
     void setTransactiontime(std::string &&pTransactiontime) noexcept;
     void setTransactiontimeToNull() noexcept;
 
-    /**  For column transactionStatus  */
-    ///Get the value of the column transactionStatus, returns the default value if the column is null
+    /**  For column transactionstatus  */
+    ///Get the value of the column transactionstatus, returns the default value if the column is null
     const std::string &getValueOfTransactionstatus() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<std::string> &getTransactionstatus() const noexcept;
-    ///Set the value of the column transactionStatus
+    ///Set the value of the column transactionstatus
     void setTransactionstatus(const std::string &pTransactionstatus) noexcept;
     void setTransactionstatus(std::string &&pTransactionstatus) noexcept;
     void setTransactionstatusToNull() noexcept;
 
-    /**  For column fraudStatus  */
-    ///Get the value of the column fraudStatus, returns the default value if the column is null
+    /**  For column fraudstatus  */
+    ///Get the value of the column fraudstatus, returns the default value if the column is null
     const std::string &getValueOfFraudstatus() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<std::string> &getFraudstatus() const noexcept;
-    ///Set the value of the column fraudStatus
+    ///Set the value of the column fraudstatus
     void setFraudstatus(const std::string &pFraudstatus) noexcept;
     void setFraudstatus(std::string &&pFraudstatus) noexcept;
     void setFraudstatusToNull() noexcept;
@@ -208,12 +208,12 @@ class Payments
     void setBank(std::string &&pBank) noexcept;
     void setBankToNull() noexcept;
 
-    /**  For column vaNumber  */
-    ///Get the value of the column vaNumber, returns the default value if the column is null
+    /**  For column vanumber  */
+    ///Get the value of the column vanumber, returns the default value if the column is null
     const std::string &getValueOfVanumber() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<std::string> &getVanumber() const noexcept;
-    ///Set the value of the column vaNumber
+    ///Set the value of the column vanumber
     void setVanumber(const std::string &pVanumber) noexcept;
     void setVanumber(std::string &&pVanumber) noexcept;
     void setVanumberToNull() noexcept;
@@ -238,20 +238,20 @@ class Payments
     void setExpiryTime(std::string &&pExpiryTime) noexcept;
     void setExpiryTimeToNull() noexcept;
 
-    /**  For column createdAt  */
-    ///Get the value of the column createdAt, returns the default value if the column is null
+    /**  For column createdat  */
+    ///Get the value of the column createdat, returns the default value if the column is null
     const ::trantor::Date &getValueOfCreatedat() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<::trantor::Date> &getCreatedat() const noexcept;
-    ///Set the value of the column createdAt
+    ///Set the value of the column createdat
     void setCreatedat(const ::trantor::Date &pCreatedat) noexcept;
 
-    /**  For column updatedAt  */
-    ///Get the value of the column updatedAt, returns the default value if the column is null
+    /**  For column updatedat  */
+    ///Get the value of the column updatedat, returns the default value if the column is null
     const ::trantor::Date &getValueOfUpdatedat() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<::trantor::Date> &getUpdatedat() const noexcept;
-    ///Set the value of the column updatedAt
+    ///Set the value of the column updatedat
     void setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept;
 
 
@@ -306,13 +306,13 @@ class Payments
   public:
     static const std::string &sqlForFindingByPrimaryKey()
     {
-        static const std::string sql="select * from " + tableName + " where id = ?";
+        static const std::string sql="select * from " + tableName + " where id = $1";
         return sql;
     }
 
     static const std::string &sqlForDeletingByPrimaryKey()
     {
-        static const std::string sql="delete from " + tableName + " where id = ?";
+        static const std::string sql="delete from " + tableName + " where id = $1";
         return sql;
     }
     std::string sqlForInserting(bool &needSelection) const
@@ -329,17 +329,17 @@ class Payments
         }
         if(dirtyFlag_[2])
         {
-            sql += "transactionId,";
+            sql += "transactionid,";
             ++parametersCount;
         }
         if(dirtyFlag_[3])
         {
-            sql += "merchantId,";
+            sql += "merchantid,";
             ++parametersCount;
         }
         if(dirtyFlag_[4])
         {
-            sql += "paymentType,";
+            sql += "paymenttype,";
             ++parametersCount;
         }
         if(dirtyFlag_[5])
@@ -349,17 +349,17 @@ class Payments
         }
         if(dirtyFlag_[6])
         {
-            sql += "transactionTime,";
+            sql += "transactiontime,";
             ++parametersCount;
         }
         if(dirtyFlag_[7])
         {
-            sql += "transactionStatus,";
+            sql += "transactionstatus,";
             ++parametersCount;
         }
         if(dirtyFlag_[8])
         {
-            sql += "fraudStatus,";
+            sql += "fraudstatus,";
             ++parametersCount;
         }
         if(dirtyFlag_[9])
@@ -369,7 +369,7 @@ class Payments
         }
         if(dirtyFlag_[10])
         {
-            sql += "vaNumber,";
+            sql += "vanumber,";
             ++parametersCount;
         }
         if(dirtyFlag_[11])
@@ -382,15 +382,17 @@ class Payments
             sql += "expiry_time,";
             ++parametersCount;
         }
-        if(dirtyFlag_[13])
+        sql += "createdat,";
+        ++parametersCount;
+        if(!dirtyFlag_[13])
         {
-            sql += "createdAt,";
-            ++parametersCount;
+            needSelection=true;
         }
-        if(dirtyFlag_[14])
+        sql += "updatedat,";
+        ++parametersCount;
+        if(!dirtyFlag_[14])
         {
-            sql += "updatedAt,";
-            ++parametersCount;
+            needSelection=true;
         }
         needSelection=true;
         if(parametersCount > 0)
@@ -401,82 +403,100 @@ class Payments
         else
             sql += ") values (";
 
+        int placeholder=1;
+        char placeholderStr[64];
+        size_t n=0;
         sql +="default,";
         if(dirtyFlag_[1])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[2])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[3])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[4])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[5])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[6])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[7])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[8])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[9])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[10])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[11])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[12])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[13])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
+        }
+        else
+        {
+            sql +="default,";
         }
         if(dirtyFlag_[14])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
+        }
+        else
+        {
+            sql +="default,";
         }
         if(parametersCount > 0)
         {
             sql.resize(sql.length() - 1);
         }
-        sql.append(1, ')');
+        if(needSelection)
+        {
+            sql.append(") returning *");
+        }
+        else
+        {
+            sql.append(1, ')');
+        }
         LOG_TRACE << sql;
         return sql;
     }

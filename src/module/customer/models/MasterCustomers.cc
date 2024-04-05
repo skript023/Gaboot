@@ -6,8 +6,8 @@
  */
 
 #include "MasterCustomers.h"
-#include "cart/models/Carts.h"
-#include "order/models/Orders.h"
+#include "Carts.h"
+#include "Orders.h"
 #include <drogon/utils/Utilities.h>
 #include <string>
 
@@ -20,38 +20,38 @@ const std::string MasterCustomers::Cols::_firstname = "firstname";
 const std::string MasterCustomers::Cols::_lastname = "lastname";
 const std::string MasterCustomers::Cols::_username = "username";
 const std::string MasterCustomers::Cols::_email = "email";
-const std::string MasterCustomers::Cols::_phoneNumber = "phoneNumber";
-const std::string MasterCustomers::Cols::_addressDetail = "addressDetail";
+const std::string MasterCustomers::Cols::_phonenumber = "phonenumber";
+const std::string MasterCustomers::Cols::_addressdetail = "addressdetail";
 const std::string MasterCustomers::Cols::_latitude = "latitude";
 const std::string MasterCustomers::Cols::_longitude = "longitude";
 const std::string MasterCustomers::Cols::_password = "password";
 const std::string MasterCustomers::Cols::_token = "token";
-const std::string MasterCustomers::Cols::_isActive = "isActive";
-const std::string MasterCustomers::Cols::_imgPath = "imgPath";
-const std::string MasterCustomers::Cols::_imgThumbPath = "imgThumbPath";
-const std::string MasterCustomers::Cols::_createdAt = "createdAt";
-const std::string MasterCustomers::Cols::_updatedAt = "updatedAt";
+const std::string MasterCustomers::Cols::_isactive = "isactive";
+const std::string MasterCustomers::Cols::_imgpath = "imgpath";
+const std::string MasterCustomers::Cols::_imgthumbpath = "imgthumbpath";
+const std::string MasterCustomers::Cols::_createdat = "createdat";
+const std::string MasterCustomers::Cols::_updatedat = "updatedat";
 const std::string MasterCustomers::primaryKeyName = "id";
 const bool MasterCustomers::hasPrimaryKey = true;
 const std::string MasterCustomers::tableName = "master_customers";
 
 const std::vector<typename MasterCustomers::MetaData> MasterCustomers::metaData_={
-{"id","uint64_t","bigint(20) unsigned",8,1,1,1},
-{"firstname","std::string","varchar(50)",50,0,0,1},
-{"lastname","std::string","varchar(50)",50,0,0,1},
-{"username","std::string","varchar(50)",50,0,0,1},
-{"email","std::string","varchar(100)",100,0,0,1},
-{"phoneNumber","std::string","varchar(20)",20,0,0,1},
-{"addressDetail","std::string","text",0,0,0,1},
-{"latitude","double","double",8,0,0,0},
-{"longitude","double","double",8,0,0,0},
-{"password","std::string","varchar(255)",255,0,0,1},
-{"token","std::string","varchar(255)",255,0,0,0},
-{"isActive","int8_t","tinyint(1)",1,0,0,1},
-{"imgPath","std::string","varchar(255)",255,0,0,0},
-{"imgThumbPath","std::string","varchar(255)",255,0,0,0},
-{"createdAt","::trantor::Date","datetime",0,0,0,1},
-{"updatedAt","::trantor::Date","datetime",0,0,0,1}
+{"id","int32_t","integer",4,1,1,1},
+{"firstname","std::string","character varying",50,0,0,1},
+{"lastname","std::string","character varying",50,0,0,1},
+{"username","std::string","character varying",50,0,0,1},
+{"email","std::string","character varying",100,0,0,1},
+{"phonenumber","std::string","character varying",20,0,0,1},
+{"addressdetail","std::string","text",0,0,0,1},
+{"latitude","double","double precision",8,0,0,0},
+{"longitude","double","double precision",8,0,0,0},
+{"password","std::string","character varying",255,0,0,1},
+{"token","std::string","character varying",255,0,0,0},
+{"isactive","bool","boolean",1,0,0,1},
+{"imgpath","std::string","character varying",255,0,0,0},
+{"imgthumbpath","std::string","character varying",255,0,0,0},
+{"createdat","::trantor::Date","timestamp without time zone",0,0,0,1},
+{"updatedat","::trantor::Date","timestamp without time zone",0,0,0,1}
 };
 const std::string &MasterCustomers::getColumnName(size_t index) noexcept(false)
 {
@@ -64,7 +64,7 @@ MasterCustomers::MasterCustomers(const Row &r, const ssize_t indexOffset) noexce
     {
         if(!r["id"].isNull())
         {
-            id_=std::make_shared<uint64_t>(r["id"].as<uint64_t>());
+            id_=std::make_shared<int32_t>(r["id"].as<int32_t>());
         }
         if(!r["firstname"].isNull())
         {
@@ -82,13 +82,13 @@ MasterCustomers::MasterCustomers(const Row &r, const ssize_t indexOffset) noexce
         {
             email_=std::make_shared<std::string>(r["email"].as<std::string>());
         }
-        if(!r["phoneNumber"].isNull())
+        if(!r["phonenumber"].isNull())
         {
-            phonenumber_=std::make_shared<std::string>(r["phoneNumber"].as<std::string>());
+            phonenumber_=std::make_shared<std::string>(r["phonenumber"].as<std::string>());
         }
-        if(!r["addressDetail"].isNull())
+        if(!r["addressdetail"].isNull())
         {
-            addressdetail_=std::make_shared<std::string>(r["addressDetail"].as<std::string>());
+            addressdetail_=std::make_shared<std::string>(r["addressdetail"].as<std::string>());
         }
         if(!r["latitude"].isNull())
         {
@@ -106,21 +106,21 @@ MasterCustomers::MasterCustomers(const Row &r, const ssize_t indexOffset) noexce
         {
             token_=std::make_shared<std::string>(r["token"].as<std::string>());
         }
-        if(!r["isActive"].isNull())
+        if(!r["isactive"].isNull())
         {
-            isactive_=std::make_shared<int8_t>(r["isActive"].as<int8_t>());
+            isactive_=std::make_shared<bool>(r["isactive"].as<bool>());
         }
-        if(!r["imgPath"].isNull())
+        if(!r["imgpath"].isNull())
         {
-            imgpath_=std::make_shared<std::string>(r["imgPath"].as<std::string>());
+            imgpath_=std::make_shared<std::string>(r["imgpath"].as<std::string>());
         }
-        if(!r["imgThumbPath"].isNull())
+        if(!r["imgthumbpath"].isNull())
         {
-            imgthumbpath_=std::make_shared<std::string>(r["imgThumbPath"].as<std::string>());
+            imgthumbpath_=std::make_shared<std::string>(r["imgthumbpath"].as<std::string>());
         }
-        if(!r["createdAt"].isNull())
+        if(!r["createdat"].isNull())
         {
-            auto timeStr = r["createdAt"].as<std::string>();
+            auto timeStr = r["createdat"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -140,9 +140,9 @@ MasterCustomers::MasterCustomers(const Row &r, const ssize_t indexOffset) noexce
                 createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        if(!r["updatedAt"].isNull())
+        if(!r["updatedat"].isNull())
         {
-            auto timeStr = r["updatedAt"].as<std::string>();
+            auto timeStr = r["updatedat"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -175,7 +175,7 @@ MasterCustomers::MasterCustomers(const Row &r, const ssize_t indexOffset) noexce
         index = offset + 0;
         if(!r[index].isNull())
         {
-            id_=std::make_shared<uint64_t>(r[index].as<uint64_t>());
+            id_=std::make_shared<int32_t>(r[index].as<int32_t>());
         }
         index = offset + 1;
         if(!r[index].isNull())
@@ -230,7 +230,7 @@ MasterCustomers::MasterCustomers(const Row &r, const ssize_t indexOffset) noexce
         index = offset + 11;
         if(!r[index].isNull())
         {
-            isactive_=std::make_shared<int8_t>(r[index].as<int8_t>());
+            isactive_=std::make_shared<bool>(r[index].as<bool>());
         }
         index = offset + 12;
         if(!r[index].isNull())
@@ -304,7 +304,7 @@ MasterCustomers::MasterCustomers(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[0] = true;
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<uint64_t>((uint64_t)pJson[pMasqueradingVector[0]].asUInt64());
+            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -392,7 +392,7 @@ MasterCustomers::MasterCustomers(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[11] = true;
         if(!pJson[pMasqueradingVector[11]].isNull())
         {
-            isactive_=std::make_shared<int8_t>((int8_t)pJson[pMasqueradingVector[11]].asInt64());
+            isactive_=std::make_shared<bool>(pJson[pMasqueradingVector[11]].asBool());
         }
     }
     if(!pMasqueradingVector[12].empty() && pJson.isMember(pMasqueradingVector[12]))
@@ -472,7 +472,7 @@ MasterCustomers::MasterCustomers(const Json::Value &pJson) noexcept(false)
         dirtyFlag_[0]=true;
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<uint64_t>((uint64_t)pJson["id"].asUInt64());
+            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
         }
     }
     if(pJson.isMember("firstname"))
@@ -507,20 +507,20 @@ MasterCustomers::MasterCustomers(const Json::Value &pJson) noexcept(false)
             email_=std::make_shared<std::string>(pJson["email"].asString());
         }
     }
-    if(pJson.isMember("phoneNumber"))
+    if(pJson.isMember("phonenumber"))
     {
         dirtyFlag_[5]=true;
-        if(!pJson["phoneNumber"].isNull())
+        if(!pJson["phonenumber"].isNull())
         {
-            phonenumber_=std::make_shared<std::string>(pJson["phoneNumber"].asString());
+            phonenumber_=std::make_shared<std::string>(pJson["phonenumber"].asString());
         }
     }
-    if(pJson.isMember("addressDetail"))
+    if(pJson.isMember("addressdetail"))
     {
         dirtyFlag_[6]=true;
-        if(!pJson["addressDetail"].isNull())
+        if(!pJson["addressdetail"].isNull())
         {
-            addressdetail_=std::make_shared<std::string>(pJson["addressDetail"].asString());
+            addressdetail_=std::make_shared<std::string>(pJson["addressdetail"].asString());
         }
     }
     if(pJson.isMember("latitude"))
@@ -555,36 +555,36 @@ MasterCustomers::MasterCustomers(const Json::Value &pJson) noexcept(false)
             token_=std::make_shared<std::string>(pJson["token"].asString());
         }
     }
-    if(pJson.isMember("isActive"))
+    if(pJson.isMember("isactive"))
     {
         dirtyFlag_[11]=true;
-        if(!pJson["isActive"].isNull())
+        if(!pJson["isactive"].isNull())
         {
-            isactive_=std::make_shared<int8_t>((int8_t)pJson["isActive"].asInt64());
+            isactive_=std::make_shared<bool>(pJson["isactive"].asBool());
         }
     }
-    if(pJson.isMember("imgPath"))
+    if(pJson.isMember("imgpath"))
     {
         dirtyFlag_[12]=true;
-        if(!pJson["imgPath"].isNull())
+        if(!pJson["imgpath"].isNull())
         {
-            imgpath_=std::make_shared<std::string>(pJson["imgPath"].asString());
+            imgpath_=std::make_shared<std::string>(pJson["imgpath"].asString());
         }
     }
-    if(pJson.isMember("imgThumbPath"))
+    if(pJson.isMember("imgthumbpath"))
     {
         dirtyFlag_[13]=true;
-        if(!pJson["imgThumbPath"].isNull())
+        if(!pJson["imgthumbpath"].isNull())
         {
-            imgthumbpath_=std::make_shared<std::string>(pJson["imgThumbPath"].asString());
+            imgthumbpath_=std::make_shared<std::string>(pJson["imgthumbpath"].asString());
         }
     }
-    if(pJson.isMember("createdAt"))
+    if(pJson.isMember("createdat"))
     {
         dirtyFlag_[14]=true;
-        if(!pJson["createdAt"].isNull())
+        if(!pJson["createdat"].isNull())
         {
-            auto timeStr = pJson["createdAt"].asString();
+            auto timeStr = pJson["createdat"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -605,12 +605,12 @@ MasterCustomers::MasterCustomers(const Json::Value &pJson) noexcept(false)
             }
         }
     }
-    if(pJson.isMember("updatedAt"))
+    if(pJson.isMember("updatedat"))
     {
         dirtyFlag_[15]=true;
-        if(!pJson["updatedAt"].isNull())
+        if(!pJson["updatedat"].isNull())
         {
-            auto timeStr = pJson["updatedAt"].asString();
+            auto timeStr = pJson["updatedat"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -645,7 +645,7 @@ void MasterCustomers::updateByMasqueradedJson(const Json::Value &pJson,
     {
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<uint64_t>((uint64_t)pJson[pMasqueradingVector[0]].asUInt64());
+            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -733,7 +733,7 @@ void MasterCustomers::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[11] = true;
         if(!pJson[pMasqueradingVector[11]].isNull())
         {
-            isactive_=std::make_shared<int8_t>((int8_t)pJson[pMasqueradingVector[11]].asInt64());
+            isactive_=std::make_shared<bool>(pJson[pMasqueradingVector[11]].asBool());
         }
     }
     if(!pMasqueradingVector[12].empty() && pJson.isMember(pMasqueradingVector[12]))
@@ -812,7 +812,7 @@ void MasterCustomers::updateByJson(const Json::Value &pJson) noexcept(false)
     {
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<uint64_t>((uint64_t)pJson["id"].asUInt64());
+            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
         }
     }
     if(pJson.isMember("firstname"))
@@ -847,20 +847,20 @@ void MasterCustomers::updateByJson(const Json::Value &pJson) noexcept(false)
             email_=std::make_shared<std::string>(pJson["email"].asString());
         }
     }
-    if(pJson.isMember("phoneNumber"))
+    if(pJson.isMember("phonenumber"))
     {
         dirtyFlag_[5] = true;
-        if(!pJson["phoneNumber"].isNull())
+        if(!pJson["phonenumber"].isNull())
         {
-            phonenumber_=std::make_shared<std::string>(pJson["phoneNumber"].asString());
+            phonenumber_=std::make_shared<std::string>(pJson["phonenumber"].asString());
         }
     }
-    if(pJson.isMember("addressDetail"))
+    if(pJson.isMember("addressdetail"))
     {
         dirtyFlag_[6] = true;
-        if(!pJson["addressDetail"].isNull())
+        if(!pJson["addressdetail"].isNull())
         {
-            addressdetail_=std::make_shared<std::string>(pJson["addressDetail"].asString());
+            addressdetail_=std::make_shared<std::string>(pJson["addressdetail"].asString());
         }
     }
     if(pJson.isMember("latitude"))
@@ -895,36 +895,36 @@ void MasterCustomers::updateByJson(const Json::Value &pJson) noexcept(false)
             token_=std::make_shared<std::string>(pJson["token"].asString());
         }
     }
-    if(pJson.isMember("isActive"))
+    if(pJson.isMember("isactive"))
     {
         dirtyFlag_[11] = true;
-        if(!pJson["isActive"].isNull())
+        if(!pJson["isactive"].isNull())
         {
-            isactive_=std::make_shared<int8_t>((int8_t)pJson["isActive"].asInt64());
+            isactive_=std::make_shared<bool>(pJson["isactive"].asBool());
         }
     }
-    if(pJson.isMember("imgPath"))
+    if(pJson.isMember("imgpath"))
     {
         dirtyFlag_[12] = true;
-        if(!pJson["imgPath"].isNull())
+        if(!pJson["imgpath"].isNull())
         {
-            imgpath_=std::make_shared<std::string>(pJson["imgPath"].asString());
+            imgpath_=std::make_shared<std::string>(pJson["imgpath"].asString());
         }
     }
-    if(pJson.isMember("imgThumbPath"))
+    if(pJson.isMember("imgthumbpath"))
     {
         dirtyFlag_[13] = true;
-        if(!pJson["imgThumbPath"].isNull())
+        if(!pJson["imgthumbpath"].isNull())
         {
-            imgthumbpath_=std::make_shared<std::string>(pJson["imgThumbPath"].asString());
+            imgthumbpath_=std::make_shared<std::string>(pJson["imgthumbpath"].asString());
         }
     }
-    if(pJson.isMember("createdAt"))
+    if(pJson.isMember("createdat"))
     {
         dirtyFlag_[14] = true;
-        if(!pJson["createdAt"].isNull())
+        if(!pJson["createdat"].isNull())
         {
-            auto timeStr = pJson["createdAt"].asString();
+            auto timeStr = pJson["createdat"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -945,12 +945,12 @@ void MasterCustomers::updateByJson(const Json::Value &pJson) noexcept(false)
             }
         }
     }
-    if(pJson.isMember("updatedAt"))
+    if(pJson.isMember("updatedat"))
     {
         dirtyFlag_[15] = true;
-        if(!pJson["updatedAt"].isNull())
+        if(!pJson["updatedat"].isNull())
         {
-            auto timeStr = pJson["updatedAt"].asString();
+            auto timeStr = pJson["updatedat"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -973,20 +973,20 @@ void MasterCustomers::updateByJson(const Json::Value &pJson) noexcept(false)
     }
 }
 
-const uint64_t &MasterCustomers::getValueOfId() const noexcept
+const int32_t &MasterCustomers::getValueOfId() const noexcept
 {
-    const static uint64_t defaultValue = uint64_t();
+    const static int32_t defaultValue = int32_t();
     if(id_)
         return *id_;
     return defaultValue;
 }
-const std::shared_ptr<uint64_t> &MasterCustomers::getId() const noexcept
+const std::shared_ptr<int32_t> &MasterCustomers::getId() const noexcept
 {
     return id_;
 }
-void MasterCustomers::setId(const uint64_t &pId) noexcept
+void MasterCustomers::setId(const int32_t &pId) noexcept
 {
-    id_ = std::make_shared<uint64_t>(pId);
+    id_ = std::make_shared<int32_t>(pId);
     dirtyFlag_[0] = true;
 }
 const typename MasterCustomers::PrimaryKeyType & MasterCustomers::getPrimaryKey() const
@@ -1220,20 +1220,20 @@ void MasterCustomers::setTokenToNull() noexcept
     dirtyFlag_[10] = true;
 }
 
-const int8_t &MasterCustomers::getValueOfIsactive() const noexcept
+const bool &MasterCustomers::getValueOfIsactive() const noexcept
 {
-    const static int8_t defaultValue = int8_t();
+    const static bool defaultValue = bool();
     if(isactive_)
         return *isactive_;
     return defaultValue;
 }
-const std::shared_ptr<int8_t> &MasterCustomers::getIsactive() const noexcept
+const std::shared_ptr<bool> &MasterCustomers::getIsactive() const noexcept
 {
     return isactive_;
 }
-void MasterCustomers::setIsactive(const int8_t &pIsactive) noexcept
+void MasterCustomers::setIsactive(const bool &pIsactive) noexcept
 {
-    isactive_ = std::make_shared<int8_t>(pIsactive);
+    isactive_ = std::make_shared<bool>(pIsactive);
     dirtyFlag_[11] = true;
 }
 
@@ -1327,7 +1327,6 @@ void MasterCustomers::setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept
 
 void MasterCustomers::updateId(const uint64_t id)
 {
-    id_ = std::make_shared<uint64_t>(id);
 }
 
 const std::vector<std::string> &MasterCustomers::insertColumns() noexcept
@@ -1337,17 +1336,17 @@ const std::vector<std::string> &MasterCustomers::insertColumns() noexcept
         "lastname",
         "username",
         "email",
-        "phoneNumber",
-        "addressDetail",
+        "phonenumber",
+        "addressdetail",
         "latitude",
         "longitude",
         "password",
         "token",
-        "isActive",
-        "imgPath",
-        "imgThumbPath",
-        "createdAt",
-        "updatedAt"
+        "isactive",
+        "imgpath",
+        "imgthumbpath",
+        "createdat",
+        "updatedat"
     };
     return inCols;
 }
@@ -1760,7 +1759,7 @@ Json::Value MasterCustomers::toJson() const
     Json::Value ret;
     if(getId())
     {
-        ret["id"]=(Json::UInt64)getValueOfId();
+        ret["id"]=getValueOfId();
     }
     else
     {
@@ -1800,19 +1799,19 @@ Json::Value MasterCustomers::toJson() const
     }
     if(getPhonenumber())
     {
-        ret["phoneNumber"]=getValueOfPhonenumber();
+        ret["phonenumber"]=getValueOfPhonenumber();
     }
     else
     {
-        ret["phoneNumber"]=Json::Value();
+        ret["phonenumber"]=Json::Value();
     }
     if(getAddressdetail())
     {
-        ret["addressDetail"]=getValueOfAddressdetail();
+        ret["addressdetail"]=getValueOfAddressdetail();
     }
     else
     {
-        ret["addressDetail"]=Json::Value();
+        ret["addressdetail"]=Json::Value();
     }
     if(getLatitude())
     {
@@ -1848,43 +1847,43 @@ Json::Value MasterCustomers::toJson() const
     }
     if(getIsactive())
     {
-        ret["isActive"]=getValueOfIsactive();
+        ret["isactive"]=getValueOfIsactive();
     }
     else
     {
-        ret["isActive"]=Json::Value();
+        ret["isactive"]=Json::Value();
     }
     if(getImgpath())
     {
-        ret["imgPath"]=getValueOfImgpath();
+        ret["imgpath"]=getValueOfImgpath();
     }
     else
     {
-        ret["imgPath"]=Json::Value();
+        ret["imgpath"]=Json::Value();
     }
     if(getImgthumbpath())
     {
-        ret["imgThumbPath"]=getValueOfImgthumbpath();
+        ret["imgthumbpath"]=getValueOfImgthumbpath();
     }
     else
     {
-        ret["imgThumbPath"]=Json::Value();
+        ret["imgthumbpath"]=Json::Value();
     }
     if(getCreatedat())
     {
-        ret["createdAt"]=getCreatedat()->toDbStringLocal();
+        ret["createdat"]=getCreatedat()->toDbStringLocal();
     }
     else
     {
-        ret["createdAt"]=Json::Value();
+        ret["createdat"]=Json::Value();
     }
     if(getUpdatedat())
     {
-        ret["updatedAt"]=getUpdatedat()->toDbStringLocal();
+        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
     }
     else
     {
-        ret["updatedAt"]=Json::Value();
+        ret["updatedat"]=Json::Value();
     }
     return ret;
 }
@@ -1899,7 +1898,7 @@ Json::Value MasterCustomers::toMasqueradedJson(
         {
             if(getId())
             {
-                ret[pMasqueradingVector[0]]=(Json::UInt64)getValueOfId();
+                ret[pMasqueradingVector[0]]=getValueOfId();
             }
             else
             {
@@ -2076,7 +2075,7 @@ Json::Value MasterCustomers::toMasqueradedJson(
     LOG_ERROR << "Masquerade failed";
     if(getId())
     {
-        ret["id"]=(Json::UInt64)getValueOfId();
+        ret["id"]=getValueOfId();
     }
     else
     {
@@ -2116,19 +2115,19 @@ Json::Value MasterCustomers::toMasqueradedJson(
     }
     if(getPhonenumber())
     {
-        ret["phoneNumber"]=getValueOfPhonenumber();
+        ret["phonenumber"]=getValueOfPhonenumber();
     }
     else
     {
-        ret["phoneNumber"]=Json::Value();
+        ret["phonenumber"]=Json::Value();
     }
     if(getAddressdetail())
     {
-        ret["addressDetail"]=getValueOfAddressdetail();
+        ret["addressdetail"]=getValueOfAddressdetail();
     }
     else
     {
-        ret["addressDetail"]=Json::Value();
+        ret["addressdetail"]=Json::Value();
     }
     if(getLatitude())
     {
@@ -2164,43 +2163,43 @@ Json::Value MasterCustomers::toMasqueradedJson(
     }
     if(getIsactive())
     {
-        ret["isActive"]=getValueOfIsactive();
+        ret["isactive"]=getValueOfIsactive();
     }
     else
     {
-        ret["isActive"]=Json::Value();
+        ret["isactive"]=Json::Value();
     }
     if(getImgpath())
     {
-        ret["imgPath"]=getValueOfImgpath();
+        ret["imgpath"]=getValueOfImgpath();
     }
     else
     {
-        ret["imgPath"]=Json::Value();
+        ret["imgpath"]=Json::Value();
     }
     if(getImgthumbpath())
     {
-        ret["imgThumbPath"]=getValueOfImgthumbpath();
+        ret["imgthumbpath"]=getValueOfImgthumbpath();
     }
     else
     {
-        ret["imgThumbPath"]=Json::Value();
+        ret["imgthumbpath"]=Json::Value();
     }
     if(getCreatedat())
     {
-        ret["createdAt"]=getCreatedat()->toDbStringLocal();
+        ret["createdat"]=getCreatedat()->toDbStringLocal();
     }
     else
     {
-        ret["createdAt"]=Json::Value();
+        ret["createdat"]=Json::Value();
     }
     if(getUpdatedat())
     {
-        ret["updatedAt"]=getUpdatedat()->toDbStringLocal();
+        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
     }
     else
     {
-        ret["updatedAt"]=Json::Value();
+        ret["updatedat"]=Json::Value();
     }
     return ret;
 }
@@ -2252,24 +2251,24 @@ bool MasterCustomers::validateJsonForCreation(const Json::Value &pJson, std::str
         err="The email column cannot be null";
         return false;
     }
-    if(pJson.isMember("phoneNumber"))
+    if(pJson.isMember("phonenumber"))
     {
-        if(!validJsonOfField(5, "phoneNumber", pJson["phoneNumber"], err, true))
+        if(!validJsonOfField(5, "phonenumber", pJson["phonenumber"], err, true))
             return false;
     }
     else
     {
-        err="The phoneNumber column cannot be null";
+        err="The phonenumber column cannot be null";
         return false;
     }
-    if(pJson.isMember("addressDetail"))
+    if(pJson.isMember("addressdetail"))
     {
-        if(!validJsonOfField(6, "addressDetail", pJson["addressDetail"], err, true))
+        if(!validJsonOfField(6, "addressdetail", pJson["addressdetail"], err, true))
             return false;
     }
     else
     {
-        err="The addressDetail column cannot be null";
+        err="The addressdetail column cannot be null";
         return false;
     }
     if(pJson.isMember("latitude"))
@@ -2297,29 +2296,29 @@ bool MasterCustomers::validateJsonForCreation(const Json::Value &pJson, std::str
         if(!validJsonOfField(10, "token", pJson["token"], err, true))
             return false;
     }
-    if(pJson.isMember("isActive"))
+    if(pJson.isMember("isactive"))
     {
-        if(!validJsonOfField(11, "isActive", pJson["isActive"], err, true))
+        if(!validJsonOfField(11, "isactive", pJson["isactive"], err, true))
             return false;
     }
-    if(pJson.isMember("imgPath"))
+    if(pJson.isMember("imgpath"))
     {
-        if(!validJsonOfField(12, "imgPath", pJson["imgPath"], err, true))
+        if(!validJsonOfField(12, "imgpath", pJson["imgpath"], err, true))
             return false;
     }
-    if(pJson.isMember("imgThumbPath"))
+    if(pJson.isMember("imgthumbpath"))
     {
-        if(!validJsonOfField(13, "imgThumbPath", pJson["imgThumbPath"], err, true))
+        if(!validJsonOfField(13, "imgthumbpath", pJson["imgthumbpath"], err, true))
             return false;
     }
-    if(pJson.isMember("createdAt"))
+    if(pJson.isMember("createdat"))
     {
-        if(!validJsonOfField(14, "createdAt", pJson["createdAt"], err, true))
+        if(!validJsonOfField(14, "createdat", pJson["createdat"], err, true))
             return false;
     }
-    if(pJson.isMember("updatedAt"))
+    if(pJson.isMember("updatedat"))
     {
-        if(!validJsonOfField(15, "updatedAt", pJson["updatedAt"], err, true))
+        if(!validJsonOfField(15, "updatedat", pJson["updatedat"], err, true))
             return false;
     }
     return true;
@@ -2537,14 +2536,14 @@ bool MasterCustomers::validateJsonForUpdate(const Json::Value &pJson, std::strin
         if(!validJsonOfField(4, "email", pJson["email"], err, false))
             return false;
     }
-    if(pJson.isMember("phoneNumber"))
+    if(pJson.isMember("phonenumber"))
     {
-        if(!validJsonOfField(5, "phoneNumber", pJson["phoneNumber"], err, false))
+        if(!validJsonOfField(5, "phonenumber", pJson["phonenumber"], err, false))
             return false;
     }
-    if(pJson.isMember("addressDetail"))
+    if(pJson.isMember("addressdetail"))
     {
-        if(!validJsonOfField(6, "addressDetail", pJson["addressDetail"], err, false))
+        if(!validJsonOfField(6, "addressdetail", pJson["addressdetail"], err, false))
             return false;
     }
     if(pJson.isMember("latitude"))
@@ -2567,29 +2566,29 @@ bool MasterCustomers::validateJsonForUpdate(const Json::Value &pJson, std::strin
         if(!validJsonOfField(10, "token", pJson["token"], err, false))
             return false;
     }
-    if(pJson.isMember("isActive"))
+    if(pJson.isMember("isactive"))
     {
-        if(!validJsonOfField(11, "isActive", pJson["isActive"], err, false))
+        if(!validJsonOfField(11, "isactive", pJson["isactive"], err, false))
             return false;
     }
-    if(pJson.isMember("imgPath"))
+    if(pJson.isMember("imgpath"))
     {
-        if(!validJsonOfField(12, "imgPath", pJson["imgPath"], err, false))
+        if(!validJsonOfField(12, "imgpath", pJson["imgpath"], err, false))
             return false;
     }
-    if(pJson.isMember("imgThumbPath"))
+    if(pJson.isMember("imgthumbpath"))
     {
-        if(!validJsonOfField(13, "imgThumbPath", pJson["imgThumbPath"], err, false))
+        if(!validJsonOfField(13, "imgthumbpath", pJson["imgthumbpath"], err, false))
             return false;
     }
-    if(pJson.isMember("createdAt"))
+    if(pJson.isMember("createdat"))
     {
-        if(!validJsonOfField(14, "createdAt", pJson["createdAt"], err, false))
+        if(!validJsonOfField(14, "createdat", pJson["createdat"], err, false))
             return false;
     }
-    if(pJson.isMember("updatedAt"))
+    if(pJson.isMember("updatedat"))
     {
-        if(!validJsonOfField(15, "updatedAt", pJson["updatedAt"], err, false))
+        if(!validJsonOfField(15, "updatedat", pJson["updatedat"], err, false))
             return false;
     }
     return true;
@@ -2716,7 +2715,7 @@ bool MasterCustomers::validJsonOfField(size_t index,
                 err="The automatic primary key cannot be set";
                 return false;
             }
-            if(!pJson.isUInt64())
+            if(!pJson.isInt())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -2908,7 +2907,7 @@ bool MasterCustomers::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(!pJson.isInt())
+            if(!pJson.isBool())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -3004,7 +3003,7 @@ void MasterCustomers::getCarts(const DbClientPtr &clientPtr,
                                const std::function<void(Carts)> &rcb,
                                const ExceptionCallback &ecb) const
 {
-    const static std::string sql = "select * from carts where customerId = ?";
+    const static std::string sql = "select * from carts where customerId = $1";
     *clientPtr << sql
                << *id_
                >> [rcb = std::move(rcb), ecb](const Result &r){
@@ -3043,7 +3042,7 @@ void MasterCustomers::getOrders(const DbClientPtr &clientPtr,
                                 const std::function<void(Orders)> &rcb,
                                 const ExceptionCallback &ecb) const
 {
-    const static std::string sql = "select * from orders where customerId = ?";
+    const static std::string sql = "select * from orders where customerId = $1";
     *clientPtr << sql
                << *id_
                >> [rcb = std::move(rcb), ecb](const Result &r){

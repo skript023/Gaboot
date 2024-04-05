@@ -129,6 +129,13 @@ target_include_directories(Gaboot PRIVATE
   "${nlohmann_json_SOURCE_DIR}/single_include"
   "${bcrypt_SOURCE_DIR}/include"
   "${jsonvalidator_SOURCE_DIR}/src"
+  "${SRC_DIR}/module/cart/models"
+  "${SRC_DIR}/module/category/models"
+  "${SRC_DIR}/module/customer/models"
+  "${SRC_DIR}/module/order/models"
+  "${SRC_DIR}/module/payment/models"
+  "${SRC_DIR}/module/product/models"
+  "${SRC_DIR}/module/wishlist/models"
 )
 
 target_precompile_headers(Gaboot PRIVATE "${SRC_DIR}/pch.h")

@@ -61,7 +61,7 @@ namespace gaboot
 				throw BadRequestException("Parameter is invalid");
 			}
 
-			auto args = Criteria(Payments::Cols::_transactionId, CompareOperator::EQ, transactionId);
+			auto args = Criteria(Payments::Cols::_transactionid, CompareOperator::EQ, transactionId);
 			auto transaction = db().findBy(args);
 
 			if (transaction.empty())
@@ -88,12 +88,12 @@ namespace gaboot
 
 			payment.from_json(util::to_nlohmann_json(json));
 
-			auto args = Criteria(Payments::Cols::_transactionId, CompareOperator::EQ, payment.m_transaction_id);
+			auto args = Criteria(Payments::Cols::_transactionid, CompareOperator::EQ, payment.m_transaction_id);
 
 			switch (jenkins::hash(payment.m_transaction_status))
 			{
 				case JENKINS_HASH("settlement"):
-					if (auto record = db().updateBy({ Payments::Cols::_transactionStatus }, args, payment.m_transaction_status); !record)
+					if (auto record = db().updateBy({ Payments::Cols::_transactionstatus }, args, payment.m_transaction_status); !record)
 						throw InternalServerErrorException("Failed update transaction");
 
 					m_response.m_message = "Payment status updated as paid";
@@ -101,7 +101,7 @@ namespace gaboot
 
 					return HttpResponse::newHttpJsonResponse(m_response.to_json());
 				case JENKINS_HASH("expired"):
-					if (auto record = db().updateBy({ Payments::Cols::_transactionStatus }, args, payment.m_transaction_status); !record)
+					if (auto record = db().updateBy({ Payments::Cols::_transactionstatus }, args, payment.m_transaction_status); !record)
 						throw InternalServerErrorException("Failed update transaction");
 
 					m_response.m_message = "Payment status updated as expired";

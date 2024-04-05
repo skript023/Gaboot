@@ -15,28 +15,28 @@ using namespace drogon::orm;
 using namespace drogon_model::gaboot;
 
 const std::string OrderDetails::Cols::_id = "id";
-const std::string OrderDetails::Cols::_orderId = "orderId";
-const std::string OrderDetails::Cols::_productId = "productId";
+const std::string OrderDetails::Cols::_orderid = "orderid";
+const std::string OrderDetails::Cols::_productid = "productid";
 const std::string OrderDetails::Cols::_price = "price";
 const std::string OrderDetails::Cols::_discount = "discount";
 const std::string OrderDetails::Cols::_quantity = "quantity";
 const std::string OrderDetails::Cols::_total = "total";
-const std::string OrderDetails::Cols::_createdAt = "createdAt";
-const std::string OrderDetails::Cols::_updatedAt = "updatedAt";
+const std::string OrderDetails::Cols::_createdat = "createdat";
+const std::string OrderDetails::Cols::_updatedat = "updatedat";
 const std::string OrderDetails::primaryKeyName = "id";
 const bool OrderDetails::hasPrimaryKey = true;
 const std::string OrderDetails::tableName = "order_details";
 
 const std::vector<typename OrderDetails::MetaData> OrderDetails::metaData_={
-{"id","int32_t","int(11)",4,1,1,1},
-{"orderId","int32_t","int(11)",4,0,0,1},
-{"productId","int32_t","int(11)",4,0,0,1},
-{"price","double","double",8,0,0,1},
-{"discount","double","double",8,0,0,1},
-{"quantity","int32_t","int(11)",4,0,0,1},
-{"total","double","double",8,0,0,1},
-{"createdAt","::trantor::Date","datetime",0,0,0,1},
-{"updatedAt","::trantor::Date","datetime",0,0,0,1}
+{"id","int32_t","integer",4,1,1,1},
+{"orderid","int32_t","integer",4,0,0,1},
+{"productid","int32_t","integer",4,0,0,1},
+{"price","double","double precision",8,0,0,1},
+{"discount","double","double precision",8,0,0,1},
+{"quantity","int32_t","integer",4,0,0,1},
+{"total","double","double precision",8,0,0,1},
+{"createdat","::trantor::Date","timestamp without time zone",0,0,0,1},
+{"updatedat","::trantor::Date","timestamp without time zone",0,0,0,1}
 };
 const std::string &OrderDetails::getColumnName(size_t index) noexcept(false)
 {
@@ -51,13 +51,13 @@ OrderDetails::OrderDetails(const Row &r, const ssize_t indexOffset) noexcept
         {
             id_=std::make_shared<int32_t>(r["id"].as<int32_t>());
         }
-        if(!r["orderId"].isNull())
+        if(!r["orderid"].isNull())
         {
-            orderid_=std::make_shared<int32_t>(r["orderId"].as<int32_t>());
+            orderid_=std::make_shared<int32_t>(r["orderid"].as<int32_t>());
         }
-        if(!r["productId"].isNull())
+        if(!r["productid"].isNull())
         {
-            productid_=std::make_shared<int32_t>(r["productId"].as<int32_t>());
+            productid_=std::make_shared<int32_t>(r["productid"].as<int32_t>());
         }
         if(!r["price"].isNull())
         {
@@ -75,9 +75,9 @@ OrderDetails::OrderDetails(const Row &r, const ssize_t indexOffset) noexcept
         {
             total_=std::make_shared<double>(r["total"].as<double>());
         }
-        if(!r["createdAt"].isNull())
+        if(!r["createdat"].isNull())
         {
-            auto timeStr = r["createdAt"].as<std::string>();
+            auto timeStr = r["createdat"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -97,9 +97,9 @@ OrderDetails::OrderDetails(const Row &r, const ssize_t indexOffset) noexcept
                 createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        if(!r["updatedAt"].isNull())
+        if(!r["updatedat"].isNull())
         {
-            auto timeStr = r["updatedAt"].as<std::string>();
+            auto timeStr = r["updatedat"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -341,20 +341,20 @@ OrderDetails::OrderDetails(const Json::Value &pJson) noexcept(false)
             id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
         }
     }
-    if(pJson.isMember("orderId"))
+    if(pJson.isMember("orderid"))
     {
         dirtyFlag_[1]=true;
-        if(!pJson["orderId"].isNull())
+        if(!pJson["orderid"].isNull())
         {
-            orderid_=std::make_shared<int32_t>((int32_t)pJson["orderId"].asInt64());
+            orderid_=std::make_shared<int32_t>((int32_t)pJson["orderid"].asInt64());
         }
     }
-    if(pJson.isMember("productId"))
+    if(pJson.isMember("productid"))
     {
         dirtyFlag_[2]=true;
-        if(!pJson["productId"].isNull())
+        if(!pJson["productid"].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson["productId"].asInt64());
+            productid_=std::make_shared<int32_t>((int32_t)pJson["productid"].asInt64());
         }
     }
     if(pJson.isMember("price"))
@@ -389,12 +389,12 @@ OrderDetails::OrderDetails(const Json::Value &pJson) noexcept(false)
             total_=std::make_shared<double>(pJson["total"].asDouble());
         }
     }
-    if(pJson.isMember("createdAt"))
+    if(pJson.isMember("createdat"))
     {
         dirtyFlag_[7]=true;
-        if(!pJson["createdAt"].isNull())
+        if(!pJson["createdat"].isNull())
         {
-            auto timeStr = pJson["createdAt"].asString();
+            auto timeStr = pJson["createdat"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -415,12 +415,12 @@ OrderDetails::OrderDetails(const Json::Value &pJson) noexcept(false)
             }
         }
     }
-    if(pJson.isMember("updatedAt"))
+    if(pJson.isMember("updatedat"))
     {
         dirtyFlag_[8]=true;
-        if(!pJson["updatedAt"].isNull())
+        if(!pJson["updatedat"].isNull())
         {
-            auto timeStr = pJson["updatedAt"].asString();
+            auto timeStr = pJson["updatedat"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -569,20 +569,20 @@ void OrderDetails::updateByJson(const Json::Value &pJson) noexcept(false)
             id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
         }
     }
-    if(pJson.isMember("orderId"))
+    if(pJson.isMember("orderid"))
     {
         dirtyFlag_[1] = true;
-        if(!pJson["orderId"].isNull())
+        if(!pJson["orderid"].isNull())
         {
-            orderid_=std::make_shared<int32_t>((int32_t)pJson["orderId"].asInt64());
+            orderid_=std::make_shared<int32_t>((int32_t)pJson["orderid"].asInt64());
         }
     }
-    if(pJson.isMember("productId"))
+    if(pJson.isMember("productid"))
     {
         dirtyFlag_[2] = true;
-        if(!pJson["productId"].isNull())
+        if(!pJson["productid"].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson["productId"].asInt64());
+            productid_=std::make_shared<int32_t>((int32_t)pJson["productid"].asInt64());
         }
     }
     if(pJson.isMember("price"))
@@ -617,12 +617,12 @@ void OrderDetails::updateByJson(const Json::Value &pJson) noexcept(false)
             total_=std::make_shared<double>(pJson["total"].asDouble());
         }
     }
-    if(pJson.isMember("createdAt"))
+    if(pJson.isMember("createdat"))
     {
         dirtyFlag_[7] = true;
-        if(!pJson["createdAt"].isNull())
+        if(!pJson["createdat"].isNull())
         {
-            auto timeStr = pJson["createdAt"].asString();
+            auto timeStr = pJson["createdat"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -643,12 +643,12 @@ void OrderDetails::updateByJson(const Json::Value &pJson) noexcept(false)
             }
         }
     }
-    if(pJson.isMember("updatedAt"))
+    if(pJson.isMember("updatedat"))
     {
         dirtyFlag_[8] = true;
-        if(!pJson["updatedAt"].isNull())
+        if(!pJson["updatedat"].isNull())
         {
-            auto timeStr = pJson["updatedAt"].asString();
+            auto timeStr = pJson["updatedat"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -831,20 +831,19 @@ void OrderDetails::setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept
 
 void OrderDetails::updateId(const uint64_t id)
 {
-    id_ = std::make_shared<int32_t>(static_cast<int32_t>(id));
 }
 
 const std::vector<std::string> &OrderDetails::insertColumns() noexcept
 {
     static const std::vector<std::string> inCols={
-        "orderId",
-        "productId",
+        "orderid",
+        "productid",
         "price",
         "discount",
         "quantity",
         "total",
-        "createdAt",
-        "updatedAt"
+        "createdat",
+        "updatedat"
     };
     return inCols;
 }
@@ -1083,19 +1082,19 @@ Json::Value OrderDetails::toJson() const
     }
     if(getOrderid())
     {
-        ret["orderId"]=getValueOfOrderid();
+        ret["orderid"]=getValueOfOrderid();
     }
     else
     {
-        ret["orderId"]=Json::Value();
+        ret["orderid"]=Json::Value();
     }
     if(getProductid())
     {
-        ret["productId"]=getValueOfProductid();
+        ret["productid"]=getValueOfProductid();
     }
     else
     {
-        ret["productId"]=Json::Value();
+        ret["productid"]=Json::Value();
     }
     if(getPrice())
     {
@@ -1131,19 +1130,19 @@ Json::Value OrderDetails::toJson() const
     }
     if(getCreatedat())
     {
-        ret["createdAt"]=getCreatedat()->toDbStringLocal();
+        ret["createdat"]=getCreatedat()->toDbStringLocal();
     }
     else
     {
-        ret["createdAt"]=Json::Value();
+        ret["createdat"]=Json::Value();
     }
     if(getUpdatedat())
     {
-        ret["updatedAt"]=getUpdatedat()->toDbStringLocal();
+        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
     }
     else
     {
-        ret["updatedAt"]=Json::Value();
+        ret["updatedat"]=Json::Value();
     }
     return ret;
 }
@@ -1266,19 +1265,19 @@ Json::Value OrderDetails::toMasqueradedJson(
     }
     if(getOrderid())
     {
-        ret["orderId"]=getValueOfOrderid();
+        ret["orderid"]=getValueOfOrderid();
     }
     else
     {
-        ret["orderId"]=Json::Value();
+        ret["orderid"]=Json::Value();
     }
     if(getProductid())
     {
-        ret["productId"]=getValueOfProductid();
+        ret["productid"]=getValueOfProductid();
     }
     else
     {
-        ret["productId"]=Json::Value();
+        ret["productid"]=Json::Value();
     }
     if(getPrice())
     {
@@ -1314,19 +1313,19 @@ Json::Value OrderDetails::toMasqueradedJson(
     }
     if(getCreatedat())
     {
-        ret["createdAt"]=getCreatedat()->toDbStringLocal();
+        ret["createdat"]=getCreatedat()->toDbStringLocal();
     }
     else
     {
-        ret["createdAt"]=Json::Value();
+        ret["createdat"]=Json::Value();
     }
     if(getUpdatedat())
     {
-        ret["updatedAt"]=getUpdatedat()->toDbStringLocal();
+        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
     }
     else
     {
-        ret["updatedAt"]=Json::Value();
+        ret["updatedat"]=Json::Value();
     }
     return ret;
 }
@@ -1338,24 +1337,24 @@ bool OrderDetails::validateJsonForCreation(const Json::Value &pJson, std::string
         if(!validJsonOfField(0, "id", pJson["id"], err, true))
             return false;
     }
-    if(pJson.isMember("orderId"))
+    if(pJson.isMember("orderid"))
     {
-        if(!validJsonOfField(1, "orderId", pJson["orderId"], err, true))
+        if(!validJsonOfField(1, "orderid", pJson["orderid"], err, true))
             return false;
     }
     else
     {
-        err="The orderId column cannot be null";
+        err="The orderid column cannot be null";
         return false;
     }
-    if(pJson.isMember("productId"))
+    if(pJson.isMember("productid"))
     {
-        if(!validJsonOfField(2, "productId", pJson["productId"], err, true))
+        if(!validJsonOfField(2, "productid", pJson["productid"], err, true))
             return false;
     }
     else
     {
-        err="The productId column cannot be null";
+        err="The productid column cannot be null";
         return false;
     }
     if(pJson.isMember("price"))
@@ -1378,14 +1377,14 @@ bool OrderDetails::validateJsonForCreation(const Json::Value &pJson, std::string
         if(!validJsonOfField(6, "total", pJson["total"], err, true))
             return false;
     }
-    if(pJson.isMember("createdAt"))
+    if(pJson.isMember("createdat"))
     {
-        if(!validJsonOfField(7, "createdAt", pJson["createdAt"], err, true))
+        if(!validJsonOfField(7, "createdat", pJson["createdat"], err, true))
             return false;
     }
-    if(pJson.isMember("updatedAt"))
+    if(pJson.isMember("updatedat"))
     {
-        if(!validJsonOfField(8, "updatedAt", pJson["updatedAt"], err, true))
+        if(!validJsonOfField(8, "updatedat", pJson["updatedat"], err, true))
             return false;
     }
     return true;
@@ -1502,14 +1501,14 @@ bool OrderDetails::validateJsonForUpdate(const Json::Value &pJson, std::string &
         err = "The value of primary key must be set in the json object for update";
         return false;
     }
-    if(pJson.isMember("orderId"))
+    if(pJson.isMember("orderid"))
     {
-        if(!validJsonOfField(1, "orderId", pJson["orderId"], err, false))
+        if(!validJsonOfField(1, "orderid", pJson["orderid"], err, false))
             return false;
     }
-    if(pJson.isMember("productId"))
+    if(pJson.isMember("productid"))
     {
-        if(!validJsonOfField(2, "productId", pJson["productId"], err, false))
+        if(!validJsonOfField(2, "productid", pJson["productid"], err, false))
             return false;
     }
     if(pJson.isMember("price"))
@@ -1532,14 +1531,14 @@ bool OrderDetails::validateJsonForUpdate(const Json::Value &pJson, std::string &
         if(!validJsonOfField(6, "total", pJson["total"], err, false))
             return false;
     }
-    if(pJson.isMember("createdAt"))
+    if(pJson.isMember("createdat"))
     {
-        if(!validJsonOfField(7, "createdAt", pJson["createdAt"], err, false))
+        if(!validJsonOfField(7, "createdat", pJson["createdat"], err, false))
             return false;
     }
-    if(pJson.isMember("updatedAt"))
+    if(pJson.isMember("updatedat"))
     {
-        if(!validJsonOfField(8, "updatedAt", pJson["updatedAt"], err, false))
+        if(!validJsonOfField(8, "updatedat", pJson["updatedat"], err, false))
             return false;
     }
     return true;
@@ -1759,7 +1758,7 @@ void OrderDetails::getOrders(const DbClientPtr &clientPtr,
                              const std::function<void(Orders)> &rcb,
                              const ExceptionCallback &ecb) const
 {
-    const static std::string sql = "select * from orders where id = ?";
+    const static std::string sql = "select * from orders where id = $1";
     *clientPtr << sql
                << *orderid_
                >> [rcb = std::move(rcb), ecb](const Result &r){

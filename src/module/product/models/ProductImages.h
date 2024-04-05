@@ -46,19 +46,19 @@ class ProductImages
     struct Cols
     {
         static const std::string _id;
-        static const std::string _imagePath;
-        static const std::string _thumbnailPath;
-        static const std::string _productId;
-        static const std::string _isCover;
-        static const std::string _createdAt;
-        static const std::string _updatedAt;
+        static const std::string _imagepath;
+        static const std::string _thumbnailpath;
+        static const std::string _productid;
+        static const std::string _iscover;
+        static const std::string _createdat;
+        static const std::string _updatedat;
     };
 
     const static int primaryKeyNumber;
     const static std::string tableName;
     const static bool hasPrimaryKey;
     const static std::string primaryKeyName;
-    using PrimaryKeyType = uint64_t;
+    using PrimaryKeyType = int32_t;
     const PrimaryKeyType &getPrimaryKey() const;
 
     /**
@@ -105,61 +105,61 @@ class ProductImages
 
     /**  For column id  */
     ///Get the value of the column id, returns the default value if the column is null
-    const uint64_t &getValueOfId() const noexcept;
+    const int32_t &getValueOfId() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<uint64_t> &getId() const noexcept;
+    const std::shared_ptr<int32_t> &getId() const noexcept;
     ///Set the value of the column id
-    void setId(const uint64_t &pId) noexcept;
+    void setId(const int32_t &pId) noexcept;
 
-    /**  For column imagePath  */
-    ///Get the value of the column imagePath, returns the default value if the column is null
+    /**  For column imagepath  */
+    ///Get the value of the column imagepath, returns the default value if the column is null
     const std::string &getValueOfImagepath() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<std::string> &getImagepath() const noexcept;
-    ///Set the value of the column imagePath
+    ///Set the value of the column imagepath
     void setImagepath(const std::string &pImagepath) noexcept;
     void setImagepath(std::string &&pImagepath) noexcept;
 
-    /**  For column thumbnailPath  */
-    ///Get the value of the column thumbnailPath, returns the default value if the column is null
+    /**  For column thumbnailpath  */
+    ///Get the value of the column thumbnailpath, returns the default value if the column is null
     const std::string &getValueOfThumbnailpath() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<std::string> &getThumbnailpath() const noexcept;
-    ///Set the value of the column thumbnailPath
+    ///Set the value of the column thumbnailpath
     void setThumbnailpath(const std::string &pThumbnailpath) noexcept;
     void setThumbnailpath(std::string &&pThumbnailpath) noexcept;
 
-    /**  For column productId  */
-    ///Get the value of the column productId, returns the default value if the column is null
+    /**  For column productid  */
+    ///Get the value of the column productid, returns the default value if the column is null
     const int32_t &getValueOfProductid() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<int32_t> &getProductid() const noexcept;
-    ///Set the value of the column productId
+    ///Set the value of the column productid
     void setProductid(const int32_t &pProductid) noexcept;
 
-    /**  For column isCover  */
-    ///Get the value of the column isCover, returns the default value if the column is null
-    const int8_t &getValueOfIscover() const noexcept;
+    /**  For column iscover  */
+    ///Get the value of the column iscover, returns the default value if the column is null
+    const bool &getValueOfIscover() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int8_t> &getIscover() const noexcept;
-    ///Set the value of the column isCover
-    void setIscover(const int8_t &pIscover) noexcept;
+    const std::shared_ptr<bool> &getIscover() const noexcept;
+    ///Set the value of the column iscover
+    void setIscover(const bool &pIscover) noexcept;
 
-    /**  For column createdAt  */
-    ///Get the value of the column createdAt, returns the default value if the column is null
+    /**  For column createdat  */
+    ///Get the value of the column createdat, returns the default value if the column is null
     const ::trantor::Date &getValueOfCreatedat() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<::trantor::Date> &getCreatedat() const noexcept;
-    ///Set the value of the column createdAt
+    ///Set the value of the column createdat
     void setCreatedat(const ::trantor::Date &pCreatedat) noexcept;
     void setCreatedatToNull() noexcept;
 
-    /**  For column updatedAt  */
-    ///Get the value of the column updatedAt, returns the default value if the column is null
+    /**  For column updatedat  */
+    ///Get the value of the column updatedat, returns the default value if the column is null
     const ::trantor::Date &getValueOfUpdatedat() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<::trantor::Date> &getUpdatedat() const noexcept;
-    ///Set the value of the column updatedAt
+    ///Set the value of the column updatedat
     void setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept;
     void setUpdatedatToNull() noexcept;
 
@@ -189,11 +189,11 @@ class ProductImages
     void updateArgs(drogon::orm::internal::SqlBinder &binder) const;
     ///For mysql or sqlite3
     void updateId(const uint64_t id);
-    std::shared_ptr<uint64_t> id_;
+    std::shared_ptr<int32_t> id_;
     std::shared_ptr<std::string> imagepath_;
     std::shared_ptr<std::string> thumbnailpath_;
     std::shared_ptr<int32_t> productid_;
-    std::shared_ptr<int8_t> iscover_;
+    std::shared_ptr<bool> iscover_;
     std::shared_ptr<::trantor::Date> createdat_;
     std::shared_ptr<::trantor::Date> updatedat_;
     struct MetaData
@@ -211,13 +211,13 @@ class ProductImages
   public:
     static const std::string &sqlForFindingByPrimaryKey()
     {
-        static const std::string sql="select * from " + tableName + " where id = ?";
+        static const std::string sql="select * from " + tableName + " where id = $1";
         return sql;
     }
 
     static const std::string &sqlForDeletingByPrimaryKey()
     {
-        static const std::string sql="delete from " + tableName + " where id = ?";
+        static const std::string sql="delete from " + tableName + " where id = $1";
         return sql;
     }
     std::string sqlForInserting(bool &needSelection) const
@@ -229,20 +229,20 @@ class ProductImages
             ++parametersCount;
         if(dirtyFlag_[1])
         {
-            sql += "imagePath,";
+            sql += "imagepath,";
             ++parametersCount;
         }
         if(dirtyFlag_[2])
         {
-            sql += "thumbnailPath,";
+            sql += "thumbnailpath,";
             ++parametersCount;
         }
         if(dirtyFlag_[3])
         {
-            sql += "productId,";
+            sql += "productid,";
             ++parametersCount;
         }
-        sql += "isCover,";
+        sql += "iscover,";
         ++parametersCount;
         if(!dirtyFlag_[4])
         {
@@ -250,12 +250,12 @@ class ProductImages
         }
         if(dirtyFlag_[5])
         {
-            sql += "createdAt,";
+            sql += "createdat,";
             ++parametersCount;
         }
         if(dirtyFlag_[6])
         {
-            sql += "updatedAt,";
+            sql += "updatedat,";
             ++parametersCount;
         }
         needSelection=true;
@@ -267,26 +267,29 @@ class ProductImages
         else
             sql += ") values (";
 
+        int placeholder=1;
+        char placeholderStr[64];
+        size_t n=0;
         sql +="default,";
         if(dirtyFlag_[1])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[2])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[3])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[4])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         else
         {
@@ -294,19 +297,26 @@ class ProductImages
         }
         if(dirtyFlag_[5])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[6])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(parametersCount > 0)
         {
             sql.resize(sql.length() - 1);
         }
-        sql.append(1, ')');
+        if(needSelection)
+        {
+            sql.append(") returning *");
+        }
+        else
+        {
+            sql.append(1, ')');
+        }
         LOG_TRACE << sql;
         return sql;
     }

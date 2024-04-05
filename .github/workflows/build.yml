@@ -50,7 +50,7 @@ jobs:
         run: sudo cmake --build ./build --config Release --target Gaboot --
 
       - name: Check if Executable got built
-        run: if (-Not (Test-Path -path "build/Gaboot")) {throw 1}
+        run: if [ ! -f "build/Gaboot" ]; then exit 1; fi
 
       - name: Upload binary to release
         uses: svenstaro/upload-release-action@v2

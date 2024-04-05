@@ -51,24 +51,24 @@ class MasterCustomers
         static const std::string _lastname;
         static const std::string _username;
         static const std::string _email;
-        static const std::string _phoneNumber;
-        static const std::string _addressDetail;
+        static const std::string _phonenumber;
+        static const std::string _addressdetail;
         static const std::string _latitude;
         static const std::string _longitude;
         static const std::string _password;
         static const std::string _token;
-        static const std::string _isActive;
-        static const std::string _imgPath;
-        static const std::string _imgThumbPath;
-        static const std::string _createdAt;
-        static const std::string _updatedAt;
+        static const std::string _isactive;
+        static const std::string _imgpath;
+        static const std::string _imgthumbpath;
+        static const std::string _createdat;
+        static const std::string _updatedat;
     };
 
     const static int primaryKeyNumber;
     const static std::string tableName;
     const static bool hasPrimaryKey;
     const static std::string primaryKeyName;
-    using PrimaryKeyType = uint64_t;
+    using PrimaryKeyType = int32_t;
     const PrimaryKeyType &getPrimaryKey() const;
 
     /**
@@ -115,11 +115,11 @@ class MasterCustomers
 
     /**  For column id  */
     ///Get the value of the column id, returns the default value if the column is null
-    const uint64_t &getValueOfId() const noexcept;
+    const int32_t &getValueOfId() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<uint64_t> &getId() const noexcept;
+    const std::shared_ptr<int32_t> &getId() const noexcept;
     ///Set the value of the column id
-    void setId(const uint64_t &pId) noexcept;
+    void setId(const int32_t &pId) noexcept;
 
     /**  For column firstname  */
     ///Get the value of the column firstname, returns the default value if the column is null
@@ -157,21 +157,21 @@ class MasterCustomers
     void setEmail(const std::string &pEmail) noexcept;
     void setEmail(std::string &&pEmail) noexcept;
 
-    /**  For column phoneNumber  */
-    ///Get the value of the column phoneNumber, returns the default value if the column is null
+    /**  For column phonenumber  */
+    ///Get the value of the column phonenumber, returns the default value if the column is null
     const std::string &getValueOfPhonenumber() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<std::string> &getPhonenumber() const noexcept;
-    ///Set the value of the column phoneNumber
+    ///Set the value of the column phonenumber
     void setPhonenumber(const std::string &pPhonenumber) noexcept;
     void setPhonenumber(std::string &&pPhonenumber) noexcept;
 
-    /**  For column addressDetail  */
-    ///Get the value of the column addressDetail, returns the default value if the column is null
+    /**  For column addressdetail  */
+    ///Get the value of the column addressdetail, returns the default value if the column is null
     const std::string &getValueOfAddressdetail() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<std::string> &getAddressdetail() const noexcept;
-    ///Set the value of the column addressDetail
+    ///Set the value of the column addressdetail
     void setAddressdetail(const std::string &pAddressdetail) noexcept;
     void setAddressdetail(std::string &&pAddressdetail) noexcept;
 
@@ -212,48 +212,48 @@ class MasterCustomers
     void setToken(std::string &&pToken) noexcept;
     void setTokenToNull() noexcept;
 
-    /**  For column isActive  */
-    ///Get the value of the column isActive, returns the default value if the column is null
-    const int8_t &getValueOfIsactive() const noexcept;
+    /**  For column isactive  */
+    ///Get the value of the column isactive, returns the default value if the column is null
+    const bool &getValueOfIsactive() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int8_t> &getIsactive() const noexcept;
-    ///Set the value of the column isActive
-    void setIsactive(const int8_t &pIsactive) noexcept;
+    const std::shared_ptr<bool> &getIsactive() const noexcept;
+    ///Set the value of the column isactive
+    void setIsactive(const bool &pIsactive) noexcept;
 
-    /**  For column imgPath  */
-    ///Get the value of the column imgPath, returns the default value if the column is null
+    /**  For column imgpath  */
+    ///Get the value of the column imgpath, returns the default value if the column is null
     const std::string &getValueOfImgpath() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<std::string> &getImgpath() const noexcept;
-    ///Set the value of the column imgPath
+    ///Set the value of the column imgpath
     void setImgpath(const std::string &pImgpath) noexcept;
     void setImgpath(std::string &&pImgpath) noexcept;
     void setImgpathToNull() noexcept;
 
-    /**  For column imgThumbPath  */
-    ///Get the value of the column imgThumbPath, returns the default value if the column is null
+    /**  For column imgthumbpath  */
+    ///Get the value of the column imgthumbpath, returns the default value if the column is null
     const std::string &getValueOfImgthumbpath() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<std::string> &getImgthumbpath() const noexcept;
-    ///Set the value of the column imgThumbPath
+    ///Set the value of the column imgthumbpath
     void setImgthumbpath(const std::string &pImgthumbpath) noexcept;
     void setImgthumbpath(std::string &&pImgthumbpath) noexcept;
     void setImgthumbpathToNull() noexcept;
 
-    /**  For column createdAt  */
-    ///Get the value of the column createdAt, returns the default value if the column is null
+    /**  For column createdat  */
+    ///Get the value of the column createdat, returns the default value if the column is null
     const ::trantor::Date &getValueOfCreatedat() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<::trantor::Date> &getCreatedat() const noexcept;
-    ///Set the value of the column createdAt
+    ///Set the value of the column createdat
     void setCreatedat(const ::trantor::Date &pCreatedat) noexcept;
 
-    /**  For column updatedAt  */
-    ///Get the value of the column updatedAt, returns the default value if the column is null
+    /**  For column updatedat  */
+    ///Get the value of the column updatedat, returns the default value if the column is null
     const ::trantor::Date &getValueOfUpdatedat() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
     const std::shared_ptr<::trantor::Date> &getUpdatedat() const noexcept;
-    ///Set the value of the column updatedAt
+    ///Set the value of the column updatedat
     void setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept;
 
 
@@ -286,7 +286,7 @@ class MasterCustomers
     void updateArgs(drogon::orm::internal::SqlBinder &binder) const;
     ///For mysql or sqlite3
     void updateId(const uint64_t id);
-    std::shared_ptr<uint64_t> id_;
+    std::shared_ptr<int32_t> id_;
     std::shared_ptr<std::string> firstname_;
     std::shared_ptr<std::string> lastname_;
     std::shared_ptr<std::string> username_;
@@ -297,7 +297,7 @@ class MasterCustomers
     std::shared_ptr<double> longitude_;
     std::shared_ptr<std::string> password_;
     std::shared_ptr<std::string> token_;
-    std::shared_ptr<int8_t> isactive_;
+    std::shared_ptr<bool> isactive_;
     std::shared_ptr<std::string> imgpath_;
     std::shared_ptr<std::string> imgthumbpath_;
     std::shared_ptr<::trantor::Date> createdat_;
@@ -317,13 +317,13 @@ class MasterCustomers
   public:
     static const std::string &sqlForFindingByPrimaryKey()
     {
-        static const std::string sql="select * from " + tableName + " where id = ?";
+        static const std::string sql="select * from " + tableName + " where id = $1";
         return sql;
     }
 
     static const std::string &sqlForDeletingByPrimaryKey()
     {
-        static const std::string sql="delete from " + tableName + " where id = ?";
+        static const std::string sql="delete from " + tableName + " where id = $1";
         return sql;
     }
     std::string sqlForInserting(bool &needSelection) const
@@ -355,12 +355,12 @@ class MasterCustomers
         }
         if(dirtyFlag_[5])
         {
-            sql += "phoneNumber,";
+            sql += "phonenumber,";
             ++parametersCount;
         }
         if(dirtyFlag_[6])
         {
-            sql += "addressDetail,";
+            sql += "addressdetail,";
             ++parametersCount;
         }
         sql += "latitude,";
@@ -385,7 +385,7 @@ class MasterCustomers
             sql += "token,";
             ++parametersCount;
         }
-        sql += "isActive,";
+        sql += "isactive,";
         ++parametersCount;
         if(!dirtyFlag_[11])
         {
@@ -393,21 +393,21 @@ class MasterCustomers
         }
         if(dirtyFlag_[12])
         {
-            sql += "imgPath,";
+            sql += "imgpath,";
             ++parametersCount;
         }
         if(dirtyFlag_[13])
         {
-            sql += "imgThumbPath,";
+            sql += "imgthumbpath,";
             ++parametersCount;
         }
-        sql += "createdAt,";
+        sql += "createdat,";
         ++parametersCount;
         if(!dirtyFlag_[14])
         {
             needSelection=true;
         }
-        sql += "updatedAt,";
+        sql += "updatedat,";
         ++parametersCount;
         if(!dirtyFlag_[15])
         {
@@ -422,41 +422,44 @@ class MasterCustomers
         else
             sql += ") values (";
 
+        int placeholder=1;
+        char placeholderStr[64];
+        size_t n=0;
         sql +="default,";
         if(dirtyFlag_[1])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[2])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[3])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[4])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[5])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[6])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[7])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         else
         {
@@ -464,8 +467,8 @@ class MasterCustomers
         }
         if(dirtyFlag_[8])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         else
         {
@@ -473,18 +476,18 @@ class MasterCustomers
         }
         if(dirtyFlag_[9])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[10])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[11])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         else
         {
@@ -492,18 +495,18 @@ class MasterCustomers
         }
         if(dirtyFlag_[12])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[13])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[14])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         else
         {
@@ -511,8 +514,8 @@ class MasterCustomers
         }
         if(dirtyFlag_[15])
         {
-            sql.append("?,");
-
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
         }
         else
         {
@@ -522,7 +525,14 @@ class MasterCustomers
         {
             sql.resize(sql.length() - 1);
         }
-        sql.append(1, ')');
+        if(needSelection)
+        {
+            sql.append(") returning *");
+        }
+        else
+        {
+            sql.append(1, ')');
+        }
         LOG_TRACE << sql;
         return sql;
     }
