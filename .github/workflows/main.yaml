@@ -2,9 +2,6 @@ name: build
 
 on: [push, pull_request]
 
-env:
-  VCPKG_FOLDER: ./vcpkg
-
 jobs:
   build:
     runs-on: windows-2022

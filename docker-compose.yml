@@ -33,9 +33,9 @@ services:
         links:
             - gaboot-database
         volumes:
-            - ./build/Linux-x64/uploads:/usr/local/bin/gaboot/uploads
-            - ./build/Linux-x64/Drogon Log:/usr/local/bin/gaboot/Drogon Log
-            - ./build/Linux-x64/Service:/var/log/
+            - ./.container/uploads:/usr/local/bin/gaboot/uploads
+            - ./.container/Drogon Log:/usr/local/bin/gaboot/Drogon Log
+            - ./.container/Service:/var/log/
 networks:
    gaboot:
     driver: bridge
