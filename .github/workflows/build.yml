@@ -8,38 +8,37 @@ on:
     branches:
       - main  # Adjust branch name if necessary
 
-env:
-  VCPKG_FOLDER: ./vcpkg
-
 jobs:
   build_and_upload:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update &&  sudo apt-get install -y  build-essential  cmake
+      - name: Check CMake version
+        run: cmake --version
 
-    - name: Configure and build
-      run: |
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_TOOLCHAIN_FILE=${VCPKG_FOLDER}/scripts/buildsystems/vcpkg.cmake
-        make
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
 
-    - name: Run tests
-      run: |
-        cd build
-        ctest --verbose
+      - name: Install Conan
+        run: |
+          pip install conan
+          conan config install https://bitbucket.org/telkom-workspace/gaboot-backend/downloads/config.zip
 
-    - name: Upload artifact to VPS
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}  # Use SSH private key for authentication
-        source: "build/"  # Adjust this to the directory containing your built binaries
-        target: "/home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/"
+      - name: Setup vcpkg toolchain
+        run: cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
+        
+      - name: Build 64bit release Executable
+        run: cmake --build ./build --config Release --target Gaboot --
+
+      - name: Upload artifact to VPS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Use SSH private key for authentication
+          source: "build/"  # Adjust this to the directory containing your built binaries
+          target: "/home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/"
