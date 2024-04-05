@@ -29,7 +29,7 @@ jobs:
       - name: Install Conan
         run: |
           pip install conan
-          conan config install https://bitbucket.org/telkom-workspace/gaboot-backend/downloads/config.zip
+          conan config install https://bitbucket.org/telkom-workspace/gaboot-backend/downloads/Linux.zip
 
       - name: Install Package
         run: conan install conanfile.txt -of=conan/Windows --build=missing
