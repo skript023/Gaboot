@@ -6,3 +6,15 @@ CMakeDeps
 CMakeToolchain
 [layout]
 cmake_layout
+[options]
+drogon*:shared=False
+drogon*:with_ctl=False
+drogon*:with_orm=True
+drogon*:with_boost=True
+drogon*:with_mysql=False
+drogon*:with_redis=False
+drogon*:with_brotli=False
+drogon*:with_sqlite=False
+drogon*:with_profile=False
+drogon*:with_postgres=True
+drogon*:with_yaml_cpp=False

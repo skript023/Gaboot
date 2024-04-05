@@ -49,11 +49,28 @@ jobs:
       - name: Build 64bit release Executable
         run: sudo cmake --build ./build --config Release --target Gaboot --
 
-      - name: Upload artifact to VPS
-        uses: appleboy/scp-action@master
+      - name: Upload binary to release
+        uses: svenstaro/upload-release-action@v2
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Use SSH private key for authentication
-          source: "build/"  # Adjust this to the directory containing your built binaries
-          target: "/home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/"
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./build # Replace with the path to your binary
+          asset_name: Gaboot # Replace with your desired asset name
+          release_tag: ${{ github.ref }}
+
+      #- name: Install SSH key
+      #  uses: webfactory/ssh-agent@v0.5.3
+      #  with:
+      #    ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      #- name: Set safe directory
+      #  run: ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "git config --global --add safe.directory /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/"
+
+      #- name: Stop existing Docker containers
+      #  run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose down"
+
+      #- name: Deploy code
+      #  run: |
+      #    ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo git pull origin main"
+
+      #- name: Build and start Docker containers
+      #  run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose up --build -d"
