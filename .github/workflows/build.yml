@@ -49,11 +49,14 @@ jobs:
       - name: Build 64bit release Executable
         run: sudo cmake --build ./build --config Release --target Gaboot --
 
+      - name: Check if Executable got built
+        run: if (-Not (Test-Path -path "build/Gaboot")) {throw 1}
+
       - name: Upload binary to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./build # Replace with the path to your binary
+          file: build/Gaboot # Replace with the path to your binary
           asset_name: Gaboot # Replace with your desired asset name
           release_tag: ${{ github.ref }}
 
