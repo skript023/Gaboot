@@ -57,23 +57,26 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: build/Gaboot # Replace with the path to your binary
+          tag: ${{ github.ref }}
           asset_name: Gaboot # Replace with your desired asset name
-          release_tag: ${{ github.ref }}
+          overwrite: true
+          body: "Gaboot Release Binary"
+          repo_name: skript023/Gaboot
 
-      #- name: Install SSH key
-      #  uses: webfactory/ssh-agent@v0.5.3
-      #  with:
-      #    ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      #- name: Set safe directory
-      #  run: ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "git config --global --add safe.directory /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/"
+      - name: Set safe directory
+        run: ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "git config --global --add safe.directory /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/"
 
-      #- name: Stop existing Docker containers
-      #  run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose down"
+      - name: Stop existing Docker containers
+        run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose down"
 
-      #- name: Deploy code
-      #  run: |
-      #    ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo git pull origin main"
+      - name: Deploy code
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo git pull origin main"
 
-      #- name: Build and start Docker containers
-      #  run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose up --build -d"
+      - name: Build and start Docker containers
+        run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose up --build -d"
