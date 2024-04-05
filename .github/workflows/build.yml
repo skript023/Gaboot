@@ -34,11 +34,20 @@ jobs:
       - name: Install Package
         run: sudo conan install conanfile.txt -of=conan/Linux --build=missing
 
+      - name: Echo list of files before removal
+        run: ls
+
       - name: Remove CMakeUserPresets.json
         run: rm CMakeUserPresets.json
 
+      - name: Echo list of files after removal
+        run: ls
+
       - name: Configure CMakeList
-        run: cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
+        run: |
+            mkdir -p build
+            cd build
+            cmake -D CMAKE_BUILD_TYPE=Release -S.. -B. build -G Ninja
         
       - name: Build 64bit release Executable
         run: cmake --build ./build --config Release --target Gaboot --
