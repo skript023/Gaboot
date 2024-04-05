@@ -32,7 +32,7 @@ jobs:
           sudo conan config install https://bitbucket.org/telkom-workspace/gaboot-backend/downloads/Linux.zip
 
       - name: Install Package
-        run: sudo conan install conanfile.txt -of=conan/Windows --build=missing
+        run: sudo conan install conanfile.txt -of=conan/Linux --build=missing
 
       - name: Configure CMakeList
         run: cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
