@@ -20,11 +20,24 @@ jobs:
         with:
           arch: amd64
 
-      - name: Set up vcpkg
+      - name: Install Conan
         run: |
-          git clone https://github.com/microsoft/vcpkg.git
-          cd vcpkg
-          .\bootstrap-vcpkg.bat
+          pip install conan
+          conan config set general.revisions_enabled=1
+          conan profile new default --detect
+          conan profile update settings.arch=x86_64 default
+          conan profile update settings.build_type=Release default
+          conan profile update settings.compiler=msvc default
+          conan profile update settings.compiler.cppstd=20 default
+          conan profile update settings.compiler.runtime=dynamic default
+          conan profile update settings.compiler.version=193 default
+          conan profile update settings.os=Windows default
+
+      - name: Install Package
+        run: conan install conanfile.txt -of=conan/Windows --build=missing
+
+      - name: Remove CMakeUserPresets.json
+        run: rm CMakeUserPresets.json
           
       - name: Setup vcpkg toolchain
         run: cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja

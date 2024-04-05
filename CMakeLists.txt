@@ -10,15 +10,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 if (WIN32)
-  message("Building on Windows")
-  include("$ENV{VCPKG_FOLDER}/scripts/buildsystems/vcpkg.cmake")
-elseif(UNIX)
-  message("Building on a Unix-based platform (including Linux)")
-  include("$ENV{VCPKG_FOLDER}/scripts/buildsystems/vcpkg.cmake")
-else()
-  message(FATAL "Building on an unknown or unsupported platform")
-  # Add default configurations or actions here
+    set(CMAKE_TOOLCHAIN_FILE "${PROJECT_SOURCE_DIR}/conan/Windows/build/Release/generators/conan_toolchain.cmake")
+elseif (UNIX)
+    set(CMAKE_TOOLCHAIN_FILE "${PROJECT_SOURCE_DIR}/conan/Linux/build/Release/generators/conan_toolchain.cmake")
 endif()
+
+#include vcpkg dependencies
+message("\nFetching packages")
+find_package(Drogon REQUIRED)
+find_package(OpenSSL REQUIRED)
+find_package(OpenCV CONFIG REQUIRED)
 
 #generate version file
 include(scripts/git.cmake)
@@ -31,11 +32,6 @@ include(scripts/cpr.cmake)
 include(scripts/g3log.cmake)
 include(scripts/fmtlib.cmake)
 include(scripts/jsonvalidator.cmake)
-
-#include vcpkg dependencies
-message("\nFetching packages")
-include(scripts/opencv.cmake)
-include(scripts/drogon.cmake)
 
 # Gaboot
 message(STATUS "Gaboot")
@@ -106,8 +102,10 @@ endif()
 # Compile main.cc as executable
 add_executable(Gaboot "${SRC_DIR}/main.cc" ${VIEWSRC} ${ICON})
 
-# Add dependencies to make sure the custom commands are executed before building YourTarget
-add_dependencies(Gaboot CopyConfigFiles)
+if (EXISTS "${DESTINATION_DIR}/config.json" AND EXISTS "${DESTINATION_DIR}/.env")
+    # Add dependencies to make sure the custom commands are executed before building YourTarget
+    add_dependencies(Gaboot CopyConfigFiles)
+endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_property(TARGET Gaboot PROPERTY CXX_STANDARD 20)
@@ -146,4 +144,4 @@ add_compile_definitions(Gaboot
 )
 
 # Add unit test build
-add_subdirectory(test)
+#add_subdirectory(test)

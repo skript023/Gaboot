@@ -16,7 +16,7 @@ services:
         networks:
             - gaboot
         volumes:
-            - ./out/dump:/var/lib/mysql
+            - ./dump:/var/lib/mysql
      gaboot-api:
         build: 
             context: .
@@ -33,9 +33,9 @@ services:
         links:
             - gaboot-database
         volumes:
-            - ./out/build/Linux-x64/uploads:/usr/local/bin/gaboot/uploads
-            - ./out/build/Linux-x64/Drogon Log:/usr/local/bin/gaboot/Drogon Log
-            - ./out/build/Linux-x64/Service:/var/log/
+            - ./build/Linux-x64/uploads:/usr/local/bin/gaboot/uploads
+            - ./build/Linux-x64/Drogon Log:/usr/local/bin/gaboot/Drogon Log
+            - ./build/Linux-x64/Service:/var/log/
 networks:
    gaboot:
     driver: bridge
