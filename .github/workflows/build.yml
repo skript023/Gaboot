@@ -34,6 +34,9 @@ jobs:
       - name: Install Package
         run: sudo conan install conanfile.txt -of=conan/Linux --build=missing
 
+      - name: Remove CMakeUserPresets.json
+        run: rm CMakeUserPresets.json
+
       - name: Configure CMakeList
         run: cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
         
