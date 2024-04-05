@@ -19,7 +19,7 @@ namespace gaboot
     {
         TRY_CLAUSE
         {
-            auto json = req->getJsonObject();
+            auto& json = req->getJsonObject();
 
             Carts cart;
 

@@ -1,22 +1,22 @@
 version: "3.5"
 services:
      gaboot-database:
-        image: mariadb:latest
+        image: postgres:latest
         restart: on-failure
         container_name: gaboot-shop-database
         environment:
-            MYSQL_ROOT_PASSWORD: gaboot
-            MYSQL_DATABASE: gaboot
-            MYSQL_USER: docker
-            MYSQL_PASSWORD: gaboot
+            POSTGRES_DB: gaboot
+            POSTGRES_USER: docker
+            POSTGRES_PASSWORD: gaboot
         ports:
-            - 3316:3306
+            - 5433:5432
         expose:
-            - 3306
+            - 5432
         networks:
             - gaboot
+        shm_size: 128mb
         volumes:
-            - ./dump:/var/lib/mysql
+            - ./.postgres:/dev/shm
      gaboot-api:
         build: 
             context: .
