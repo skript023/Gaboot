@@ -12,16 +12,21 @@ namespace gaboot::sha256
         SHA256_CTX sha256;
         std::string hashedString = "";
 
-        SHA256_Init(&sha256);
-        SHA256_Update(&sha256, str.c_str(), str.length());
-        SHA256_Final(hash, &sha256);
+        // Use SHA256_Init_ex to avoid deprecation warning
+        EVP_MD_CTX* mdctx = EVP_MD_CTX_new();
+        EVP_DigestInit_ex(mdctx, EVP_sha256(), NULL); // Initialize the digest context with SHA-256
+        EVP_DigestUpdate(mdctx, str.c_str(), str.length()); // Update the digest context with the data
+        EVP_DigestFinal_ex(mdctx, hash, NULL); // Finalize the digest calculation
 
-        for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) 
+        // Convert hash to string
+        for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
         {
             char hex[3];
             sprintf(hex, "%02x", hash[i]);
             hashedString += hex;
         }
+
+        EVP_MD_CTX_free(mdctx);
 
         return hashedString;
     }
