@@ -28,11 +28,11 @@ jobs:
 
       - name: Install Conan
         run: |
-          pip install conan
-          conan config install https://bitbucket.org/telkom-workspace/gaboot-backend/downloads/Linux.zip
+          sudo pip install conan
+          sudo conan config install https://bitbucket.org/telkom-workspace/gaboot-backend/downloads/Linux.zip
 
       - name: Install Package
-        run: conan install conanfile.txt -of=conan/Windows --build=missing
+        run: sudo conan install conanfile.txt -of=conan/Windows --build=missing
 
       - name: Configure CMakeList
         run: cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
