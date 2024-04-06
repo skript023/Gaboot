@@ -58,7 +58,7 @@ jobs:
         run: |
           sudo mkdir Linux
           sudo echo "SERVER_KEY=${{ secrets.SERVER_KEY }}" > ./Linux/.env
-          sudo echo "SECRET=${{ secrets.SECRET }}" >> ./Linux/.env
+          sudo echo "SECRET=${{ secrets.SECRET }}" > ./Linux/.env
           sudo cp -r src/assets ./Linux/assets
           sudo cp config.json ./Linux/config.json
           sudo cp Dockerfile ./Linux/Dockerfile
