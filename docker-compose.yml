@@ -18,7 +18,7 @@ services:
         volumes:
             - ./postgres:/dev/shm
             - ./postgres/data:/var/lib/postgresql/data
-            - ./postgres/config.conf:/etc/postgresql/
+            - ./postgres/config:/etc/postgresql/
      gaboot-api:
         build: 
             context: .
