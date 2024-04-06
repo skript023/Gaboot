@@ -57,6 +57,7 @@ jobs:
       - name: Move binary to new folder
         run: |
           sudo mkdir Linux
+          sudo cp -r src/assets ./Linux/assets
           sudo cp config.json ./Linux/config.json
           sudo cp Dockerfile ./Linux/Dockerfile
           sudo cp docker-compose.yml ./Linux/docker-compose
