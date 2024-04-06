@@ -51,7 +51,7 @@ jobs:
         run: | 
           sudo cp config.json ./build/config.json && \
           sudo cp Dockerfile ./build/Dockerfile && \
-          sudo cp docker-compose ./build/docker-compose && \
+          sudo cp docker-compose.yml ./build/docker-compose && \
           sudo cp supervisord.conf ./build/supervisord.conf && \
           sudo cmake --build ./build --config Release --target Gaboot --
 
