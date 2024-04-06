@@ -9,7 +9,7 @@ on:
       - main  # Adjust branch name if necessary
 
 jobs:
-  build_and_upload:
+  deployment:
     runs-on: ubuntu-latest
     permissions: write-all
 
