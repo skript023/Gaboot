@@ -106,12 +106,12 @@ jobs:
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose up --build -d gaboot-api"
       - name: Connect to PostgreSQL and run SQL query
         run: |
-          export PGPASSWORD="${DB_PASSWORD}"
+          export PGPASSWORD="${{ secrets.DB_PASSWORD }}"
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && \
           output=$(psql -h localhost -p 5433 -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -c "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'master_users');")"
       - name: Load dump sql
         run: |
-          export PGPASSWORD="${DB_PASSWORD}"
+          export PGPASSWORD="${{ secrets.DB_PASSWORD }}"
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
           "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && \
           if [ "$output" == "f" ]; then \
