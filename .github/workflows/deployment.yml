@@ -108,7 +108,7 @@ jobs:
         run: |
           export PGPASSWORD="${{ secrets.DB_PASSWORD }}"
           output=$(ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && \
-          psql -h localhost -p 5433 -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -c"SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'master_users');\"")
+          psql -h localhost -p 5433 -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -c"SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'master_users');")"
       - name: Load dump sql
         run: |
           export PGPASSWORD="${{ secrets.DB_PASSWORD }}"
