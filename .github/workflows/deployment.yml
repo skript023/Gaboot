@@ -57,8 +57,8 @@ jobs:
       - name: Move binary to new folder
         run: |
           sudo mkdir Linux
-          sudo echo "SERVER_KEY=${{ secrets.SERVER_KEY }}" > ./Linux/.env
-          sudo echo "SECRET=${{ secrets.SECRET }}" > ./Linux/.env
+          echo "SERVER_KEY=${{ secrets.SERVER_KEY }}" | sudo tee ./Linux/.env
+          echo "SECRET=${{ secrets.SECRET }}" | sudo tee -a ./Linux/.env
           sudo cp -r src/assets ./Linux/assets
           sudo cp config.json ./Linux/config.json
           sudo cp Dockerfile ./Linux/Dockerfile
