@@ -563,5 +563,5 @@ build/
 CMakebackup1.txt
 src/version.cpp
 .env
-.container/
-.postgres
+container/
+postgres/
