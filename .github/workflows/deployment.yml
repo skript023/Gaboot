@@ -1,4 +1,4 @@
-name: C++ Build, Vcpkg Install, and Artifact Upload
+name: deploy
 
 on:
   push:
