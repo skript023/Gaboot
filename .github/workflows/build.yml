@@ -102,12 +102,12 @@ jobs:
             ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose up --build -d gaboot-api"
 
       - name: Connect to PostgreSQL and run SQL query
-      run: |
-        export PGPASSWORD="${DB_PASSWORD}"
-        output=$(sudo docker exec -t gaboot-shop-database psql -h localhost -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -d gaboot -c "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'your_table');")
-        if [[ "$output" == "t" ]]; then
-          echo "Table exists"
-        else
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker cp gaboot.sql gaboot-shop-database:/docker-entrypoint-initdb.d/gaboot.sql"
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker exec -i gaboot-shop-database psql -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -f docker-entrypoint-initdb.d/gaboot.sql"
-        fi
+        run: |
+          export PGPASSWORD="${DB_PASSWORD}"
+          output=$(sudo docker exec -t gaboot-shop-database psql -h localhost -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -d gaboot -c "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'your_table');")
+          if [[ "$output" == "t" ]]; then
+            echo "Table exists"
+          else
+            ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker cp gaboot.sql gaboot-shop-database:/docker-entrypoint-initdb.d/gaboot.sql"
+            ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker exec -i gaboot-shop-database psql -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -f docker-entrypoint-initdb.d/gaboot.sql"
+          fi
