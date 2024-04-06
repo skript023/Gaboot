@@ -48,18 +48,23 @@ jobs:
         run: sudo cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
         
       - name: Build 64bit release Executable
-        run: | 
-          sudo cp config.json ./build/config.json && \
-          sudo cp Dockerfile ./build/Dockerfile && \
-          sudo cp docker-compose.yml ./build/docker-compose && \
-          sudo cp supervisord.conf ./build/supervisord.conf && \
+        run: |
           sudo cmake --build ./build --config Release --target Gaboot --
 
       - name: Check if Executable got built
         run: if [ ! -f "build/Gaboot" ]; then exit 1; fi
 
+      - name: Move binary to new folder
+        run: |
+          sudo mkdir Linux
+          sudo cp config.json ./Linux/config.json
+          sudo cp Dockerfile ./Linux/Dockerfile
+          sudo cp docker-compose.yml ./Linux/docker-compose
+          sudo cp supervisord.conf ./Linux/supervisord.conf
+          sudo cp ./build/Gaboot ./Linux/Gaboot
+
       - name: Zip files
-        run: zip -r Gaboot.zip build/Gaboot build/config.json build/Dockerfile build/docker-compose.yml build/supervisord.conf -d Linux/
+        run: sudo zip -r Gaboot.zip Linux/Gaboot Linux/config.json Linux/Dockerfile Linux/docker-compose.yml Linux/supervisord.conf
 
       - name: Upload binary to release
         uses: svenstaro/upload-release-action@v2
@@ -86,7 +91,9 @@ jobs:
       - name: Deploy code
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/ && \
-          sudo wget -O https://github.com/skript023/Gaboot/releases/download/v1.0.0/Gaboot.zip"
+          sudo wget -O https://github.com/skript023/Gaboot/releases/download/v1.0.0/Gaboot.zip" && \
+          sudo unzip Gaboot.zip && \
+          sudo rm -f Gaboot.zip
 
       - name: Build and start Docker containers
         run: |
