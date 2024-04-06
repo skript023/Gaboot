@@ -3,17 +3,17 @@ FROM ubuntu:latest
 # Install Supervisor
 RUN apt-get update && apt-get install -y supervisor
 
-WORKDIR /usr/local/bin/gaboot
+WORKDIR /home/skript023/gbt-backend/Linux
 
 # Copy the necessary files
-COPY out/build/Linux-x64/Gaboot .
-COPY out/build/Linux-x64/config.json .
-COPY out/build/Linux-x64/.env .
-COPY out/build/Linux-x64/uploads/ ./uploads
-#COPY gaboot.service /etc/systemd/system/gaboot.service
+COPY Gaboot .
+COPY config.json .
+COPY .env .
+COPY ./uploads/ ./uploads
+COPY ./assets ./assets
 
 # Set permissions
-RUN chmod +x /usr/local/bin/gaboot/Gaboot
+RUN chmod +x /home/skript023/gbt-backend/Linux/Gaboot
 
 # Copy Supervisor configuration file
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf

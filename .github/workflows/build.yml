@@ -48,18 +48,26 @@ jobs:
         run: sudo cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
         
       - name: Build 64bit release Executable
-        run: sudo cmake --build ./build --config Release --target Gaboot --
+        run: | 
+          sudo cp config.json ./build/config.json && \
+          sudo cp Dockerfile ./build/Dockerfile && \
+          sudo cp docker-compose ./build/docker-compose && \
+          sudo cp supervisord.conf ./build/supervisord.conf && \
+          sudo cmake --build ./build --config Release --target Gaboot --
 
       - name: Check if Executable got built
         run: if [ ! -f "build/Gaboot" ]; then exit 1; fi
+
+      - name: Zip files
+        run: zip -r Gaboot.zip build/*
 
       - name: Upload binary to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: build/Gaboot # Replace with the path to your binary
+          file: ./Gaboot.zip
           tag: v1.0.0
-          asset_name: Gaboot # Replace with your desired asset name
+          asset_name: Gaboot
           overwrite: true
           body: "Gaboot Release Binary"
           repo_name: skript023/Gaboot
@@ -82,4 +90,8 @@ jobs:
           sudo wget https://github.com/skript023/Gaboot/releases/download/v1.0.0/Gaboot"
 
       - name: Build and start Docker containers
-        run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose up --build -d"
+        run: |
+            ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && \
+            sudo docker-compose up --build -d" \
+            sudo docker cp gaboot.sql gaboot-shop-database:/docker-entrypoint-initdb.d/gaboot.sql \
+            docker exec -i gaboot-shop-database psql -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -f docker-entrypoint-initdb.d/gaboot.sql

@@ -249,3 +249,1481 @@ Log content flushed successfully to sink
 exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
 
 FATAL:  terminating connection due to administrator command
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 00:29:43 895367
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 8
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398549) [0x555d42cf9549]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f293f539520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f293f8c9b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f293f8d520c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f293f8d5277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f293f8d51fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a656d) [0x555d42e0756d]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba822) [0x555d42d1b822]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x17384a) [0x555d42ad484a]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f293f520d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e965) [0x555d42aff965]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 00:29:45 052680
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 29
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398549) [0x557163135549]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7fe87020b520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7fe87059bb9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7fe8705a720c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7fe8705a7277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7fe8705a71fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a656d) [0x55716324356d]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba822) [0x557163157822]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x17384a) [0x557162f1084a]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7fe8701f2d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e965) [0x557162f3b965]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 00:29:47 200051
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 50
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398549) [0x5648823e2549]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f5f50de9520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f5f51179b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f5f5118520c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f5f51185277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f5f511851fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a656d) [0x5648824f056d]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba822) [0x564882404822]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x17384a) [0x5648821bd84a]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f5f50dd0d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e965) [0x5648821e8965]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 00:29:50 352871
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 71
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398549) [0x55a772ee6549]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f7edfca2520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f7ee0032b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f7ee003e20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f7ee003e277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f7ee003e1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a656d) [0x55a772ff456d]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba822) [0x55a772f08822]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x17384a) [0x55a772cc184a]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f7edfc89d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e965) [0x55a772cec965]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 00:52:38 646687
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 8
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x3974b9) [0x5595f71904b9]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f3ed96f1520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f3ed9a81b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f3ed9a8d20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f3ed9a8d277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f3ed9a8d1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a54dd) [0x5595f729e4dd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3b9792) [0x5595f71b2792]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x17284a) [0x5595f6f6b84a]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f3ed96d8d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19d965) [0x5595f6f96965]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 00:52:39 810816
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 29
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x3974b9) [0x5574c21194b9]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f72141b8520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f7214548b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f721455420c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f7214554277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f72145541fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a54dd) [0x5574c22274dd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3b9792) [0x5574c213b792]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x17284a) [0x5574c1ef484a]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f721419fd90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19d965) [0x5574c1f1f965]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 00:52:41 983819
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 50
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x3974b9) [0x564ce74314b9]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f2e93c68520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f2e93ff8b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f2e9400420c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f2e94004277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f2e940041fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a54dd) [0x564ce753f4dd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3b9792) [0x564ce7453792]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x17284a) [0x564ce720c84a]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f2e93c4fd90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19d965) [0x564ce7237965]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 00:52:45 158657
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 71
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x3974b9) [0x5606a1ff74b9]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f0b06829520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f0b06bb9b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f0b06bc520c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f0b06bc5277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f0b06bc51fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a54dd) [0x5606a21054dd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3b9792) [0x5606a2019792]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x17284a) [0x5606a1dd284a]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f0b06810d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19d965) [0x5606a1dfd965]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 00:53:23 059936
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 8
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x3974b9) [0x55ef954344b9]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7fd387fd3520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7fd388363b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7fd38836f20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7fd38836f277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7fd38836f1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a54dd) [0x55ef955424dd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3b9792) [0x55ef95456792]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x17284a) [0x55ef9520f84a]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7fd387fbad90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19d965) [0x55ef9523a965]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 00:53:24 208735
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 29
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x3974b9) [0x55c975ee84b9]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7fb4ae680520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7fb4aea10b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7fb4aea1c20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7fb4aea1c277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7fb4aea1c1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a54dd) [0x55c975ff64dd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3b9792) [0x55c975f0a792]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x17284a) [0x55c975cc384a]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7fb4ae667d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19d965) [0x55c975cee965]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 00:53:26 363570
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 50
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x3974b9) [0x5572324234b9]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f8ea9ae2520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f8ea9e72b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f8ea9e7e20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f8ea9e7e277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f8ea9e7e1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a54dd) [0x5572325314dd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3b9792) [0x557232445792]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x17284a) [0x5572321fe84a]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f8ea9ac9d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19d965) [0x557232229965]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 00:53:29 521949
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 71
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x3974b9) [0x561f70a224b9]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f668de94520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f668e224b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f668e23020c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f668e230277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f668e2301fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a54dd) [0x561f70b304dd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3b9792) [0x561f70a44792]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x17284a) [0x561f707fd84a]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f668de7bd90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19d965) [0x561f70828965]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::TimeoutError'
+  what():  SQL execution timeout
+2024/04/06 01:29:53 522222
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 8
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x5562b347b499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f57a0929520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f57a0cb9b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f57a0cc520c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f57a0cc5277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f57a0cc51fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x5562b35894bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x5562b349d772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x5562b3256838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f57a0910d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x5562b3281945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::TimeoutError'
+  what():  SQL execution timeout
+2024/04/06 01:30:24 685822
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 29
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x56177e5e7499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f9674828520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f9674bb8b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f9674bc420c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f9674bc4277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f9674bc41fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x56177e6f54bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x56177e609772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x56177e3c2838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f967480fd90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x56177e3ed945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::TimeoutError'
+  what():  SQL execution timeout
+2024/04/06 01:30:55 843614
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 50
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x5586fa273499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7fd4e61af520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7fd4e653fb9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7fd4e654b20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7fd4e654b277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7fd4e654b1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x5586fa3814bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x5586fa295772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x5586fa04e838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7fd4e6196d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x5586fa079945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::TimeoutError'
+  what():  SQL execution timeout
+2024/04/06 01:31:26 993609
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 71
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x563692981499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7fb443db9520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7fb444149b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7fb44415520c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7fb444155277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7fb4441551fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x563692a8f4bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x5636929a3772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x56369275c838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7fb443da0d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x563692787945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::TimeoutError'
+  what():  SQL execution timeout
+2024/04/06 01:31:58 153579
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 92
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x5616219f3499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7fc04cecb520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7fc04d25bb9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7fc04d26720c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7fc04d267277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7fc04d2671fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x561621b014bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x561621a15772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x5616217ce838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7fc04ceb2d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x5616217f9945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::TimeoutError'
+  what():  SQL execution timeout
+2024/04/06 01:32:29 320710
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 113
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x55e48c12a499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7ff10d5c2520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7ff10d952b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7ff10d95e20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7ff10d95e277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7ff10d95e1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x55e48c2384bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x55e48c14c772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x55e48bf05838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7ff10d5a9d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x55e48bf30945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::TimeoutError'
+  what():  SQL execution timeout
+2024/04/06 01:33:00 476830
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 134
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x55d2793af499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7fadc74cc520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7fadc785cb9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7fadc786820c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7fadc7868277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7fadc78681fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x55d2794bd4bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x55d2793d1772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x55d27918a838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7fadc74b3d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x55d2791b5945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::TimeoutError'
+  what():  SQL execution timeout
+2024/04/06 01:33:31 637361
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 155
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x557fdf30c499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f216f519520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f216f8a9b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f216f8b520c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f216f8b5277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f216f8b51fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x557fdf41a4bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x557fdf32e772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x557fdf0e7838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f216f500d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x557fdf112945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::TimeoutError'
+  what():  SQL execution timeout
+2024/04/06 01:34:02 802091
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 176
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x55e5c1ed0499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f4714f05520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f4715295b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f47152a120c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f47152a1277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f47152a11fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x55e5c1fde4bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x55e5c1ef2772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x55e5c1cab838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f4714eecd90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x55e5c1cd6945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::TimeoutError'
+  what():  SQL execution timeout
+2024/04/06 01:34:33 963813
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 197
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x560bb7546499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f7065a12520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f7065da2b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f7065dae20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f7065dae277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f7065dae1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x560bb76544bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x560bb7568772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x560bb7321838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f70659f9d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x560bb734c945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::TimeoutError'
+  what():  SQL execution timeout
+2024/04/06 01:35:05 111414
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 218
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x55e07727e499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f2d38fe3520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f2d39373b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f2d3937f20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f2d3937f277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f2d3937f1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x55e07738c4bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x55e0772a0772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x55e077059838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f2d38fcad90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x55e077084945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::TimeoutError'
+  what():  SQL execution timeout
+2024/04/06 01:35:36 251408
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 239
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x55951caa3499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7fe0c6a9b520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7fe0c6e2bb9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7fe0c6e3720c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7fe0c6e37277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7fe0c6e371fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x55951cbb14bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x55951cac5772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x55951c87e838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7fe0c6a82d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x55951c8a9945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::TimeoutError'
+  what():  SQL execution timeout
+2024/04/06 01:36:07 417085
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 260
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x5630a4e67499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7fa2c0ec7520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7fa2c1257b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7fa2c126320c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7fa2c1263277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7fa2c12631fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x5630a4f754bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x5630a4e89772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x5630a4c42838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7fa2c0eaed90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x5630a4c6d945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 01:36:54 663898
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 8
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x55bce39bb499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f4c9816e520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f4c984feb9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f4c9850a20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f4c9850a277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f4c9850a1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x55bce3ac94bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x55bce39dd772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x55bce3796838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f4c98155d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x55bce37c1945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 01:36:55 848131
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 29
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x55a82a6f3499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7fe1d277e520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7fe1d2b0eb9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7fe1d2b1a20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7fe1d2b1a277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7fe1d2b1a1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x55a82a8014bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x55a82a715772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x55a82a4ce838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7fe1d2765d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x55a82a4f9945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 01:36:58 055066
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 50
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x558f519be499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f8f14a9b520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f8f14e2bb9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f8f14e3720c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f8f14e37277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f8f14e371fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x558f51acc4bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x558f519e0772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x558f51799838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f8f14a82d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x558f517c4945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 01:37:01 233093
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 71
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x55b74627f499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7fb99f02a520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7fb99f3bab9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7fb99f3c620c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7fb99f3c6277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7fb99f3c61fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x55b74638d4bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x55b7462a1772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x55b74605a838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7fb99f011d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x55b746085945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 01:42:02 732136
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 8
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x563e5e4a6499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f9a9dde4520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f9a9e174b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f9a9e18020c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f9a9e180277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f9a9e1801fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x563e5e5b44bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x563e5e4c8772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x563e5e281838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f9a9ddcbd90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x563e5e2ac945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 01:42:03 982428
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 29
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x5555caed7499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f745d7db520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f745db6bb9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f745db7720c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f745db77277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f745db771fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x5555cafe54bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x5555caef9772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x5555cacb2838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f745d7c2d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x5555cacdd945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 01:42:06 238217
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 50
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x56552b197499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f82f4be2520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f82f4f72b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f82f4f7e20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f82f4f7e277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f82f4f7e1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x56552b2a54bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x56552b1b9772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x56552af72838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f82f4bc9d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x56552af9d945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 01:42:09 410254
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 71
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x563b1647f499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f47d2083520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f47d2413b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f47d241f20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f47d241f277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f47d241f1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x563b1658d4bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x563b164a1772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x563b1625a838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f47d206ad90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x563b16285945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 01:45:44 302455
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 8
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x556559fad499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7fb98663b520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7fb9869cbb9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7fb9869d720c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7fb9869d7277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7fb9869d71fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x55655a0bb4bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x556559fcf772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x556559d88838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7fb986622d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x556559db3945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 01:45:45 458440
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 29
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x5579bdf31499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7fe1d2d93520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7fe1d3123b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7fe1d312f20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7fe1d312f277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7fe1d312f1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x5579be03f4bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x5579bdf53772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x5579bdd0c838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7fe1d2d7ad90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x5579bdd37945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 01:45:47 611232
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 50
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x55d42ca95499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f9753407520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f9753797b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f97537a320c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f97537a3277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f97537a31fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x55d42cba34bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x55d42cab7772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x55d42c870838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f97533eed90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x55d42c89b945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 01:45:50 763016
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 71
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x559cccb9b499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f686d183520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f686d513b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f686d51f20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f686d51f277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f686d51f1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x559cccca94bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x559cccbbd772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x559ccc976838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f686d16ad90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x559ccc9a1945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 01:47:12 524443
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 8
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x56473a96d499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f7eba3ef520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f7eba77fb9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f7eba78b20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f7eba78b277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f7eba78b1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x56473aa7b4bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x56473a98f772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x56473a748838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f7eba3d6d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x56473a773945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 01:47:13 675173
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 29
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x55bb358bd499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7fce00d44520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7fce010d4b9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7fce010e020c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7fce010e0277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7fce010e01fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x55bb359cb4bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x55bb358df772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x55bb35698838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7fce00d2bd90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x55bb356c3945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 01:47:15 829339
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 50
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x56366ebfd499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f5a6487d520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f5a64c0db9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f5a64c1920c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f5a64c19277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f5a64c191fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x56366ed0b4bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x56366ec1f772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x56366e9d8838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f5a64864d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x56366ea03945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+
+terminate called after throwing an instance of 'drogon::orm::Failure'
+  what():  ERROR:  relation "carts" does not exist
+LINE 1: select * from carts order by customerid
+                      ^
+
+2024/04/06 01:47:18 982551
+
+***** FATAL SIGNAL RECEIVED ******* 
+Received fatal signal: SIGABRT(6)	PID: 71
+
+***** SIGNAL SIGABRT(6)
+
+*******	STACKDUMP *******
+	stack dump [1]  /usr/local/bin/gaboot/Gaboot(+0x398499) [0x5645592ef499]
+	stack dump [2]  /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f5b8dc3f520]
+	stack dump [3]  pthread_kill + 0x12c
+	stack dump [4]  raise + 0x16
+	stack dump [5]  abort + 0xd3
+	stack dump [6]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xa2b9e) [0x7f5b8dfcfb9e]
+	stack dump [7]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae20c) [0x7f5b8dfdb20c]
+	stack dump [8]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae277) [0x7f5b8dfdb277]
+	stack dump [9]  /lib/x86_64-linux-gnu/libstdc++.so.6(+0xae1fe) [0x7f5b8dfdb1fe]
+	stack dump [10]  /usr/local/bin/gaboot/Gaboot(+0x4a64bd) [0x5645593fd4bd]
+	stack dump [11]  /usr/local/bin/gaboot/Gaboot(+0x3ba772) [0x564559311772]
+	stack dump [12]  /usr/local/bin/gaboot/Gaboot(+0x173838) [0x5645590ca838]
+	stack dump [13]  /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f5b8dc26d90]
+	stack dump [14]  __libc_start_main + 0x80
+	stack dump [15]  /usr/local/bin/gaboot/Gaboot(+0x19e945) [0x5645590f5945]
+
+Exiting after fatal event  (FATAL_SIGNAL). Fatal type:  SIGABRT
+Log content flushed successfully to sink
+
+
+
+
+exitWithDefaultSignalHandler:244. Exiting due to FATAL_SIGNAL, 6   
+

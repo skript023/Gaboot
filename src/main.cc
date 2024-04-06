@@ -35,6 +35,8 @@ int main()
     LOG(INFO) << "Customer middleware is " << CUSTOMER_MIDDLEWARE_STATUS;
 
     g_file_manager.init(UPLOAD_PATH);
+    ADD_CONFIG("./config.json");
+    LOG(INFO) << "Configuration loaded.";
 
     //Set HTTP listener address and port
     LOG(INFO) << "Starting C++ Gaboot Server.";
@@ -60,8 +62,6 @@ int main()
 
     ADD_LISTENER("0.0.0.0", 8080);
     LOG(INFO) << "Listener initialized.";
-    ADD_CONFIG("./config.json");
-    LOG(INFO) << "Configuration loaded.";
 
     //Run HTTP framework,the method will block in the internal event loop
     LOG(INFO) << "Server has started.";

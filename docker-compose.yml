@@ -22,7 +22,7 @@ services:
             context: .
             dockerfile: Dockerfile
         container_name: gaboot-shop-server
-        restart: unless-stopped
+        restart: on-failure
         init: true
         ports:
             - 5000:8080
