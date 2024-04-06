@@ -65,7 +65,7 @@ jobs:
           sudo cp ./build/Gaboot ./Linux/Gaboot
 
       - name: Zip files
-        run: sudo zip -r Gaboot.zip Linux/Gaboot Linux/config.json Linux/Dockerfile Linux/docker-compose.yml Linux/supervisord.conf
+        run: sudo zip -r Gaboot.zip Linux/Gaboot Linux/config.json Linux/Dockerfile Linux/docker-compose.yml Linux/supervisord.conf Linux/assets
 
       - name: Upload binary to release
         uses: svenstaro/upload-release-action@v2
