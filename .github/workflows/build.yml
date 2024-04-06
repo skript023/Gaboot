@@ -67,7 +67,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ./Gaboot.zip
           tag: v1.0.0
-          asset_name: Gaboot
+          asset_name: Gaboot.zip
           overwrite: true
           body: "Gaboot Release Binary"
           repo_name: skript023/Gaboot
