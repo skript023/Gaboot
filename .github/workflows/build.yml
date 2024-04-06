@@ -59,7 +59,7 @@ jobs:
         run: if [ ! -f "build/Gaboot" ]; then exit 1; fi
 
       - name: Zip files
-        run: zip -r Gaboot.zip build/*
+        run: zip -r Gaboot.zip build/Gaboot build/config.json build/Dockerfile build/docker-compose.yml build/supervisord.conf
 
       - name: Upload binary to release
         uses: svenstaro/upload-release-action@v2
