@@ -30,7 +30,7 @@ jobs:
       - name: Install Conan
         run: |
           sudo pip install conan
-          sudo conan config install https://bitbucket.org/telkom-workspace/gaboot-backend/downloads/Linux.zip
+          sudo conan config install https://bitbucket.org/telkom-workspace/gaboot-backend/downloads/config_linux.zip
 
       - name: Install Package
         run: sudo conan install conanfile.txt -of=conan/Linux --build=missing
@@ -87,7 +87,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbawt-backend/Linux/ && \
           sudo rm -f Gaboot && \
-          sudo wget https://github.com/skript023/Gaboot/releases/download/v1.0.0/Gaboot"
+          sudo wget -O https://github.com/skript023/Gaboot/releases/download/v1.0.0/Gaboot.zip"
 
       - name: Build and start Docker containers
         run: |
