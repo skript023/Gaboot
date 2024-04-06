@@ -90,7 +90,7 @@ jobs:
 
       - name: Deploy code
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/ && \
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/" && \
           sudo wget -O "https://github.com/skript023/Gaboot/releases/download/v1.0.0/Gaboot.zip" && \
           sudo unzip Gaboot.zip && \
           sudo rm -f Gaboot.zip
