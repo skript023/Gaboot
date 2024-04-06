@@ -1,0 +1,118 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - main  # Adjust branch name if necessary
+  pull_request:
+    branches:
+      - main  # Adjust branch name if necessary
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+      - uses: actions/checkout@v3
+  
+      - name: Install dependencies
+        run: sudo apt-get update &&  sudo apt-get install -y  build-essential cmake g++ gdb make ninja-build rsync zip
+
+      - name: Check CMake version
+        run: cmake --version
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Conan
+        run: |
+          sudo pip install conan
+          sudo conan config install https://bitbucket.org/telkom-workspace/gaboot-backend/downloads/config_linux.zip
+
+      - name: Install Package
+        run: sudo conan install conanfile.txt -of=conan/Linux --build=missing
+
+      - name: Echo list of files before removal
+        run: ls
+
+      - name: Remove CMakeUserPresets.json
+        run: sudo rm CMakeUserPresets.json
+
+      - name: Echo list of files after removal
+        run: ls
+
+      - name: Configure CMakeList
+        run: sudo cmake -D CMAKE_BUILD_TYPE=Release -S. -Bbuild -G Ninja
+        
+      - name: Build 64bit release Executable
+        run: |
+          sudo cmake --build ./build --config Release --target Gaboot --
+
+      - name: Check if Executable got built
+        run: if [ ! -f "build/Gaboot" ]; then exit 1; fi
+
+      - name: Move binary to new folder
+        run: |
+          sudo mkdir Linux
+          sudo cp -r src/assets ./Linux/assets
+          sudo cp config.json ./Linux/config.json
+          sudo cp Dockerfile ./Linux/Dockerfile
+          sudo cp docker-compose.yml ./Linux/docker-compose.yml
+          sudo cp supervisord.conf ./Linux/supervisord.conf
+          sudo cp ./build/Gaboot ./Linux/Gaboot
+
+      - name: Zip files
+        run: sudo zip -r Gaboot.zip Linux/Gaboot Linux/config.json Linux/Dockerfile Linux/docker-compose.yml Linux/supervisord.conf
+
+      - name: Upload binary to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./Gaboot.zip
+          tag: v1.0.0
+          asset_name: Gaboot.zip
+          overwrite: true
+          body: "Gaboot Release Binary"
+          repo_name: skript023/Gaboot
+
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Set safe directory
+        run: ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "git config --global --add safe.directory /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/"
+
+      - name: Stop existing Docker containers
+        run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose down gaboot-api"
+
+      - name: Deploy code
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/ && sudo rm -f Gaboot.zip"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/ && sudo wget https://github.com/skript023/Gaboot/releases/download/v1.0.0/Gaboot.zip"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/ && sudo rm -r Linux/"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/ && sudo unzip -o Gaboot.zip"
+          
+      - name: Build and start Docker containers
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/"
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose up --build -d gaboot-api"
+
+      - name: Connect to PostgreSQL and run SQL query
+        run: |
+          export PGPASSWORD="${DB_PASSWORD}"
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && \
+          output=$(psql -h localhost -p 5433 -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -c "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'master_users');")"
+      - name: Load dump sql
+        run: |
+          export PGPASSWORD="${DB_PASSWORD}"
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
+          "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && \
+          if [ "$output" != "t" ]; then \
+            sudo docker cp gaboot.sql gaboot-shop-database:/docker-entrypoint-initdb.d/gaboot.sql; \
+            sudo docker exec -i gaboot-shop-database psql -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -f docker-entrypoint-initdb.d/gaboot.sql; \
+          fi"
