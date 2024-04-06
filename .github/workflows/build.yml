@@ -104,6 +104,7 @@ jobs:
       - name: Connect to PostgreSQL and run SQL query
         run: |
           export PGPASSWORD="${DB_PASSWORD}"
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/"
           output=$(sudo docker exec -t gaboot-shop-database psql -h localhost -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -d gaboot -c "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'your_table');")
           if [[ "$output" == "t" ]]; then
             echo "Table exists"
