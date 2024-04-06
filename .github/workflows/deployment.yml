@@ -88,10 +88,7 @@ jobs:
 
       - name: Set safe directory
         run: ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "git config --global --add safe.directory /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/"
-
-      - name: Stop existing Docker containers
-        run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose down gaboot-api"
-
+        
       - name: Deploy code
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/"
@@ -100,22 +97,25 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/ && sudo rm -r Linux/"
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/ && sudo unzip -o Gaboot.zip"
           
+      - name: Stop existing Docker containers
+        run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose down gaboot-api"
+
       - name: Build and start Docker containers
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/"
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose up --build -d gaboot-api"
-
       - name: Connect to PostgreSQL and run SQL query
         run: |
           export PGPASSWORD="${DB_PASSWORD}"
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && \
-          output=$(psql -h localhost -p 5433 -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -c "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'master_users');")"
+          output=$(ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && \
+          psql -h localhost -p 5433 -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -tAc \"SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'master_users');\"")
       - name: Load dump sql
         run: |
           export PGPASSWORD="${DB_PASSWORD}"
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
-          "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && \
-          if [ "$output" != "t" ]; then \
+          if [[ "$output" == "f" ]]; then
+            ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
+            "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && \
             sudo docker cp gaboot.sql gaboot-shop-database:/docker-entrypoint-initdb.d/gaboot.sql; \
-            sudo docker exec -i gaboot-shop-database psql -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -f docker-entrypoint-initdb.d/gaboot.sql; \
-          fi"
+            sudo docker exec -i gaboot-shop-database psql -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -f docker-entrypoint-initdb.d/gaboot.sql;"
+          fi
+
