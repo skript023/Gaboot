@@ -98,7 +98,7 @@ jobs:
       - name: Build and start Docker containers
         run: |
             export PGPASSWORD="${DB_PASSWORD}"
-            ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && \
-            sudo docker-compose up --build -d && \
-            sudo docker cp gaboot.sql gaboot-shop-database:/docker-entrypoint-initdb.d/gaboot.sql && \
-            sudo docker exec -i gaboot-shop-database psql -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -f docker-entrypoint-initdb.d/gaboot.sql"
+            ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/"
+            sudo docker-compose up --build -d
+            sudo docker cp gaboot.sql gaboot-shop-database:/docker-entrypoint-initdb.d/gaboot.sql
+            sudo docker exec -i gaboot-shop-database psql -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -f docker-entrypoint-initdb.d/gaboot.sql
