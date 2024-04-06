@@ -17,8 +17,8 @@ services:
         shm_size: 128mb
         volumes:
             - ./postgres:/dev/shm
-            - ./postgres/postgresql.conf:/etc/postgresql/postgresql.conf
-            - ./postgres/pg_hba.conf:/etc/postgresql/pg_hba.conf
+            - ./postgres/data:/var/lib/postgresql/data
+            - ./postgres/config.conf:/etc/postgresql/
      gaboot-api:
         build: 
             context: .
@@ -35,8 +35,8 @@ services:
         links:
             - gaboot-database
         volumes:
-            - ./container/uploads:/usr/local/bin/gaboot/uploads
-            - ./container/Drogon Log:/usr/local/bin/gaboot/Drogon Log
+            - ./container/uploads:/usr/local/bin/gaboot/uploads/
+            - ./container/Drogon Log:"/usr/local/bin/gaboot/Drogon Log/"
             - ./container/Service:/var/log/
 networks:
    gaboot:

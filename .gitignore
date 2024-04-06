@@ -565,3 +565,4 @@ src/version.cpp
 .env
 container/
 postgres/
+conan/
