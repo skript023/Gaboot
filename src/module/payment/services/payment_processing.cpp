@@ -116,8 +116,6 @@ namespace gaboot
 
         auto res = cpr::Post(m_url, body, header);
 
-        if (!res.status_code) throw std::runtime_error("UNKNOWN ERROR 01 - Check your internet access");
-
         auto json = nlohmann::ordered_json::parse(res.text);
 
         json["status_code"] = std::stol(json["status_code"].get<std::string>());
