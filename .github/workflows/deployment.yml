@@ -57,6 +57,7 @@ jobs:
       - name: Move binary to new folder
         run: |
           sudo mkdir Linux
+          sudo mkdir Linux/postgres/data
           echo "SERVER_KEY=${{ secrets.SERVER_KEY }}" | sudo tee ./Linux/.env
           echo "SECRET=${{ secrets.SECRET }}" | sudo tee -a ./Linux/.env
           sudo cp -r src/assets Linux/assets
