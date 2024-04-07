@@ -1,14 +1,13 @@
 FROM ubuntu:latest
 
 # Install Supervisor
-RUN apt-get update && apt-get install -y supervisor
+RUN apt-get update && apt-get install -y supervisor curl
 
 WORKDIR /home/skript023/gbt-backend/Linux
 
 # Copy the necessary files
 COPY Gaboot .
 COPY config.json .
-COPY .env .
 COPY ./assets ./assets
 
 # Set permissions

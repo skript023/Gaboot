@@ -58,8 +58,8 @@
 #define UPLOAD_PATH drogon::app().getUploadPath()
 #define DATABASE_CLIENT drogon::app().getDbClient()
 
-#define SECRET util::get_env("SECRET")
-#define SERVER_KEY util::get_env("SERVER_KEY")
+#define SECRET "QmFoYXNhQXN1MTIz"
+#define SERVER_KEY "U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg="
 
 #ifdef BASIC_MIDDLEWARE_DISABLE
 #define BASIC_MIDDLEWARE

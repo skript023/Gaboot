@@ -209,6 +209,21 @@ namespace gaboot::util
         return nlohmannJson;
     }
 
+    inline bool is_json(std::string const& str)
+    {
+        try 
+        {
+            // Attempt to parse the string
+            nlohmann::json::parse(str);
+            // If parsing succeeds, it's valid JSON
+            return true;
+        }
+        catch (nlohmann::json::parse_error& ex)
+        {
+            LOG(WARNING) << "The string is not json type, " << ex.what();
+            return false;
+        }
+    }
 #ifdef _WIN32
     inline std::string current_datetime()
     {

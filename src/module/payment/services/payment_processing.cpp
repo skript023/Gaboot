@@ -102,26 +102,28 @@ namespace gaboot
 
     bool payment_processing::make_payment(payment_gateway* midtrans)
     {
-        try
+        std::string token = fmt::format("Basic {}", SERVER_KEY);
+
+        cpr::Header header = {
+            { "Accept", "application/json" },
+            { "Content-Type", "application/json" },
+            { "Authorization", "Basic U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg=" }
+        };
+
+        cpr::Body body = m_json.dump();
+
+        LOG(INFO) << "Request payment to " << m_url;
+
+        LOG(INFO) << m_json.dump();
+
+        auto res = cpr::Post(m_url, body, header);
+
+        LOG(INFO) << "Result after request " << res.text;
+
+        if (!res.status_code) throw std::runtime_error("UNKNOWN ERROR 01 - Check your internet access or invalid request");
+
+        if (util::is_json(res.text))
         {
-            std::string token = fmt::format("Basic {}", SERVER_KEY);
-
-            cpr::Header header = {
-                { "Accept", "application/json" },
-                { "Content-Type", "application/json" },
-                { "Authorization", token }
-            };
-
-            cpr::Body body = m_json.dump();
-
-            LOG(INFO) << "Request payment to " << m_url;
-
-            LOG(INFO) << m_json.dump();
-
-            auto res = cpr::Post(m_url, body, header);
-
-            LOG(INFO) << "Result after request " << res.status_line;
-
             auto json = nlohmann::ordered_json::parse(res.text);
 
             json["status_code"] = std::stol(json["status_code"].get<std::string>());
@@ -132,14 +134,8 @@ namespace gaboot
             {
                 return true;
             }
-
-            return false;
         }
-        catch (const std::exception& ex)
-        {
-            LOG(WARNING) << "Error caught while request to payment gateway" << ex.what();
 
-            return false;
-        }
+        return false;
     }
 }
