@@ -61,6 +61,7 @@ jobs:
           echo "SECRET=${{ secrets.SECRET }}" | sudo tee -a ./Linux/.env
           sudo cp -r src/assets Linux/assets
           sudo cp config/config.json Linux/config.json
+          sudo cp config/pg_hba.conf Linux/postgres/data/pg_hba.conf
           sudo cp config/supervisord.conf Linux/supervisord.conf
           sudo cp Dockerfile Linux/Dockerfile
           sudo cp docker-compose.yml Linux/docker-compose.yml

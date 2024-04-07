@@ -102,31 +102,44 @@ namespace gaboot
 
     bool payment_processing::make_payment(payment_gateway* midtrans)
     {
-        std::string token = fmt::format("Basic {}", SERVER_KEY);
-
-        cpr::Header header = {
-            { "Accept", "application/json" },
-            { "Content-Type", "application/json" },
-            { "Authorization", token }
-        };
-
-        cpr::Body body = m_json.dump();
-
-        LOG(INFO) << m_json.dump();
-
-        auto res = cpr::Post(m_url, body, header);
-
-        auto json = nlohmann::ordered_json::parse(res.text);
-
-        json["status_code"] = std::stol(json["status_code"].get<std::string>());
-
-        midtrans->from_json(json);
-
-        if (json["status_code"] == 201 && res.status_code == 200)
+        try
         {
-            return true;
-        }
+            std::string token = fmt::format("Basic {}", SERVER_KEY);
 
-        return false;
+            cpr::Header header = {
+                { "Accept", "application/json" },
+                { "Content-Type", "application/json" },
+                { "Authorization", token }
+            };
+
+            cpr::Body body = m_json.dump();
+
+            LOG(INFO) << "Request payment to " << m_url;
+
+            LOG(INFO) << m_json.dump();
+
+            auto res = cpr::Post(m_url, body, header);
+
+            LOG(INFO) << "Result after request " << res.status_line;
+
+            auto json = nlohmann::ordered_json::parse(res.text);
+
+            json["status_code"] = std::stol(json["status_code"].get<std::string>());
+
+            midtrans->from_json(json);
+
+            if (json["status_code"] == 201 && res.status_code == 200)
+            {
+                return true;
+            }
+
+            return false;
+        }
+        catch (const std::exception& ex)
+        {
+            LOG(WARNING) << "Error caught while request to payment gateway" << ex.what();
+
+            return false;
+        }
     }
 }

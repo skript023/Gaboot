@@ -97,14 +97,14 @@ if (EXISTS "${SOURCE_DIR}/src/assets")
 endif()
 
 # Add a custom target to make sure the custom command is executed before building your main target
-if (EXISTS "${DESTINATION_DIR}/config.json" AND EXISTS "${DESTINATION_DIR}/.env")
+if (EXISTS "${DESTINATION_DIR}/config/config.json" AND EXISTS "${DESTINATION_DIR}/.env")
     add_custom_target(CopyConfigFiles DEPENDS ${DESTINATION_DIR}/config.json ${DESTINATION_DIR}/.env)
 endif()
 
 # Compile main.cc as executable
 add_executable(Gaboot "${SRC_DIR}/main.cc" ${VIEWSRC} ${ICON})
 
-if (EXISTS "${DESTINATION_DIR}/config.json" AND EXISTS "${DESTINATION_DIR}/.env")
+if (EXISTS "${DESTINATION_DIR}/config/config.json" AND EXISTS "${DESTINATION_DIR}/.env")
     # Add dependencies to make sure the custom commands are executed before building YourTarget
     add_dependencies(Gaboot CopyConfigFiles)
 endif()
@@ -140,7 +140,7 @@ target_include_directories(Gaboot PRIVATE
 
 target_precompile_headers(Gaboot PRIVATE "${SRC_DIR}/pch.h")
 
-target_link_libraries(Gaboot PRIVATE Drogon::Drogon bcrypt OpenSSL::SSL OpenSSL::Crypto cpr fmt::fmt nlohmann_json_schema_validator g3log opencv_core opencv_imgcodecs opencv_highgui)
+target_link_libraries(Gaboot PRIVATE Drogon::Drogon bcrypt OpenSSL::SSL OpenSSL::Crypto cpr::cpr fmt::fmt nlohmann_json_schema_validator g3log opencv_core opencv_imgcodecs opencv_highgui)
 
 # Warnings as errors
 set_property(TARGET Gaboot PROPERTY COMPILE_WARNING_AS_ERROR ON)
