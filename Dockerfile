@@ -9,7 +9,6 @@ WORKDIR /home/skript023/gbt-backend/Linux
 COPY Gaboot .
 COPY config.json .
 COPY .env .
-COPY ./uploads/ ./uploads
 COPY ./assets ./assets
 
 # Set permissions

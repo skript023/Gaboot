@@ -59,16 +59,15 @@ jobs:
           sudo mkdir Linux
           echo "SERVER_KEY=${{ secrets.SERVER_KEY }}" | sudo tee ./Linux/.env
           echo "SECRET=${{ secrets.SECRET }}" | sudo tee -a ./Linux/.env
-          sudo cp -r src/assets ./Linux/assets
-          sudo cp config.json ./Linux/config.json
-          sudo cp Dockerfile ./Linux/Dockerfile
-          sudo cp docker-compose.yml ./Linux/docker-compose.yml
-          sudo cp supervisord.conf ./Linux/supervisord.conf
-          sudo cp ./build/Gaboot ./Linux/Gaboot
-          sudo mkdir ./Linux/uploads
+          sudo cp -r src/assets Linux/assets
+          sudo cp config/config.json Linux/config.json
+          sudo cp config/supervisord.conf Linux/supervisord.conf
+          sudo cp Dockerfile Linux/Dockerfile
+          sudo cp docker-compose.yml Linux/docker-compose.yml
+          sudo cp build/Gaboot Linux/Gaboot
 
       - name: Zip files
-        run: sudo zip -r Gaboot.zip Linux/Gaboot Linux/config.json Linux/Dockerfile Linux/docker-compose.yml Linux/supervisord.conf Linux/assets Linux/uploads Linux/.env
+        run: sudo zip -r Gaboot.zip Linux/Gaboot Linux/config.json Linux/Dockerfile Linux/docker-compose.yml Linux/supervisord.conf Linux/assets Linux/.env
 
       - name: Upload binary to release
         uses: svenstaro/upload-release-action@v2
