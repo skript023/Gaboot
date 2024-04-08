@@ -5,7 +5,7 @@
  */
 
 #include <pch.h>
-#include "cutomer_middleware.h"
+#include "customer_middleware.h"
 #include "exception/exception.hpp"
 #include "auth/cache/auth_manager.hpp"
 

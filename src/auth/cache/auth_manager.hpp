@@ -25,6 +25,7 @@ namespace gaboot
 		virtual ~auth_manager();
 
 		bool insert(int64_t id);
+		bool insert(MasterCustomers* customer);
 		bool insert(int64_t id, MasterCustomers* customer);
 		bool find(int64_t id, MasterCustomers* customer);
 		MasterCustomers* find(int64_t id);

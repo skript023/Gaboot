@@ -19,8 +19,8 @@ endif()
 
 #include vcpkg dependencies
 message("\nFetching packages")
-find_package(Drogon REQUIRED)
-find_package(OpenSSL REQUIRED)
+find_package(Drogon CONFIG REQUIRED)
+find_package(OpenSSL CONFIG REQUIRED)
 find_package(OpenCV CONFIG REQUIRED)
 
 #generate version file

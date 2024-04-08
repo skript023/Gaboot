@@ -18,7 +18,7 @@ namespace gaboot
 {
     class basic_middleware : public HttpFilter<basic_middleware>
     {
-        Mapper<MasterCustomers> customer()
+        Mapper<MasterCustomers> db()
         {
             return Mapper<MasterCustomers>(DATABASE_CLIENT);
         }

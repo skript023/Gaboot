@@ -38,6 +38,27 @@ namespace gaboot
 			return false;
 		}
 	}
+
+	bool auth_manager::insert(MasterCustomers* customer)
+	{
+		try
+		{
+			auto result = m_cache_auth.insert({ customer->getValueOfId(), auth_cache(*customer, 24h) });
+
+			if (result.second)
+				LOG(INFO_TO_FILE) << "Customer " << *result.first->second.m_customers.getUsername() << " successfully inserted into authentication pool";
+			else
+				LOG(INFO_TO_FILE) << "Customer " << *result.first->second.m_customers.getUsername() << " is already exist in authentication pool";
+
+			return true;
+		}
+		catch (const DrogonDbException& e)
+		{
+			LOG(WARNING) << e.base().what();
+
+			return false;
+		}
+	}
 	
 	bool auth_manager::insert(int64_t id, MasterCustomers* customer)
 	{

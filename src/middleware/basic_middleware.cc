@@ -6,6 +6,7 @@
 
 #include "basic_middleware.h"
 #include "exception/exception.hpp"
+#include "auth/cache/auth_manager.hpp"
 
 using namespace drogon;
 
@@ -17,18 +18,26 @@ namespace gaboot
         {
             std::string param = req->getHeader("Authorization");
 
-            if (this->parse_token_from_header(param))
+            if (!this->parse_token_from_header(param))
             {
-                auto customers = customer().findBy(Criteria(MasterCustomers::Cols::_token, CompareOperator::EQ, m_token));
-
-                return fccb();
+                throw UnauthorizedException("You're unauthorized");
             }
 
-            throw UnauthorizedException("You're unauthorized");
+            LOG(INFO) << m_token;
+
+            auto customer = db().findOne(Criteria(MasterCustomers::Cols::_token, CompareOperator::EQ, m_token));
+
+            g_auth_manager->insert(&customer);
+
+            return fccb();
         }
-        catch (UnauthorizedException const& ex)
+        catch (GabootException const& ex)
         {
             fcb(ex.response());
+        }
+        catch (DrogonDbException const& ex)
+        {
+            fcb(UnauthorizedException("Token Not found").response());
         }
     }
 
@@ -36,7 +45,7 @@ namespace gaboot
     {
         if (auto it = header.find("Basic"); it != std::string::npos)
         {   
-            m_token = header.substr(sizeof("Basic") - 1);
+            m_token = header.substr(sizeof("Basic"));
 
             return true;
         }

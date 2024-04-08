@@ -185,36 +185,39 @@ namespace gaboot
     }
     HttpResponsePtr customer_service::updateImage(HttpRequestPtr const& req, std::string&& id)
     {
-        MultiPartParser fileUpload;
-        MasterCustomers customer = db().findByPrimaryKey(stoull(id));
-
-        if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0)
+        TRY_CLAUSE
         {
-            throw BadRequestException("Data is empty or file requirement doesn't match");
-        }
+            MultiPartParser fileUpload;
+            MasterCustomers customer = db().findByPrimaryKey(stoull(id));
 
-        auto& file = fileUpload.getFiles()[0];
+            if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0)
+            {
+                throw BadRequestException("Data is empty or file requirement doesn't match");
+            }
 
-        upload_file upload(&file, customer.getValueOfUsername(), "customers");
+            auto& file = fileUpload.getFiles()[0];
 
-        if (!util::allowed_image(file.getFileExtension().data()))
-            throw BadRequestException("File type doesn't allowed");
+            upload_file upload(&file, customer.getValueOfUsername(), "customers");
 
-        m_data["imgPath"] = upload.get_image_path();
-        m_data["imgThumbPath"] = upload.get_thumbnail_path();
-        m_data["updatedAt"] = trantor::Date::now().toDbStringLocal();
+            if (!util::allowed_image(file.getFileExtension().data()))
+                throw BadRequestException("File type doesn't allowed");
 
-        customer.updateByJson(m_data);
+            customer.setImgpath(upload.get_image_path());
+            customer.setImgthumbpath(upload.get_thumbnail_path());
+            customer.setUpdatedat(trantor::Date::now());
 
-        if (!db().update(customer))
-        {
-            throw InternalServerErrorException("Unable to update non-existing data");
-        }
+            if (!db().update(customer))
+            {
+                throw InternalServerErrorException("Unable to update non-existing data");
+            }
 
-        m_response.m_message = "Success update customer data.";
-        m_response.m_success = true;
+            upload.save();
 
-        return HttpResponse::newHttpJsonResponse(m_response.to_json());
+            m_response.m_message = "Success update customer data.";
+            m_response.m_success = true;
+
+            return HttpResponse::newHttpJsonResponse(m_response.to_json());
+        } EXCEPT_CLAUSE
     }
     HttpResponsePtr customer_service::getProfile(HttpRequestPtr const& req, std::string&& id)
     {
