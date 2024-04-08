@@ -22,6 +22,8 @@ namespace gaboot
         validate_error err;
         auto res = m_validate.validate(data, err);
 
+        LOG(INFO) << "Schema : " << m_schema;
+
         if (err)
         {
             error = err.message() + " at " + err.pointer().to_string().substr(1);
