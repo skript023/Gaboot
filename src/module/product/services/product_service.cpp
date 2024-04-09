@@ -25,7 +25,7 @@ namespace gaboot
 
 			this->load_cache();
 
-			const auto products = categoryId.empty() ? m_cache_product.limit(limit).offset(page * limit).find_all() : m_cache_product.find([categoryId](const MasterProducts& entry) -> bool { return entry.getValueOfCategoryid() == stoi(categoryId); });
+			const auto products = categoryId.empty() ? m_cache_product.limit(limit).offset(page * limit).find_all() : m_cache_product.find([categoryId](const MasterProducts& entry) -> bool { return entry.getValueOfCategoryId() == categoryId; });
 
 			if (products.empty())
 			{
@@ -76,15 +76,15 @@ namespace gaboot
 			MasterProducts product(m_data);
 			ProductImages productImage;
 			upload_file upload(&file, product.getValueOfName(), "products");
-			productImage.setImagepath(upload.get_image_path());
-			productImage.setThumbnailpath(upload.get_thumbnail_path());
+			productImage.setImagePath(upload.get_image_path());
+			productImage.setThumbnailPath(upload.get_thumbnail_path());
 
-			productImage.setCreatedat(trantor::Date::now());
-			productImage.setUpdatedat(trantor::Date::now());
+			productImage.setCreatedAt(trantor::Date::now());
+			productImage.setUpdatedAt(trantor::Date::now());
 
 			product.setPrice(m_data["price"].asDouble());
-			product.setCreatedat(trantor::Date::now());
-			product.setUpdatedat(trantor::Date::now());
+			product.setCreatedAt(trantor::Date::now());
+			product.setUpdatedAt(trantor::Date::now());
 
 			if (!schema.validate(product.toJson(), m_error))
 			{
@@ -92,7 +92,7 @@ namespace gaboot
 			}
 
 			db().insert(product);
-			productImage.setProductid(product.getPrimaryKey());
+			productImage.setProductId(product.getPrimaryKey());
 			db_images().insert(productImage);
 
 			m_cache_product.clear();
@@ -112,14 +112,14 @@ namespace gaboot
 	{
 		TRY_CLAUSE
 		{
-			if (id.empty() || !util::is_numeric(id))
+			if (id.empty())
 			{
 				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
 			this->load_cache();
 
-			const auto product = m_cache_product.find(stoull(id));
+			const auto product = m_cache_product.find(id);
 
 			if (!product) throw NotFoundException("Product data is empty 0 data found");
 
@@ -136,7 +136,7 @@ namespace gaboot
 		{
 			MultiPartParser multipart;
 
-			if (id.empty() || !util::is_numeric(id))
+			if (id.empty())
 			{
 				throw NotFoundException("Parameters invalid");
 			}
@@ -162,12 +162,12 @@ namespace gaboot
 			}
 
 			MasterProducts product(m_data);
-			product.setId(stoll(id));
-			product.setUpdatedat(trantor::Date::now());
+			product.setId(id);
+			product.setUpdatedAt(trantor::Date::now());
 
 			this->load_cache();
 
-			if (!m_cache_product.update(stoull(id), product))
+			if (!m_cache_product.update(id, product))
 				throw NotFoundException("Unable to update non-existing product");
 
 			if (const auto record = db().updateFuture(product).get(); !record)
@@ -176,7 +176,7 @@ namespace gaboot
 			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 			{
 				if (const auto record2 = db_images().updateBy(m_data_image.getMemberNames(),
-					Criteria(ProductImages::Cols::_productid, CompareOperator::EQ, id),
+					Criteria(ProductImages::Cols::_product_id, CompareOperator::EQ, id),
 					upload.get_image_path(),
 					upload.get_thumbnail_path(),
 					trantor::Date::now()
@@ -198,16 +198,16 @@ namespace gaboot
 	{
 		TRY_CLAUSE
 		{
-			if (id.empty() || !util::is_numeric(id))
+			if (id.empty())
 			{
 				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
 			this->load_cache();
 
-			const auto record = db().deleteFutureByPrimaryKey(stoll(id)).get();
+			const auto record = db().deleteByPrimaryKey(id);
 
-			m_cache_product.remove(stoull(id));
+			m_cache_product.remove(id);
 
 			if (!record)
 			{
@@ -231,17 +231,17 @@ namespace gaboot
 			const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
 			const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
-			if (id.empty() || !util::is_numeric(id))
+			if (id.empty())
 			{
 				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
 			this->load_cache();
 
-			auto args = Criteria(MasterProducts::Cols::_categoryid, CompareOperator::EQ, stoull(id));
+			auto args = Criteria(MasterProducts::Cols::_category_id, CompareOperator::EQ, id);
 
 			const auto products = m_cache_product.find([id](const MasterProducts& entry) -> bool {
-				return entry.getValueOfCategoryid() == stoi(id);
+				return entry.getValueOfCategoryId() == id;
 			});
 
 			if (products.empty())

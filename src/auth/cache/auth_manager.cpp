@@ -12,13 +12,13 @@ namespace gaboot
 		g_auth_manager = this;
 	}
 
-	bool auth_manager::insert(int64_t id)
+	bool auth_manager::insert(std::string const& id)
 	{
 		try
 		{
 			if (!this->find(id))
 			{
-				auto customer = db().findFutureByPrimaryKey(id).get();
+				auto customer = db().findByPrimaryKey(id);
 				auto result = m_cache_auth.insert({ id, auth_cache(customer, 24h) });
 
 				if (result.second)
@@ -60,7 +60,7 @@ namespace gaboot
 		}
 	}
 	
-	bool auth_manager::insert(int64_t id, MasterCustomers* customer)
+	bool auth_manager::insert(std::string const& id, MasterCustomers* customer)
 	{
 		try
 		{
@@ -86,7 +86,7 @@ namespace gaboot
 		}
 	}
 
-	bool auth_manager::find(int64_t id, MasterCustomers* customer)
+	bool auth_manager::find(std::string const& id, MasterCustomers* customer)
 	{
 		if (auto it = m_cache_auth.find(id); it != m_cache_auth.end())
 		{
@@ -101,7 +101,7 @@ namespace gaboot
 
 		return false;
 	}
-	MasterCustomers* auth_manager::find(int64_t id)
+	MasterCustomers* auth_manager::find(std::string const& id)
 	{
 		if (auto it = m_cache_auth.find(id); it != m_cache_auth.end())
 		{
@@ -140,7 +140,7 @@ namespace gaboot
 
 		return nullptr;
 	}
-	bool auth_manager::update(int64_t id, MasterCustomers customer)
+	bool auth_manager::update(std::string const& id, MasterCustomers customer)
 	{
 		if (auto it = m_cache_auth.find(id); it != m_cache_auth.end())
 		{
@@ -151,7 +151,7 @@ namespace gaboot
 
 		return false;
 	}
-	bool auth_manager::remove(int64_t id)
+	bool auth_manager::remove(std::string const& id)
 	{
 		if (auto it = m_cache_auth.find(id); it != m_cache_auth.end())
 		{

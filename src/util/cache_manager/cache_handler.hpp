@@ -12,7 +12,7 @@ namespace gaboot
 		{
 			m_duration = std::chrono::high_resolution_clock::now() + time;
 		}
-		bool insert(int64_t id, T* cache)
+		bool insert(std::string id, T* cache)
 		{
 			if (!this->find(id))
 			{
@@ -24,7 +24,7 @@ namespace gaboot
 
 			return false;
 		}
-		bool find(int64_t id, T* cache)
+		bool find(std::string id, T* cache)
 		{
 			if (auto it = m_cache.find(id); it != m_cache.end())
 			{
@@ -39,7 +39,7 @@ namespace gaboot
 
 			return false;
 		}
-		T* find(int64_t id)
+		T* find(std::string id)
 		{
 			if (auto it = m_cache.find(id); it != m_cache.end())
 			{
@@ -92,7 +92,7 @@ namespace gaboot
 
 			return *this;
 		}
-		bool update(int64_t id, T cache)
+		bool update(std::string id, T cache)
 		{
 			if (auto it = m_cache.find(id); it != m_cache.end())
 			{
@@ -103,7 +103,7 @@ namespace gaboot
 
 			return false;
 		}
-		bool remove(int64_t id)
+		bool remove(std::string id)
 		{
 			if (auto it = m_cache.find(id); it != m_cache.end())
 			{
@@ -129,13 +129,13 @@ namespace gaboot
 		{
 			m_cache.clear();
 		}
-		int64_t first_id()
+		std::string first_id()
 		{
 			auto first = m_cache.begin();
 
 			return first->first;
 		}
-		int64_t last_id()
+		std::string last_id()
 		{
 			auto last = --m_cache.end();
 
@@ -164,7 +164,7 @@ namespace gaboot
 		{
 			m_duration = std::chrono::high_resolution_clock::now() + time;
 		}
-		bool insert(int64_t id, T* cache) const
+		bool insert(std::string id, T* cache) const
 		{
 			if (!this->find(id))
 			{
@@ -176,7 +176,7 @@ namespace gaboot
 
 			return false;
 		}
-		bool find(int64_t id, T* cache) const
+		bool find(std::string id, T* cache) const
 		{
 			if (auto it = m_cache.find(id); it != m_cache.end())
 			{
@@ -191,7 +191,7 @@ namespace gaboot
 
 			return false;
 		}
-		T* find(int64_t id) const
+		T* find(std::string id) const
 		{
 			if (auto it = m_cache.find(id); it != m_cache.end())
 			{
@@ -218,7 +218,7 @@ namespace gaboot
 
 			return result;
 		}
-		bool update(int64_t id, T cache) const
+		bool update(std::string id, T cache) const
 		{
 			if (auto it = m_cache.find(id); it != m_cache.end())
 			{
@@ -229,7 +229,7 @@ namespace gaboot
 
 			return false;
 		}
-		bool remove(int64_t id) const
+		bool remove(std::string id) const
 		{
 			if (auto it = m_cache.find(id); it != m_cache.end())
 			{
@@ -255,13 +255,13 @@ namespace gaboot
 		{
 			m_cache.clear();
 		}
-		int64_t first_id() const
+		std::string first_id() const
 		{
 			auto first = m_cache.begin();
 
 			return first->first;
 		}
-		int64_t last_id() const
+		std::string last_id() const
 		{
 			auto last = --m_cache.end();
 
@@ -286,7 +286,7 @@ namespace gaboot
 	private:
 		size_t m_limit;
 		size_t m_offset;
-		std::map<int64_t, T>m_cache;
+		std::map<std::string, T>m_cache;
 		std::chrono::high_resolution_clock::time_point m_duration;
 	};
 }

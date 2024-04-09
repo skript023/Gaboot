@@ -51,24 +51,24 @@ class MasterCustomers
         static const std::string _lastname;
         static const std::string _username;
         static const std::string _email;
-        static const std::string _phonenumber;
-        static const std::string _addressdetail;
+        static const std::string _phone_number;
+        static const std::string _address_detail;
         static const std::string _latitude;
         static const std::string _longitude;
         static const std::string _password;
         static const std::string _token;
-        static const std::string _isactive;
-        static const std::string _imgpath;
-        static const std::string _imgthumbpath;
-        static const std::string _createdat;
-        static const std::string _updatedat;
+        static const std::string _is_active;
+        static const std::string _image_path;
+        static const std::string _thumbnail_path;
+        static const std::string _created_at;
+        static const std::string _updated_at;
     };
 
     const static int primaryKeyNumber;
     const static std::string tableName;
     const static bool hasPrimaryKey;
     const static std::string primaryKeyName;
-    using PrimaryKeyType = int32_t;
+    using PrimaryKeyType = std::string;
     const PrimaryKeyType &getPrimaryKey() const;
 
     /**
@@ -115,11 +115,12 @@ class MasterCustomers
 
     /**  For column id  */
     ///Get the value of the column id, returns the default value if the column is null
-    const int32_t &getValueOfId() const noexcept;
+    const std::string &getValueOfId() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getId() const noexcept;
+    const std::shared_ptr<std::string> &getId() const noexcept;
     ///Set the value of the column id
-    void setId(const int32_t &pId) noexcept;
+    void setId(const std::string &pId) noexcept;
+    void setId(std::string &&pId) noexcept;
 
     /**  For column firstname  */
     ///Get the value of the column firstname, returns the default value if the column is null
@@ -157,23 +158,23 @@ class MasterCustomers
     void setEmail(const std::string &pEmail) noexcept;
     void setEmail(std::string &&pEmail) noexcept;
 
-    /**  For column phonenumber  */
-    ///Get the value of the column phonenumber, returns the default value if the column is null
-    const std::string &getValueOfPhonenumber() const noexcept;
+    /**  For column phone_number  */
+    ///Get the value of the column phone_number, returns the default value if the column is null
+    const std::string &getValueOfPhoneNumber() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getPhonenumber() const noexcept;
-    ///Set the value of the column phonenumber
-    void setPhonenumber(const std::string &pPhonenumber) noexcept;
-    void setPhonenumber(std::string &&pPhonenumber) noexcept;
+    const std::shared_ptr<std::string> &getPhoneNumber() const noexcept;
+    ///Set the value of the column phone_number
+    void setPhoneNumber(const std::string &pPhoneNumber) noexcept;
+    void setPhoneNumber(std::string &&pPhoneNumber) noexcept;
 
-    /**  For column addressdetail  */
-    ///Get the value of the column addressdetail, returns the default value if the column is null
-    const std::string &getValueOfAddressdetail() const noexcept;
+    /**  For column address_detail  */
+    ///Get the value of the column address_detail, returns the default value if the column is null
+    const std::string &getValueOfAddressDetail() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getAddressdetail() const noexcept;
-    ///Set the value of the column addressdetail
-    void setAddressdetail(const std::string &pAddressdetail) noexcept;
-    void setAddressdetail(std::string &&pAddressdetail) noexcept;
+    const std::shared_ptr<std::string> &getAddressDetail() const noexcept;
+    ///Set the value of the column address_detail
+    void setAddressDetail(const std::string &pAddressDetail) noexcept;
+    void setAddressDetail(std::string &&pAddressDetail) noexcept;
 
     /**  For column latitude  */
     ///Get the value of the column latitude, returns the default value if the column is null
@@ -212,49 +213,49 @@ class MasterCustomers
     void setToken(std::string &&pToken) noexcept;
     void setTokenToNull() noexcept;
 
-    /**  For column isactive  */
-    ///Get the value of the column isactive, returns the default value if the column is null
-    const bool &getValueOfIsactive() const noexcept;
+    /**  For column is_active  */
+    ///Get the value of the column is_active, returns the default value if the column is null
+    const bool &getValueOfIsActive() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<bool> &getIsactive() const noexcept;
-    ///Set the value of the column isactive
-    void setIsactive(const bool &pIsactive) noexcept;
+    const std::shared_ptr<bool> &getIsActive() const noexcept;
+    ///Set the value of the column is_active
+    void setIsActive(const bool &pIsActive) noexcept;
 
-    /**  For column imgpath  */
-    ///Get the value of the column imgpath, returns the default value if the column is null
-    const std::string &getValueOfImgpath() const noexcept;
+    /**  For column image_path  */
+    ///Get the value of the column image_path, returns the default value if the column is null
+    const std::string &getValueOfImagePath() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getImgpath() const noexcept;
-    ///Set the value of the column imgpath
-    void setImgpath(const std::string &pImgpath) noexcept;
-    void setImgpath(std::string &&pImgpath) noexcept;
-    void setImgpathToNull() noexcept;
+    const std::shared_ptr<std::string> &getImagePath() const noexcept;
+    ///Set the value of the column image_path
+    void setImagePath(const std::string &pImagePath) noexcept;
+    void setImagePath(std::string &&pImagePath) noexcept;
+    void setImagePathToNull() noexcept;
 
-    /**  For column imgthumbpath  */
-    ///Get the value of the column imgthumbpath, returns the default value if the column is null
-    const std::string &getValueOfImgthumbpath() const noexcept;
+    /**  For column thumbnail_path  */
+    ///Get the value of the column thumbnail_path, returns the default value if the column is null
+    const std::string &getValueOfThumbnailPath() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getImgthumbpath() const noexcept;
-    ///Set the value of the column imgthumbpath
-    void setImgthumbpath(const std::string &pImgthumbpath) noexcept;
-    void setImgthumbpath(std::string &&pImgthumbpath) noexcept;
-    void setImgthumbpathToNull() noexcept;
+    const std::shared_ptr<std::string> &getThumbnailPath() const noexcept;
+    ///Set the value of the column thumbnail_path
+    void setThumbnailPath(const std::string &pThumbnailPath) noexcept;
+    void setThumbnailPath(std::string &&pThumbnailPath) noexcept;
+    void setThumbnailPathToNull() noexcept;
 
-    /**  For column createdat  */
-    ///Get the value of the column createdat, returns the default value if the column is null
-    const ::trantor::Date &getValueOfCreatedat() const noexcept;
+    /**  For column created_at  */
+    ///Get the value of the column created_at, returns the default value if the column is null
+    const ::trantor::Date &getValueOfCreatedAt() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<::trantor::Date> &getCreatedat() const noexcept;
-    ///Set the value of the column createdat
-    void setCreatedat(const ::trantor::Date &pCreatedat) noexcept;
+    const std::shared_ptr<::trantor::Date> &getCreatedAt() const noexcept;
+    ///Set the value of the column created_at
+    void setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept;
 
-    /**  For column updatedat  */
-    ///Get the value of the column updatedat, returns the default value if the column is null
-    const ::trantor::Date &getValueOfUpdatedat() const noexcept;
+    /**  For column updated_at  */
+    ///Get the value of the column updated_at, returns the default value if the column is null
+    const ::trantor::Date &getValueOfUpdatedAt() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<::trantor::Date> &getUpdatedat() const noexcept;
-    ///Set the value of the column updatedat
-    void setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept;
+    const std::shared_ptr<::trantor::Date> &getUpdatedAt() const noexcept;
+    ///Set the value of the column updated_at
+    void setUpdatedAt(const ::trantor::Date &pUpdatedAt) noexcept;
 
 
     static size_t getColumnNumber() noexcept {  return 16;  }
@@ -286,22 +287,22 @@ class MasterCustomers
     void updateArgs(drogon::orm::internal::SqlBinder &binder) const;
     ///For mysql or sqlite3
     void updateId(const uint64_t id);
-    std::shared_ptr<int32_t> id_;
+    std::shared_ptr<std::string> id_;
     std::shared_ptr<std::string> firstname_;
     std::shared_ptr<std::string> lastname_;
     std::shared_ptr<std::string> username_;
     std::shared_ptr<std::string> email_;
-    std::shared_ptr<std::string> phonenumber_;
-    std::shared_ptr<std::string> addressdetail_;
+    std::shared_ptr<std::string> phoneNumber_;
+    std::shared_ptr<std::string> addressDetail_;
     std::shared_ptr<double> latitude_;
     std::shared_ptr<double> longitude_;
     std::shared_ptr<std::string> password_;
     std::shared_ptr<std::string> token_;
-    std::shared_ptr<bool> isactive_;
-    std::shared_ptr<std::string> imgpath_;
-    std::shared_ptr<std::string> imgthumbpath_;
-    std::shared_ptr<::trantor::Date> createdat_;
-    std::shared_ptr<::trantor::Date> updatedat_;
+    std::shared_ptr<bool> isActive_;
+    std::shared_ptr<std::string> imagePath_;
+    std::shared_ptr<std::string> thumbnailPath_;
+    std::shared_ptr<::trantor::Date> createdAt_;
+    std::shared_ptr<::trantor::Date> updatedAt_;
     struct MetaData
     {
         const std::string colName_;
@@ -331,8 +332,12 @@ class MasterCustomers
         std::string sql="insert into " + tableName + " (";
         size_t parametersCount = 0;
         needSelection = false;
-            sql += "id,";
-            ++parametersCount;
+        sql += "id,";
+        ++parametersCount;
+        if(!dirtyFlag_[0])
+        {
+            needSelection=true;
+        }
         if(dirtyFlag_[1])
         {
             sql += "firstname,";
@@ -355,12 +360,12 @@ class MasterCustomers
         }
         if(dirtyFlag_[5])
         {
-            sql += "phonenumber,";
+            sql += "phone_number,";
             ++parametersCount;
         }
         if(dirtyFlag_[6])
         {
-            sql += "addressdetail,";
+            sql += "address_detail,";
             ++parametersCount;
         }
         sql += "latitude,";
@@ -385,7 +390,7 @@ class MasterCustomers
             sql += "token,";
             ++parametersCount;
         }
-        sql += "isactive,";
+        sql += "is_active,";
         ++parametersCount;
         if(!dirtyFlag_[11])
         {
@@ -393,27 +398,26 @@ class MasterCustomers
         }
         if(dirtyFlag_[12])
         {
-            sql += "imgpath,";
+            sql += "image_path,";
             ++parametersCount;
         }
         if(dirtyFlag_[13])
         {
-            sql += "imgthumbpath,";
+            sql += "thumbnail_path,";
             ++parametersCount;
         }
-        sql += "createdat,";
+        sql += "created_at,";
         ++parametersCount;
         if(!dirtyFlag_[14])
         {
             needSelection=true;
         }
-        sql += "updatedat,";
+        sql += "updated_at,";
         ++parametersCount;
         if(!dirtyFlag_[15])
         {
             needSelection=true;
         }
-        needSelection=true;
         if(parametersCount > 0)
         {
             sql[sql.length()-1]=')';
@@ -425,7 +429,15 @@ class MasterCustomers
         int placeholder=1;
         char placeholderStr[64];
         size_t n=0;
-        sql +="default,";
+        if(dirtyFlag_[0])
+        {
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
+        }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[1])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);

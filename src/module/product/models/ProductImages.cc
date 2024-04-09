@@ -15,24 +15,24 @@ using namespace drogon::orm;
 using namespace drogon_model::gaboot;
 
 const std::string ProductImages::Cols::_id = "id";
-const std::string ProductImages::Cols::_imagepath = "imagepath";
-const std::string ProductImages::Cols::_thumbnailpath = "thumbnailpath";
-const std::string ProductImages::Cols::_productid = "productid";
-const std::string ProductImages::Cols::_iscover = "iscover";
-const std::string ProductImages::Cols::_createdat = "createdat";
-const std::string ProductImages::Cols::_updatedat = "updatedat";
+const std::string ProductImages::Cols::_image_path = "image_path";
+const std::string ProductImages::Cols::_thumbnail_path = "thumbnail_path";
+const std::string ProductImages::Cols::_product_id = "product_id";
+const std::string ProductImages::Cols::_is_cover = "is_cover";
+const std::string ProductImages::Cols::_created_at = "created_at";
+const std::string ProductImages::Cols::_updated_at = "updated_at";
 const std::string ProductImages::primaryKeyName = "id";
 const bool ProductImages::hasPrimaryKey = true;
 const std::string ProductImages::tableName = "product_images";
 
 const std::vector<typename ProductImages::MetaData> ProductImages::metaData_={
-{"id","int32_t","integer",4,1,1,1},
-{"imagepath","std::string","character varying",255,0,0,1},
-{"thumbnailpath","std::string","character varying",255,0,0,1},
-{"productid","int32_t","integer",4,0,0,1},
-{"iscover","bool","boolean",1,0,0,1},
-{"createdat","::trantor::Date","timestamp without time zone",0,0,0,0},
-{"updatedat","::trantor::Date","timestamp without time zone",0,0,0,0}
+{"id","std::string","uuid",0,0,1,1},
+{"image_path","std::string","character varying",255,0,0,1},
+{"thumbnail_path","std::string","character varying",255,0,0,1},
+{"product_id","std::string","uuid",0,0,0,1},
+{"is_cover","bool","boolean",1,0,0,1},
+{"created_at","::trantor::Date","timestamp without time zone",0,0,0,0},
+{"updated_at","::trantor::Date","timestamp without time zone",0,0,0,0}
 };
 const std::string &ProductImages::getColumnName(size_t index) noexcept(false)
 {
@@ -45,27 +45,27 @@ ProductImages::ProductImages(const Row &r, const ssize_t indexOffset) noexcept
     {
         if(!r["id"].isNull())
         {
-            id_=std::make_shared<int32_t>(r["id"].as<int32_t>());
+            id_=std::make_shared<std::string>(r["id"].as<std::string>());
         }
-        if(!r["imagepath"].isNull())
+        if(!r["image_path"].isNull())
         {
-            imagepath_=std::make_shared<std::string>(r["imagepath"].as<std::string>());
+            imagePath_=std::make_shared<std::string>(r["image_path"].as<std::string>());
         }
-        if(!r["thumbnailpath"].isNull())
+        if(!r["thumbnail_path"].isNull())
         {
-            thumbnailpath_=std::make_shared<std::string>(r["thumbnailpath"].as<std::string>());
+            thumbnailPath_=std::make_shared<std::string>(r["thumbnail_path"].as<std::string>());
         }
-        if(!r["productid"].isNull())
+        if(!r["product_id"].isNull())
         {
-            productid_=std::make_shared<int32_t>(r["productid"].as<int32_t>());
+            productId_=std::make_shared<std::string>(r["product_id"].as<std::string>());
         }
-        if(!r["iscover"].isNull())
+        if(!r["is_cover"].isNull())
         {
-            iscover_=std::make_shared<bool>(r["iscover"].as<bool>());
+            isCover_=std::make_shared<bool>(r["is_cover"].as<bool>());
         }
-        if(!r["createdat"].isNull())
+        if(!r["created_at"].isNull())
         {
-            auto timeStr = r["createdat"].as<std::string>();
+            auto timeStr = r["created_at"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -82,12 +82,12 @@ ProductImages::ProductImages(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        if(!r["updatedat"].isNull())
+        if(!r["updated_at"].isNull())
         {
-            auto timeStr = r["updatedat"].as<std::string>();
+            auto timeStr = r["updated_at"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -104,7 +104,7 @@ ProductImages::ProductImages(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -120,27 +120,27 @@ ProductImages::ProductImages(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 0;
         if(!r[index].isNull())
         {
-            id_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            id_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 1;
         if(!r[index].isNull())
         {
-            imagepath_=std::make_shared<std::string>(r[index].as<std::string>());
+            imagePath_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 2;
         if(!r[index].isNull())
         {
-            thumbnailpath_=std::make_shared<std::string>(r[index].as<std::string>());
+            thumbnailPath_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 3;
         if(!r[index].isNull())
         {
-            productid_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            productId_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 4;
         if(!r[index].isNull())
         {
-            iscover_=std::make_shared<bool>(r[index].as<bool>());
+            isCover_=std::make_shared<bool>(r[index].as<bool>());
         }
         index = offset + 5;
         if(!r[index].isNull())
@@ -162,7 +162,7 @@ ProductImages::ProductImages(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
         index = offset + 6;
@@ -185,7 +185,7 @@ ProductImages::ProductImages(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -204,7 +204,7 @@ ProductImages::ProductImages(const Json::Value &pJson, const std::vector<std::st
         dirtyFlag_[0] = true;
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<std::string>(pJson[pMasqueradingVector[0]].asString());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -212,7 +212,7 @@ ProductImages::ProductImages(const Json::Value &pJson, const std::vector<std::st
         dirtyFlag_[1] = true;
         if(!pJson[pMasqueradingVector[1]].isNull())
         {
-            imagepath_=std::make_shared<std::string>(pJson[pMasqueradingVector[1]].asString());
+            imagePath_=std::make_shared<std::string>(pJson[pMasqueradingVector[1]].asString());
         }
     }
     if(!pMasqueradingVector[2].empty() && pJson.isMember(pMasqueradingVector[2]))
@@ -220,7 +220,7 @@ ProductImages::ProductImages(const Json::Value &pJson, const std::vector<std::st
         dirtyFlag_[2] = true;
         if(!pJson[pMasqueradingVector[2]].isNull())
         {
-            thumbnailpath_=std::make_shared<std::string>(pJson[pMasqueradingVector[2]].asString());
+            thumbnailPath_=std::make_shared<std::string>(pJson[pMasqueradingVector[2]].asString());
         }
     }
     if(!pMasqueradingVector[3].empty() && pJson.isMember(pMasqueradingVector[3]))
@@ -228,7 +228,7 @@ ProductImages::ProductImages(const Json::Value &pJson, const std::vector<std::st
         dirtyFlag_[3] = true;
         if(!pJson[pMasqueradingVector[3]].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[3]].asInt64());
+            productId_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
         }
     }
     if(!pMasqueradingVector[4].empty() && pJson.isMember(pMasqueradingVector[4]))
@@ -236,7 +236,7 @@ ProductImages::ProductImages(const Json::Value &pJson, const std::vector<std::st
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            iscover_=std::make_shared<bool>(pJson[pMasqueradingVector[4]].asBool());
+            isCover_=std::make_shared<bool>(pJson[pMasqueradingVector[4]].asBool());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -261,7 +261,7 @@ ProductImages::ProductImages(const Json::Value &pJson, const std::vector<std::st
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -287,7 +287,7 @@ ProductImages::ProductImages(const Json::Value &pJson, const std::vector<std::st
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -300,47 +300,47 @@ ProductImages::ProductImages(const Json::Value &pJson) noexcept(false)
         dirtyFlag_[0]=true;
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<std::string>(pJson["id"].asString());
         }
     }
-    if(pJson.isMember("imagepath"))
+    if(pJson.isMember("image_path"))
     {
         dirtyFlag_[1]=true;
-        if(!pJson["imagepath"].isNull())
+        if(!pJson["image_path"].isNull())
         {
-            imagepath_=std::make_shared<std::string>(pJson["imagepath"].asString());
+            imagePath_=std::make_shared<std::string>(pJson["image_path"].asString());
         }
     }
-    if(pJson.isMember("thumbnailpath"))
+    if(pJson.isMember("thumbnail_path"))
     {
         dirtyFlag_[2]=true;
-        if(!pJson["thumbnailpath"].isNull())
+        if(!pJson["thumbnail_path"].isNull())
         {
-            thumbnailpath_=std::make_shared<std::string>(pJson["thumbnailpath"].asString());
+            thumbnailPath_=std::make_shared<std::string>(pJson["thumbnail_path"].asString());
         }
     }
-    if(pJson.isMember("productid"))
+    if(pJson.isMember("product_id"))
     {
         dirtyFlag_[3]=true;
-        if(!pJson["productid"].isNull())
+        if(!pJson["product_id"].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson["productid"].asInt64());
+            productId_=std::make_shared<std::string>(pJson["product_id"].asString());
         }
     }
-    if(pJson.isMember("iscover"))
+    if(pJson.isMember("is_cover"))
     {
         dirtyFlag_[4]=true;
-        if(!pJson["iscover"].isNull())
+        if(!pJson["is_cover"].isNull())
         {
-            iscover_=std::make_shared<bool>(pJson["iscover"].asBool());
+            isCover_=std::make_shared<bool>(pJson["is_cover"].asBool());
         }
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
         dirtyFlag_[5]=true;
-        if(!pJson["createdat"].isNull())
+        if(!pJson["created_at"].isNull())
         {
-            auto timeStr = pJson["createdat"].asString();
+            auto timeStr = pJson["created_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -357,16 +357,16 @@ ProductImages::ProductImages(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
         dirtyFlag_[6]=true;
-        if(!pJson["updatedat"].isNull())
+        if(!pJson["updated_at"].isNull())
         {
-            auto timeStr = pJson["updatedat"].asString();
+            auto timeStr = pJson["updated_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -383,7 +383,7 @@ ProductImages::ProductImages(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -401,7 +401,7 @@ void ProductImages::updateByMasqueradedJson(const Json::Value &pJson,
     {
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<std::string>(pJson[pMasqueradingVector[0]].asString());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -409,7 +409,7 @@ void ProductImages::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[1] = true;
         if(!pJson[pMasqueradingVector[1]].isNull())
         {
-            imagepath_=std::make_shared<std::string>(pJson[pMasqueradingVector[1]].asString());
+            imagePath_=std::make_shared<std::string>(pJson[pMasqueradingVector[1]].asString());
         }
     }
     if(!pMasqueradingVector[2].empty() && pJson.isMember(pMasqueradingVector[2]))
@@ -417,7 +417,7 @@ void ProductImages::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[2] = true;
         if(!pJson[pMasqueradingVector[2]].isNull())
         {
-            thumbnailpath_=std::make_shared<std::string>(pJson[pMasqueradingVector[2]].asString());
+            thumbnailPath_=std::make_shared<std::string>(pJson[pMasqueradingVector[2]].asString());
         }
     }
     if(!pMasqueradingVector[3].empty() && pJson.isMember(pMasqueradingVector[3]))
@@ -425,7 +425,7 @@ void ProductImages::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[3] = true;
         if(!pJson[pMasqueradingVector[3]].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[3]].asInt64());
+            productId_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
         }
     }
     if(!pMasqueradingVector[4].empty() && pJson.isMember(pMasqueradingVector[4]))
@@ -433,7 +433,7 @@ void ProductImages::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            iscover_=std::make_shared<bool>(pJson[pMasqueradingVector[4]].asBool());
+            isCover_=std::make_shared<bool>(pJson[pMasqueradingVector[4]].asBool());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -458,7 +458,7 @@ void ProductImages::updateByMasqueradedJson(const Json::Value &pJson,
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -484,7 +484,7 @@ void ProductImages::updateByMasqueradedJson(const Json::Value &pJson,
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -496,47 +496,47 @@ void ProductImages::updateByJson(const Json::Value &pJson) noexcept(false)
     {
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<std::string>(pJson["id"].asString());
         }
     }
-    if(pJson.isMember("imagepath"))
+    if(pJson.isMember("image_path"))
     {
         dirtyFlag_[1] = true;
-        if(!pJson["imagepath"].isNull())
+        if(!pJson["image_path"].isNull())
         {
-            imagepath_=std::make_shared<std::string>(pJson["imagepath"].asString());
+            imagePath_=std::make_shared<std::string>(pJson["image_path"].asString());
         }
     }
-    if(pJson.isMember("thumbnailpath"))
+    if(pJson.isMember("thumbnail_path"))
     {
         dirtyFlag_[2] = true;
-        if(!pJson["thumbnailpath"].isNull())
+        if(!pJson["thumbnail_path"].isNull())
         {
-            thumbnailpath_=std::make_shared<std::string>(pJson["thumbnailpath"].asString());
+            thumbnailPath_=std::make_shared<std::string>(pJson["thumbnail_path"].asString());
         }
     }
-    if(pJson.isMember("productid"))
+    if(pJson.isMember("product_id"))
     {
         dirtyFlag_[3] = true;
-        if(!pJson["productid"].isNull())
+        if(!pJson["product_id"].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson["productid"].asInt64());
+            productId_=std::make_shared<std::string>(pJson["product_id"].asString());
         }
     }
-    if(pJson.isMember("iscover"))
+    if(pJson.isMember("is_cover"))
     {
         dirtyFlag_[4] = true;
-        if(!pJson["iscover"].isNull())
+        if(!pJson["is_cover"].isNull())
         {
-            iscover_=std::make_shared<bool>(pJson["iscover"].asBool());
+            isCover_=std::make_shared<bool>(pJson["is_cover"].asBool());
         }
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
         dirtyFlag_[5] = true;
-        if(!pJson["createdat"].isNull())
+        if(!pJson["created_at"].isNull())
         {
-            auto timeStr = pJson["createdat"].asString();
+            auto timeStr = pJson["created_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -553,16 +553,16 @@ void ProductImages::updateByJson(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
         dirtyFlag_[6] = true;
-        if(!pJson["updatedat"].isNull())
+        if(!pJson["updated_at"].isNull())
         {
-            auto timeStr = pJson["updatedat"].asString();
+            auto timeStr = pJson["updated_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -579,26 +579,31 @@ void ProductImages::updateByJson(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
 }
 
-const int32_t &ProductImages::getValueOfId() const noexcept
+const std::string &ProductImages::getValueOfId() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
+    const static std::string defaultValue = std::string();
     if(id_)
         return *id_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &ProductImages::getId() const noexcept
+const std::shared_ptr<std::string> &ProductImages::getId() const noexcept
 {
     return id_;
 }
-void ProductImages::setId(const int32_t &pId) noexcept
+void ProductImages::setId(const std::string &pId) noexcept
 {
-    id_ = std::make_shared<int32_t>(pId);
+    id_ = std::make_shared<std::string>(pId);
+    dirtyFlag_[0] = true;
+}
+void ProductImages::setId(std::string &&pId) noexcept
+{
+    id_ = std::make_shared<std::string>(std::move(pId));
     dirtyFlag_[0] = true;
 }
 const typename ProductImages::PrimaryKeyType & ProductImages::getPrimaryKey() const
@@ -607,125 +612,130 @@ const typename ProductImages::PrimaryKeyType & ProductImages::getPrimaryKey() co
     return *id_;
 }
 
-const std::string &ProductImages::getValueOfImagepath() const noexcept
+const std::string &ProductImages::getValueOfImagePath() const noexcept
 {
     const static std::string defaultValue = std::string();
-    if(imagepath_)
-        return *imagepath_;
+    if(imagePath_)
+        return *imagePath_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &ProductImages::getImagepath() const noexcept
+const std::shared_ptr<std::string> &ProductImages::getImagePath() const noexcept
 {
-    return imagepath_;
+    return imagePath_;
 }
-void ProductImages::setImagepath(const std::string &pImagepath) noexcept
+void ProductImages::setImagePath(const std::string &pImagePath) noexcept
 {
-    imagepath_ = std::make_shared<std::string>(pImagepath);
+    imagePath_ = std::make_shared<std::string>(pImagePath);
     dirtyFlag_[1] = true;
 }
-void ProductImages::setImagepath(std::string &&pImagepath) noexcept
+void ProductImages::setImagePath(std::string &&pImagePath) noexcept
 {
-    imagepath_ = std::make_shared<std::string>(std::move(pImagepath));
+    imagePath_ = std::make_shared<std::string>(std::move(pImagePath));
     dirtyFlag_[1] = true;
 }
 
-const std::string &ProductImages::getValueOfThumbnailpath() const noexcept
+const std::string &ProductImages::getValueOfThumbnailPath() const noexcept
 {
     const static std::string defaultValue = std::string();
-    if(thumbnailpath_)
-        return *thumbnailpath_;
+    if(thumbnailPath_)
+        return *thumbnailPath_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &ProductImages::getThumbnailpath() const noexcept
+const std::shared_ptr<std::string> &ProductImages::getThumbnailPath() const noexcept
 {
-    return thumbnailpath_;
+    return thumbnailPath_;
 }
-void ProductImages::setThumbnailpath(const std::string &pThumbnailpath) noexcept
+void ProductImages::setThumbnailPath(const std::string &pThumbnailPath) noexcept
 {
-    thumbnailpath_ = std::make_shared<std::string>(pThumbnailpath);
+    thumbnailPath_ = std::make_shared<std::string>(pThumbnailPath);
     dirtyFlag_[2] = true;
 }
-void ProductImages::setThumbnailpath(std::string &&pThumbnailpath) noexcept
+void ProductImages::setThumbnailPath(std::string &&pThumbnailPath) noexcept
 {
-    thumbnailpath_ = std::make_shared<std::string>(std::move(pThumbnailpath));
+    thumbnailPath_ = std::make_shared<std::string>(std::move(pThumbnailPath));
     dirtyFlag_[2] = true;
 }
 
-const int32_t &ProductImages::getValueOfProductid() const noexcept
+const std::string &ProductImages::getValueOfProductId() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
-    if(productid_)
-        return *productid_;
+    const static std::string defaultValue = std::string();
+    if(productId_)
+        return *productId_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &ProductImages::getProductid() const noexcept
+const std::shared_ptr<std::string> &ProductImages::getProductId() const noexcept
 {
-    return productid_;
+    return productId_;
 }
-void ProductImages::setProductid(const int32_t &pProductid) noexcept
+void ProductImages::setProductId(const std::string &pProductId) noexcept
 {
-    productid_ = std::make_shared<int32_t>(pProductid);
+    productId_ = std::make_shared<std::string>(pProductId);
+    dirtyFlag_[3] = true;
+}
+void ProductImages::setProductId(std::string &&pProductId) noexcept
+{
+    productId_ = std::make_shared<std::string>(std::move(pProductId));
     dirtyFlag_[3] = true;
 }
 
-const bool &ProductImages::getValueOfIscover() const noexcept
+const bool &ProductImages::getValueOfIsCover() const noexcept
 {
     const static bool defaultValue = bool();
-    if(iscover_)
-        return *iscover_;
+    if(isCover_)
+        return *isCover_;
     return defaultValue;
 }
-const std::shared_ptr<bool> &ProductImages::getIscover() const noexcept
+const std::shared_ptr<bool> &ProductImages::getIsCover() const noexcept
 {
-    return iscover_;
+    return isCover_;
 }
-void ProductImages::setIscover(const bool &pIscover) noexcept
+void ProductImages::setIsCover(const bool &pIsCover) noexcept
 {
-    iscover_ = std::make_shared<bool>(pIscover);
+    isCover_ = std::make_shared<bool>(pIsCover);
     dirtyFlag_[4] = true;
 }
 
-const ::trantor::Date &ProductImages::getValueOfCreatedat() const noexcept
+const ::trantor::Date &ProductImages::getValueOfCreatedAt() const noexcept
 {
     const static ::trantor::Date defaultValue = ::trantor::Date();
-    if(createdat_)
-        return *createdat_;
+    if(createdAt_)
+        return *createdAt_;
     return defaultValue;
 }
-const std::shared_ptr<::trantor::Date> &ProductImages::getCreatedat() const noexcept
+const std::shared_ptr<::trantor::Date> &ProductImages::getCreatedAt() const noexcept
 {
-    return createdat_;
+    return createdAt_;
 }
-void ProductImages::setCreatedat(const ::trantor::Date &pCreatedat) noexcept
+void ProductImages::setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept
 {
-    createdat_ = std::make_shared<::trantor::Date>(pCreatedat);
+    createdAt_ = std::make_shared<::trantor::Date>(pCreatedAt);
     dirtyFlag_[5] = true;
 }
-void ProductImages::setCreatedatToNull() noexcept
+void ProductImages::setCreatedAtToNull() noexcept
 {
-    createdat_.reset();
+    createdAt_.reset();
     dirtyFlag_[5] = true;
 }
 
-const ::trantor::Date &ProductImages::getValueOfUpdatedat() const noexcept
+const ::trantor::Date &ProductImages::getValueOfUpdatedAt() const noexcept
 {
     const static ::trantor::Date defaultValue = ::trantor::Date();
-    if(updatedat_)
-        return *updatedat_;
+    if(updatedAt_)
+        return *updatedAt_;
     return defaultValue;
 }
-const std::shared_ptr<::trantor::Date> &ProductImages::getUpdatedat() const noexcept
+const std::shared_ptr<::trantor::Date> &ProductImages::getUpdatedAt() const noexcept
 {
-    return updatedat_;
+    return updatedAt_;
 }
-void ProductImages::setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept
+void ProductImages::setUpdatedAt(const ::trantor::Date &pUpdatedAt) noexcept
 {
-    updatedat_ = std::make_shared<::trantor::Date>(pUpdatedat);
+    updatedAt_ = std::make_shared<::trantor::Date>(pUpdatedAt);
     dirtyFlag_[6] = true;
 }
-void ProductImages::setUpdatedatToNull() noexcept
+void ProductImages::setUpdatedAtToNull() noexcept
 {
-    updatedat_.reset();
+    updatedAt_.reset();
     dirtyFlag_[6] = true;
 }
 
@@ -736,23 +746,35 @@ void ProductImages::updateId(const uint64_t id)
 const std::vector<std::string> &ProductImages::insertColumns() noexcept
 {
     static const std::vector<std::string> inCols={
-        "imagepath",
-        "thumbnailpath",
-        "productid",
-        "iscover",
-        "createdat",
-        "updatedat"
+        "id",
+        "image_path",
+        "thumbnail_path",
+        "product_id",
+        "is_cover",
+        "created_at",
+        "updated_at"
     };
     return inCols;
 }
 
 void ProductImages::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 {
+    if(dirtyFlag_[0])
+    {
+        if(getId())
+        {
+            binder << getValueOfId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
     if(dirtyFlag_[1])
     {
-        if(getImagepath())
+        if(getImagePath())
         {
-            binder << getValueOfImagepath();
+            binder << getValueOfImagePath();
         }
         else
         {
@@ -761,9 +783,9 @@ void ProductImages::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[2])
     {
-        if(getThumbnailpath())
+        if(getThumbnailPath())
         {
-            binder << getValueOfThumbnailpath();
+            binder << getValueOfThumbnailPath();
         }
         else
         {
@@ -772,9 +794,9 @@ void ProductImages::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[3])
     {
-        if(getProductid())
+        if(getProductId())
         {
-            binder << getValueOfProductid();
+            binder << getValueOfProductId();
         }
         else
         {
@@ -783,9 +805,9 @@ void ProductImages::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[4])
     {
-        if(getIscover())
+        if(getIsCover())
         {
-            binder << getValueOfIscover();
+            binder << getValueOfIsCover();
         }
         else
         {
@@ -794,9 +816,9 @@ void ProductImages::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[5])
     {
-        if(getCreatedat())
+        if(getCreatedAt())
         {
-            binder << getValueOfCreatedat();
+            binder << getValueOfCreatedAt();
         }
         else
         {
@@ -805,9 +827,9 @@ void ProductImages::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[6])
     {
-        if(getUpdatedat())
+        if(getUpdatedAt())
         {
-            binder << getValueOfUpdatedat();
+            binder << getValueOfUpdatedAt();
         }
         else
         {
@@ -819,6 +841,10 @@ void ProductImages::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 const std::vector<std::string> ProductImages::updateColumns() const
 {
     std::vector<std::string> ret;
+    if(dirtyFlag_[0])
+    {
+        ret.push_back(getColumnName(0));
+    }
     if(dirtyFlag_[1])
     {
         ret.push_back(getColumnName(1));
@@ -848,11 +874,22 @@ const std::vector<std::string> ProductImages::updateColumns() const
 
 void ProductImages::updateArgs(drogon::orm::internal::SqlBinder &binder) const
 {
+    if(dirtyFlag_[0])
+    {
+        if(getId())
+        {
+            binder << getValueOfId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
     if(dirtyFlag_[1])
     {
-        if(getImagepath())
+        if(getImagePath())
         {
-            binder << getValueOfImagepath();
+            binder << getValueOfImagePath();
         }
         else
         {
@@ -861,9 +898,9 @@ void ProductImages::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[2])
     {
-        if(getThumbnailpath())
+        if(getThumbnailPath())
         {
-            binder << getValueOfThumbnailpath();
+            binder << getValueOfThumbnailPath();
         }
         else
         {
@@ -872,9 +909,9 @@ void ProductImages::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[3])
     {
-        if(getProductid())
+        if(getProductId())
         {
-            binder << getValueOfProductid();
+            binder << getValueOfProductId();
         }
         else
         {
@@ -883,9 +920,9 @@ void ProductImages::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[4])
     {
-        if(getIscover())
+        if(getIsCover())
         {
-            binder << getValueOfIscover();
+            binder << getValueOfIsCover();
         }
         else
         {
@@ -894,9 +931,9 @@ void ProductImages::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[5])
     {
-        if(getCreatedat())
+        if(getCreatedAt())
         {
-            binder << getValueOfCreatedat();
+            binder << getValueOfCreatedAt();
         }
         else
         {
@@ -905,9 +942,9 @@ void ProductImages::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[6])
     {
-        if(getUpdatedat())
+        if(getUpdatedAt())
         {
-            binder << getValueOfUpdatedat();
+            binder << getValueOfUpdatedAt();
         }
         else
         {
@@ -926,53 +963,53 @@ Json::Value ProductImages::toJson() const
     {
         ret["id"]=Json::Value();
     }
-    if(getImagepath())
+    if(getImagePath())
     {
-        ret["imagepath"]=getValueOfImagepath();
+        ret["image_path"]=getValueOfImagePath();
     }
     else
     {
-        ret["imagepath"]=Json::Value();
+        ret["image_path"]=Json::Value();
     }
-    if(getThumbnailpath())
+    if(getThumbnailPath())
     {
-        ret["thumbnailpath"]=getValueOfThumbnailpath();
-    }
-    else
-    {
-        ret["thumbnailpath"]=Json::Value();
-    }
-    if(getProductid())
-    {
-        ret["productid"]=getValueOfProductid();
+        ret["thumbnail_path"]=getValueOfThumbnailPath();
     }
     else
     {
-        ret["productid"]=Json::Value();
+        ret["thumbnail_path"]=Json::Value();
     }
-    if(getIscover())
+    if(getProductId())
     {
-        ret["iscover"]=getValueOfIscover();
-    }
-    else
-    {
-        ret["iscover"]=Json::Value();
-    }
-    if(getCreatedat())
-    {
-        ret["createdat"]=getCreatedat()->toDbStringLocal();
+        ret["product_id"]=getValueOfProductId();
     }
     else
     {
-        ret["createdat"]=Json::Value();
+        ret["product_id"]=Json::Value();
     }
-    if(getUpdatedat())
+    if(getIsCover())
     {
-        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
+        ret["is_cover"]=getValueOfIsCover();
     }
     else
     {
-        ret["updatedat"]=Json::Value();
+        ret["is_cover"]=Json::Value();
+    }
+    if(getCreatedAt())
+    {
+        ret["created_at"]=getCreatedAt()->toDbStringLocal();
+    }
+    else
+    {
+        ret["created_at"]=Json::Value();
+    }
+    if(getUpdatedAt())
+    {
+        ret["updated_at"]=getUpdatedAt()->toDbStringLocal();
+    }
+    else
+    {
+        ret["updated_at"]=Json::Value();
     }
     return ret;
 }
@@ -996,9 +1033,9 @@ Json::Value ProductImages::toMasqueradedJson(
         }
         if(!pMasqueradingVector[1].empty())
         {
-            if(getImagepath())
+            if(getImagePath())
             {
-                ret[pMasqueradingVector[1]]=getValueOfImagepath();
+                ret[pMasqueradingVector[1]]=getValueOfImagePath();
             }
             else
             {
@@ -1007,9 +1044,9 @@ Json::Value ProductImages::toMasqueradedJson(
         }
         if(!pMasqueradingVector[2].empty())
         {
-            if(getThumbnailpath())
+            if(getThumbnailPath())
             {
-                ret[pMasqueradingVector[2]]=getValueOfThumbnailpath();
+                ret[pMasqueradingVector[2]]=getValueOfThumbnailPath();
             }
             else
             {
@@ -1018,9 +1055,9 @@ Json::Value ProductImages::toMasqueradedJson(
         }
         if(!pMasqueradingVector[3].empty())
         {
-            if(getProductid())
+            if(getProductId())
             {
-                ret[pMasqueradingVector[3]]=getValueOfProductid();
+                ret[pMasqueradingVector[3]]=getValueOfProductId();
             }
             else
             {
@@ -1029,9 +1066,9 @@ Json::Value ProductImages::toMasqueradedJson(
         }
         if(!pMasqueradingVector[4].empty())
         {
-            if(getIscover())
+            if(getIsCover())
             {
-                ret[pMasqueradingVector[4]]=getValueOfIscover();
+                ret[pMasqueradingVector[4]]=getValueOfIsCover();
             }
             else
             {
@@ -1040,9 +1077,9 @@ Json::Value ProductImages::toMasqueradedJson(
         }
         if(!pMasqueradingVector[5].empty())
         {
-            if(getCreatedat())
+            if(getCreatedAt())
             {
-                ret[pMasqueradingVector[5]]=getCreatedat()->toDbStringLocal();
+                ret[pMasqueradingVector[5]]=getCreatedAt()->toDbStringLocal();
             }
             else
             {
@@ -1051,9 +1088,9 @@ Json::Value ProductImages::toMasqueradedJson(
         }
         if(!pMasqueradingVector[6].empty())
         {
-            if(getUpdatedat())
+            if(getUpdatedAt())
             {
-                ret[pMasqueradingVector[6]]=getUpdatedat()->toDbStringLocal();
+                ret[pMasqueradingVector[6]]=getUpdatedAt()->toDbStringLocal();
             }
             else
             {
@@ -1071,53 +1108,53 @@ Json::Value ProductImages::toMasqueradedJson(
     {
         ret["id"]=Json::Value();
     }
-    if(getImagepath())
+    if(getImagePath())
     {
-        ret["imagepath"]=getValueOfImagepath();
+        ret["image_path"]=getValueOfImagePath();
     }
     else
     {
-        ret["imagepath"]=Json::Value();
+        ret["image_path"]=Json::Value();
     }
-    if(getThumbnailpath())
+    if(getThumbnailPath())
     {
-        ret["thumbnailpath"]=getValueOfThumbnailpath();
-    }
-    else
-    {
-        ret["thumbnailpath"]=Json::Value();
-    }
-    if(getProductid())
-    {
-        ret["productid"]=getValueOfProductid();
+        ret["thumbnail_path"]=getValueOfThumbnailPath();
     }
     else
     {
-        ret["productid"]=Json::Value();
+        ret["thumbnail_path"]=Json::Value();
     }
-    if(getIscover())
+    if(getProductId())
     {
-        ret["iscover"]=getValueOfIscover();
-    }
-    else
-    {
-        ret["iscover"]=Json::Value();
-    }
-    if(getCreatedat())
-    {
-        ret["createdat"]=getCreatedat()->toDbStringLocal();
+        ret["product_id"]=getValueOfProductId();
     }
     else
     {
-        ret["createdat"]=Json::Value();
+        ret["product_id"]=Json::Value();
     }
-    if(getUpdatedat())
+    if(getIsCover())
     {
-        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
+        ret["is_cover"]=getValueOfIsCover();
     }
     else
     {
-        ret["updatedat"]=Json::Value();
+        ret["is_cover"]=Json::Value();
+    }
+    if(getCreatedAt())
+    {
+        ret["created_at"]=getCreatedAt()->toDbStringLocal();
+    }
+    else
+    {
+        ret["created_at"]=Json::Value();
+    }
+    if(getUpdatedAt())
+    {
+        ret["updated_at"]=getUpdatedAt()->toDbStringLocal();
+    }
+    else
+    {
+        ret["updated_at"]=Json::Value();
     }
     return ret;
 }
@@ -1129,49 +1166,49 @@ bool ProductImages::validateJsonForCreation(const Json::Value &pJson, std::strin
         if(!validJsonOfField(0, "id", pJson["id"], err, true))
             return false;
     }
-    if(pJson.isMember("imagepath"))
+    if(pJson.isMember("image_path"))
     {
-        if(!validJsonOfField(1, "imagepath", pJson["imagepath"], err, true))
+        if(!validJsonOfField(1, "image_path", pJson["image_path"], err, true))
             return false;
     }
     else
     {
-        err="The imagepath column cannot be null";
+        err="The image_path column cannot be null";
         return false;
     }
-    if(pJson.isMember("thumbnailpath"))
+    if(pJson.isMember("thumbnail_path"))
     {
-        if(!validJsonOfField(2, "thumbnailpath", pJson["thumbnailpath"], err, true))
+        if(!validJsonOfField(2, "thumbnail_path", pJson["thumbnail_path"], err, true))
             return false;
     }
     else
     {
-        err="The thumbnailpath column cannot be null";
+        err="The thumbnail_path column cannot be null";
         return false;
     }
-    if(pJson.isMember("productid"))
+    if(pJson.isMember("product_id"))
     {
-        if(!validJsonOfField(3, "productid", pJson["productid"], err, true))
+        if(!validJsonOfField(3, "product_id", pJson["product_id"], err, true))
             return false;
     }
     else
     {
-        err="The productid column cannot be null";
+        err="The product_id column cannot be null";
         return false;
     }
-    if(pJson.isMember("iscover"))
+    if(pJson.isMember("is_cover"))
     {
-        if(!validJsonOfField(4, "iscover", pJson["iscover"], err, true))
+        if(!validJsonOfField(4, "is_cover", pJson["is_cover"], err, true))
             return false;
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(5, "createdat", pJson["createdat"], err, true))
+        if(!validJsonOfField(5, "created_at", pJson["created_at"], err, true))
             return false;
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
-        if(!validJsonOfField(6, "updatedat", pJson["updatedat"], err, true))
+        if(!validJsonOfField(6, "updated_at", pJson["updated_at"], err, true))
             return false;
     }
     return true;
@@ -1277,34 +1314,34 @@ bool ProductImages::validateJsonForUpdate(const Json::Value &pJson, std::string 
         err = "The value of primary key must be set in the json object for update";
         return false;
     }
-    if(pJson.isMember("imagepath"))
+    if(pJson.isMember("image_path"))
     {
-        if(!validJsonOfField(1, "imagepath", pJson["imagepath"], err, false))
+        if(!validJsonOfField(1, "image_path", pJson["image_path"], err, false))
             return false;
     }
-    if(pJson.isMember("thumbnailpath"))
+    if(pJson.isMember("thumbnail_path"))
     {
-        if(!validJsonOfField(2, "thumbnailpath", pJson["thumbnailpath"], err, false))
+        if(!validJsonOfField(2, "thumbnail_path", pJson["thumbnail_path"], err, false))
             return false;
     }
-    if(pJson.isMember("productid"))
+    if(pJson.isMember("product_id"))
     {
-        if(!validJsonOfField(3, "productid", pJson["productid"], err, false))
+        if(!validJsonOfField(3, "product_id", pJson["product_id"], err, false))
             return false;
     }
-    if(pJson.isMember("iscover"))
+    if(pJson.isMember("is_cover"))
     {
-        if(!validJsonOfField(4, "iscover", pJson["iscover"], err, false))
+        if(!validJsonOfField(4, "is_cover", pJson["is_cover"], err, false))
             return false;
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(5, "createdat", pJson["createdat"], err, false))
+        if(!validJsonOfField(5, "created_at", pJson["created_at"], err, false))
             return false;
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
-        if(!validJsonOfField(6, "updatedat", pJson["updatedat"], err, false))
+        if(!validJsonOfField(6, "updated_at", pJson["updated_at"], err, false))
             return false;
     }
     return true;
@@ -1381,12 +1418,7 @@ bool ProductImages::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(isForCreation)
-            {
-                err="The automatic primary key cannot be set";
-                return false;
-            }
-            if(!pJson.isInt())
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -1440,7 +1472,7 @@ bool ProductImages::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(!pJson.isInt())
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -1507,7 +1539,7 @@ void ProductImages::getMaster_products(const DbClientPtr &clientPtr,
 {
     const static std::string sql = "select * from master_products where id = $1";
     *clientPtr << sql
-               << *productid_
+               << *productId_
                >> [rcb = std::move(rcb)](const Result &r){
                    std::vector<MasterProducts> ret;
                    ret.reserve(r.size());

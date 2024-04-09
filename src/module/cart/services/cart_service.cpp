@@ -23,16 +23,16 @@ namespace gaboot
 
             Carts cart;
 
-            cart.setCustomerid((*json)["customer_id"].asUInt());
-            cart.setProductid((*json)["product_id"].asUInt());
+            cart.setCustomerId((*json)["customer_id"].asString());
+            cart.setProductId((*json)["product_id"].asString());
             cart.setPrice((*json)["price"].asDouble());
             cart.setQuantity((*json)["quantity"].asInt());
-            cart.setCreatedat(trantor::Date::now());
-            cart.setUpdatedat(trantor::Date::now());
+            cart.setCreatedAt(trantor::Date::now());
+            cart.setUpdatedAt(trantor::Date::now());
 
             validator schema({
-                {"customer_id", "type:number|required|numberOnly"},
-                {"product_id", "type:number|required|numberOnly"},
+                {"customer_id", "type:string|required"},
+                {"product_id", "type:string|required"},
                 {"price", "type:number|required|numberOnly"},
                 {"quantity", "type:number|required|numberOnly"},
             });
@@ -60,8 +60,10 @@ namespace gaboot
             const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
             const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
-            auto customerCallback = [customer](const Carts& entry) -> bool { return entry.getValueOfCustomerid() == stoi(customer); };
-            auto productCallback = [product](const Carts& entry) -> bool { return entry.getValueOfProductid() == stoi(product); };
+            auto customerCallback = [customer](const Carts& entry) -> bool { return entry.getValueOfCustomerId() == customer; };
+            auto productCallback = [product](const Carts& entry) -> bool { return entry.getValueOfProductId() == product; };
+
+            this->load_cache();
 
             auto carts = !customer.empty() ?  m_cache_cart.find(customerCallback) : !product.empty() ? m_cache_cart.find(productCallback) : m_cache_cart.limit(limit).offset(page * limit).find_all();
 
@@ -87,14 +89,14 @@ namespace gaboot
     {
         TRY_CLAUSE
         {
-            if (id.empty() || !util::is_numeric(id))
+            if (id.empty())
 			{
 				throw BadRequestException("Parameter is invalid");
 			}
 
 			this->load_cache();
 
-			const auto cart = m_cache_cart.find(stoull(id));
+			const auto cart = m_cache_cart.find(id);
 
 			if (!cart) throw NotFoundException("Cart data is not found");
 
@@ -111,16 +113,16 @@ namespace gaboot
         {
             auto json = req->getJsonObject();
 
-            if (id.empty() || !util::is_numeric(id))
+            if (id.empty())
                 throw BadRequestException("Parameter is invalid");
 
             this->load_cache();
 
-            auto cart = m_cache_cart.find(stoll(id));
+            auto cart = m_cache_cart.find(id);
 
             cart->updateByJson(*json);
 
-            if (!db().update(*cart) || !m_cache_cart.update(stoll(id), *cart))
+            if (!db().update(*cart) || !m_cache_cart.update(id, *cart))
                 throw BadRequestException("Unable to update non-existing cart");
 
             m_cache_cart.clear();
@@ -135,12 +137,12 @@ namespace gaboot
     {
         TRY_CLAUSE
         {
-            if (id.empty() || !util::is_numeric(id))
+            if (id.empty())
                 throw BadRequestException("Parameter is invalid");
 
             this->load_cache();
 
-            if (!db().deleteByPrimaryKey(stoll(id)) || !m_cache_cart.remove(stoll(id)))
+            if (!db().deleteByPrimaryKey(id) || !m_cache_cart.remove(id))
                 throw BadRequestException("Unable delete non-existing cart");
 
             m_response.m_message = "Success delete cart";

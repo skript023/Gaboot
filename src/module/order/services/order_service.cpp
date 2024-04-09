@@ -19,16 +19,16 @@ namespace gaboot
 			auto& json = req->getJsonObject();
 			
 			Orders order;
-			order.setCustomerid((*json)["customer_id"].asInt());
+			order.setCustomerId((*json)["customer_id"].asString());
 			order.setName((*json)["name"].asString());
 			order.setStatus(OrderStatus::OPEN);
-			order.setGrandtotal((*json)["grand_total"].asDouble());
+			order.setGrandTotal((*json)["grand_total"].asDouble());
 			order.setExpired(trantor::Date().after(24 * 3600).toDbStringLocal());
-			order.setTotalitem((*json)["total_item"].asInt());
-			order.setTotalprice((*json)["total_price"].asInt());
+			order.setTotalItem((*json)["total_item"].asInt());
+			order.setTotalPrice((*json)["total_price"].asInt());
 			order.setDiscount(0.0);
-			order.setCreatedat(trantor::Date().now());
-			order.setUpdatedat(trantor::Date().now());
+			order.setCreatedAt(trantor::Date().now());
+			order.setUpdatedAt(trantor::Date().now());
 
 			orders().insert(order);
 			m_cache_order.clear();
@@ -51,7 +51,7 @@ namespace gaboot
 			const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
 			const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
-			auto callback = [customer](const Orders& entry) -> bool { return entry.getValueOfCustomerid() == stoi(customer); };
+			auto callback = [customer](const Orders& entry) -> bool { return entry.getValueOfCustomerId() == customer; };
 			auto orders = customer.empty() ? m_cache_order.limit(limit).offset(page * limit).find_all() : m_cache_order.find(callback);
 
 			if (orders.empty())
@@ -77,14 +77,14 @@ namespace gaboot
 	{
 		TRY_CLAUSE
 		{
-			if (id.empty() || !util::is_numeric(id))
+			if (id.empty())
 			{
 				throw BadRequestException("Parameter is invalid");
 			}
 
 			this->load_cache();
 
-			const auto order = m_cache_order.find(stoull(id));
+			const auto order = m_cache_order.find(id);
 
 			if (!order) throw NotFoundException("Order data is not found");
 
@@ -101,12 +101,12 @@ namespace gaboot
 		{
 			auto & json = req->getJsonObject();
 
-			if (id.empty() || !util::is_numeric(id))
+			if (id.empty())
 				throw BadRequestException("Parameter is invalid");
 
 			this->load_cache();
 
-			auto order = m_cache_order.find(stoull(id));
+			auto order = m_cache_order.find(id);
 
 			order->updateByJson(*json);
 

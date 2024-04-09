@@ -37,10 +37,10 @@ namespace gaboot
 
 			upload_file upload(&file, *category.getName(), "categories");
 
-			category.setCreatedat(trantor::Date::now());
-			category.setUpdatedat(trantor::Date::now());
-			category.setImgpath(upload.get_image_path());
-			category.setImgthumbpath(upload.get_thumbnail_path());
+			category.setCreatedAt(trantor::Date::now());
+			category.setUpdatedAt(trantor::Date::now());
+			category.setImagePath(upload.get_image_path());
+			category.setThumbnailPath(upload.get_thumbnail_path());
 
 			if (!schema.validate(category.toJson(), m_error))
 			{
@@ -103,14 +103,14 @@ namespace gaboot
 	{
 		TRY_CLAUSE
 		{
-			if (id.empty() || !util::is_numeric(id))
+			if (id.empty())
 			{
 				throw BadRequestException("Requirement doesn't match");
 			}
 
 			this->load_cache();
 
-			const auto category = m_cache_category.find(stoll(id));
+			const auto category = m_cache_category.find(id);
 
 			if (!category) throw NotFoundException("Unable retrieve category detail");
 
@@ -129,7 +129,7 @@ namespace gaboot
 
 			this->load_cache();
 
-			if (id.empty() || !util::is_numeric(id))
+			if (id.empty())
 			{
 				throw BadRequestException("Parameters requirement doesn't match");
 			}
@@ -143,12 +143,12 @@ namespace gaboot
 
 			util::multipart_tojson(multipart, m_data);
 
-			auto category = m_cache_category.find(stoll(id));
+			auto category = m_cache_category.find(id);
 			if (!category) throw NotFoundException("Unable to update non-existing data");
 
 			category->updateByJson(m_data);
-			category->setId(stoll(id));
-			category->setUpdatedat(trantor::Date::now());
+			category->setId(id);
+			category->setUpdatedAt(trantor::Date::now());
 
 			validator schema({
 				{"name", "type:string|required|alphanum"},
@@ -164,11 +164,11 @@ namespace gaboot
 
 			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 			{
-				category->setImgpath(upload.get_image_path());
-				category->setImgthumbpath(upload.get_thumbnail_path());
+				category->setImagePath(upload.get_image_path());
+				category->setThumbnailPath(upload.get_thumbnail_path());
 			}
 
-			if (!m_cache_category.update(stoll(id), *category))
+			if (!m_cache_category.update(id, *category))
 				throw CustomException<k500InternalServerError>("Unable to update non-existing cache");
 
 			if (!db().updateFuture(*category).get())
@@ -191,21 +191,21 @@ namespace gaboot
 	{
 		TRY_CLAUSE
 		{
-			if (id.empty() || !util::is_numeric(id))
+			if (id.empty())
 			{
 				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
 			this->load_cache();
 
-			const auto record = db().deleteFutureByPrimaryKey(stoll(id)).get();
+			const auto record = db().deleteFutureByPrimaryKey(id).get();
 
 			if (!record)
 			{
 				throw NotFoundException("Unable to delete non-existing data");
 			}
 
-			m_cache_category.remove(stoll(id));
+			m_cache_category.remove(id);
 
 			m_response.m_message = fmt::format("Delete category on {} successfully", record);
 			m_response.m_success = true;
@@ -219,7 +219,7 @@ namespace gaboot
 		{
 			Categories category;
 
-			if (id.empty() || !util::is_numeric(id))
+			if (id.empty())
 			{
 				LOG(WARNING) << "ID is empty or ID is not numeric";
 
@@ -228,9 +228,9 @@ namespace gaboot
 
 			this->load_cache();
 
-			if (!m_cache_category.find(stoll(id), &category))
+			if (!m_cache_category.find(id, &category))
 			{
-				std::filesystem::path file(*category.getImgpath());
+				std::filesystem::path file(*category.getImagePath());
 
 				if (!std::filesystem::exists(file))
 				{
@@ -245,8 +245,8 @@ namespace gaboot
 					return response;
 				}
 
-				if (auto image = category.getImgpath(); image && !image->empty())
-					return HttpResponse::newFileResponse(*category.getImgpath());
+				if (auto image = category.getImagePath(); image && !image->empty())
+					return HttpResponse::newFileResponse(*category.getImagePath());
 			}
 
 			throw NotFoundException("Unable to retreive category image");
@@ -258,7 +258,7 @@ namespace gaboot
 		{
 			Categories category;
 
-			if (id.empty() || !util::is_numeric(id))
+			if (id.empty())
 			{
 				LOG(WARNING) << "ID is empty or ID is not numeric";
 
@@ -267,9 +267,9 @@ namespace gaboot
 
 			this->load_cache();
 
-			if (m_cache_category.find(stoll(id), &category))
+			if (m_cache_category.find(id, &category))
 			{
-				std::filesystem::path file(*category.getImgthumbpath());
+				std::filesystem::path file(*category.getThumbnailPath());
 
 				if (!std::filesystem::exists(file))
 				{
@@ -284,8 +284,8 @@ namespace gaboot
 					return response;
 				}
 
-				if (auto image = category.getImgpath(); image && !image->empty())
-					return HttpResponse::newFileResponse(*category.getImgthumbpath());
+				if (auto image = category.getImagePath(); image && !image->empty())
+					return HttpResponse::newFileResponse(*category.getThumbnailPath());
 			}
 
 			throw NotFoundException("Unable to retreive category image");

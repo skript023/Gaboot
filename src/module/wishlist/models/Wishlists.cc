@@ -15,20 +15,20 @@ using namespace drogon::orm;
 using namespace drogon_model::gaboot;
 
 const std::string Wishlists::Cols::_id = "id";
-const std::string Wishlists::Cols::_productid = "productid";
+const std::string Wishlists::Cols::_product_id = "product_id";
 const std::string Wishlists::Cols::_category = "category";
-const std::string Wishlists::Cols::_createdat = "createdat";
-const std::string Wishlists::Cols::_updatedat = "updatedat";
+const std::string Wishlists::Cols::_created_at = "created_at";
+const std::string Wishlists::Cols::_updated_at = "updated_at";
 const std::string Wishlists::primaryKeyName = "id";
 const bool Wishlists::hasPrimaryKey = true;
 const std::string Wishlists::tableName = "wishlists";
 
 const std::vector<typename Wishlists::MetaData> Wishlists::metaData_={
-{"id","int32_t","integer",4,1,1,1},
-{"productid","int32_t","integer",4,0,0,1},
+{"id","std::string","uuid",0,0,1,1},
+{"product_id","std::string","uuid",0,0,0,1},
 {"category","std::string","character varying",100,0,0,1},
-{"createdat","::trantor::Date","timestamp without time zone",0,0,0,1},
-{"updatedat","::trantor::Date","timestamp without time zone",0,0,0,1}
+{"created_at","::trantor::Date","timestamp without time zone",0,0,0,1},
+{"updated_at","::trantor::Date","timestamp without time zone",0,0,0,1}
 };
 const std::string &Wishlists::getColumnName(size_t index) noexcept(false)
 {
@@ -41,19 +41,19 @@ Wishlists::Wishlists(const Row &r, const ssize_t indexOffset) noexcept
     {
         if(!r["id"].isNull())
         {
-            id_=std::make_shared<int32_t>(r["id"].as<int32_t>());
+            id_=std::make_shared<std::string>(r["id"].as<std::string>());
         }
-        if(!r["productid"].isNull())
+        if(!r["product_id"].isNull())
         {
-            productid_=std::make_shared<int32_t>(r["productid"].as<int32_t>());
+            productId_=std::make_shared<std::string>(r["product_id"].as<std::string>());
         }
         if(!r["category"].isNull())
         {
             category_=std::make_shared<std::string>(r["category"].as<std::string>());
         }
-        if(!r["createdat"].isNull())
+        if(!r["created_at"].isNull())
         {
-            auto timeStr = r["createdat"].as<std::string>();
+            auto timeStr = r["created_at"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -70,12 +70,12 @@ Wishlists::Wishlists(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        if(!r["updatedat"].isNull())
+        if(!r["updated_at"].isNull())
         {
-            auto timeStr = r["updatedat"].as<std::string>();
+            auto timeStr = r["updated_at"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -92,7 +92,7 @@ Wishlists::Wishlists(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -108,12 +108,12 @@ Wishlists::Wishlists(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 0;
         if(!r[index].isNull())
         {
-            id_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            id_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 1;
         if(!r[index].isNull())
         {
-            productid_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            productId_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 2;
         if(!r[index].isNull())
@@ -140,7 +140,7 @@ Wishlists::Wishlists(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
         index = offset + 4;
@@ -163,7 +163,7 @@ Wishlists::Wishlists(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -182,7 +182,7 @@ Wishlists::Wishlists(const Json::Value &pJson, const std::vector<std::string> &p
         dirtyFlag_[0] = true;
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<std::string>(pJson[pMasqueradingVector[0]].asString());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -190,7 +190,7 @@ Wishlists::Wishlists(const Json::Value &pJson, const std::vector<std::string> &p
         dirtyFlag_[1] = true;
         if(!pJson[pMasqueradingVector[1]].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[1]].asInt64());
+            productId_=std::make_shared<std::string>(pJson[pMasqueradingVector[1]].asString());
         }
     }
     if(!pMasqueradingVector[2].empty() && pJson.isMember(pMasqueradingVector[2]))
@@ -223,7 +223,7 @@ Wishlists::Wishlists(const Json::Value &pJson, const std::vector<std::string> &p
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -249,7 +249,7 @@ Wishlists::Wishlists(const Json::Value &pJson, const std::vector<std::string> &p
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -262,15 +262,15 @@ Wishlists::Wishlists(const Json::Value &pJson) noexcept(false)
         dirtyFlag_[0]=true;
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<std::string>(pJson["id"].asString());
         }
     }
-    if(pJson.isMember("productid"))
+    if(pJson.isMember("product_id"))
     {
         dirtyFlag_[1]=true;
-        if(!pJson["productid"].isNull())
+        if(!pJson["product_id"].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson["productid"].asInt64());
+            productId_=std::make_shared<std::string>(pJson["product_id"].asString());
         }
     }
     if(pJson.isMember("category"))
@@ -281,12 +281,12 @@ Wishlists::Wishlists(const Json::Value &pJson) noexcept(false)
             category_=std::make_shared<std::string>(pJson["category"].asString());
         }
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
         dirtyFlag_[3]=true;
-        if(!pJson["createdat"].isNull())
+        if(!pJson["created_at"].isNull())
         {
-            auto timeStr = pJson["createdat"].asString();
+            auto timeStr = pJson["created_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -303,16 +303,16 @@ Wishlists::Wishlists(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
         dirtyFlag_[4]=true;
-        if(!pJson["updatedat"].isNull())
+        if(!pJson["updated_at"].isNull())
         {
-            auto timeStr = pJson["updatedat"].asString();
+            auto timeStr = pJson["updated_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -329,7 +329,7 @@ Wishlists::Wishlists(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -347,7 +347,7 @@ void Wishlists::updateByMasqueradedJson(const Json::Value &pJson,
     {
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<std::string>(pJson[pMasqueradingVector[0]].asString());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -355,7 +355,7 @@ void Wishlists::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[1] = true;
         if(!pJson[pMasqueradingVector[1]].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[1]].asInt64());
+            productId_=std::make_shared<std::string>(pJson[pMasqueradingVector[1]].asString());
         }
     }
     if(!pMasqueradingVector[2].empty() && pJson.isMember(pMasqueradingVector[2]))
@@ -388,7 +388,7 @@ void Wishlists::updateByMasqueradedJson(const Json::Value &pJson,
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -414,7 +414,7 @@ void Wishlists::updateByMasqueradedJson(const Json::Value &pJson,
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -426,15 +426,15 @@ void Wishlists::updateByJson(const Json::Value &pJson) noexcept(false)
     {
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<std::string>(pJson["id"].asString());
         }
     }
-    if(pJson.isMember("productid"))
+    if(pJson.isMember("product_id"))
     {
         dirtyFlag_[1] = true;
-        if(!pJson["productid"].isNull())
+        if(!pJson["product_id"].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson["productid"].asInt64());
+            productId_=std::make_shared<std::string>(pJson["product_id"].asString());
         }
     }
     if(pJson.isMember("category"))
@@ -445,12 +445,12 @@ void Wishlists::updateByJson(const Json::Value &pJson) noexcept(false)
             category_=std::make_shared<std::string>(pJson["category"].asString());
         }
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
         dirtyFlag_[3] = true;
-        if(!pJson["createdat"].isNull())
+        if(!pJson["created_at"].isNull())
         {
-            auto timeStr = pJson["createdat"].asString();
+            auto timeStr = pJson["created_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -467,16 +467,16 @@ void Wishlists::updateByJson(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
         dirtyFlag_[4] = true;
-        if(!pJson["updatedat"].isNull())
+        if(!pJson["updated_at"].isNull())
         {
-            auto timeStr = pJson["updatedat"].asString();
+            auto timeStr = pJson["updated_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -493,26 +493,31 @@ void Wishlists::updateByJson(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
 }
 
-const int32_t &Wishlists::getValueOfId() const noexcept
+const std::string &Wishlists::getValueOfId() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
+    const static std::string defaultValue = std::string();
     if(id_)
         return *id_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &Wishlists::getId() const noexcept
+const std::shared_ptr<std::string> &Wishlists::getId() const noexcept
 {
     return id_;
 }
-void Wishlists::setId(const int32_t &pId) noexcept
+void Wishlists::setId(const std::string &pId) noexcept
 {
-    id_ = std::make_shared<int32_t>(pId);
+    id_ = std::make_shared<std::string>(pId);
+    dirtyFlag_[0] = true;
+}
+void Wishlists::setId(std::string &&pId) noexcept
+{
+    id_ = std::make_shared<std::string>(std::move(pId));
     dirtyFlag_[0] = true;
 }
 const typename Wishlists::PrimaryKeyType & Wishlists::getPrimaryKey() const
@@ -521,20 +526,25 @@ const typename Wishlists::PrimaryKeyType & Wishlists::getPrimaryKey() const
     return *id_;
 }
 
-const int32_t &Wishlists::getValueOfProductid() const noexcept
+const std::string &Wishlists::getValueOfProductId() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
-    if(productid_)
-        return *productid_;
+    const static std::string defaultValue = std::string();
+    if(productId_)
+        return *productId_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &Wishlists::getProductid() const noexcept
+const std::shared_ptr<std::string> &Wishlists::getProductId() const noexcept
 {
-    return productid_;
+    return productId_;
 }
-void Wishlists::setProductid(const int32_t &pProductid) noexcept
+void Wishlists::setProductId(const std::string &pProductId) noexcept
 {
-    productid_ = std::make_shared<int32_t>(pProductid);
+    productId_ = std::make_shared<std::string>(pProductId);
+    dirtyFlag_[1] = true;
+}
+void Wishlists::setProductId(std::string &&pProductId) noexcept
+{
+    productId_ = std::make_shared<std::string>(std::move(pProductId));
     dirtyFlag_[1] = true;
 }
 
@@ -560,37 +570,37 @@ void Wishlists::setCategory(std::string &&pCategory) noexcept
     dirtyFlag_[2] = true;
 }
 
-const ::trantor::Date &Wishlists::getValueOfCreatedat() const noexcept
+const ::trantor::Date &Wishlists::getValueOfCreatedAt() const noexcept
 {
     const static ::trantor::Date defaultValue = ::trantor::Date();
-    if(createdat_)
-        return *createdat_;
+    if(createdAt_)
+        return *createdAt_;
     return defaultValue;
 }
-const std::shared_ptr<::trantor::Date> &Wishlists::getCreatedat() const noexcept
+const std::shared_ptr<::trantor::Date> &Wishlists::getCreatedAt() const noexcept
 {
-    return createdat_;
+    return createdAt_;
 }
-void Wishlists::setCreatedat(const ::trantor::Date &pCreatedat) noexcept
+void Wishlists::setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept
 {
-    createdat_ = std::make_shared<::trantor::Date>(pCreatedat);
+    createdAt_ = std::make_shared<::trantor::Date>(pCreatedAt);
     dirtyFlag_[3] = true;
 }
 
-const ::trantor::Date &Wishlists::getValueOfUpdatedat() const noexcept
+const ::trantor::Date &Wishlists::getValueOfUpdatedAt() const noexcept
 {
     const static ::trantor::Date defaultValue = ::trantor::Date();
-    if(updatedat_)
-        return *updatedat_;
+    if(updatedAt_)
+        return *updatedAt_;
     return defaultValue;
 }
-const std::shared_ptr<::trantor::Date> &Wishlists::getUpdatedat() const noexcept
+const std::shared_ptr<::trantor::Date> &Wishlists::getUpdatedAt() const noexcept
 {
-    return updatedat_;
+    return updatedAt_;
 }
-void Wishlists::setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept
+void Wishlists::setUpdatedAt(const ::trantor::Date &pUpdatedAt) noexcept
 {
-    updatedat_ = std::make_shared<::trantor::Date>(pUpdatedat);
+    updatedAt_ = std::make_shared<::trantor::Date>(pUpdatedAt);
     dirtyFlag_[4] = true;
 }
 
@@ -601,21 +611,33 @@ void Wishlists::updateId(const uint64_t id)
 const std::vector<std::string> &Wishlists::insertColumns() noexcept
 {
     static const std::vector<std::string> inCols={
-        "productid",
+        "id",
+        "product_id",
         "category",
-        "createdat",
-        "updatedat"
+        "created_at",
+        "updated_at"
     };
     return inCols;
 }
 
 void Wishlists::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 {
+    if(dirtyFlag_[0])
+    {
+        if(getId())
+        {
+            binder << getValueOfId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
     if(dirtyFlag_[1])
     {
-        if(getProductid())
+        if(getProductId())
         {
-            binder << getValueOfProductid();
+            binder << getValueOfProductId();
         }
         else
         {
@@ -635,9 +657,9 @@ void Wishlists::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[3])
     {
-        if(getCreatedat())
+        if(getCreatedAt())
         {
-            binder << getValueOfCreatedat();
+            binder << getValueOfCreatedAt();
         }
         else
         {
@@ -646,9 +668,9 @@ void Wishlists::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[4])
     {
-        if(getUpdatedat())
+        if(getUpdatedAt())
         {
-            binder << getValueOfUpdatedat();
+            binder << getValueOfUpdatedAt();
         }
         else
         {
@@ -660,6 +682,10 @@ void Wishlists::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 const std::vector<std::string> Wishlists::updateColumns() const
 {
     std::vector<std::string> ret;
+    if(dirtyFlag_[0])
+    {
+        ret.push_back(getColumnName(0));
+    }
     if(dirtyFlag_[1])
     {
         ret.push_back(getColumnName(1));
@@ -681,11 +707,22 @@ const std::vector<std::string> Wishlists::updateColumns() const
 
 void Wishlists::updateArgs(drogon::orm::internal::SqlBinder &binder) const
 {
+    if(dirtyFlag_[0])
+    {
+        if(getId())
+        {
+            binder << getValueOfId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
     if(dirtyFlag_[1])
     {
-        if(getProductid())
+        if(getProductId())
         {
-            binder << getValueOfProductid();
+            binder << getValueOfProductId();
         }
         else
         {
@@ -705,9 +742,9 @@ void Wishlists::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[3])
     {
-        if(getCreatedat())
+        if(getCreatedAt())
         {
-            binder << getValueOfCreatedat();
+            binder << getValueOfCreatedAt();
         }
         else
         {
@@ -716,9 +753,9 @@ void Wishlists::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[4])
     {
-        if(getUpdatedat())
+        if(getUpdatedAt())
         {
-            binder << getValueOfUpdatedat();
+            binder << getValueOfUpdatedAt();
         }
         else
         {
@@ -737,13 +774,13 @@ Json::Value Wishlists::toJson() const
     {
         ret["id"]=Json::Value();
     }
-    if(getProductid())
+    if(getProductId())
     {
-        ret["productid"]=getValueOfProductid();
+        ret["product_id"]=getValueOfProductId();
     }
     else
     {
-        ret["productid"]=Json::Value();
+        ret["product_id"]=Json::Value();
     }
     if(getCategory())
     {
@@ -753,21 +790,21 @@ Json::Value Wishlists::toJson() const
     {
         ret["category"]=Json::Value();
     }
-    if(getCreatedat())
+    if(getCreatedAt())
     {
-        ret["createdat"]=getCreatedat()->toDbStringLocal();
+        ret["created_at"]=getCreatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["createdat"]=Json::Value();
+        ret["created_at"]=Json::Value();
     }
-    if(getUpdatedat())
+    if(getUpdatedAt())
     {
-        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
+        ret["updated_at"]=getUpdatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["updatedat"]=Json::Value();
+        ret["updated_at"]=Json::Value();
     }
     return ret;
 }
@@ -791,9 +828,9 @@ Json::Value Wishlists::toMasqueradedJson(
         }
         if(!pMasqueradingVector[1].empty())
         {
-            if(getProductid())
+            if(getProductId())
             {
-                ret[pMasqueradingVector[1]]=getValueOfProductid();
+                ret[pMasqueradingVector[1]]=getValueOfProductId();
             }
             else
             {
@@ -813,9 +850,9 @@ Json::Value Wishlists::toMasqueradedJson(
         }
         if(!pMasqueradingVector[3].empty())
         {
-            if(getCreatedat())
+            if(getCreatedAt())
             {
-                ret[pMasqueradingVector[3]]=getCreatedat()->toDbStringLocal();
+                ret[pMasqueradingVector[3]]=getCreatedAt()->toDbStringLocal();
             }
             else
             {
@@ -824,9 +861,9 @@ Json::Value Wishlists::toMasqueradedJson(
         }
         if(!pMasqueradingVector[4].empty())
         {
-            if(getUpdatedat())
+            if(getUpdatedAt())
             {
-                ret[pMasqueradingVector[4]]=getUpdatedat()->toDbStringLocal();
+                ret[pMasqueradingVector[4]]=getUpdatedAt()->toDbStringLocal();
             }
             else
             {
@@ -844,13 +881,13 @@ Json::Value Wishlists::toMasqueradedJson(
     {
         ret["id"]=Json::Value();
     }
-    if(getProductid())
+    if(getProductId())
     {
-        ret["productid"]=getValueOfProductid();
+        ret["product_id"]=getValueOfProductId();
     }
     else
     {
-        ret["productid"]=Json::Value();
+        ret["product_id"]=Json::Value();
     }
     if(getCategory())
     {
@@ -860,21 +897,21 @@ Json::Value Wishlists::toMasqueradedJson(
     {
         ret["category"]=Json::Value();
     }
-    if(getCreatedat())
+    if(getCreatedAt())
     {
-        ret["createdat"]=getCreatedat()->toDbStringLocal();
+        ret["created_at"]=getCreatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["createdat"]=Json::Value();
+        ret["created_at"]=Json::Value();
     }
-    if(getUpdatedat())
+    if(getUpdatedAt())
     {
-        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
+        ret["updated_at"]=getUpdatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["updatedat"]=Json::Value();
+        ret["updated_at"]=Json::Value();
     }
     return ret;
 }
@@ -886,14 +923,14 @@ bool Wishlists::validateJsonForCreation(const Json::Value &pJson, std::string &e
         if(!validJsonOfField(0, "id", pJson["id"], err, true))
             return false;
     }
-    if(pJson.isMember("productid"))
+    if(pJson.isMember("product_id"))
     {
-        if(!validJsonOfField(1, "productid", pJson["productid"], err, true))
+        if(!validJsonOfField(1, "product_id", pJson["product_id"], err, true))
             return false;
     }
     else
     {
-        err="The productid column cannot be null";
+        err="The product_id column cannot be null";
         return false;
     }
     if(pJson.isMember("category"))
@@ -906,14 +943,14 @@ bool Wishlists::validateJsonForCreation(const Json::Value &pJson, std::string &e
         err="The category column cannot be null";
         return false;
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(3, "createdat", pJson["createdat"], err, true))
+        if(!validJsonOfField(3, "created_at", pJson["created_at"], err, true))
             return false;
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
-        if(!validJsonOfField(4, "updatedat", pJson["updatedat"], err, true))
+        if(!validJsonOfField(4, "updated_at", pJson["updated_at"], err, true))
             return false;
     }
     return true;
@@ -998,9 +1035,9 @@ bool Wishlists::validateJsonForUpdate(const Json::Value &pJson, std::string &err
         err = "The value of primary key must be set in the json object for update";
         return false;
     }
-    if(pJson.isMember("productid"))
+    if(pJson.isMember("product_id"))
     {
-        if(!validJsonOfField(1, "productid", pJson["productid"], err, false))
+        if(!validJsonOfField(1, "product_id", pJson["product_id"], err, false))
             return false;
     }
     if(pJson.isMember("category"))
@@ -1008,14 +1045,14 @@ bool Wishlists::validateJsonForUpdate(const Json::Value &pJson, std::string &err
         if(!validJsonOfField(2, "category", pJson["category"], err, false))
             return false;
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(3, "createdat", pJson["createdat"], err, false))
+        if(!validJsonOfField(3, "created_at", pJson["created_at"], err, false))
             return false;
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
-        if(!validJsonOfField(4, "updatedat", pJson["updatedat"], err, false))
+        if(!validJsonOfField(4, "updated_at", pJson["updated_at"], err, false))
             return false;
     }
     return true;
@@ -1082,12 +1119,7 @@ bool Wishlists::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(isForCreation)
-            {
-                err="The automatic primary key cannot be set";
-                return false;
-            }
-            if(!pJson.isInt())
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -1099,7 +1131,7 @@ bool Wishlists::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(!pJson.isInt())
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -1178,7 +1210,7 @@ void Wishlists::getMaster_products(const DbClientPtr &clientPtr,
 {
     const static std::string sql = "select * from master_products where orderId = $1";
     *clientPtr << sql
-               << *productid_
+               << *productId_
                >> [rcb = std::move(rcb), ecb](const Result &r){
                     if (r.size() == 0)
                     {

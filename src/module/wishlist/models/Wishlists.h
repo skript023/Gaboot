@@ -46,17 +46,17 @@ class Wishlists
     struct Cols
     {
         static const std::string _id;
-        static const std::string _productid;
+        static const std::string _product_id;
         static const std::string _category;
-        static const std::string _createdat;
-        static const std::string _updatedat;
+        static const std::string _created_at;
+        static const std::string _updated_at;
     };
 
     const static int primaryKeyNumber;
     const static std::string tableName;
     const static bool hasPrimaryKey;
     const static std::string primaryKeyName;
-    using PrimaryKeyType = int32_t;
+    using PrimaryKeyType = std::string;
     const PrimaryKeyType &getPrimaryKey() const;
 
     /**
@@ -103,19 +103,21 @@ class Wishlists
 
     /**  For column id  */
     ///Get the value of the column id, returns the default value if the column is null
-    const int32_t &getValueOfId() const noexcept;
+    const std::string &getValueOfId() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getId() const noexcept;
+    const std::shared_ptr<std::string> &getId() const noexcept;
     ///Set the value of the column id
-    void setId(const int32_t &pId) noexcept;
+    void setId(const std::string &pId) noexcept;
+    void setId(std::string &&pId) noexcept;
 
-    /**  For column productid  */
-    ///Get the value of the column productid, returns the default value if the column is null
-    const int32_t &getValueOfProductid() const noexcept;
+    /**  For column product_id  */
+    ///Get the value of the column product_id, returns the default value if the column is null
+    const std::string &getValueOfProductId() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getProductid() const noexcept;
-    ///Set the value of the column productid
-    void setProductid(const int32_t &pProductid) noexcept;
+    const std::shared_ptr<std::string> &getProductId() const noexcept;
+    ///Set the value of the column product_id
+    void setProductId(const std::string &pProductId) noexcept;
+    void setProductId(std::string &&pProductId) noexcept;
 
     /**  For column category  */
     ///Get the value of the column category, returns the default value if the column is null
@@ -126,21 +128,21 @@ class Wishlists
     void setCategory(const std::string &pCategory) noexcept;
     void setCategory(std::string &&pCategory) noexcept;
 
-    /**  For column createdat  */
-    ///Get the value of the column createdat, returns the default value if the column is null
-    const ::trantor::Date &getValueOfCreatedat() const noexcept;
+    /**  For column created_at  */
+    ///Get the value of the column created_at, returns the default value if the column is null
+    const ::trantor::Date &getValueOfCreatedAt() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<::trantor::Date> &getCreatedat() const noexcept;
-    ///Set the value of the column createdat
-    void setCreatedat(const ::trantor::Date &pCreatedat) noexcept;
+    const std::shared_ptr<::trantor::Date> &getCreatedAt() const noexcept;
+    ///Set the value of the column created_at
+    void setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept;
 
-    /**  For column updatedat  */
-    ///Get the value of the column updatedat, returns the default value if the column is null
-    const ::trantor::Date &getValueOfUpdatedat() const noexcept;
+    /**  For column updated_at  */
+    ///Get the value of the column updated_at, returns the default value if the column is null
+    const ::trantor::Date &getValueOfUpdatedAt() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<::trantor::Date> &getUpdatedat() const noexcept;
-    ///Set the value of the column updatedat
-    void setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept;
+    const std::shared_ptr<::trantor::Date> &getUpdatedAt() const noexcept;
+    ///Set the value of the column updated_at
+    void setUpdatedAt(const ::trantor::Date &pUpdatedAt) noexcept;
 
 
     static size_t getColumnNumber() noexcept {  return 5;  }
@@ -168,11 +170,11 @@ class Wishlists
     void updateArgs(drogon::orm::internal::SqlBinder &binder) const;
     ///For mysql or sqlite3
     void updateId(const uint64_t id);
-    std::shared_ptr<int32_t> id_;
-    std::shared_ptr<int32_t> productid_;
+    std::shared_ptr<std::string> id_;
+    std::shared_ptr<std::string> productId_;
     std::shared_ptr<std::string> category_;
-    std::shared_ptr<::trantor::Date> createdat_;
-    std::shared_ptr<::trantor::Date> updatedat_;
+    std::shared_ptr<::trantor::Date> createdAt_;
+    std::shared_ptr<::trantor::Date> updatedAt_;
     struct MetaData
     {
         const std::string colName_;
@@ -202,11 +204,15 @@ class Wishlists
         std::string sql="insert into " + tableName + " (";
         size_t parametersCount = 0;
         needSelection = false;
-            sql += "id,";
-            ++parametersCount;
+        sql += "id,";
+        ++parametersCount;
+        if(!dirtyFlag_[0])
+        {
+            needSelection=true;
+        }
         if(dirtyFlag_[1])
         {
-            sql += "productid,";
+            sql += "product_id,";
             ++parametersCount;
         }
         if(dirtyFlag_[2])
@@ -214,19 +220,18 @@ class Wishlists
             sql += "category,";
             ++parametersCount;
         }
-        sql += "createdat,";
+        sql += "created_at,";
         ++parametersCount;
         if(!dirtyFlag_[3])
         {
             needSelection=true;
         }
-        sql += "updatedat,";
+        sql += "updated_at,";
         ++parametersCount;
         if(!dirtyFlag_[4])
         {
             needSelection=true;
         }
-        needSelection=true;
         if(parametersCount > 0)
         {
             sql[sql.length()-1]=')';
@@ -238,7 +243,15 @@ class Wishlists
         int placeholder=1;
         char placeholderStr[64];
         size_t n=0;
-        sql +="default,";
+        if(dirtyFlag_[0])
+        {
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
+        }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[1])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);

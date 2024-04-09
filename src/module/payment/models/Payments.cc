@@ -15,39 +15,39 @@ using namespace drogon_model::gaboot;
 
 const std::string Payments::Cols::_id = "id";
 const std::string Payments::Cols::_name = "name";
-const std::string Payments::Cols::_transactionid = "transactionid";
-const std::string Payments::Cols::_merchantid = "merchantid";
-const std::string Payments::Cols::_paymenttype = "paymenttype";
+const std::string Payments::Cols::_transaction_id = "transaction_id";
+const std::string Payments::Cols::_merchant_id = "merchant_id";
+const std::string Payments::Cols::_payment_type = "payment_type";
 const std::string Payments::Cols::_description = "description";
-const std::string Payments::Cols::_transactiontime = "transactiontime";
-const std::string Payments::Cols::_transactionstatus = "transactionstatus";
-const std::string Payments::Cols::_fraudstatus = "fraudstatus";
+const std::string Payments::Cols::_transaction_time = "transaction_time";
+const std::string Payments::Cols::_transaction_status = "transaction_status";
+const std::string Payments::Cols::_fraud_status = "fraud_status";
 const std::string Payments::Cols::_bank = "bank";
-const std::string Payments::Cols::_vanumber = "vanumber";
+const std::string Payments::Cols::_va_number = "va_number";
 const std::string Payments::Cols::_currency = "currency";
 const std::string Payments::Cols::_expiry_time = "expiry_time";
-const std::string Payments::Cols::_createdat = "createdat";
-const std::string Payments::Cols::_updatedat = "updatedat";
+const std::string Payments::Cols::_created_at = "created_at";
+const std::string Payments::Cols::_updated_at = "updated_at";
 const std::string Payments::primaryKeyName = "id";
 const bool Payments::hasPrimaryKey = true;
 const std::string Payments::tableName = "payments";
 
 const std::vector<typename Payments::MetaData> Payments::metaData_={
-{"id","int32_t","integer",4,1,1,1},
+{"id","std::string","uuid",0,0,1,1},
 {"name","std::string","character varying",255,0,0,0},
-{"transactionid","std::string","character varying",255,0,0,0},
-{"merchantid","std::string","character varying",255,0,0,0},
-{"paymenttype","std::string","character varying",255,0,0,0},
+{"transaction_id","std::string","character varying",255,0,0,0},
+{"merchant_id","std::string","character varying",255,0,0,0},
+{"payment_type","std::string","character varying",255,0,0,0},
 {"description","std::string","character varying",255,0,0,0},
-{"transactiontime","std::string","character varying",255,0,0,0},
-{"transactionstatus","std::string","character varying",255,0,0,0},
-{"fraudstatus","std::string","character varying",255,0,0,0},
+{"transaction_time","std::string","character varying",255,0,0,0},
+{"transaction_status","std::string","character varying",255,0,0,0},
+{"fraud_status","std::string","character varying",255,0,0,0},
 {"bank","std::string","character varying",255,0,0,0},
-{"vanumber","std::string","character varying",255,0,0,0},
+{"va_number","std::string","character varying",255,0,0,0},
 {"currency","std::string","character varying",255,0,0,0},
 {"expiry_time","std::string","character varying",255,0,0,0},
-{"createdat","::trantor::Date","timestamp without time zone",0,0,0,1},
-{"updatedat","::trantor::Date","timestamp without time zone",0,0,0,1}
+{"created_at","::trantor::Date","timestamp without time zone",0,0,0,1},
+{"updated_at","::trantor::Date","timestamp without time zone",0,0,0,1}
 };
 const std::string &Payments::getColumnName(size_t index) noexcept(false)
 {
@@ -60,47 +60,47 @@ Payments::Payments(const Row &r, const ssize_t indexOffset) noexcept
     {
         if(!r["id"].isNull())
         {
-            id_=std::make_shared<int32_t>(r["id"].as<int32_t>());
+            id_=std::make_shared<std::string>(r["id"].as<std::string>());
         }
         if(!r["name"].isNull())
         {
             name_=std::make_shared<std::string>(r["name"].as<std::string>());
         }
-        if(!r["transactionid"].isNull())
+        if(!r["transaction_id"].isNull())
         {
-            transactionid_=std::make_shared<std::string>(r["transactionid"].as<std::string>());
+            transactionId_=std::make_shared<std::string>(r["transaction_id"].as<std::string>());
         }
-        if(!r["merchantid"].isNull())
+        if(!r["merchant_id"].isNull())
         {
-            merchantid_=std::make_shared<std::string>(r["merchantid"].as<std::string>());
+            merchantId_=std::make_shared<std::string>(r["merchant_id"].as<std::string>());
         }
-        if(!r["paymenttype"].isNull())
+        if(!r["payment_type"].isNull())
         {
-            paymenttype_=std::make_shared<std::string>(r["paymenttype"].as<std::string>());
+            paymentType_=std::make_shared<std::string>(r["payment_type"].as<std::string>());
         }
         if(!r["description"].isNull())
         {
             description_=std::make_shared<std::string>(r["description"].as<std::string>());
         }
-        if(!r["transactiontime"].isNull())
+        if(!r["transaction_time"].isNull())
         {
-            transactiontime_=std::make_shared<std::string>(r["transactiontime"].as<std::string>());
+            transactionTime_=std::make_shared<std::string>(r["transaction_time"].as<std::string>());
         }
-        if(!r["transactionstatus"].isNull())
+        if(!r["transaction_status"].isNull())
         {
-            transactionstatus_=std::make_shared<std::string>(r["transactionstatus"].as<std::string>());
+            transactionStatus_=std::make_shared<std::string>(r["transaction_status"].as<std::string>());
         }
-        if(!r["fraudstatus"].isNull())
+        if(!r["fraud_status"].isNull())
         {
-            fraudstatus_=std::make_shared<std::string>(r["fraudstatus"].as<std::string>());
+            fraudStatus_=std::make_shared<std::string>(r["fraud_status"].as<std::string>());
         }
         if(!r["bank"].isNull())
         {
             bank_=std::make_shared<std::string>(r["bank"].as<std::string>());
         }
-        if(!r["vanumber"].isNull())
+        if(!r["va_number"].isNull())
         {
-            vanumber_=std::make_shared<std::string>(r["vanumber"].as<std::string>());
+            vaNumber_=std::make_shared<std::string>(r["va_number"].as<std::string>());
         }
         if(!r["currency"].isNull())
         {
@@ -110,9 +110,9 @@ Payments::Payments(const Row &r, const ssize_t indexOffset) noexcept
         {
             expiryTime_=std::make_shared<std::string>(r["expiry_time"].as<std::string>());
         }
-        if(!r["createdat"].isNull())
+        if(!r["created_at"].isNull())
         {
-            auto timeStr = r["createdat"].as<std::string>();
+            auto timeStr = r["created_at"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -129,12 +129,12 @@ Payments::Payments(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        if(!r["updatedat"].isNull())
+        if(!r["updated_at"].isNull())
         {
-            auto timeStr = r["updatedat"].as<std::string>();
+            auto timeStr = r["updated_at"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -151,7 +151,7 @@ Payments::Payments(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -167,7 +167,7 @@ Payments::Payments(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 0;
         if(!r[index].isNull())
         {
-            id_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            id_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 1;
         if(!r[index].isNull())
@@ -177,17 +177,17 @@ Payments::Payments(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 2;
         if(!r[index].isNull())
         {
-            transactionid_=std::make_shared<std::string>(r[index].as<std::string>());
+            transactionId_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 3;
         if(!r[index].isNull())
         {
-            merchantid_=std::make_shared<std::string>(r[index].as<std::string>());
+            merchantId_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 4;
         if(!r[index].isNull())
         {
-            paymenttype_=std::make_shared<std::string>(r[index].as<std::string>());
+            paymentType_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 5;
         if(!r[index].isNull())
@@ -197,17 +197,17 @@ Payments::Payments(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 6;
         if(!r[index].isNull())
         {
-            transactiontime_=std::make_shared<std::string>(r[index].as<std::string>());
+            transactionTime_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 7;
         if(!r[index].isNull())
         {
-            transactionstatus_=std::make_shared<std::string>(r[index].as<std::string>());
+            transactionStatus_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 8;
         if(!r[index].isNull())
         {
-            fraudstatus_=std::make_shared<std::string>(r[index].as<std::string>());
+            fraudStatus_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 9;
         if(!r[index].isNull())
@@ -217,7 +217,7 @@ Payments::Payments(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 10;
         if(!r[index].isNull())
         {
-            vanumber_=std::make_shared<std::string>(r[index].as<std::string>());
+            vaNumber_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 11;
         if(!r[index].isNull())
@@ -249,7 +249,7 @@ Payments::Payments(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
         index = offset + 14;
@@ -272,7 +272,7 @@ Payments::Payments(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -291,7 +291,7 @@ Payments::Payments(const Json::Value &pJson, const std::vector<std::string> &pMa
         dirtyFlag_[0] = true;
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<std::string>(pJson[pMasqueradingVector[0]].asString());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -307,7 +307,7 @@ Payments::Payments(const Json::Value &pJson, const std::vector<std::string> &pMa
         dirtyFlag_[2] = true;
         if(!pJson[pMasqueradingVector[2]].isNull())
         {
-            transactionid_=std::make_shared<std::string>(pJson[pMasqueradingVector[2]].asString());
+            transactionId_=std::make_shared<std::string>(pJson[pMasqueradingVector[2]].asString());
         }
     }
     if(!pMasqueradingVector[3].empty() && pJson.isMember(pMasqueradingVector[3]))
@@ -315,7 +315,7 @@ Payments::Payments(const Json::Value &pJson, const std::vector<std::string> &pMa
         dirtyFlag_[3] = true;
         if(!pJson[pMasqueradingVector[3]].isNull())
         {
-            merchantid_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
+            merchantId_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
         }
     }
     if(!pMasqueradingVector[4].empty() && pJson.isMember(pMasqueradingVector[4]))
@@ -323,7 +323,7 @@ Payments::Payments(const Json::Value &pJson, const std::vector<std::string> &pMa
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            paymenttype_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
+            paymentType_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -339,7 +339,7 @@ Payments::Payments(const Json::Value &pJson, const std::vector<std::string> &pMa
         dirtyFlag_[6] = true;
         if(!pJson[pMasqueradingVector[6]].isNull())
         {
-            transactiontime_=std::make_shared<std::string>(pJson[pMasqueradingVector[6]].asString());
+            transactionTime_=std::make_shared<std::string>(pJson[pMasqueradingVector[6]].asString());
         }
     }
     if(!pMasqueradingVector[7].empty() && pJson.isMember(pMasqueradingVector[7]))
@@ -347,7 +347,7 @@ Payments::Payments(const Json::Value &pJson, const std::vector<std::string> &pMa
         dirtyFlag_[7] = true;
         if(!pJson[pMasqueradingVector[7]].isNull())
         {
-            transactionstatus_=std::make_shared<std::string>(pJson[pMasqueradingVector[7]].asString());
+            transactionStatus_=std::make_shared<std::string>(pJson[pMasqueradingVector[7]].asString());
         }
     }
     if(!pMasqueradingVector[8].empty() && pJson.isMember(pMasqueradingVector[8]))
@@ -355,7 +355,7 @@ Payments::Payments(const Json::Value &pJson, const std::vector<std::string> &pMa
         dirtyFlag_[8] = true;
         if(!pJson[pMasqueradingVector[8]].isNull())
         {
-            fraudstatus_=std::make_shared<std::string>(pJson[pMasqueradingVector[8]].asString());
+            fraudStatus_=std::make_shared<std::string>(pJson[pMasqueradingVector[8]].asString());
         }
     }
     if(!pMasqueradingVector[9].empty() && pJson.isMember(pMasqueradingVector[9]))
@@ -371,7 +371,7 @@ Payments::Payments(const Json::Value &pJson, const std::vector<std::string> &pMa
         dirtyFlag_[10] = true;
         if(!pJson[pMasqueradingVector[10]].isNull())
         {
-            vanumber_=std::make_shared<std::string>(pJson[pMasqueradingVector[10]].asString());
+            vaNumber_=std::make_shared<std::string>(pJson[pMasqueradingVector[10]].asString());
         }
     }
     if(!pMasqueradingVector[11].empty() && pJson.isMember(pMasqueradingVector[11]))
@@ -412,7 +412,7 @@ Payments::Payments(const Json::Value &pJson, const std::vector<std::string> &pMa
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -438,7 +438,7 @@ Payments::Payments(const Json::Value &pJson, const std::vector<std::string> &pMa
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -451,7 +451,7 @@ Payments::Payments(const Json::Value &pJson) noexcept(false)
         dirtyFlag_[0]=true;
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<std::string>(pJson["id"].asString());
         }
     }
     if(pJson.isMember("name"))
@@ -462,28 +462,28 @@ Payments::Payments(const Json::Value &pJson) noexcept(false)
             name_=std::make_shared<std::string>(pJson["name"].asString());
         }
     }
-    if(pJson.isMember("transactionid"))
+    if(pJson.isMember("transaction_id"))
     {
         dirtyFlag_[2]=true;
-        if(!pJson["transactionid"].isNull())
+        if(!pJson["transaction_id"].isNull())
         {
-            transactionid_=std::make_shared<std::string>(pJson["transactionid"].asString());
+            transactionId_=std::make_shared<std::string>(pJson["transaction_id"].asString());
         }
     }
-    if(pJson.isMember("merchantid"))
+    if(pJson.isMember("merchant_id"))
     {
         dirtyFlag_[3]=true;
-        if(!pJson["merchantid"].isNull())
+        if(!pJson["merchant_id"].isNull())
         {
-            merchantid_=std::make_shared<std::string>(pJson["merchantid"].asString());
+            merchantId_=std::make_shared<std::string>(pJson["merchant_id"].asString());
         }
     }
-    if(pJson.isMember("paymenttype"))
+    if(pJson.isMember("payment_type"))
     {
         dirtyFlag_[4]=true;
-        if(!pJson["paymenttype"].isNull())
+        if(!pJson["payment_type"].isNull())
         {
-            paymenttype_=std::make_shared<std::string>(pJson["paymenttype"].asString());
+            paymentType_=std::make_shared<std::string>(pJson["payment_type"].asString());
         }
     }
     if(pJson.isMember("description"))
@@ -494,28 +494,28 @@ Payments::Payments(const Json::Value &pJson) noexcept(false)
             description_=std::make_shared<std::string>(pJson["description"].asString());
         }
     }
-    if(pJson.isMember("transactiontime"))
+    if(pJson.isMember("transaction_time"))
     {
         dirtyFlag_[6]=true;
-        if(!pJson["transactiontime"].isNull())
+        if(!pJson["transaction_time"].isNull())
         {
-            transactiontime_=std::make_shared<std::string>(pJson["transactiontime"].asString());
+            transactionTime_=std::make_shared<std::string>(pJson["transaction_time"].asString());
         }
     }
-    if(pJson.isMember("transactionstatus"))
+    if(pJson.isMember("transaction_status"))
     {
         dirtyFlag_[7]=true;
-        if(!pJson["transactionstatus"].isNull())
+        if(!pJson["transaction_status"].isNull())
         {
-            transactionstatus_=std::make_shared<std::string>(pJson["transactionstatus"].asString());
+            transactionStatus_=std::make_shared<std::string>(pJson["transaction_status"].asString());
         }
     }
-    if(pJson.isMember("fraudstatus"))
+    if(pJson.isMember("fraud_status"))
     {
         dirtyFlag_[8]=true;
-        if(!pJson["fraudstatus"].isNull())
+        if(!pJson["fraud_status"].isNull())
         {
-            fraudstatus_=std::make_shared<std::string>(pJson["fraudstatus"].asString());
+            fraudStatus_=std::make_shared<std::string>(pJson["fraud_status"].asString());
         }
     }
     if(pJson.isMember("bank"))
@@ -526,12 +526,12 @@ Payments::Payments(const Json::Value &pJson) noexcept(false)
             bank_=std::make_shared<std::string>(pJson["bank"].asString());
         }
     }
-    if(pJson.isMember("vanumber"))
+    if(pJson.isMember("va_number"))
     {
         dirtyFlag_[10]=true;
-        if(!pJson["vanumber"].isNull())
+        if(!pJson["va_number"].isNull())
         {
-            vanumber_=std::make_shared<std::string>(pJson["vanumber"].asString());
+            vaNumber_=std::make_shared<std::string>(pJson["va_number"].asString());
         }
     }
     if(pJson.isMember("currency"))
@@ -550,12 +550,12 @@ Payments::Payments(const Json::Value &pJson) noexcept(false)
             expiryTime_=std::make_shared<std::string>(pJson["expiry_time"].asString());
         }
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
         dirtyFlag_[13]=true;
-        if(!pJson["createdat"].isNull())
+        if(!pJson["created_at"].isNull())
         {
-            auto timeStr = pJson["createdat"].asString();
+            auto timeStr = pJson["created_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -572,16 +572,16 @@ Payments::Payments(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
         dirtyFlag_[14]=true;
-        if(!pJson["updatedat"].isNull())
+        if(!pJson["updated_at"].isNull())
         {
-            auto timeStr = pJson["updatedat"].asString();
+            auto timeStr = pJson["updated_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -598,7 +598,7 @@ Payments::Payments(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -616,7 +616,7 @@ void Payments::updateByMasqueradedJson(const Json::Value &pJson,
     {
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<std::string>(pJson[pMasqueradingVector[0]].asString());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -632,7 +632,7 @@ void Payments::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[2] = true;
         if(!pJson[pMasqueradingVector[2]].isNull())
         {
-            transactionid_=std::make_shared<std::string>(pJson[pMasqueradingVector[2]].asString());
+            transactionId_=std::make_shared<std::string>(pJson[pMasqueradingVector[2]].asString());
         }
     }
     if(!pMasqueradingVector[3].empty() && pJson.isMember(pMasqueradingVector[3]))
@@ -640,7 +640,7 @@ void Payments::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[3] = true;
         if(!pJson[pMasqueradingVector[3]].isNull())
         {
-            merchantid_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
+            merchantId_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
         }
     }
     if(!pMasqueradingVector[4].empty() && pJson.isMember(pMasqueradingVector[4]))
@@ -648,7 +648,7 @@ void Payments::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            paymenttype_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
+            paymentType_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -664,7 +664,7 @@ void Payments::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[6] = true;
         if(!pJson[pMasqueradingVector[6]].isNull())
         {
-            transactiontime_=std::make_shared<std::string>(pJson[pMasqueradingVector[6]].asString());
+            transactionTime_=std::make_shared<std::string>(pJson[pMasqueradingVector[6]].asString());
         }
     }
     if(!pMasqueradingVector[7].empty() && pJson.isMember(pMasqueradingVector[7]))
@@ -672,7 +672,7 @@ void Payments::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[7] = true;
         if(!pJson[pMasqueradingVector[7]].isNull())
         {
-            transactionstatus_=std::make_shared<std::string>(pJson[pMasqueradingVector[7]].asString());
+            transactionStatus_=std::make_shared<std::string>(pJson[pMasqueradingVector[7]].asString());
         }
     }
     if(!pMasqueradingVector[8].empty() && pJson.isMember(pMasqueradingVector[8]))
@@ -680,7 +680,7 @@ void Payments::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[8] = true;
         if(!pJson[pMasqueradingVector[8]].isNull())
         {
-            fraudstatus_=std::make_shared<std::string>(pJson[pMasqueradingVector[8]].asString());
+            fraudStatus_=std::make_shared<std::string>(pJson[pMasqueradingVector[8]].asString());
         }
     }
     if(!pMasqueradingVector[9].empty() && pJson.isMember(pMasqueradingVector[9]))
@@ -696,7 +696,7 @@ void Payments::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[10] = true;
         if(!pJson[pMasqueradingVector[10]].isNull())
         {
-            vanumber_=std::make_shared<std::string>(pJson[pMasqueradingVector[10]].asString());
+            vaNumber_=std::make_shared<std::string>(pJson[pMasqueradingVector[10]].asString());
         }
     }
     if(!pMasqueradingVector[11].empty() && pJson.isMember(pMasqueradingVector[11]))
@@ -737,7 +737,7 @@ void Payments::updateByMasqueradedJson(const Json::Value &pJson,
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -763,7 +763,7 @@ void Payments::updateByMasqueradedJson(const Json::Value &pJson,
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -775,7 +775,7 @@ void Payments::updateByJson(const Json::Value &pJson) noexcept(false)
     {
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<std::string>(pJson["id"].asString());
         }
     }
     if(pJson.isMember("name"))
@@ -786,28 +786,28 @@ void Payments::updateByJson(const Json::Value &pJson) noexcept(false)
             name_=std::make_shared<std::string>(pJson["name"].asString());
         }
     }
-    if(pJson.isMember("transactionid"))
+    if(pJson.isMember("transaction_id"))
     {
         dirtyFlag_[2] = true;
-        if(!pJson["transactionid"].isNull())
+        if(!pJson["transaction_id"].isNull())
         {
-            transactionid_=std::make_shared<std::string>(pJson["transactionid"].asString());
+            transactionId_=std::make_shared<std::string>(pJson["transaction_id"].asString());
         }
     }
-    if(pJson.isMember("merchantid"))
+    if(pJson.isMember("merchant_id"))
     {
         dirtyFlag_[3] = true;
-        if(!pJson["merchantid"].isNull())
+        if(!pJson["merchant_id"].isNull())
         {
-            merchantid_=std::make_shared<std::string>(pJson["merchantid"].asString());
+            merchantId_=std::make_shared<std::string>(pJson["merchant_id"].asString());
         }
     }
-    if(pJson.isMember("paymenttype"))
+    if(pJson.isMember("payment_type"))
     {
         dirtyFlag_[4] = true;
-        if(!pJson["paymenttype"].isNull())
+        if(!pJson["payment_type"].isNull())
         {
-            paymenttype_=std::make_shared<std::string>(pJson["paymenttype"].asString());
+            paymentType_=std::make_shared<std::string>(pJson["payment_type"].asString());
         }
     }
     if(pJson.isMember("description"))
@@ -818,28 +818,28 @@ void Payments::updateByJson(const Json::Value &pJson) noexcept(false)
             description_=std::make_shared<std::string>(pJson["description"].asString());
         }
     }
-    if(pJson.isMember("transactiontime"))
+    if(pJson.isMember("transaction_time"))
     {
         dirtyFlag_[6] = true;
-        if(!pJson["transactiontime"].isNull())
+        if(!pJson["transaction_time"].isNull())
         {
-            transactiontime_=std::make_shared<std::string>(pJson["transactiontime"].asString());
+            transactionTime_=std::make_shared<std::string>(pJson["transaction_time"].asString());
         }
     }
-    if(pJson.isMember("transactionstatus"))
+    if(pJson.isMember("transaction_status"))
     {
         dirtyFlag_[7] = true;
-        if(!pJson["transactionstatus"].isNull())
+        if(!pJson["transaction_status"].isNull())
         {
-            transactionstatus_=std::make_shared<std::string>(pJson["transactionstatus"].asString());
+            transactionStatus_=std::make_shared<std::string>(pJson["transaction_status"].asString());
         }
     }
-    if(pJson.isMember("fraudstatus"))
+    if(pJson.isMember("fraud_status"))
     {
         dirtyFlag_[8] = true;
-        if(!pJson["fraudstatus"].isNull())
+        if(!pJson["fraud_status"].isNull())
         {
-            fraudstatus_=std::make_shared<std::string>(pJson["fraudstatus"].asString());
+            fraudStatus_=std::make_shared<std::string>(pJson["fraud_status"].asString());
         }
     }
     if(pJson.isMember("bank"))
@@ -850,12 +850,12 @@ void Payments::updateByJson(const Json::Value &pJson) noexcept(false)
             bank_=std::make_shared<std::string>(pJson["bank"].asString());
         }
     }
-    if(pJson.isMember("vanumber"))
+    if(pJson.isMember("va_number"))
     {
         dirtyFlag_[10] = true;
-        if(!pJson["vanumber"].isNull())
+        if(!pJson["va_number"].isNull())
         {
-            vanumber_=std::make_shared<std::string>(pJson["vanumber"].asString());
+            vaNumber_=std::make_shared<std::string>(pJson["va_number"].asString());
         }
     }
     if(pJson.isMember("currency"))
@@ -874,12 +874,12 @@ void Payments::updateByJson(const Json::Value &pJson) noexcept(false)
             expiryTime_=std::make_shared<std::string>(pJson["expiry_time"].asString());
         }
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
         dirtyFlag_[13] = true;
-        if(!pJson["createdat"].isNull())
+        if(!pJson["created_at"].isNull())
         {
-            auto timeStr = pJson["createdat"].asString();
+            auto timeStr = pJson["created_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -896,16 +896,16 @@ void Payments::updateByJson(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
         dirtyFlag_[14] = true;
-        if(!pJson["updatedat"].isNull())
+        if(!pJson["updated_at"].isNull())
         {
-            auto timeStr = pJson["updatedat"].asString();
+            auto timeStr = pJson["updated_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -922,26 +922,31 @@ void Payments::updateByJson(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
 }
 
-const int32_t &Payments::getValueOfId() const noexcept
+const std::string &Payments::getValueOfId() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
+    const static std::string defaultValue = std::string();
     if(id_)
         return *id_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &Payments::getId() const noexcept
+const std::shared_ptr<std::string> &Payments::getId() const noexcept
 {
     return id_;
 }
-void Payments::setId(const int32_t &pId) noexcept
+void Payments::setId(const std::string &pId) noexcept
 {
-    id_ = std::make_shared<int32_t>(pId);
+    id_ = std::make_shared<std::string>(pId);
+    dirtyFlag_[0] = true;
+}
+void Payments::setId(std::string &&pId) noexcept
+{
+    id_ = std::make_shared<std::string>(std::move(pId));
     dirtyFlag_[0] = true;
 }
 const typename Payments::PrimaryKeyType & Payments::getPrimaryKey() const
@@ -977,84 +982,84 @@ void Payments::setNameToNull() noexcept
     dirtyFlag_[1] = true;
 }
 
-const std::string &Payments::getValueOfTransactionid() const noexcept
+const std::string &Payments::getValueOfTransactionId() const noexcept
 {
     const static std::string defaultValue = std::string();
-    if(transactionid_)
-        return *transactionid_;
+    if(transactionId_)
+        return *transactionId_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &Payments::getTransactionid() const noexcept
+const std::shared_ptr<std::string> &Payments::getTransactionId() const noexcept
 {
-    return transactionid_;
+    return transactionId_;
 }
-void Payments::setTransactionid(const std::string &pTransactionid) noexcept
+void Payments::setTransactionId(const std::string &pTransactionId) noexcept
 {
-    transactionid_ = std::make_shared<std::string>(pTransactionid);
+    transactionId_ = std::make_shared<std::string>(pTransactionId);
     dirtyFlag_[2] = true;
 }
-void Payments::setTransactionid(std::string &&pTransactionid) noexcept
+void Payments::setTransactionId(std::string &&pTransactionId) noexcept
 {
-    transactionid_ = std::make_shared<std::string>(std::move(pTransactionid));
+    transactionId_ = std::make_shared<std::string>(std::move(pTransactionId));
     dirtyFlag_[2] = true;
 }
-void Payments::setTransactionidToNull() noexcept
+void Payments::setTransactionIdToNull() noexcept
 {
-    transactionid_.reset();
+    transactionId_.reset();
     dirtyFlag_[2] = true;
 }
 
-const std::string &Payments::getValueOfMerchantid() const noexcept
+const std::string &Payments::getValueOfMerchantId() const noexcept
 {
     const static std::string defaultValue = std::string();
-    if(merchantid_)
-        return *merchantid_;
+    if(merchantId_)
+        return *merchantId_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &Payments::getMerchantid() const noexcept
+const std::shared_ptr<std::string> &Payments::getMerchantId() const noexcept
 {
-    return merchantid_;
+    return merchantId_;
 }
-void Payments::setMerchantid(const std::string &pMerchantid) noexcept
+void Payments::setMerchantId(const std::string &pMerchantId) noexcept
 {
-    merchantid_ = std::make_shared<std::string>(pMerchantid);
+    merchantId_ = std::make_shared<std::string>(pMerchantId);
     dirtyFlag_[3] = true;
 }
-void Payments::setMerchantid(std::string &&pMerchantid) noexcept
+void Payments::setMerchantId(std::string &&pMerchantId) noexcept
 {
-    merchantid_ = std::make_shared<std::string>(std::move(pMerchantid));
+    merchantId_ = std::make_shared<std::string>(std::move(pMerchantId));
     dirtyFlag_[3] = true;
 }
-void Payments::setMerchantidToNull() noexcept
+void Payments::setMerchantIdToNull() noexcept
 {
-    merchantid_.reset();
+    merchantId_.reset();
     dirtyFlag_[3] = true;
 }
 
-const std::string &Payments::getValueOfPaymenttype() const noexcept
+const std::string &Payments::getValueOfPaymentType() const noexcept
 {
     const static std::string defaultValue = std::string();
-    if(paymenttype_)
-        return *paymenttype_;
+    if(paymentType_)
+        return *paymentType_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &Payments::getPaymenttype() const noexcept
+const std::shared_ptr<std::string> &Payments::getPaymentType() const noexcept
 {
-    return paymenttype_;
+    return paymentType_;
 }
-void Payments::setPaymenttype(const std::string &pPaymenttype) noexcept
+void Payments::setPaymentType(const std::string &pPaymentType) noexcept
 {
-    paymenttype_ = std::make_shared<std::string>(pPaymenttype);
+    paymentType_ = std::make_shared<std::string>(pPaymentType);
     dirtyFlag_[4] = true;
 }
-void Payments::setPaymenttype(std::string &&pPaymenttype) noexcept
+void Payments::setPaymentType(std::string &&pPaymentType) noexcept
 {
-    paymenttype_ = std::make_shared<std::string>(std::move(pPaymenttype));
+    paymentType_ = std::make_shared<std::string>(std::move(pPaymentType));
     dirtyFlag_[4] = true;
 }
-void Payments::setPaymenttypeToNull() noexcept
+void Payments::setPaymentTypeToNull() noexcept
 {
-    paymenttype_.reset();
+    paymentType_.reset();
     dirtyFlag_[4] = true;
 }
 
@@ -1085,84 +1090,84 @@ void Payments::setDescriptionToNull() noexcept
     dirtyFlag_[5] = true;
 }
 
-const std::string &Payments::getValueOfTransactiontime() const noexcept
+const std::string &Payments::getValueOfTransactionTime() const noexcept
 {
     const static std::string defaultValue = std::string();
-    if(transactiontime_)
-        return *transactiontime_;
+    if(transactionTime_)
+        return *transactionTime_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &Payments::getTransactiontime() const noexcept
+const std::shared_ptr<std::string> &Payments::getTransactionTime() const noexcept
 {
-    return transactiontime_;
+    return transactionTime_;
 }
-void Payments::setTransactiontime(const std::string &pTransactiontime) noexcept
+void Payments::setTransactionTime(const std::string &pTransactionTime) noexcept
 {
-    transactiontime_ = std::make_shared<std::string>(pTransactiontime);
+    transactionTime_ = std::make_shared<std::string>(pTransactionTime);
     dirtyFlag_[6] = true;
 }
-void Payments::setTransactiontime(std::string &&pTransactiontime) noexcept
+void Payments::setTransactionTime(std::string &&pTransactionTime) noexcept
 {
-    transactiontime_ = std::make_shared<std::string>(std::move(pTransactiontime));
+    transactionTime_ = std::make_shared<std::string>(std::move(pTransactionTime));
     dirtyFlag_[6] = true;
 }
-void Payments::setTransactiontimeToNull() noexcept
+void Payments::setTransactionTimeToNull() noexcept
 {
-    transactiontime_.reset();
+    transactionTime_.reset();
     dirtyFlag_[6] = true;
 }
 
-const std::string &Payments::getValueOfTransactionstatus() const noexcept
+const std::string &Payments::getValueOfTransactionStatus() const noexcept
 {
     const static std::string defaultValue = std::string();
-    if(transactionstatus_)
-        return *transactionstatus_;
+    if(transactionStatus_)
+        return *transactionStatus_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &Payments::getTransactionstatus() const noexcept
+const std::shared_ptr<std::string> &Payments::getTransactionStatus() const noexcept
 {
-    return transactionstatus_;
+    return transactionStatus_;
 }
-void Payments::setTransactionstatus(const std::string &pTransactionstatus) noexcept
+void Payments::setTransactionStatus(const std::string &pTransactionStatus) noexcept
 {
-    transactionstatus_ = std::make_shared<std::string>(pTransactionstatus);
+    transactionStatus_ = std::make_shared<std::string>(pTransactionStatus);
     dirtyFlag_[7] = true;
 }
-void Payments::setTransactionstatus(std::string &&pTransactionstatus) noexcept
+void Payments::setTransactionStatus(std::string &&pTransactionStatus) noexcept
 {
-    transactionstatus_ = std::make_shared<std::string>(std::move(pTransactionstatus));
+    transactionStatus_ = std::make_shared<std::string>(std::move(pTransactionStatus));
     dirtyFlag_[7] = true;
 }
-void Payments::setTransactionstatusToNull() noexcept
+void Payments::setTransactionStatusToNull() noexcept
 {
-    transactionstatus_.reset();
+    transactionStatus_.reset();
     dirtyFlag_[7] = true;
 }
 
-const std::string &Payments::getValueOfFraudstatus() const noexcept
+const std::string &Payments::getValueOfFraudStatus() const noexcept
 {
     const static std::string defaultValue = std::string();
-    if(fraudstatus_)
-        return *fraudstatus_;
+    if(fraudStatus_)
+        return *fraudStatus_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &Payments::getFraudstatus() const noexcept
+const std::shared_ptr<std::string> &Payments::getFraudStatus() const noexcept
 {
-    return fraudstatus_;
+    return fraudStatus_;
 }
-void Payments::setFraudstatus(const std::string &pFraudstatus) noexcept
+void Payments::setFraudStatus(const std::string &pFraudStatus) noexcept
 {
-    fraudstatus_ = std::make_shared<std::string>(pFraudstatus);
+    fraudStatus_ = std::make_shared<std::string>(pFraudStatus);
     dirtyFlag_[8] = true;
 }
-void Payments::setFraudstatus(std::string &&pFraudstatus) noexcept
+void Payments::setFraudStatus(std::string &&pFraudStatus) noexcept
 {
-    fraudstatus_ = std::make_shared<std::string>(std::move(pFraudstatus));
+    fraudStatus_ = std::make_shared<std::string>(std::move(pFraudStatus));
     dirtyFlag_[8] = true;
 }
-void Payments::setFraudstatusToNull() noexcept
+void Payments::setFraudStatusToNull() noexcept
 {
-    fraudstatus_.reset();
+    fraudStatus_.reset();
     dirtyFlag_[8] = true;
 }
 
@@ -1193,30 +1198,30 @@ void Payments::setBankToNull() noexcept
     dirtyFlag_[9] = true;
 }
 
-const std::string &Payments::getValueOfVanumber() const noexcept
+const std::string &Payments::getValueOfVaNumber() const noexcept
 {
     const static std::string defaultValue = std::string();
-    if(vanumber_)
-        return *vanumber_;
+    if(vaNumber_)
+        return *vaNumber_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &Payments::getVanumber() const noexcept
+const std::shared_ptr<std::string> &Payments::getVaNumber() const noexcept
 {
-    return vanumber_;
+    return vaNumber_;
 }
-void Payments::setVanumber(const std::string &pVanumber) noexcept
+void Payments::setVaNumber(const std::string &pVaNumber) noexcept
 {
-    vanumber_ = std::make_shared<std::string>(pVanumber);
+    vaNumber_ = std::make_shared<std::string>(pVaNumber);
     dirtyFlag_[10] = true;
 }
-void Payments::setVanumber(std::string &&pVanumber) noexcept
+void Payments::setVaNumber(std::string &&pVaNumber) noexcept
 {
-    vanumber_ = std::make_shared<std::string>(std::move(pVanumber));
+    vaNumber_ = std::make_shared<std::string>(std::move(pVaNumber));
     dirtyFlag_[10] = true;
 }
-void Payments::setVanumberToNull() noexcept
+void Payments::setVaNumberToNull() noexcept
 {
-    vanumber_.reset();
+    vaNumber_.reset();
     dirtyFlag_[10] = true;
 }
 
@@ -1274,37 +1279,37 @@ void Payments::setExpiryTimeToNull() noexcept
     dirtyFlag_[12] = true;
 }
 
-const ::trantor::Date &Payments::getValueOfCreatedat() const noexcept
+const ::trantor::Date &Payments::getValueOfCreatedAt() const noexcept
 {
     const static ::trantor::Date defaultValue = ::trantor::Date();
-    if(createdat_)
-        return *createdat_;
+    if(createdAt_)
+        return *createdAt_;
     return defaultValue;
 }
-const std::shared_ptr<::trantor::Date> &Payments::getCreatedat() const noexcept
+const std::shared_ptr<::trantor::Date> &Payments::getCreatedAt() const noexcept
 {
-    return createdat_;
+    return createdAt_;
 }
-void Payments::setCreatedat(const ::trantor::Date &pCreatedat) noexcept
+void Payments::setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept
 {
-    createdat_ = std::make_shared<::trantor::Date>(pCreatedat);
+    createdAt_ = std::make_shared<::trantor::Date>(pCreatedAt);
     dirtyFlag_[13] = true;
 }
 
-const ::trantor::Date &Payments::getValueOfUpdatedat() const noexcept
+const ::trantor::Date &Payments::getValueOfUpdatedAt() const noexcept
 {
     const static ::trantor::Date defaultValue = ::trantor::Date();
-    if(updatedat_)
-        return *updatedat_;
+    if(updatedAt_)
+        return *updatedAt_;
     return defaultValue;
 }
-const std::shared_ptr<::trantor::Date> &Payments::getUpdatedat() const noexcept
+const std::shared_ptr<::trantor::Date> &Payments::getUpdatedAt() const noexcept
 {
-    return updatedat_;
+    return updatedAt_;
 }
-void Payments::setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept
+void Payments::setUpdatedAt(const ::trantor::Date &pUpdatedAt) noexcept
 {
-    updatedat_ = std::make_shared<::trantor::Date>(pUpdatedat);
+    updatedAt_ = std::make_shared<::trantor::Date>(pUpdatedAt);
     dirtyFlag_[14] = true;
 }
 
@@ -1315,26 +1320,38 @@ void Payments::updateId(const uint64_t id)
 const std::vector<std::string> &Payments::insertColumns() noexcept
 {
     static const std::vector<std::string> inCols={
+        "id",
         "name",
-        "transactionid",
-        "merchantid",
-        "paymenttype",
+        "transaction_id",
+        "merchant_id",
+        "payment_type",
         "description",
-        "transactiontime",
-        "transactionstatus",
-        "fraudstatus",
+        "transaction_time",
+        "transaction_status",
+        "fraud_status",
         "bank",
-        "vanumber",
+        "va_number",
         "currency",
         "expiry_time",
-        "createdat",
-        "updatedat"
+        "created_at",
+        "updated_at"
     };
     return inCols;
 }
 
 void Payments::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 {
+    if(dirtyFlag_[0])
+    {
+        if(getId())
+        {
+            binder << getValueOfId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
     if(dirtyFlag_[1])
     {
         if(getName())
@@ -1348,9 +1365,9 @@ void Payments::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[2])
     {
-        if(getTransactionid())
+        if(getTransactionId())
         {
-            binder << getValueOfTransactionid();
+            binder << getValueOfTransactionId();
         }
         else
         {
@@ -1359,9 +1376,9 @@ void Payments::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[3])
     {
-        if(getMerchantid())
+        if(getMerchantId())
         {
-            binder << getValueOfMerchantid();
+            binder << getValueOfMerchantId();
         }
         else
         {
@@ -1370,9 +1387,9 @@ void Payments::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[4])
     {
-        if(getPaymenttype())
+        if(getPaymentType())
         {
-            binder << getValueOfPaymenttype();
+            binder << getValueOfPaymentType();
         }
         else
         {
@@ -1392,9 +1409,9 @@ void Payments::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[6])
     {
-        if(getTransactiontime())
+        if(getTransactionTime())
         {
-            binder << getValueOfTransactiontime();
+            binder << getValueOfTransactionTime();
         }
         else
         {
@@ -1403,9 +1420,9 @@ void Payments::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[7])
     {
-        if(getTransactionstatus())
+        if(getTransactionStatus())
         {
-            binder << getValueOfTransactionstatus();
+            binder << getValueOfTransactionStatus();
         }
         else
         {
@@ -1414,9 +1431,9 @@ void Payments::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[8])
     {
-        if(getFraudstatus())
+        if(getFraudStatus())
         {
-            binder << getValueOfFraudstatus();
+            binder << getValueOfFraudStatus();
         }
         else
         {
@@ -1436,9 +1453,9 @@ void Payments::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[10])
     {
-        if(getVanumber())
+        if(getVaNumber())
         {
-            binder << getValueOfVanumber();
+            binder << getValueOfVaNumber();
         }
         else
         {
@@ -1469,9 +1486,9 @@ void Payments::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[13])
     {
-        if(getCreatedat())
+        if(getCreatedAt())
         {
-            binder << getValueOfCreatedat();
+            binder << getValueOfCreatedAt();
         }
         else
         {
@@ -1480,9 +1497,9 @@ void Payments::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[14])
     {
-        if(getUpdatedat())
+        if(getUpdatedAt())
         {
-            binder << getValueOfUpdatedat();
+            binder << getValueOfUpdatedAt();
         }
         else
         {
@@ -1494,6 +1511,10 @@ void Payments::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 const std::vector<std::string> Payments::updateColumns() const
 {
     std::vector<std::string> ret;
+    if(dirtyFlag_[0])
+    {
+        ret.push_back(getColumnName(0));
+    }
     if(dirtyFlag_[1])
     {
         ret.push_back(getColumnName(1));
@@ -1555,6 +1576,17 @@ const std::vector<std::string> Payments::updateColumns() const
 
 void Payments::updateArgs(drogon::orm::internal::SqlBinder &binder) const
 {
+    if(dirtyFlag_[0])
+    {
+        if(getId())
+        {
+            binder << getValueOfId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
     if(dirtyFlag_[1])
     {
         if(getName())
@@ -1568,9 +1600,9 @@ void Payments::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[2])
     {
-        if(getTransactionid())
+        if(getTransactionId())
         {
-            binder << getValueOfTransactionid();
+            binder << getValueOfTransactionId();
         }
         else
         {
@@ -1579,9 +1611,9 @@ void Payments::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[3])
     {
-        if(getMerchantid())
+        if(getMerchantId())
         {
-            binder << getValueOfMerchantid();
+            binder << getValueOfMerchantId();
         }
         else
         {
@@ -1590,9 +1622,9 @@ void Payments::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[4])
     {
-        if(getPaymenttype())
+        if(getPaymentType())
         {
-            binder << getValueOfPaymenttype();
+            binder << getValueOfPaymentType();
         }
         else
         {
@@ -1612,9 +1644,9 @@ void Payments::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[6])
     {
-        if(getTransactiontime())
+        if(getTransactionTime())
         {
-            binder << getValueOfTransactiontime();
+            binder << getValueOfTransactionTime();
         }
         else
         {
@@ -1623,9 +1655,9 @@ void Payments::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[7])
     {
-        if(getTransactionstatus())
+        if(getTransactionStatus())
         {
-            binder << getValueOfTransactionstatus();
+            binder << getValueOfTransactionStatus();
         }
         else
         {
@@ -1634,9 +1666,9 @@ void Payments::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[8])
     {
-        if(getFraudstatus())
+        if(getFraudStatus())
         {
-            binder << getValueOfFraudstatus();
+            binder << getValueOfFraudStatus();
         }
         else
         {
@@ -1656,9 +1688,9 @@ void Payments::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[10])
     {
-        if(getVanumber())
+        if(getVaNumber())
         {
-            binder << getValueOfVanumber();
+            binder << getValueOfVaNumber();
         }
         else
         {
@@ -1689,9 +1721,9 @@ void Payments::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[13])
     {
-        if(getCreatedat())
+        if(getCreatedAt())
         {
-            binder << getValueOfCreatedat();
+            binder << getValueOfCreatedAt();
         }
         else
         {
@@ -1700,9 +1732,9 @@ void Payments::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[14])
     {
-        if(getUpdatedat())
+        if(getUpdatedAt())
         {
-            binder << getValueOfUpdatedat();
+            binder << getValueOfUpdatedAt();
         }
         else
         {
@@ -1729,29 +1761,29 @@ Json::Value Payments::toJson() const
     {
         ret["name"]=Json::Value();
     }
-    if(getTransactionid())
+    if(getTransactionId())
     {
-        ret["transactionid"]=getValueOfTransactionid();
+        ret["transaction_id"]=getValueOfTransactionId();
     }
     else
     {
-        ret["transactionid"]=Json::Value();
+        ret["transaction_id"]=Json::Value();
     }
-    if(getMerchantid())
+    if(getMerchantId())
     {
-        ret["merchantid"]=getValueOfMerchantid();
-    }
-    else
-    {
-        ret["merchantid"]=Json::Value();
-    }
-    if(getPaymenttype())
-    {
-        ret["paymenttype"]=getValueOfPaymenttype();
+        ret["merchant_id"]=getValueOfMerchantId();
     }
     else
     {
-        ret["paymenttype"]=Json::Value();
+        ret["merchant_id"]=Json::Value();
+    }
+    if(getPaymentType())
+    {
+        ret["payment_type"]=getValueOfPaymentType();
+    }
+    else
+    {
+        ret["payment_type"]=Json::Value();
     }
     if(getDescription())
     {
@@ -1761,29 +1793,29 @@ Json::Value Payments::toJson() const
     {
         ret["description"]=Json::Value();
     }
-    if(getTransactiontime())
+    if(getTransactionTime())
     {
-        ret["transactiontime"]=getValueOfTransactiontime();
+        ret["transaction_time"]=getValueOfTransactionTime();
     }
     else
     {
-        ret["transactiontime"]=Json::Value();
+        ret["transaction_time"]=Json::Value();
     }
-    if(getTransactionstatus())
+    if(getTransactionStatus())
     {
-        ret["transactionstatus"]=getValueOfTransactionstatus();
-    }
-    else
-    {
-        ret["transactionstatus"]=Json::Value();
-    }
-    if(getFraudstatus())
-    {
-        ret["fraudstatus"]=getValueOfFraudstatus();
+        ret["transaction_status"]=getValueOfTransactionStatus();
     }
     else
     {
-        ret["fraudstatus"]=Json::Value();
+        ret["transaction_status"]=Json::Value();
+    }
+    if(getFraudStatus())
+    {
+        ret["fraud_status"]=getValueOfFraudStatus();
+    }
+    else
+    {
+        ret["fraud_status"]=Json::Value();
     }
     if(getBank())
     {
@@ -1793,13 +1825,13 @@ Json::Value Payments::toJson() const
     {
         ret["bank"]=Json::Value();
     }
-    if(getVanumber())
+    if(getVaNumber())
     {
-        ret["vanumber"]=getValueOfVanumber();
+        ret["va_number"]=getValueOfVaNumber();
     }
     else
     {
-        ret["vanumber"]=Json::Value();
+        ret["va_number"]=Json::Value();
     }
     if(getCurrency())
     {
@@ -1817,21 +1849,21 @@ Json::Value Payments::toJson() const
     {
         ret["expiry_time"]=Json::Value();
     }
-    if(getCreatedat())
+    if(getCreatedAt())
     {
-        ret["createdat"]=getCreatedat()->toDbStringLocal();
+        ret["created_at"]=getCreatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["createdat"]=Json::Value();
+        ret["created_at"]=Json::Value();
     }
-    if(getUpdatedat())
+    if(getUpdatedAt())
     {
-        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
+        ret["updated_at"]=getUpdatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["updatedat"]=Json::Value();
+        ret["updated_at"]=Json::Value();
     }
     return ret;
 }
@@ -1866,9 +1898,9 @@ Json::Value Payments::toMasqueradedJson(
         }
         if(!pMasqueradingVector[2].empty())
         {
-            if(getTransactionid())
+            if(getTransactionId())
             {
-                ret[pMasqueradingVector[2]]=getValueOfTransactionid();
+                ret[pMasqueradingVector[2]]=getValueOfTransactionId();
             }
             else
             {
@@ -1877,9 +1909,9 @@ Json::Value Payments::toMasqueradedJson(
         }
         if(!pMasqueradingVector[3].empty())
         {
-            if(getMerchantid())
+            if(getMerchantId())
             {
-                ret[pMasqueradingVector[3]]=getValueOfMerchantid();
+                ret[pMasqueradingVector[3]]=getValueOfMerchantId();
             }
             else
             {
@@ -1888,9 +1920,9 @@ Json::Value Payments::toMasqueradedJson(
         }
         if(!pMasqueradingVector[4].empty())
         {
-            if(getPaymenttype())
+            if(getPaymentType())
             {
-                ret[pMasqueradingVector[4]]=getValueOfPaymenttype();
+                ret[pMasqueradingVector[4]]=getValueOfPaymentType();
             }
             else
             {
@@ -1910,9 +1942,9 @@ Json::Value Payments::toMasqueradedJson(
         }
         if(!pMasqueradingVector[6].empty())
         {
-            if(getTransactiontime())
+            if(getTransactionTime())
             {
-                ret[pMasqueradingVector[6]]=getValueOfTransactiontime();
+                ret[pMasqueradingVector[6]]=getValueOfTransactionTime();
             }
             else
             {
@@ -1921,9 +1953,9 @@ Json::Value Payments::toMasqueradedJson(
         }
         if(!pMasqueradingVector[7].empty())
         {
-            if(getTransactionstatus())
+            if(getTransactionStatus())
             {
-                ret[pMasqueradingVector[7]]=getValueOfTransactionstatus();
+                ret[pMasqueradingVector[7]]=getValueOfTransactionStatus();
             }
             else
             {
@@ -1932,9 +1964,9 @@ Json::Value Payments::toMasqueradedJson(
         }
         if(!pMasqueradingVector[8].empty())
         {
-            if(getFraudstatus())
+            if(getFraudStatus())
             {
-                ret[pMasqueradingVector[8]]=getValueOfFraudstatus();
+                ret[pMasqueradingVector[8]]=getValueOfFraudStatus();
             }
             else
             {
@@ -1954,9 +1986,9 @@ Json::Value Payments::toMasqueradedJson(
         }
         if(!pMasqueradingVector[10].empty())
         {
-            if(getVanumber())
+            if(getVaNumber())
             {
-                ret[pMasqueradingVector[10]]=getValueOfVanumber();
+                ret[pMasqueradingVector[10]]=getValueOfVaNumber();
             }
             else
             {
@@ -1987,9 +2019,9 @@ Json::Value Payments::toMasqueradedJson(
         }
         if(!pMasqueradingVector[13].empty())
         {
-            if(getCreatedat())
+            if(getCreatedAt())
             {
-                ret[pMasqueradingVector[13]]=getCreatedat()->toDbStringLocal();
+                ret[pMasqueradingVector[13]]=getCreatedAt()->toDbStringLocal();
             }
             else
             {
@@ -1998,9 +2030,9 @@ Json::Value Payments::toMasqueradedJson(
         }
         if(!pMasqueradingVector[14].empty())
         {
-            if(getUpdatedat())
+            if(getUpdatedAt())
             {
-                ret[pMasqueradingVector[14]]=getUpdatedat()->toDbStringLocal();
+                ret[pMasqueradingVector[14]]=getUpdatedAt()->toDbStringLocal();
             }
             else
             {
@@ -2026,29 +2058,29 @@ Json::Value Payments::toMasqueradedJson(
     {
         ret["name"]=Json::Value();
     }
-    if(getTransactionid())
+    if(getTransactionId())
     {
-        ret["transactionid"]=getValueOfTransactionid();
+        ret["transaction_id"]=getValueOfTransactionId();
     }
     else
     {
-        ret["transactionid"]=Json::Value();
+        ret["transaction_id"]=Json::Value();
     }
-    if(getMerchantid())
+    if(getMerchantId())
     {
-        ret["merchantid"]=getValueOfMerchantid();
-    }
-    else
-    {
-        ret["merchantid"]=Json::Value();
-    }
-    if(getPaymenttype())
-    {
-        ret["paymenttype"]=getValueOfPaymenttype();
+        ret["merchant_id"]=getValueOfMerchantId();
     }
     else
     {
-        ret["paymenttype"]=Json::Value();
+        ret["merchant_id"]=Json::Value();
+    }
+    if(getPaymentType())
+    {
+        ret["payment_type"]=getValueOfPaymentType();
+    }
+    else
+    {
+        ret["payment_type"]=Json::Value();
     }
     if(getDescription())
     {
@@ -2058,29 +2090,29 @@ Json::Value Payments::toMasqueradedJson(
     {
         ret["description"]=Json::Value();
     }
-    if(getTransactiontime())
+    if(getTransactionTime())
     {
-        ret["transactiontime"]=getValueOfTransactiontime();
+        ret["transaction_time"]=getValueOfTransactionTime();
     }
     else
     {
-        ret["transactiontime"]=Json::Value();
+        ret["transaction_time"]=Json::Value();
     }
-    if(getTransactionstatus())
+    if(getTransactionStatus())
     {
-        ret["transactionstatus"]=getValueOfTransactionstatus();
-    }
-    else
-    {
-        ret["transactionstatus"]=Json::Value();
-    }
-    if(getFraudstatus())
-    {
-        ret["fraudstatus"]=getValueOfFraudstatus();
+        ret["transaction_status"]=getValueOfTransactionStatus();
     }
     else
     {
-        ret["fraudstatus"]=Json::Value();
+        ret["transaction_status"]=Json::Value();
+    }
+    if(getFraudStatus())
+    {
+        ret["fraud_status"]=getValueOfFraudStatus();
+    }
+    else
+    {
+        ret["fraud_status"]=Json::Value();
     }
     if(getBank())
     {
@@ -2090,13 +2122,13 @@ Json::Value Payments::toMasqueradedJson(
     {
         ret["bank"]=Json::Value();
     }
-    if(getVanumber())
+    if(getVaNumber())
     {
-        ret["vanumber"]=getValueOfVanumber();
+        ret["va_number"]=getValueOfVaNumber();
     }
     else
     {
-        ret["vanumber"]=Json::Value();
+        ret["va_number"]=Json::Value();
     }
     if(getCurrency())
     {
@@ -2114,21 +2146,21 @@ Json::Value Payments::toMasqueradedJson(
     {
         ret["expiry_time"]=Json::Value();
     }
-    if(getCreatedat())
+    if(getCreatedAt())
     {
-        ret["createdat"]=getCreatedat()->toDbStringLocal();
+        ret["created_at"]=getCreatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["createdat"]=Json::Value();
+        ret["created_at"]=Json::Value();
     }
-    if(getUpdatedat())
+    if(getUpdatedAt())
     {
-        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
+        ret["updated_at"]=getUpdatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["updatedat"]=Json::Value();
+        ret["updated_at"]=Json::Value();
     }
     return ret;
 }
@@ -2145,19 +2177,19 @@ bool Payments::validateJsonForCreation(const Json::Value &pJson, std::string &er
         if(!validJsonOfField(1, "name", pJson["name"], err, true))
             return false;
     }
-    if(pJson.isMember("transactionid"))
+    if(pJson.isMember("transaction_id"))
     {
-        if(!validJsonOfField(2, "transactionid", pJson["transactionid"], err, true))
+        if(!validJsonOfField(2, "transaction_id", pJson["transaction_id"], err, true))
             return false;
     }
-    if(pJson.isMember("merchantid"))
+    if(pJson.isMember("merchant_id"))
     {
-        if(!validJsonOfField(3, "merchantid", pJson["merchantid"], err, true))
+        if(!validJsonOfField(3, "merchant_id", pJson["merchant_id"], err, true))
             return false;
     }
-    if(pJson.isMember("paymenttype"))
+    if(pJson.isMember("payment_type"))
     {
-        if(!validJsonOfField(4, "paymenttype", pJson["paymenttype"], err, true))
+        if(!validJsonOfField(4, "payment_type", pJson["payment_type"], err, true))
             return false;
     }
     if(pJson.isMember("description"))
@@ -2165,19 +2197,19 @@ bool Payments::validateJsonForCreation(const Json::Value &pJson, std::string &er
         if(!validJsonOfField(5, "description", pJson["description"], err, true))
             return false;
     }
-    if(pJson.isMember("transactiontime"))
+    if(pJson.isMember("transaction_time"))
     {
-        if(!validJsonOfField(6, "transactiontime", pJson["transactiontime"], err, true))
+        if(!validJsonOfField(6, "transaction_time", pJson["transaction_time"], err, true))
             return false;
     }
-    if(pJson.isMember("transactionstatus"))
+    if(pJson.isMember("transaction_status"))
     {
-        if(!validJsonOfField(7, "transactionstatus", pJson["transactionstatus"], err, true))
+        if(!validJsonOfField(7, "transaction_status", pJson["transaction_status"], err, true))
             return false;
     }
-    if(pJson.isMember("fraudstatus"))
+    if(pJson.isMember("fraud_status"))
     {
-        if(!validJsonOfField(8, "fraudstatus", pJson["fraudstatus"], err, true))
+        if(!validJsonOfField(8, "fraud_status", pJson["fraud_status"], err, true))
             return false;
     }
     if(pJson.isMember("bank"))
@@ -2185,9 +2217,9 @@ bool Payments::validateJsonForCreation(const Json::Value &pJson, std::string &er
         if(!validJsonOfField(9, "bank", pJson["bank"], err, true))
             return false;
     }
-    if(pJson.isMember("vanumber"))
+    if(pJson.isMember("va_number"))
     {
-        if(!validJsonOfField(10, "vanumber", pJson["vanumber"], err, true))
+        if(!validJsonOfField(10, "va_number", pJson["va_number"], err, true))
             return false;
     }
     if(pJson.isMember("currency"))
@@ -2200,14 +2232,14 @@ bool Payments::validateJsonForCreation(const Json::Value &pJson, std::string &er
         if(!validJsonOfField(12, "expiry_time", pJson["expiry_time"], err, true))
             return false;
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(13, "createdat", pJson["createdat"], err, true))
+        if(!validJsonOfField(13, "created_at", pJson["created_at"], err, true))
             return false;
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
-        if(!validJsonOfField(14, "updatedat", pJson["updatedat"], err, true))
+        if(!validJsonOfField(14, "updated_at", pJson["updated_at"], err, true))
             return false;
     }
     return true;
@@ -2367,19 +2399,19 @@ bool Payments::validateJsonForUpdate(const Json::Value &pJson, std::string &err)
         if(!validJsonOfField(1, "name", pJson["name"], err, false))
             return false;
     }
-    if(pJson.isMember("transactionid"))
+    if(pJson.isMember("transaction_id"))
     {
-        if(!validJsonOfField(2, "transactionid", pJson["transactionid"], err, false))
+        if(!validJsonOfField(2, "transaction_id", pJson["transaction_id"], err, false))
             return false;
     }
-    if(pJson.isMember("merchantid"))
+    if(pJson.isMember("merchant_id"))
     {
-        if(!validJsonOfField(3, "merchantid", pJson["merchantid"], err, false))
+        if(!validJsonOfField(3, "merchant_id", pJson["merchant_id"], err, false))
             return false;
     }
-    if(pJson.isMember("paymenttype"))
+    if(pJson.isMember("payment_type"))
     {
-        if(!validJsonOfField(4, "paymenttype", pJson["paymenttype"], err, false))
+        if(!validJsonOfField(4, "payment_type", pJson["payment_type"], err, false))
             return false;
     }
     if(pJson.isMember("description"))
@@ -2387,19 +2419,19 @@ bool Payments::validateJsonForUpdate(const Json::Value &pJson, std::string &err)
         if(!validJsonOfField(5, "description", pJson["description"], err, false))
             return false;
     }
-    if(pJson.isMember("transactiontime"))
+    if(pJson.isMember("transaction_time"))
     {
-        if(!validJsonOfField(6, "transactiontime", pJson["transactiontime"], err, false))
+        if(!validJsonOfField(6, "transaction_time", pJson["transaction_time"], err, false))
             return false;
     }
-    if(pJson.isMember("transactionstatus"))
+    if(pJson.isMember("transaction_status"))
     {
-        if(!validJsonOfField(7, "transactionstatus", pJson["transactionstatus"], err, false))
+        if(!validJsonOfField(7, "transaction_status", pJson["transaction_status"], err, false))
             return false;
     }
-    if(pJson.isMember("fraudstatus"))
+    if(pJson.isMember("fraud_status"))
     {
-        if(!validJsonOfField(8, "fraudstatus", pJson["fraudstatus"], err, false))
+        if(!validJsonOfField(8, "fraud_status", pJson["fraud_status"], err, false))
             return false;
     }
     if(pJson.isMember("bank"))
@@ -2407,9 +2439,9 @@ bool Payments::validateJsonForUpdate(const Json::Value &pJson, std::string &err)
         if(!validJsonOfField(9, "bank", pJson["bank"], err, false))
             return false;
     }
-    if(pJson.isMember("vanumber"))
+    if(pJson.isMember("va_number"))
     {
-        if(!validJsonOfField(10, "vanumber", pJson["vanumber"], err, false))
+        if(!validJsonOfField(10, "va_number", pJson["va_number"], err, false))
             return false;
     }
     if(pJson.isMember("currency"))
@@ -2422,14 +2454,14 @@ bool Payments::validateJsonForUpdate(const Json::Value &pJson, std::string &err)
         if(!validJsonOfField(12, "expiry_time", pJson["expiry_time"], err, false))
             return false;
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(13, "createdat", pJson["createdat"], err, false))
+        if(!validJsonOfField(13, "created_at", pJson["created_at"], err, false))
             return false;
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
-        if(!validJsonOfField(14, "updatedat", pJson["updatedat"], err, false))
+        if(!validJsonOfField(14, "updated_at", pJson["updated_at"], err, false))
             return false;
     }
     return true;
@@ -2546,12 +2578,7 @@ bool Payments::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(isForCreation)
-            {
-                err="The automatic primary key cannot be set";
-                return false;
-            }
-            if(!pJson.isInt())
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;

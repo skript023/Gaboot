@@ -17,22 +17,22 @@ using namespace drogon_model::gaboot;
 const std::string Categories::Cols::_id = "id";
 const std::string Categories::Cols::_name = "name";
 const std::string Categories::Cols::_description = "description";
-const std::string Categories::Cols::_imgpath = "imgpath";
-const std::string Categories::Cols::_imgthumbpath = "imgthumbpath";
-const std::string Categories::Cols::_createdat = "createdat";
-const std::string Categories::Cols::_updatedat = "updatedat";
+const std::string Categories::Cols::_image_path = "image_path";
+const std::string Categories::Cols::_thumbnail_path = "thumbnail_path";
+const std::string Categories::Cols::_created_at = "created_at";
+const std::string Categories::Cols::_updated_at = "updated_at";
 const std::string Categories::primaryKeyName = "id";
 const bool Categories::hasPrimaryKey = true;
 const std::string Categories::tableName = "categories";
 
 const std::vector<typename Categories::MetaData> Categories::metaData_={
-{"id","int32_t","integer",4,1,1,1},
+{"id","std::string","uuid",0,0,1,1},
 {"name","std::string","character varying",100,0,0,1},
 {"description","std::string","text",0,0,0,1},
-{"imgpath","std::string","character varying",255,0,0,0},
-{"imgthumbpath","std::string","character varying",255,0,0,0},
-{"createdat","::trantor::Date","timestamp without time zone",0,0,0,1},
-{"updatedat","::trantor::Date","timestamp without time zone",0,0,0,1}
+{"image_path","std::string","character varying",255,0,0,0},
+{"thumbnail_path","std::string","character varying",255,0,0,0},
+{"created_at","::trantor::Date","timestamp without time zone",0,0,0,1},
+{"updated_at","::trantor::Date","timestamp without time zone",0,0,0,1}
 };
 const std::string &Categories::getColumnName(size_t index) noexcept(false)
 {
@@ -45,7 +45,7 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
     {
         if(!r["id"].isNull())
         {
-            id_=std::make_shared<int32_t>(r["id"].as<int32_t>());
+            id_=std::make_shared<std::string>(r["id"].as<std::string>());
         }
         if(!r["name"].isNull())
         {
@@ -55,17 +55,17 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
         {
             description_=std::make_shared<std::string>(r["description"].as<std::string>());
         }
-        if(!r["imgpath"].isNull())
+        if(!r["image_path"].isNull())
         {
-            imgpath_=std::make_shared<std::string>(r["imgpath"].as<std::string>());
+            imagePath_=std::make_shared<std::string>(r["image_path"].as<std::string>());
         }
-        if(!r["imgthumbpath"].isNull())
+        if(!r["thumbnail_path"].isNull())
         {
-            imgthumbpath_=std::make_shared<std::string>(r["imgthumbpath"].as<std::string>());
+            thumbnailPath_=std::make_shared<std::string>(r["thumbnail_path"].as<std::string>());
         }
-        if(!r["createdat"].isNull())
+        if(!r["created_at"].isNull())
         {
-            auto timeStr = r["createdat"].as<std::string>();
+            auto timeStr = r["created_at"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -82,12 +82,12 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        if(!r["updatedat"].isNull())
+        if(!r["updated_at"].isNull())
         {
-            auto timeStr = r["updatedat"].as<std::string>();
+            auto timeStr = r["updated_at"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -104,7 +104,7 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -120,7 +120,7 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 0;
         if(!r[index].isNull())
         {
-            id_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            id_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 1;
         if(!r[index].isNull())
@@ -135,12 +135,12 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 3;
         if(!r[index].isNull())
         {
-            imgpath_=std::make_shared<std::string>(r[index].as<std::string>());
+            imagePath_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 4;
         if(!r[index].isNull())
         {
-            imgthumbpath_=std::make_shared<std::string>(r[index].as<std::string>());
+            thumbnailPath_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 5;
         if(!r[index].isNull())
@@ -162,7 +162,7 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
         index = offset + 6;
@@ -185,7 +185,7 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -204,7 +204,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
         dirtyFlag_[0] = true;
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<std::string>(pJson[pMasqueradingVector[0]].asString());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -228,7 +228,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
         dirtyFlag_[3] = true;
         if(!pJson[pMasqueradingVector[3]].isNull())
         {
-            imgpath_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
+            imagePath_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
         }
     }
     if(!pMasqueradingVector[4].empty() && pJson.isMember(pMasqueradingVector[4]))
@@ -236,7 +236,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            imgthumbpath_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
+            thumbnailPath_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -261,7 +261,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -287,7 +287,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -300,7 +300,7 @@ Categories::Categories(const Json::Value &pJson) noexcept(false)
         dirtyFlag_[0]=true;
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<std::string>(pJson["id"].asString());
         }
     }
     if(pJson.isMember("name"))
@@ -319,28 +319,28 @@ Categories::Categories(const Json::Value &pJson) noexcept(false)
             description_=std::make_shared<std::string>(pJson["description"].asString());
         }
     }
-    if(pJson.isMember("imgpath"))
+    if(pJson.isMember("image_path"))
     {
         dirtyFlag_[3]=true;
-        if(!pJson["imgpath"].isNull())
+        if(!pJson["image_path"].isNull())
         {
-            imgpath_=std::make_shared<std::string>(pJson["imgpath"].asString());
+            imagePath_=std::make_shared<std::string>(pJson["image_path"].asString());
         }
     }
-    if(pJson.isMember("imgthumbpath"))
+    if(pJson.isMember("thumbnail_path"))
     {
         dirtyFlag_[4]=true;
-        if(!pJson["imgthumbpath"].isNull())
+        if(!pJson["thumbnail_path"].isNull())
         {
-            imgthumbpath_=std::make_shared<std::string>(pJson["imgthumbpath"].asString());
+            thumbnailPath_=std::make_shared<std::string>(pJson["thumbnail_path"].asString());
         }
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
         dirtyFlag_[5]=true;
-        if(!pJson["createdat"].isNull())
+        if(!pJson["created_at"].isNull())
         {
-            auto timeStr = pJson["createdat"].asString();
+            auto timeStr = pJson["created_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -357,16 +357,16 @@ Categories::Categories(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
         dirtyFlag_[6]=true;
-        if(!pJson["updatedat"].isNull())
+        if(!pJson["updated_at"].isNull())
         {
-            auto timeStr = pJson["updatedat"].asString();
+            auto timeStr = pJson["updated_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -383,7 +383,7 @@ Categories::Categories(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -401,7 +401,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
     {
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<std::string>(pJson[pMasqueradingVector[0]].asString());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -425,7 +425,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[3] = true;
         if(!pJson[pMasqueradingVector[3]].isNull())
         {
-            imgpath_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
+            imagePath_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
         }
     }
     if(!pMasqueradingVector[4].empty() && pJson.isMember(pMasqueradingVector[4]))
@@ -433,7 +433,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            imgthumbpath_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
+            thumbnailPath_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -458,7 +458,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -484,7 +484,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -496,7 +496,7 @@ void Categories::updateByJson(const Json::Value &pJson) noexcept(false)
     {
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<std::string>(pJson["id"].asString());
         }
     }
     if(pJson.isMember("name"))
@@ -515,28 +515,28 @@ void Categories::updateByJson(const Json::Value &pJson) noexcept(false)
             description_=std::make_shared<std::string>(pJson["description"].asString());
         }
     }
-    if(pJson.isMember("imgpath"))
+    if(pJson.isMember("image_path"))
     {
         dirtyFlag_[3] = true;
-        if(!pJson["imgpath"].isNull())
+        if(!pJson["image_path"].isNull())
         {
-            imgpath_=std::make_shared<std::string>(pJson["imgpath"].asString());
+            imagePath_=std::make_shared<std::string>(pJson["image_path"].asString());
         }
     }
-    if(pJson.isMember("imgthumbpath"))
+    if(pJson.isMember("thumbnail_path"))
     {
         dirtyFlag_[4] = true;
-        if(!pJson["imgthumbpath"].isNull())
+        if(!pJson["thumbnail_path"].isNull())
         {
-            imgthumbpath_=std::make_shared<std::string>(pJson["imgthumbpath"].asString());
+            thumbnailPath_=std::make_shared<std::string>(pJson["thumbnail_path"].asString());
         }
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
         dirtyFlag_[5] = true;
-        if(!pJson["createdat"].isNull())
+        if(!pJson["created_at"].isNull())
         {
-            auto timeStr = pJson["createdat"].asString();
+            auto timeStr = pJson["created_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -553,16 +553,16 @@ void Categories::updateByJson(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
         dirtyFlag_[6] = true;
-        if(!pJson["updatedat"].isNull())
+        if(!pJson["updated_at"].isNull())
         {
-            auto timeStr = pJson["updatedat"].asString();
+            auto timeStr = pJson["updated_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -579,26 +579,31 @@ void Categories::updateByJson(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
 }
 
-const int32_t &Categories::getValueOfId() const noexcept
+const std::string &Categories::getValueOfId() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
+    const static std::string defaultValue = std::string();
     if(id_)
         return *id_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &Categories::getId() const noexcept
+const std::shared_ptr<std::string> &Categories::getId() const noexcept
 {
     return id_;
 }
-void Categories::setId(const int32_t &pId) noexcept
+void Categories::setId(const std::string &pId) noexcept
 {
-    id_ = std::make_shared<int32_t>(pId);
+    id_ = std::make_shared<std::string>(pId);
+    dirtyFlag_[0] = true;
+}
+void Categories::setId(std::string &&pId) noexcept
+{
+    id_ = std::make_shared<std::string>(std::move(pId));
     dirtyFlag_[0] = true;
 }
 const typename Categories::PrimaryKeyType & Categories::getPrimaryKey() const
@@ -651,91 +656,91 @@ void Categories::setDescription(std::string &&pDescription) noexcept
     dirtyFlag_[2] = true;
 }
 
-const std::string &Categories::getValueOfImgpath() const noexcept
+const std::string &Categories::getValueOfImagePath() const noexcept
 {
     const static std::string defaultValue = std::string();
-    if(imgpath_)
-        return *imgpath_;
+    if(imagePath_)
+        return *imagePath_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &Categories::getImgpath() const noexcept
+const std::shared_ptr<std::string> &Categories::getImagePath() const noexcept
 {
-    return imgpath_;
+    return imagePath_;
 }
-void Categories::setImgpath(const std::string &pImgpath) noexcept
+void Categories::setImagePath(const std::string &pImagePath) noexcept
 {
-    imgpath_ = std::make_shared<std::string>(pImgpath);
+    imagePath_ = std::make_shared<std::string>(pImagePath);
     dirtyFlag_[3] = true;
 }
-void Categories::setImgpath(std::string &&pImgpath) noexcept
+void Categories::setImagePath(std::string &&pImagePath) noexcept
 {
-    imgpath_ = std::make_shared<std::string>(std::move(pImgpath));
+    imagePath_ = std::make_shared<std::string>(std::move(pImagePath));
     dirtyFlag_[3] = true;
 }
-void Categories::setImgpathToNull() noexcept
+void Categories::setImagePathToNull() noexcept
 {
-    imgpath_.reset();
+    imagePath_.reset();
     dirtyFlag_[3] = true;
 }
 
-const std::string &Categories::getValueOfImgthumbpath() const noexcept
+const std::string &Categories::getValueOfThumbnailPath() const noexcept
 {
     const static std::string defaultValue = std::string();
-    if(imgthumbpath_)
-        return *imgthumbpath_;
+    if(thumbnailPath_)
+        return *thumbnailPath_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &Categories::getImgthumbpath() const noexcept
+const std::shared_ptr<std::string> &Categories::getThumbnailPath() const noexcept
 {
-    return imgthumbpath_;
+    return thumbnailPath_;
 }
-void Categories::setImgthumbpath(const std::string &pImgthumbpath) noexcept
+void Categories::setThumbnailPath(const std::string &pThumbnailPath) noexcept
 {
-    imgthumbpath_ = std::make_shared<std::string>(pImgthumbpath);
+    thumbnailPath_ = std::make_shared<std::string>(pThumbnailPath);
     dirtyFlag_[4] = true;
 }
-void Categories::setImgthumbpath(std::string &&pImgthumbpath) noexcept
+void Categories::setThumbnailPath(std::string &&pThumbnailPath) noexcept
 {
-    imgthumbpath_ = std::make_shared<std::string>(std::move(pImgthumbpath));
+    thumbnailPath_ = std::make_shared<std::string>(std::move(pThumbnailPath));
     dirtyFlag_[4] = true;
 }
-void Categories::setImgthumbpathToNull() noexcept
+void Categories::setThumbnailPathToNull() noexcept
 {
-    imgthumbpath_.reset();
+    thumbnailPath_.reset();
     dirtyFlag_[4] = true;
 }
 
-const ::trantor::Date &Categories::getValueOfCreatedat() const noexcept
+const ::trantor::Date &Categories::getValueOfCreatedAt() const noexcept
 {
     const static ::trantor::Date defaultValue = ::trantor::Date();
-    if(createdat_)
-        return *createdat_;
+    if(createdAt_)
+        return *createdAt_;
     return defaultValue;
 }
-const std::shared_ptr<::trantor::Date> &Categories::getCreatedat() const noexcept
+const std::shared_ptr<::trantor::Date> &Categories::getCreatedAt() const noexcept
 {
-    return createdat_;
+    return createdAt_;
 }
-void Categories::setCreatedat(const ::trantor::Date &pCreatedat) noexcept
+void Categories::setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept
 {
-    createdat_ = std::make_shared<::trantor::Date>(pCreatedat);
+    createdAt_ = std::make_shared<::trantor::Date>(pCreatedAt);
     dirtyFlag_[5] = true;
 }
 
-const ::trantor::Date &Categories::getValueOfUpdatedat() const noexcept
+const ::trantor::Date &Categories::getValueOfUpdatedAt() const noexcept
 {
     const static ::trantor::Date defaultValue = ::trantor::Date();
-    if(updatedat_)
-        return *updatedat_;
+    if(updatedAt_)
+        return *updatedAt_;
     return defaultValue;
 }
-const std::shared_ptr<::trantor::Date> &Categories::getUpdatedat() const noexcept
+const std::shared_ptr<::trantor::Date> &Categories::getUpdatedAt() const noexcept
 {
-    return updatedat_;
+    return updatedAt_;
 }
-void Categories::setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept
+void Categories::setUpdatedAt(const ::trantor::Date &pUpdatedAt) noexcept
 {
-    updatedat_ = std::make_shared<::trantor::Date>(pUpdatedat);
+    updatedAt_ = std::make_shared<::trantor::Date>(pUpdatedAt);
     dirtyFlag_[6] = true;
 }
 
@@ -746,18 +751,30 @@ void Categories::updateId(const uint64_t id)
 const std::vector<std::string> &Categories::insertColumns() noexcept
 {
     static const std::vector<std::string> inCols={
+        "id",
         "name",
         "description",
-        "imgpath",
-        "imgthumbpath",
-        "createdat",
-        "updatedat"
+        "image_path",
+        "thumbnail_path",
+        "created_at",
+        "updated_at"
     };
     return inCols;
 }
 
 void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 {
+    if(dirtyFlag_[0])
+    {
+        if(getId())
+        {
+            binder << getValueOfId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
     if(dirtyFlag_[1])
     {
         if(getName())
@@ -782,9 +799,9 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[3])
     {
-        if(getImgpath())
+        if(getImagePath())
         {
-            binder << getValueOfImgpath();
+            binder << getValueOfImagePath();
         }
         else
         {
@@ -793,9 +810,9 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[4])
     {
-        if(getImgthumbpath())
+        if(getThumbnailPath())
         {
-            binder << getValueOfImgthumbpath();
+            binder << getValueOfThumbnailPath();
         }
         else
         {
@@ -804,9 +821,9 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[5])
     {
-        if(getCreatedat())
+        if(getCreatedAt())
         {
-            binder << getValueOfCreatedat();
+            binder << getValueOfCreatedAt();
         }
         else
         {
@@ -815,9 +832,9 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[6])
     {
-        if(getUpdatedat())
+        if(getUpdatedAt())
         {
-            binder << getValueOfUpdatedat();
+            binder << getValueOfUpdatedAt();
         }
         else
         {
@@ -829,6 +846,10 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 const std::vector<std::string> Categories::updateColumns() const
 {
     std::vector<std::string> ret;
+    if(dirtyFlag_[0])
+    {
+        ret.push_back(getColumnName(0));
+    }
     if(dirtyFlag_[1])
     {
         ret.push_back(getColumnName(1));
@@ -858,6 +879,17 @@ const std::vector<std::string> Categories::updateColumns() const
 
 void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
 {
+    if(dirtyFlag_[0])
+    {
+        if(getId())
+        {
+            binder << getValueOfId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
     if(dirtyFlag_[1])
     {
         if(getName())
@@ -882,9 +914,9 @@ void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[3])
     {
-        if(getImgpath())
+        if(getImagePath())
         {
-            binder << getValueOfImgpath();
+            binder << getValueOfImagePath();
         }
         else
         {
@@ -893,9 +925,9 @@ void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[4])
     {
-        if(getImgthumbpath())
+        if(getThumbnailPath())
         {
-            binder << getValueOfImgthumbpath();
+            binder << getValueOfThumbnailPath();
         }
         else
         {
@@ -904,9 +936,9 @@ void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[5])
     {
-        if(getCreatedat())
+        if(getCreatedAt())
         {
-            binder << getValueOfCreatedat();
+            binder << getValueOfCreatedAt();
         }
         else
         {
@@ -915,9 +947,9 @@ void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[6])
     {
-        if(getUpdatedat())
+        if(getUpdatedAt())
         {
-            binder << getValueOfUpdatedat();
+            binder << getValueOfUpdatedAt();
         }
         else
         {
@@ -952,37 +984,37 @@ Json::Value Categories::toJson() const
     {
         ret["description"]=Json::Value();
     }
-    if(getImgpath())
+    if(getImagePath())
     {
-        ret["imgpath"]=getValueOfImgpath();
+        ret["image_path"]=getValueOfImagePath();
     }
     else
     {
-        ret["imgpath"]=Json::Value();
+        ret["image_path"]=Json::Value();
     }
-    if(getImgthumbpath())
+    if(getThumbnailPath())
     {
-        ret["imgthumbpath"]=getValueOfImgthumbpath();
-    }
-    else
-    {
-        ret["imgthumbpath"]=Json::Value();
-    }
-    if(getCreatedat())
-    {
-        ret["createdat"]=getCreatedat()->toDbStringLocal();
+        ret["thumbnail_path"]=getValueOfThumbnailPath();
     }
     else
     {
-        ret["createdat"]=Json::Value();
+        ret["thumbnail_path"]=Json::Value();
     }
-    if(getUpdatedat())
+    if(getCreatedAt())
     {
-        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
+        ret["created_at"]=getCreatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["updatedat"]=Json::Value();
+        ret["created_at"]=Json::Value();
+    }
+    if(getUpdatedAt())
+    {
+        ret["updated_at"]=getUpdatedAt()->toDbStringLocal();
+    }
+    else
+    {
+        ret["updated_at"]=Json::Value();
     }
     return ret;
 }
@@ -1028,9 +1060,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[3].empty())
         {
-            if(getImgpath())
+            if(getImagePath())
             {
-                ret[pMasqueradingVector[3]]=getValueOfImgpath();
+                ret[pMasqueradingVector[3]]=getValueOfImagePath();
             }
             else
             {
@@ -1039,9 +1071,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[4].empty())
         {
-            if(getImgthumbpath())
+            if(getThumbnailPath())
             {
-                ret[pMasqueradingVector[4]]=getValueOfImgthumbpath();
+                ret[pMasqueradingVector[4]]=getValueOfThumbnailPath();
             }
             else
             {
@@ -1050,9 +1082,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[5].empty())
         {
-            if(getCreatedat())
+            if(getCreatedAt())
             {
-                ret[pMasqueradingVector[5]]=getCreatedat()->toDbStringLocal();
+                ret[pMasqueradingVector[5]]=getCreatedAt()->toDbStringLocal();
             }
             else
             {
@@ -1061,9 +1093,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[6].empty())
         {
-            if(getUpdatedat())
+            if(getUpdatedAt())
             {
-                ret[pMasqueradingVector[6]]=getUpdatedat()->toDbStringLocal();
+                ret[pMasqueradingVector[6]]=getUpdatedAt()->toDbStringLocal();
             }
             else
             {
@@ -1097,37 +1129,37 @@ Json::Value Categories::toMasqueradedJson(
     {
         ret["description"]=Json::Value();
     }
-    if(getImgpath())
+    if(getImagePath())
     {
-        ret["imgpath"]=getValueOfImgpath();
+        ret["image_path"]=getValueOfImagePath();
     }
     else
     {
-        ret["imgpath"]=Json::Value();
+        ret["image_path"]=Json::Value();
     }
-    if(getImgthumbpath())
+    if(getThumbnailPath())
     {
-        ret["imgthumbpath"]=getValueOfImgthumbpath();
-    }
-    else
-    {
-        ret["imgthumbpath"]=Json::Value();
-    }
-    if(getCreatedat())
-    {
-        ret["createdat"]=getCreatedat()->toDbStringLocal();
+        ret["thumbnail_path"]=getValueOfThumbnailPath();
     }
     else
     {
-        ret["createdat"]=Json::Value();
+        ret["thumbnail_path"]=Json::Value();
     }
-    if(getUpdatedat())
+    if(getCreatedAt())
     {
-        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
+        ret["created_at"]=getCreatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["updatedat"]=Json::Value();
+        ret["created_at"]=Json::Value();
+    }
+    if(getUpdatedAt())
+    {
+        ret["updated_at"]=getUpdatedAt()->toDbStringLocal();
+    }
+    else
+    {
+        ret["updated_at"]=Json::Value();
     }
     return ret;
 }
@@ -1159,24 +1191,24 @@ bool Categories::validateJsonForCreation(const Json::Value &pJson, std::string &
         err="The description column cannot be null";
         return false;
     }
-    if(pJson.isMember("imgpath"))
+    if(pJson.isMember("image_path"))
     {
-        if(!validJsonOfField(3, "imgpath", pJson["imgpath"], err, true))
+        if(!validJsonOfField(3, "image_path", pJson["image_path"], err, true))
             return false;
     }
-    if(pJson.isMember("imgthumbpath"))
+    if(pJson.isMember("thumbnail_path"))
     {
-        if(!validJsonOfField(4, "imgthumbpath", pJson["imgthumbpath"], err, true))
+        if(!validJsonOfField(4, "thumbnail_path", pJson["thumbnail_path"], err, true))
             return false;
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(5, "createdat", pJson["createdat"], err, true))
+        if(!validJsonOfField(5, "created_at", pJson["created_at"], err, true))
             return false;
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
-        if(!validJsonOfField(6, "updatedat", pJson["updatedat"], err, true))
+        if(!validJsonOfField(6, "updated_at", pJson["updated_at"], err, true))
             return false;
     }
     return true;
@@ -1287,24 +1319,24 @@ bool Categories::validateJsonForUpdate(const Json::Value &pJson, std::string &er
         if(!validJsonOfField(2, "description", pJson["description"], err, false))
             return false;
     }
-    if(pJson.isMember("imgpath"))
+    if(pJson.isMember("image_path"))
     {
-        if(!validJsonOfField(3, "imgpath", pJson["imgpath"], err, false))
+        if(!validJsonOfField(3, "image_path", pJson["image_path"], err, false))
             return false;
     }
-    if(pJson.isMember("imgthumbpath"))
+    if(pJson.isMember("thumbnail_path"))
     {
-        if(!validJsonOfField(4, "imgthumbpath", pJson["imgthumbpath"], err, false))
+        if(!validJsonOfField(4, "thumbnail_path", pJson["thumbnail_path"], err, false))
             return false;
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(5, "createdat", pJson["createdat"], err, false))
+        if(!validJsonOfField(5, "created_at", pJson["created_at"], err, false))
             return false;
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
-        if(!validJsonOfField(6, "updatedat", pJson["updatedat"], err, false))
+        if(!validJsonOfField(6, "updated_at", pJson["updated_at"], err, false))
             return false;
     }
     return true;
@@ -1381,12 +1413,7 @@ bool Categories::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(isForCreation)
-            {
-                err="The automatic primary key cannot be set";
-                return false;
-            }
-            if(!pJson.isInt())
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;

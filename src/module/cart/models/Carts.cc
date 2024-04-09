@@ -16,24 +16,24 @@ using namespace drogon::orm;
 using namespace drogon_model::gaboot;
 
 const std::string Carts::Cols::_id = "id";
-const std::string Carts::Cols::_customerid = "customerid";
-const std::string Carts::Cols::_productid = "productid";
+const std::string Carts::Cols::_customer_id = "customer_id";
+const std::string Carts::Cols::_product_id = "product_id";
 const std::string Carts::Cols::_price = "price";
 const std::string Carts::Cols::_quantity = "quantity";
-const std::string Carts::Cols::_createdat = "createdat";
-const std::string Carts::Cols::_updatedat = "updatedat";
+const std::string Carts::Cols::_created_at = "created_at";
+const std::string Carts::Cols::_updated_at = "updated_at";
 const std::string Carts::primaryKeyName = "id";
 const bool Carts::hasPrimaryKey = true;
 const std::string Carts::tableName = "carts";
 
 const std::vector<typename Carts::MetaData> Carts::metaData_={
-{"id","int32_t","integer",4,1,1,1},
-{"customerid","int32_t","integer",4,0,0,1},
-{"productid","int32_t","integer",4,0,0,1},
+{"id","std::string","uuid",0,0,1,1},
+{"customer_id","std::string","uuid",0,0,0,1},
+{"product_id","std::string","uuid",0,0,0,1},
 {"price","double","double precision",8,0,0,1},
 {"quantity","int32_t","integer",4,0,0,1},
-{"createdat","::trantor::Date","timestamp without time zone",0,0,0,1},
-{"updatedat","::trantor::Date","timestamp without time zone",0,0,0,1}
+{"created_at","::trantor::Date","timestamp without time zone",0,0,0,1},
+{"updated_at","::trantor::Date","timestamp without time zone",0,0,0,1}
 };
 const std::string &Carts::getColumnName(size_t index) noexcept(false)
 {
@@ -46,15 +46,15 @@ Carts::Carts(const Row &r, const ssize_t indexOffset) noexcept
     {
         if(!r["id"].isNull())
         {
-            id_=std::make_shared<int32_t>(r["id"].as<int32_t>());
+            id_=std::make_shared<std::string>(r["id"].as<std::string>());
         }
-        if(!r["customerid"].isNull())
+        if(!r["customer_id"].isNull())
         {
-            customerid_=std::make_shared<int32_t>(r["customerid"].as<int32_t>());
+            customerId_=std::make_shared<std::string>(r["customer_id"].as<std::string>());
         }
-        if(!r["productid"].isNull())
+        if(!r["product_id"].isNull())
         {
-            productid_=std::make_shared<int32_t>(r["productid"].as<int32_t>());
+            productId_=std::make_shared<std::string>(r["product_id"].as<std::string>());
         }
         if(!r["price"].isNull())
         {
@@ -64,9 +64,9 @@ Carts::Carts(const Row &r, const ssize_t indexOffset) noexcept
         {
             quantity_=std::make_shared<int32_t>(r["quantity"].as<int32_t>());
         }
-        if(!r["createdat"].isNull())
+        if(!r["created_at"].isNull())
         {
-            auto timeStr = r["createdat"].as<std::string>();
+            auto timeStr = r["created_at"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -83,12 +83,12 @@ Carts::Carts(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        if(!r["updatedat"].isNull())
+        if(!r["updated_at"].isNull())
         {
-            auto timeStr = r["updatedat"].as<std::string>();
+            auto timeStr = r["updated_at"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -105,7 +105,7 @@ Carts::Carts(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -121,17 +121,17 @@ Carts::Carts(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 0;
         if(!r[index].isNull())
         {
-            id_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            id_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 1;
         if(!r[index].isNull())
         {
-            customerid_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            customerId_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 2;
         if(!r[index].isNull())
         {
-            productid_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            productId_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 3;
         if(!r[index].isNull())
@@ -163,7 +163,7 @@ Carts::Carts(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
         index = offset + 6;
@@ -186,7 +186,7 @@ Carts::Carts(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -205,7 +205,7 @@ Carts::Carts(const Json::Value &pJson, const std::vector<std::string> &pMasquera
         dirtyFlag_[0] = true;
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<std::string>(pJson[pMasqueradingVector[0]].asString());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -213,7 +213,7 @@ Carts::Carts(const Json::Value &pJson, const std::vector<std::string> &pMasquera
         dirtyFlag_[1] = true;
         if(!pJson[pMasqueradingVector[1]].isNull())
         {
-            customerid_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[1]].asInt64());
+            customerId_=std::make_shared<std::string>(pJson[pMasqueradingVector[1]].asString());
         }
     }
     if(!pMasqueradingVector[2].empty() && pJson.isMember(pMasqueradingVector[2]))
@@ -221,7 +221,7 @@ Carts::Carts(const Json::Value &pJson, const std::vector<std::string> &pMasquera
         dirtyFlag_[2] = true;
         if(!pJson[pMasqueradingVector[2]].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[2]].asInt64());
+            productId_=std::make_shared<std::string>(pJson[pMasqueradingVector[2]].asString());
         }
     }
     if(!pMasqueradingVector[3].empty() && pJson.isMember(pMasqueradingVector[3]))
@@ -262,7 +262,7 @@ Carts::Carts(const Json::Value &pJson, const std::vector<std::string> &pMasquera
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -288,7 +288,7 @@ Carts::Carts(const Json::Value &pJson, const std::vector<std::string> &pMasquera
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -301,23 +301,23 @@ Carts::Carts(const Json::Value &pJson) noexcept(false)
         dirtyFlag_[0]=true;
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<std::string>(pJson["id"].asString());
         }
     }
-    if(pJson.isMember("customerid"))
+    if(pJson.isMember("customer_id"))
     {
         dirtyFlag_[1]=true;
-        if(!pJson["customerid"].isNull())
+        if(!pJson["customer_id"].isNull())
         {
-            customerid_=std::make_shared<int32_t>((int32_t)pJson["customerid"].asInt64());
+            customerId_=std::make_shared<std::string>(pJson["customer_id"].asString());
         }
     }
-    if(pJson.isMember("productid"))
+    if(pJson.isMember("product_id"))
     {
         dirtyFlag_[2]=true;
-        if(!pJson["productid"].isNull())
+        if(!pJson["product_id"].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson["productid"].asInt64());
+            productId_=std::make_shared<std::string>(pJson["product_id"].asString());
         }
     }
     if(pJson.isMember("price"))
@@ -336,12 +336,12 @@ Carts::Carts(const Json::Value &pJson) noexcept(false)
             quantity_=std::make_shared<int32_t>((int32_t)pJson["quantity"].asInt64());
         }
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
         dirtyFlag_[5]=true;
-        if(!pJson["createdat"].isNull())
+        if(!pJson["created_at"].isNull())
         {
-            auto timeStr = pJson["createdat"].asString();
+            auto timeStr = pJson["created_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -358,16 +358,16 @@ Carts::Carts(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
         dirtyFlag_[6]=true;
-        if(!pJson["updatedat"].isNull())
+        if(!pJson["updated_at"].isNull())
         {
-            auto timeStr = pJson["updatedat"].asString();
+            auto timeStr = pJson["updated_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -384,7 +384,7 @@ Carts::Carts(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -402,7 +402,7 @@ void Carts::updateByMasqueradedJson(const Json::Value &pJson,
     {
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<std::string>(pJson[pMasqueradingVector[0]].asString());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -410,7 +410,7 @@ void Carts::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[1] = true;
         if(!pJson[pMasqueradingVector[1]].isNull())
         {
-            customerid_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[1]].asInt64());
+            customerId_=std::make_shared<std::string>(pJson[pMasqueradingVector[1]].asString());
         }
     }
     if(!pMasqueradingVector[2].empty() && pJson.isMember(pMasqueradingVector[2]))
@@ -418,7 +418,7 @@ void Carts::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[2] = true;
         if(!pJson[pMasqueradingVector[2]].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[2]].asInt64());
+            productId_=std::make_shared<std::string>(pJson[pMasqueradingVector[2]].asString());
         }
     }
     if(!pMasqueradingVector[3].empty() && pJson.isMember(pMasqueradingVector[3]))
@@ -459,7 +459,7 @@ void Carts::updateByMasqueradedJson(const Json::Value &pJson,
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -485,7 +485,7 @@ void Carts::updateByMasqueradedJson(const Json::Value &pJson,
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -497,23 +497,23 @@ void Carts::updateByJson(const Json::Value &pJson) noexcept(false)
     {
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<std::string>(pJson["id"].asString());
         }
     }
-    if(pJson.isMember("customerid"))
+    if(pJson.isMember("customer_id"))
     {
         dirtyFlag_[1] = true;
-        if(!pJson["customerid"].isNull())
+        if(!pJson["customer_id"].isNull())
         {
-            customerid_=std::make_shared<int32_t>((int32_t)pJson["customerid"].asInt64());
+            customerId_=std::make_shared<std::string>(pJson["customer_id"].asString());
         }
     }
-    if(pJson.isMember("productid"))
+    if(pJson.isMember("product_id"))
     {
         dirtyFlag_[2] = true;
-        if(!pJson["productid"].isNull())
+        if(!pJson["product_id"].isNull())
         {
-            productid_=std::make_shared<int32_t>((int32_t)pJson["productid"].asInt64());
+            productId_=std::make_shared<std::string>(pJson["product_id"].asString());
         }
     }
     if(pJson.isMember("price"))
@@ -532,12 +532,12 @@ void Carts::updateByJson(const Json::Value &pJson) noexcept(false)
             quantity_=std::make_shared<int32_t>((int32_t)pJson["quantity"].asInt64());
         }
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
         dirtyFlag_[5] = true;
-        if(!pJson["createdat"].isNull())
+        if(!pJson["created_at"].isNull())
         {
-            auto timeStr = pJson["createdat"].asString();
+            auto timeStr = pJson["created_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -554,16 +554,16 @@ void Carts::updateByJson(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
         dirtyFlag_[6] = true;
-        if(!pJson["updatedat"].isNull())
+        if(!pJson["updated_at"].isNull())
         {
-            auto timeStr = pJson["updatedat"].asString();
+            auto timeStr = pJson["updated_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -580,26 +580,31 @@ void Carts::updateByJson(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
 }
 
-const int32_t &Carts::getValueOfId() const noexcept
+const std::string &Carts::getValueOfId() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
+    const static std::string defaultValue = std::string();
     if(id_)
         return *id_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &Carts::getId() const noexcept
+const std::shared_ptr<std::string> &Carts::getId() const noexcept
 {
     return id_;
 }
-void Carts::setId(const int32_t &pId) noexcept
+void Carts::setId(const std::string &pId) noexcept
 {
-    id_ = std::make_shared<int32_t>(pId);
+    id_ = std::make_shared<std::string>(pId);
+    dirtyFlag_[0] = true;
+}
+void Carts::setId(std::string &&pId) noexcept
+{
+    id_ = std::make_shared<std::string>(std::move(pId));
     dirtyFlag_[0] = true;
 }
 const typename Carts::PrimaryKeyType & Carts::getPrimaryKey() const
@@ -608,37 +613,47 @@ const typename Carts::PrimaryKeyType & Carts::getPrimaryKey() const
     return *id_;
 }
 
-const int32_t &Carts::getValueOfCustomerid() const noexcept
+const std::string &Carts::getValueOfCustomerId() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
-    if(customerid_)
-        return *customerid_;
+    const static std::string defaultValue = std::string();
+    if(customerId_)
+        return *customerId_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &Carts::getCustomerid() const noexcept
+const std::shared_ptr<std::string> &Carts::getCustomerId() const noexcept
 {
-    return customerid_;
+    return customerId_;
 }
-void Carts::setCustomerid(const int32_t &pCustomerid) noexcept
+void Carts::setCustomerId(const std::string &pCustomerId) noexcept
 {
-    customerid_ = std::make_shared<int32_t>(pCustomerid);
+    customerId_ = std::make_shared<std::string>(pCustomerId);
+    dirtyFlag_[1] = true;
+}
+void Carts::setCustomerId(std::string &&pCustomerId) noexcept
+{
+    customerId_ = std::make_shared<std::string>(std::move(pCustomerId));
     dirtyFlag_[1] = true;
 }
 
-const int32_t &Carts::getValueOfProductid() const noexcept
+const std::string &Carts::getValueOfProductId() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
-    if(productid_)
-        return *productid_;
+    const static std::string defaultValue = std::string();
+    if(productId_)
+        return *productId_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &Carts::getProductid() const noexcept
+const std::shared_ptr<std::string> &Carts::getProductId() const noexcept
 {
-    return productid_;
+    return productId_;
 }
-void Carts::setProductid(const int32_t &pProductid) noexcept
+void Carts::setProductId(const std::string &pProductId) noexcept
 {
-    productid_ = std::make_shared<int32_t>(pProductid);
+    productId_ = std::make_shared<std::string>(pProductId);
+    dirtyFlag_[2] = true;
+}
+void Carts::setProductId(std::string &&pProductId) noexcept
+{
+    productId_ = std::make_shared<std::string>(std::move(pProductId));
     dirtyFlag_[2] = true;
 }
 
@@ -676,37 +691,37 @@ void Carts::setQuantity(const int32_t &pQuantity) noexcept
     dirtyFlag_[4] = true;
 }
 
-const ::trantor::Date &Carts::getValueOfCreatedat() const noexcept
+const ::trantor::Date &Carts::getValueOfCreatedAt() const noexcept
 {
     const static ::trantor::Date defaultValue = ::trantor::Date();
-    if(createdat_)
-        return *createdat_;
+    if(createdAt_)
+        return *createdAt_;
     return defaultValue;
 }
-const std::shared_ptr<::trantor::Date> &Carts::getCreatedat() const noexcept
+const std::shared_ptr<::trantor::Date> &Carts::getCreatedAt() const noexcept
 {
-    return createdat_;
+    return createdAt_;
 }
-void Carts::setCreatedat(const ::trantor::Date &pCreatedat) noexcept
+void Carts::setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept
 {
-    createdat_ = std::make_shared<::trantor::Date>(pCreatedat);
+    createdAt_ = std::make_shared<::trantor::Date>(pCreatedAt);
     dirtyFlag_[5] = true;
 }
 
-const ::trantor::Date &Carts::getValueOfUpdatedat() const noexcept
+const ::trantor::Date &Carts::getValueOfUpdatedAt() const noexcept
 {
     const static ::trantor::Date defaultValue = ::trantor::Date();
-    if(updatedat_)
-        return *updatedat_;
+    if(updatedAt_)
+        return *updatedAt_;
     return defaultValue;
 }
-const std::shared_ptr<::trantor::Date> &Carts::getUpdatedat() const noexcept
+const std::shared_ptr<::trantor::Date> &Carts::getUpdatedAt() const noexcept
 {
-    return updatedat_;
+    return updatedAt_;
 }
-void Carts::setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept
+void Carts::setUpdatedAt(const ::trantor::Date &pUpdatedAt) noexcept
 {
-    updatedat_ = std::make_shared<::trantor::Date>(pUpdatedat);
+    updatedAt_ = std::make_shared<::trantor::Date>(pUpdatedAt);
     dirtyFlag_[6] = true;
 }
 
@@ -717,23 +732,35 @@ void Carts::updateId(const uint64_t id)
 const std::vector<std::string> &Carts::insertColumns() noexcept
 {
     static const std::vector<std::string> inCols={
-        "customerid",
-        "productid",
+        "id",
+        "customer_id",
+        "product_id",
         "price",
         "quantity",
-        "createdat",
-        "updatedat"
+        "created_at",
+        "updated_at"
     };
     return inCols;
 }
 
 void Carts::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 {
+    if(dirtyFlag_[0])
+    {
+        if(getId())
+        {
+            binder << getValueOfId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
     if(dirtyFlag_[1])
     {
-        if(getCustomerid())
+        if(getCustomerId())
         {
-            binder << getValueOfCustomerid();
+            binder << getValueOfCustomerId();
         }
         else
         {
@@ -742,9 +769,9 @@ void Carts::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[2])
     {
-        if(getProductid())
+        if(getProductId())
         {
-            binder << getValueOfProductid();
+            binder << getValueOfProductId();
         }
         else
         {
@@ -775,9 +802,9 @@ void Carts::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[5])
     {
-        if(getCreatedat())
+        if(getCreatedAt())
         {
-            binder << getValueOfCreatedat();
+            binder << getValueOfCreatedAt();
         }
         else
         {
@@ -786,9 +813,9 @@ void Carts::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[6])
     {
-        if(getUpdatedat())
+        if(getUpdatedAt())
         {
-            binder << getValueOfUpdatedat();
+            binder << getValueOfUpdatedAt();
         }
         else
         {
@@ -800,6 +827,10 @@ void Carts::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 const std::vector<std::string> Carts::updateColumns() const
 {
     std::vector<std::string> ret;
+    if(dirtyFlag_[0])
+    {
+        ret.push_back(getColumnName(0));
+    }
     if(dirtyFlag_[1])
     {
         ret.push_back(getColumnName(1));
@@ -829,11 +860,22 @@ const std::vector<std::string> Carts::updateColumns() const
 
 void Carts::updateArgs(drogon::orm::internal::SqlBinder &binder) const
 {
+    if(dirtyFlag_[0])
+    {
+        if(getId())
+        {
+            binder << getValueOfId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
     if(dirtyFlag_[1])
     {
-        if(getCustomerid())
+        if(getCustomerId())
         {
-            binder << getValueOfCustomerid();
+            binder << getValueOfCustomerId();
         }
         else
         {
@@ -842,9 +884,9 @@ void Carts::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[2])
     {
-        if(getProductid())
+        if(getProductId())
         {
-            binder << getValueOfProductid();
+            binder << getValueOfProductId();
         }
         else
         {
@@ -875,9 +917,9 @@ void Carts::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[5])
     {
-        if(getCreatedat())
+        if(getCreatedAt())
         {
-            binder << getValueOfCreatedat();
+            binder << getValueOfCreatedAt();
         }
         else
         {
@@ -886,9 +928,9 @@ void Carts::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[6])
     {
-        if(getUpdatedat())
+        if(getUpdatedAt())
         {
-            binder << getValueOfUpdatedat();
+            binder << getValueOfUpdatedAt();
         }
         else
         {
@@ -907,21 +949,21 @@ Json::Value Carts::toJson() const
     {
         ret["id"]=Json::Value();
     }
-    if(getCustomerid())
+    if(getCustomerId())
     {
-        ret["customerid"]=getValueOfCustomerid();
+        ret["customer_id"]=getValueOfCustomerId();
     }
     else
     {
-        ret["customerid"]=Json::Value();
+        ret["customer_id"]=Json::Value();
     }
-    if(getProductid())
+    if(getProductId())
     {
-        ret["productid"]=getValueOfProductid();
+        ret["product_id"]=getValueOfProductId();
     }
     else
     {
-        ret["productid"]=Json::Value();
+        ret["product_id"]=Json::Value();
     }
     if(getPrice())
     {
@@ -939,21 +981,21 @@ Json::Value Carts::toJson() const
     {
         ret["quantity"]=Json::Value();
     }
-    if(getCreatedat())
+    if(getCreatedAt())
     {
-        ret["createdat"]=getCreatedat()->toDbStringLocal();
+        ret["created_at"]=getCreatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["createdat"]=Json::Value();
+        ret["created_at"]=Json::Value();
     }
-    if(getUpdatedat())
+    if(getUpdatedAt())
     {
-        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
+        ret["updated_at"]=getUpdatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["updatedat"]=Json::Value();
+        ret["updated_at"]=Json::Value();
     }
     return ret;
 }
@@ -977,9 +1019,9 @@ Json::Value Carts::toMasqueradedJson(
         }
         if(!pMasqueradingVector[1].empty())
         {
-            if(getCustomerid())
+            if(getCustomerId())
             {
-                ret[pMasqueradingVector[1]]=getValueOfCustomerid();
+                ret[pMasqueradingVector[1]]=getValueOfCustomerId();
             }
             else
             {
@@ -988,9 +1030,9 @@ Json::Value Carts::toMasqueradedJson(
         }
         if(!pMasqueradingVector[2].empty())
         {
-            if(getProductid())
+            if(getProductId())
             {
-                ret[pMasqueradingVector[2]]=getValueOfProductid();
+                ret[pMasqueradingVector[2]]=getValueOfProductId();
             }
             else
             {
@@ -1021,9 +1063,9 @@ Json::Value Carts::toMasqueradedJson(
         }
         if(!pMasqueradingVector[5].empty())
         {
-            if(getCreatedat())
+            if(getCreatedAt())
             {
-                ret[pMasqueradingVector[5]]=getCreatedat()->toDbStringLocal();
+                ret[pMasqueradingVector[5]]=getCreatedAt()->toDbStringLocal();
             }
             else
             {
@@ -1032,9 +1074,9 @@ Json::Value Carts::toMasqueradedJson(
         }
         if(!pMasqueradingVector[6].empty())
         {
-            if(getUpdatedat())
+            if(getUpdatedAt())
             {
-                ret[pMasqueradingVector[6]]=getUpdatedat()->toDbStringLocal();
+                ret[pMasqueradingVector[6]]=getUpdatedAt()->toDbStringLocal();
             }
             else
             {
@@ -1052,21 +1094,21 @@ Json::Value Carts::toMasqueradedJson(
     {
         ret["id"]=Json::Value();
     }
-    if(getCustomerid())
+    if(getCustomerId())
     {
-        ret["customerid"]=getValueOfCustomerid();
+        ret["customer_id"]=getValueOfCustomerId();
     }
     else
     {
-        ret["customerid"]=Json::Value();
+        ret["customer_id"]=Json::Value();
     }
-    if(getProductid())
+    if(getProductId())
     {
-        ret["productid"]=getValueOfProductid();
+        ret["product_id"]=getValueOfProductId();
     }
     else
     {
-        ret["productid"]=Json::Value();
+        ret["product_id"]=Json::Value();
     }
     if(getPrice())
     {
@@ -1084,21 +1126,21 @@ Json::Value Carts::toMasqueradedJson(
     {
         ret["quantity"]=Json::Value();
     }
-    if(getCreatedat())
+    if(getCreatedAt())
     {
-        ret["createdat"]=getCreatedat()->toDbStringLocal();
+        ret["created_at"]=getCreatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["createdat"]=Json::Value();
+        ret["created_at"]=Json::Value();
     }
-    if(getUpdatedat())
+    if(getUpdatedAt())
     {
-        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
+        ret["updated_at"]=getUpdatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["updatedat"]=Json::Value();
+        ret["updated_at"]=Json::Value();
     }
     return ret;
 }
@@ -1110,24 +1152,24 @@ bool Carts::validateJsonForCreation(const Json::Value &pJson, std::string &err)
         if(!validJsonOfField(0, "id", pJson["id"], err, true))
             return false;
     }
-    if(pJson.isMember("customerid"))
+    if(pJson.isMember("customer_id"))
     {
-        if(!validJsonOfField(1, "customerid", pJson["customerid"], err, true))
+        if(!validJsonOfField(1, "customer_id", pJson["customer_id"], err, true))
             return false;
     }
     else
     {
-        err="The customerid column cannot be null";
+        err="The customer_id column cannot be null";
         return false;
     }
-    if(pJson.isMember("productid"))
+    if(pJson.isMember("product_id"))
     {
-        if(!validJsonOfField(2, "productid", pJson["productid"], err, true))
+        if(!validJsonOfField(2, "product_id", pJson["product_id"], err, true))
             return false;
     }
     else
     {
-        err="The productid column cannot be null";
+        err="The product_id column cannot be null";
         return false;
     }
     if(pJson.isMember("price"))
@@ -1150,14 +1192,14 @@ bool Carts::validateJsonForCreation(const Json::Value &pJson, std::string &err)
         err="The quantity column cannot be null";
         return false;
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(5, "createdat", pJson["createdat"], err, true))
+        if(!validJsonOfField(5, "created_at", pJson["created_at"], err, true))
             return false;
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
-        if(!validJsonOfField(6, "updatedat", pJson["updatedat"], err, true))
+        if(!validJsonOfField(6, "updated_at", pJson["updated_at"], err, true))
             return false;
     }
     return true;
@@ -1268,14 +1310,14 @@ bool Carts::validateJsonForUpdate(const Json::Value &pJson, std::string &err)
         err = "The value of primary key must be set in the json object for update";
         return false;
     }
-    if(pJson.isMember("customerid"))
+    if(pJson.isMember("customer_id"))
     {
-        if(!validJsonOfField(1, "customerid", pJson["customerid"], err, false))
+        if(!validJsonOfField(1, "customer_id", pJson["customer_id"], err, false))
             return false;
     }
-    if(pJson.isMember("productid"))
+    if(pJson.isMember("product_id"))
     {
-        if(!validJsonOfField(2, "productid", pJson["productid"], err, false))
+        if(!validJsonOfField(2, "product_id", pJson["product_id"], err, false))
             return false;
     }
     if(pJson.isMember("price"))
@@ -1288,14 +1330,14 @@ bool Carts::validateJsonForUpdate(const Json::Value &pJson, std::string &err)
         if(!validJsonOfField(4, "quantity", pJson["quantity"], err, false))
             return false;
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(5, "createdat", pJson["createdat"], err, false))
+        if(!validJsonOfField(5, "created_at", pJson["created_at"], err, false))
             return false;
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
-        if(!validJsonOfField(6, "updatedat", pJson["updatedat"], err, false))
+        if(!validJsonOfField(6, "updated_at", pJson["updated_at"], err, false))
             return false;
     }
     return true;
@@ -1372,12 +1414,7 @@ bool Carts::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(isForCreation)
-            {
-                err="The automatic primary key cannot be set";
-                return false;
-            }
-            if(!pJson.isInt())
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -1389,7 +1426,7 @@ bool Carts::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(!pJson.isInt())
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -1401,7 +1438,7 @@ bool Carts::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(!pJson.isInt())
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -1483,7 +1520,7 @@ void Carts::getMaster_customers(const DbClientPtr &clientPtr,
 {
     const static std::string sql = "select * from master_customers where id = $1";
     *clientPtr << sql
-               << *customerid_
+               << *customerId_
                >> [rcb = std::move(rcb), ecb](const Result &r){
                     if (r.size() == 0)
                     {
@@ -1522,7 +1559,7 @@ void Carts::getMaster_products(const DbClientPtr &clientPtr,
 {
     const static std::string sql = "select * from master_products where id = $1";
     *clientPtr << sql
-               << *productid_
+               << *productId_
                >> [rcb = std::move(rcb), ecb](const Result &r){
                     if (r.size() == 0)
                     {

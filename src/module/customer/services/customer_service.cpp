@@ -78,12 +78,12 @@ namespace gaboot
                 throw BadRequestException(m_error);
             }
 
-            customer.setCreatedat(trantor::Date::now());
-            customer.setUpdatedat(trantor::Date::now());
-            customer.setImgpath(upload.get_image_path());
-            customer.setImgthumbpath(upload.get_thumbnail_path());
+            customer.setCreatedAt(trantor::Date::now());
+            customer.setUpdatedAt(trantor::Date::now());
+            customer.setImagePath(upload.get_image_path());
+            customer.setThumbnailPath(upload.get_thumbnail_path());
             customer.setPassword(bcrypt::generateHash(customer.getValueOfPassword()));
-            customer.setIsactive(true);
+            customer.setIsActive(true);
 
             db().insert(customer);
 
@@ -104,12 +104,12 @@ namespace gaboot
     {
         TRY_CLAUSE
         {
-            if (id.empty() || !util::is_numeric(id))
+            if (id.empty())
             {
                 throw BadRequestException("Requirement doesn't match");
             }
 
-            const auto user = db().findByPrimaryKey(stoll(id));
+            const auto user = db().findByPrimaryKey(id);
 
             if (!user.getId()) throw NotFoundException("Unable retrieve customer detail");
 
@@ -128,7 +128,7 @@ namespace gaboot
 
             if (!json) throw BadRequestException("Requested body can't be empty");
 
-            if (id.empty() || !util::is_numeric(id))
+            if (id.empty())
             {
                 throw BadRequestException("Parameters requirement doesn't match");
             }
@@ -146,11 +146,11 @@ namespace gaboot
                 throw BadRequestException(m_error);
             }
 
-            MasterCustomers customer = db().findByPrimaryKey(stoull(id));
+            MasterCustomers customer = db().findByPrimaryKey(id);
 
             customer.updateByJson(*json);
-            customer.setId(stoll(id));
-            customer.setUpdatedat(trantor::Date::now());
+            customer.setId(id);
+            customer.setUpdatedAt(trantor::Date::now());
 
             if (!db().update(customer))
                 throw BadRequestException("Unable to update non-existing record");
@@ -165,14 +165,14 @@ namespace gaboot
     {
         TRY_CLAUSE
         {
-            if (id.empty() || !util::is_numeric(id))
+            if (id.empty())
             {
                 LOG(WARNING) << "ID is empty or ID is not numeric";
 
                 throw BadRequestException("Parameters requirement doesn't match");
             }
 
-            if (!db().deleteByPrimaryKey(stoll(id)))
+            if (!db().deleteByPrimaryKey(id))
             {
                 throw BadRequestException("Unable delete non-existing data");
             }
@@ -188,7 +188,7 @@ namespace gaboot
         TRY_CLAUSE
         {
             MultiPartParser fileUpload;
-            MasterCustomers customer = db().findByPrimaryKey(stoull(id));
+            MasterCustomers customer = db().findByPrimaryKey(id);
 
             if (fileUpload.parse(req) != 0 || fileUpload.getFiles().size() == 0)
             {
@@ -202,9 +202,9 @@ namespace gaboot
             if (!util::allowed_image(file.getFileExtension().data()))
                 throw BadRequestException("File type doesn't allowed");
 
-            customer.setImgpath(upload.get_image_path());
-            customer.setImgthumbpath(upload.get_thumbnail_path());
-            customer.setUpdatedat(trantor::Date::now());
+            customer.setImagePath(upload.get_image_path());
+            customer.setThumbnailPath(upload.get_thumbnail_path());
+            customer.setUpdatedAt(trantor::Date::now());
 
             if (!db().update(customer))
             {
@@ -225,14 +225,14 @@ namespace gaboot
         {
             MasterCustomers customer;
 
-            if (id.empty() || !util::is_numeric(id))
+            if (id.empty())
             {
                 LOG(WARNING) << "ID is empty or ID is not numeric";
 
                 throw BadRequestException();
             }
 
-            if (!g_auth_manager->find(stoll(id), &customer))
+            if (!g_auth_manager->find(id, &customer))
             {
                 throw NotFoundException("Unable to retreive customers profile");
             }
@@ -256,21 +256,21 @@ namespace gaboot
         {
             MasterCustomers customer;
 
-            if (id.empty() || !util::is_numeric(id))
+            if (id.empty())
             {
                 LOG(WARNING) << "ID is empty or ID is not numeric";
 
                 throw BadRequestException("Parameters requirement doesn't match");
             }
 
-            if (g_auth_manager->find(stoll(id), &customer))
+            if (g_auth_manager->find(id, &customer))
             {
-                std::filesystem::path file(*customer.getImgpath());
+                std::filesystem::path file(*customer.getImagePath());
 
                 if (!std::filesystem::exists(file))
                     throw NotFoundException("Unable to retreive profile picture, please upload your profile picture");
-                if (auto image = customer.getImgpath(); image && !image->empty())
-                    return HttpResponse::newFileResponse(*customer.getImgpath());
+                if (auto image = customer.getImagePath(); image && !image->empty())
+                    return HttpResponse::newFileResponse(*customer.getImagePath());
             }
 
             throw NotFoundException("Unable to retreive customers image");
@@ -282,16 +282,16 @@ namespace gaboot
         {
             MasterCustomers customer;
 
-            if (id.empty() || !util::is_numeric(id))
+            if (id.empty())
             {
                 LOG(WARNING) << "ID is empty or ID is not numeric";
 
                 throw BadRequestException("Parameters requirement doesn't match");
             }
 
-            if (g_auth_manager->find(stoll(id), &customer))
+            if (g_auth_manager->find(id, &customer))
             {
-                std::filesystem::path file(*customer.getImgthumbpath());
+                std::filesystem::path file(*customer.getThumbnailPath());
 
                 if (!std::filesystem::exists(file))
                 {
@@ -299,8 +299,8 @@ namespace gaboot
 
                     throw NotFoundException("Unable to retreive profile picture, please upload your profile picture");
                 }
-                if (auto image = customer.getImgpath(); image && !image->empty())
-                    return HttpResponse::newFileResponse(*customer.getImgthumbpath());
+                if (auto image = customer.getImagePath(); image && !image->empty())
+                    return HttpResponse::newFileResponse(*customer.getThumbnailPath());
             }
 
             throw NotFoundException("Unable to retreive customers image");

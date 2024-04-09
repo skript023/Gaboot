@@ -46,26 +46,26 @@ class Payments
     {
         static const std::string _id;
         static const std::string _name;
-        static const std::string _transactionid;
-        static const std::string _merchantid;
-        static const std::string _paymenttype;
+        static const std::string _transaction_id;
+        static const std::string _merchant_id;
+        static const std::string _payment_type;
         static const std::string _description;
-        static const std::string _transactiontime;
-        static const std::string _transactionstatus;
-        static const std::string _fraudstatus;
+        static const std::string _transaction_time;
+        static const std::string _transaction_status;
+        static const std::string _fraud_status;
         static const std::string _bank;
-        static const std::string _vanumber;
+        static const std::string _va_number;
         static const std::string _currency;
         static const std::string _expiry_time;
-        static const std::string _createdat;
-        static const std::string _updatedat;
+        static const std::string _created_at;
+        static const std::string _updated_at;
     };
 
     const static int primaryKeyNumber;
     const static std::string tableName;
     const static bool hasPrimaryKey;
     const static std::string primaryKeyName;
-    using PrimaryKeyType = int32_t;
+    using PrimaryKeyType = std::string;
     const PrimaryKeyType &getPrimaryKey() const;
 
     /**
@@ -112,11 +112,12 @@ class Payments
 
     /**  For column id  */
     ///Get the value of the column id, returns the default value if the column is null
-    const int32_t &getValueOfId() const noexcept;
+    const std::string &getValueOfId() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getId() const noexcept;
+    const std::shared_ptr<std::string> &getId() const noexcept;
     ///Set the value of the column id
-    void setId(const int32_t &pId) noexcept;
+    void setId(const std::string &pId) noexcept;
+    void setId(std::string &&pId) noexcept;
 
     /**  For column name  */
     ///Get the value of the column name, returns the default value if the column is null
@@ -128,35 +129,35 @@ class Payments
     void setName(std::string &&pName) noexcept;
     void setNameToNull() noexcept;
 
-    /**  For column transactionid  */
-    ///Get the value of the column transactionid, returns the default value if the column is null
-    const std::string &getValueOfTransactionid() const noexcept;
+    /**  For column transaction_id  */
+    ///Get the value of the column transaction_id, returns the default value if the column is null
+    const std::string &getValueOfTransactionId() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getTransactionid() const noexcept;
-    ///Set the value of the column transactionid
-    void setTransactionid(const std::string &pTransactionid) noexcept;
-    void setTransactionid(std::string &&pTransactionid) noexcept;
-    void setTransactionidToNull() noexcept;
+    const std::shared_ptr<std::string> &getTransactionId() const noexcept;
+    ///Set the value of the column transaction_id
+    void setTransactionId(const std::string &pTransactionId) noexcept;
+    void setTransactionId(std::string &&pTransactionId) noexcept;
+    void setTransactionIdToNull() noexcept;
 
-    /**  For column merchantid  */
-    ///Get the value of the column merchantid, returns the default value if the column is null
-    const std::string &getValueOfMerchantid() const noexcept;
+    /**  For column merchant_id  */
+    ///Get the value of the column merchant_id, returns the default value if the column is null
+    const std::string &getValueOfMerchantId() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getMerchantid() const noexcept;
-    ///Set the value of the column merchantid
-    void setMerchantid(const std::string &pMerchantid) noexcept;
-    void setMerchantid(std::string &&pMerchantid) noexcept;
-    void setMerchantidToNull() noexcept;
+    const std::shared_ptr<std::string> &getMerchantId() const noexcept;
+    ///Set the value of the column merchant_id
+    void setMerchantId(const std::string &pMerchantId) noexcept;
+    void setMerchantId(std::string &&pMerchantId) noexcept;
+    void setMerchantIdToNull() noexcept;
 
-    /**  For column paymenttype  */
-    ///Get the value of the column paymenttype, returns the default value if the column is null
-    const std::string &getValueOfPaymenttype() const noexcept;
+    /**  For column payment_type  */
+    ///Get the value of the column payment_type, returns the default value if the column is null
+    const std::string &getValueOfPaymentType() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getPaymenttype() const noexcept;
-    ///Set the value of the column paymenttype
-    void setPaymenttype(const std::string &pPaymenttype) noexcept;
-    void setPaymenttype(std::string &&pPaymenttype) noexcept;
-    void setPaymenttypeToNull() noexcept;
+    const std::shared_ptr<std::string> &getPaymentType() const noexcept;
+    ///Set the value of the column payment_type
+    void setPaymentType(const std::string &pPaymentType) noexcept;
+    void setPaymentType(std::string &&pPaymentType) noexcept;
+    void setPaymentTypeToNull() noexcept;
 
     /**  For column description  */
     ///Get the value of the column description, returns the default value if the column is null
@@ -168,35 +169,35 @@ class Payments
     void setDescription(std::string &&pDescription) noexcept;
     void setDescriptionToNull() noexcept;
 
-    /**  For column transactiontime  */
-    ///Get the value of the column transactiontime, returns the default value if the column is null
-    const std::string &getValueOfTransactiontime() const noexcept;
+    /**  For column transaction_time  */
+    ///Get the value of the column transaction_time, returns the default value if the column is null
+    const std::string &getValueOfTransactionTime() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getTransactiontime() const noexcept;
-    ///Set the value of the column transactiontime
-    void setTransactiontime(const std::string &pTransactiontime) noexcept;
-    void setTransactiontime(std::string &&pTransactiontime) noexcept;
-    void setTransactiontimeToNull() noexcept;
+    const std::shared_ptr<std::string> &getTransactionTime() const noexcept;
+    ///Set the value of the column transaction_time
+    void setTransactionTime(const std::string &pTransactionTime) noexcept;
+    void setTransactionTime(std::string &&pTransactionTime) noexcept;
+    void setTransactionTimeToNull() noexcept;
 
-    /**  For column transactionstatus  */
-    ///Get the value of the column transactionstatus, returns the default value if the column is null
-    const std::string &getValueOfTransactionstatus() const noexcept;
+    /**  For column transaction_status  */
+    ///Get the value of the column transaction_status, returns the default value if the column is null
+    const std::string &getValueOfTransactionStatus() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getTransactionstatus() const noexcept;
-    ///Set the value of the column transactionstatus
-    void setTransactionstatus(const std::string &pTransactionstatus) noexcept;
-    void setTransactionstatus(std::string &&pTransactionstatus) noexcept;
-    void setTransactionstatusToNull() noexcept;
+    const std::shared_ptr<std::string> &getTransactionStatus() const noexcept;
+    ///Set the value of the column transaction_status
+    void setTransactionStatus(const std::string &pTransactionStatus) noexcept;
+    void setTransactionStatus(std::string &&pTransactionStatus) noexcept;
+    void setTransactionStatusToNull() noexcept;
 
-    /**  For column fraudstatus  */
-    ///Get the value of the column fraudstatus, returns the default value if the column is null
-    const std::string &getValueOfFraudstatus() const noexcept;
+    /**  For column fraud_status  */
+    ///Get the value of the column fraud_status, returns the default value if the column is null
+    const std::string &getValueOfFraudStatus() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getFraudstatus() const noexcept;
-    ///Set the value of the column fraudstatus
-    void setFraudstatus(const std::string &pFraudstatus) noexcept;
-    void setFraudstatus(std::string &&pFraudstatus) noexcept;
-    void setFraudstatusToNull() noexcept;
+    const std::shared_ptr<std::string> &getFraudStatus() const noexcept;
+    ///Set the value of the column fraud_status
+    void setFraudStatus(const std::string &pFraudStatus) noexcept;
+    void setFraudStatus(std::string &&pFraudStatus) noexcept;
+    void setFraudStatusToNull() noexcept;
 
     /**  For column bank  */
     ///Get the value of the column bank, returns the default value if the column is null
@@ -208,15 +209,15 @@ class Payments
     void setBank(std::string &&pBank) noexcept;
     void setBankToNull() noexcept;
 
-    /**  For column vanumber  */
-    ///Get the value of the column vanumber, returns the default value if the column is null
-    const std::string &getValueOfVanumber() const noexcept;
+    /**  For column va_number  */
+    ///Get the value of the column va_number, returns the default value if the column is null
+    const std::string &getValueOfVaNumber() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getVanumber() const noexcept;
-    ///Set the value of the column vanumber
-    void setVanumber(const std::string &pVanumber) noexcept;
-    void setVanumber(std::string &&pVanumber) noexcept;
-    void setVanumberToNull() noexcept;
+    const std::shared_ptr<std::string> &getVaNumber() const noexcept;
+    ///Set the value of the column va_number
+    void setVaNumber(const std::string &pVaNumber) noexcept;
+    void setVaNumber(std::string &&pVaNumber) noexcept;
+    void setVaNumberToNull() noexcept;
 
     /**  For column currency  */
     ///Get the value of the column currency, returns the default value if the column is null
@@ -238,21 +239,21 @@ class Payments
     void setExpiryTime(std::string &&pExpiryTime) noexcept;
     void setExpiryTimeToNull() noexcept;
 
-    /**  For column createdat  */
-    ///Get the value of the column createdat, returns the default value if the column is null
-    const ::trantor::Date &getValueOfCreatedat() const noexcept;
+    /**  For column created_at  */
+    ///Get the value of the column created_at, returns the default value if the column is null
+    const ::trantor::Date &getValueOfCreatedAt() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<::trantor::Date> &getCreatedat() const noexcept;
-    ///Set the value of the column createdat
-    void setCreatedat(const ::trantor::Date &pCreatedat) noexcept;
+    const std::shared_ptr<::trantor::Date> &getCreatedAt() const noexcept;
+    ///Set the value of the column created_at
+    void setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept;
 
-    /**  For column updatedat  */
-    ///Get the value of the column updatedat, returns the default value if the column is null
-    const ::trantor::Date &getValueOfUpdatedat() const noexcept;
+    /**  For column updated_at  */
+    ///Get the value of the column updated_at, returns the default value if the column is null
+    const ::trantor::Date &getValueOfUpdatedAt() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<::trantor::Date> &getUpdatedat() const noexcept;
-    ///Set the value of the column updatedat
-    void setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept;
+    const std::shared_ptr<::trantor::Date> &getUpdatedAt() const noexcept;
+    ///Set the value of the column updated_at
+    void setUpdatedAt(const ::trantor::Date &pUpdatedAt) noexcept;
 
 
     static size_t getColumnNumber() noexcept {  return 15;  }
@@ -276,21 +277,21 @@ class Payments
     void updateArgs(drogon::orm::internal::SqlBinder &binder) const;
     ///For mysql or sqlite3
     void updateId(const uint64_t id);
-    std::shared_ptr<int32_t> id_;
+    std::shared_ptr<std::string> id_;
     std::shared_ptr<std::string> name_;
-    std::shared_ptr<std::string> transactionid_;
-    std::shared_ptr<std::string> merchantid_;
-    std::shared_ptr<std::string> paymenttype_;
+    std::shared_ptr<std::string> transactionId_;
+    std::shared_ptr<std::string> merchantId_;
+    std::shared_ptr<std::string> paymentType_;
     std::shared_ptr<std::string> description_;
-    std::shared_ptr<std::string> transactiontime_;
-    std::shared_ptr<std::string> transactionstatus_;
-    std::shared_ptr<std::string> fraudstatus_;
+    std::shared_ptr<std::string> transactionTime_;
+    std::shared_ptr<std::string> transactionStatus_;
+    std::shared_ptr<std::string> fraudStatus_;
     std::shared_ptr<std::string> bank_;
-    std::shared_ptr<std::string> vanumber_;
+    std::shared_ptr<std::string> vaNumber_;
     std::shared_ptr<std::string> currency_;
     std::shared_ptr<std::string> expiryTime_;
-    std::shared_ptr<::trantor::Date> createdat_;
-    std::shared_ptr<::trantor::Date> updatedat_;
+    std::shared_ptr<::trantor::Date> createdAt_;
+    std::shared_ptr<::trantor::Date> updatedAt_;
     struct MetaData
     {
         const std::string colName_;
@@ -320,8 +321,12 @@ class Payments
         std::string sql="insert into " + tableName + " (";
         size_t parametersCount = 0;
         needSelection = false;
-            sql += "id,";
-            ++parametersCount;
+        sql += "id,";
+        ++parametersCount;
+        if(!dirtyFlag_[0])
+        {
+            needSelection=true;
+        }
         if(dirtyFlag_[1])
         {
             sql += "name,";
@@ -329,17 +334,17 @@ class Payments
         }
         if(dirtyFlag_[2])
         {
-            sql += "transactionid,";
+            sql += "transaction_id,";
             ++parametersCount;
         }
         if(dirtyFlag_[3])
         {
-            sql += "merchantid,";
+            sql += "merchant_id,";
             ++parametersCount;
         }
         if(dirtyFlag_[4])
         {
-            sql += "paymenttype,";
+            sql += "payment_type,";
             ++parametersCount;
         }
         if(dirtyFlag_[5])
@@ -349,17 +354,17 @@ class Payments
         }
         if(dirtyFlag_[6])
         {
-            sql += "transactiontime,";
+            sql += "transaction_time,";
             ++parametersCount;
         }
         if(dirtyFlag_[7])
         {
-            sql += "transactionstatus,";
+            sql += "transaction_status,";
             ++parametersCount;
         }
         if(dirtyFlag_[8])
         {
-            sql += "fraudstatus,";
+            sql += "fraud_status,";
             ++parametersCount;
         }
         if(dirtyFlag_[9])
@@ -369,7 +374,7 @@ class Payments
         }
         if(dirtyFlag_[10])
         {
-            sql += "vanumber,";
+            sql += "va_number,";
             ++parametersCount;
         }
         if(dirtyFlag_[11])
@@ -382,19 +387,18 @@ class Payments
             sql += "expiry_time,";
             ++parametersCount;
         }
-        sql += "createdat,";
+        sql += "created_at,";
         ++parametersCount;
         if(!dirtyFlag_[13])
         {
             needSelection=true;
         }
-        sql += "updatedat,";
+        sql += "updated_at,";
         ++parametersCount;
         if(!dirtyFlag_[14])
         {
             needSelection=true;
         }
-        needSelection=true;
         if(parametersCount > 0)
         {
             sql[sql.length()-1]=')';
@@ -406,7 +410,15 @@ class Payments
         int placeholder=1;
         char placeholderStr[64];
         size_t n=0;
-        sql +="default,";
+        if(dirtyFlag_[0])
+        {
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
+        }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[1])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);

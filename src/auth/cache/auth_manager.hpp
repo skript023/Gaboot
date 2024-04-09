@@ -24,17 +24,17 @@ namespace gaboot
 		explicit auth_manager();
 		virtual ~auth_manager();
 
-		bool insert(int64_t id);
+		bool insert(std::string const& id);
 		bool insert(MasterCustomers* customer);
-		bool insert(int64_t id, MasterCustomers* customer);
-		bool find(int64_t id, MasterCustomers* customer);
-		MasterCustomers* find(int64_t id);
+		bool insert(std::string const& id, MasterCustomers* customer);
+		bool find(std::string const& id, MasterCustomers* customer);
+		MasterCustomers* find(std::string const& id);
 		std::vector<MasterCustomers> find(std::function<bool(MasterCustomers const&)> callback);
 		MasterCustomers* find_one(std::function<bool(MasterCustomers const&)> callback);
-		bool update(int64_t id, MasterCustomers customer);
-		bool remove(int64_t id);
+		bool update(std::string const& id, MasterCustomers customer);
+		bool remove(std::string const& id);
 	private:
-		std::map<int64_t, auth_cache> m_cache_auth;
+		std::map<std::string, auth_cache> m_cache_auth;
 	};
 
 	inline auth_manager* g_auth_manager;

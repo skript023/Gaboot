@@ -25,8 +25,8 @@ namespace gaboot
 			});
 
 			Wishlists wishlist(*data);
-			wishlist.setCreatedat(trantor::Date::now());
-			wishlist.setUpdatedat(trantor::Date::now());
+			wishlist.setCreatedAt(trantor::Date::now());
+			wishlist.setUpdatedAt(trantor::Date::now());
 
 			if (!schema.validate(wishlist.toJson(), m_error))
 			{
@@ -85,14 +85,14 @@ namespace gaboot
 	{
 		TRY_CLAUSE
 		{
-			if (id.empty() || !util::is_numeric(id))
+			if (id.empty())
 			{
 				throw BadRequestException("Requirement doesn't match");
 			}
 
 			this->load_cache();
 
-			const auto user = m_cache_wishlist.find(stoll(id));
+			const auto user = m_cache_wishlist.find(id);
 
 			if (!user) throw NotFoundException("Unable retrieve wishlist detail");
 
@@ -111,20 +111,20 @@ namespace gaboot
 
 			if (!json) throw BadRequestException();
 
-			if (id.empty() || !util::is_numeric(id))
+			if (id.empty())
 			{
 				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
-			const auto wishlist = m_cache_wishlist.find(stoll(id));
+			const auto wishlist = m_cache_wishlist.find(id);
 
 			wishlist->updateByJson(*json);
-			wishlist->setId(stoll(id));
-			wishlist->setUpdatedat(trantor::Date::now());
+			wishlist->setId(id);
+			wishlist->setUpdatedAt(trantor::Date::now());
 
 			this->load_cache();
 
-			if (!m_cache_wishlist.update(stoll(id), *wishlist) || !db().updateFuture(*wishlist).get())
+			if (!m_cache_wishlist.update(id, *wishlist) || !db().updateFuture(*wishlist).get())
 				throw BadRequestException("Unable to update non-existing record");
 
 			m_response.m_data = wishlist->toJson();
@@ -139,17 +139,17 @@ namespace gaboot
 
 		TRY_CLAUSE
 		{
-			if (id.empty() || !util::is_numeric(id))
+			if (id.empty())
 			{
 				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
 			this->load_cache();
 
-			if (m_cache_wishlist.remove(stoll(id)))
+			if (m_cache_wishlist.remove(id))
 				throw NotFoundException("Unable to delete non-existing record");
 
-			if (auto record = db().deleteByPrimaryKey(stoll(id)); !record)
+			if (auto record = db().deleteByPrimaryKey(id); !record)
 				throw NotFoundException("Unable to delete non-existing record");
 
 			m_response.m_message = "Delete wishlist successfully";

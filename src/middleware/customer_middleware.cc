@@ -25,10 +25,10 @@ namespace gaboot
             if (this->parse_token_from_header(param))
             {
                 auto json = this->verify_token();
-                auto id = json["id"].get<int64_t>();
+                auto id = json["id"].get<std::string>();
                 
                 g_auth_manager->insert(id);
-                req->setBody(std::to_string(id));
+                req->setBody(id);
 
                 return fccb();
             }

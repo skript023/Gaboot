@@ -17,31 +17,31 @@ using namespace drogon_model::gaboot;
 
 const std::string Orders::Cols::_id = "id";
 const std::string Orders::Cols::_name = "name";
-const std::string Orders::Cols::_customerid = "customerid";
-const std::string Orders::Cols::_totalprice = "totalprice";
+const std::string Orders::Cols::_customer_id = "customer_id";
+const std::string Orders::Cols::_total_price = "total_price";
 const std::string Orders::Cols::_discount = "discount";
-const std::string Orders::Cols::_grandtotal = "grandtotal";
-const std::string Orders::Cols::_totalitem = "totalitem";
+const std::string Orders::Cols::_grand_total = "grand_total";
+const std::string Orders::Cols::_total_item = "total_item";
 const std::string Orders::Cols::_status = "status";
 const std::string Orders::Cols::_expired = "expired";
-const std::string Orders::Cols::_createdat = "createdat";
-const std::string Orders::Cols::_updatedat = "updatedat";
+const std::string Orders::Cols::_created_at = "created_at";
+const std::string Orders::Cols::_updated_at = "updated_at";
 const std::string Orders::primaryKeyName = "id";
 const bool Orders::hasPrimaryKey = true;
 const std::string Orders::tableName = "orders";
 
 const std::vector<typename Orders::MetaData> Orders::metaData_={
-{"id","int32_t","integer",4,1,1,1},
+{"id","std::string","uuid",0,0,1,1},
 {"name","std::string","character varying",255,0,0,0},
-{"customerid","int32_t","integer",4,0,0,0},
-{"totalprice","double","double precision",8,0,0,0},
+{"customer_id","std::string","uuid",0,0,0,1},
+{"total_price","double","double precision",8,0,0,0},
 {"discount","double","double precision",8,0,0,0},
-{"grandtotal","double","double precision",8,0,0,0},
-{"totalitem","int32_t","integer",4,0,0,0},
+{"grand_total","double","double precision",8,0,0,0},
+{"total_item","int32_t","integer",4,0,0,0},
 {"status","std::string","character varying",255,0,0,0},
 {"expired","std::string","character varying",255,0,0,0},
-{"createdat","::trantor::Date","timestamp without time zone",0,0,0,1},
-{"updatedat","::trantor::Date","timestamp without time zone",0,0,0,1}
+{"created_at","::trantor::Date","timestamp without time zone",0,0,0,1},
+{"updated_at","::trantor::Date","timestamp without time zone",0,0,0,1}
 };
 const std::string &Orders::getColumnName(size_t index) noexcept(false)
 {
@@ -54,31 +54,31 @@ Orders::Orders(const Row &r, const ssize_t indexOffset) noexcept
     {
         if(!r["id"].isNull())
         {
-            id_=std::make_shared<int32_t>(r["id"].as<int32_t>());
+            id_=std::make_shared<std::string>(r["id"].as<std::string>());
         }
         if(!r["name"].isNull())
         {
             name_=std::make_shared<std::string>(r["name"].as<std::string>());
         }
-        if(!r["customerid"].isNull())
+        if(!r["customer_id"].isNull())
         {
-            customerid_=std::make_shared<int32_t>(r["customerid"].as<int32_t>());
+            customerId_=std::make_shared<std::string>(r["customer_id"].as<std::string>());
         }
-        if(!r["totalprice"].isNull())
+        if(!r["total_price"].isNull())
         {
-            totalprice_=std::make_shared<double>(r["totalprice"].as<double>());
+            totalPrice_=std::make_shared<double>(r["total_price"].as<double>());
         }
         if(!r["discount"].isNull())
         {
             discount_=std::make_shared<double>(r["discount"].as<double>());
         }
-        if(!r["grandtotal"].isNull())
+        if(!r["grand_total"].isNull())
         {
-            grandtotal_=std::make_shared<double>(r["grandtotal"].as<double>());
+            grandTotal_=std::make_shared<double>(r["grand_total"].as<double>());
         }
-        if(!r["totalitem"].isNull())
+        if(!r["total_item"].isNull())
         {
-            totalitem_=std::make_shared<int32_t>(r["totalitem"].as<int32_t>());
+            totalItem_=std::make_shared<int32_t>(r["total_item"].as<int32_t>());
         }
         if(!r["status"].isNull())
         {
@@ -88,9 +88,9 @@ Orders::Orders(const Row &r, const ssize_t indexOffset) noexcept
         {
             expired_=std::make_shared<std::string>(r["expired"].as<std::string>());
         }
-        if(!r["createdat"].isNull())
+        if(!r["created_at"].isNull())
         {
-            auto timeStr = r["createdat"].as<std::string>();
+            auto timeStr = r["created_at"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -107,12 +107,12 @@ Orders::Orders(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        if(!r["updatedat"].isNull())
+        if(!r["updated_at"].isNull())
         {
-            auto timeStr = r["updatedat"].as<std::string>();
+            auto timeStr = r["updated_at"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -129,7 +129,7 @@ Orders::Orders(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -145,7 +145,7 @@ Orders::Orders(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 0;
         if(!r[index].isNull())
         {
-            id_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            id_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 1;
         if(!r[index].isNull())
@@ -155,12 +155,12 @@ Orders::Orders(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 2;
         if(!r[index].isNull())
         {
-            customerid_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            customerId_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 3;
         if(!r[index].isNull())
         {
-            totalprice_=std::make_shared<double>(r[index].as<double>());
+            totalPrice_=std::make_shared<double>(r[index].as<double>());
         }
         index = offset + 4;
         if(!r[index].isNull())
@@ -170,12 +170,12 @@ Orders::Orders(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 5;
         if(!r[index].isNull())
         {
-            grandtotal_=std::make_shared<double>(r[index].as<double>());
+            grandTotal_=std::make_shared<double>(r[index].as<double>());
         }
         index = offset + 6;
         if(!r[index].isNull())
         {
-            totalitem_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            totalItem_=std::make_shared<int32_t>(r[index].as<int32_t>());
         }
         index = offset + 7;
         if(!r[index].isNull())
@@ -207,7 +207,7 @@ Orders::Orders(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
         index = offset + 10;
@@ -230,7 +230,7 @@ Orders::Orders(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -249,7 +249,7 @@ Orders::Orders(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[0] = true;
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<std::string>(pJson[pMasqueradingVector[0]].asString());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -265,7 +265,7 @@ Orders::Orders(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[2] = true;
         if(!pJson[pMasqueradingVector[2]].isNull())
         {
-            customerid_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[2]].asInt64());
+            customerId_=std::make_shared<std::string>(pJson[pMasqueradingVector[2]].asString());
         }
     }
     if(!pMasqueradingVector[3].empty() && pJson.isMember(pMasqueradingVector[3]))
@@ -273,7 +273,7 @@ Orders::Orders(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[3] = true;
         if(!pJson[pMasqueradingVector[3]].isNull())
         {
-            totalprice_=std::make_shared<double>(pJson[pMasqueradingVector[3]].asDouble());
+            totalPrice_=std::make_shared<double>(pJson[pMasqueradingVector[3]].asDouble());
         }
     }
     if(!pMasqueradingVector[4].empty() && pJson.isMember(pMasqueradingVector[4]))
@@ -289,7 +289,7 @@ Orders::Orders(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[5] = true;
         if(!pJson[pMasqueradingVector[5]].isNull())
         {
-            grandtotal_=std::make_shared<double>(pJson[pMasqueradingVector[5]].asDouble());
+            grandTotal_=std::make_shared<double>(pJson[pMasqueradingVector[5]].asDouble());
         }
     }
     if(!pMasqueradingVector[6].empty() && pJson.isMember(pMasqueradingVector[6]))
@@ -297,7 +297,7 @@ Orders::Orders(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[6] = true;
         if(!pJson[pMasqueradingVector[6]].isNull())
         {
-            totalitem_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[6]].asInt64());
+            totalItem_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[6]].asInt64());
         }
     }
     if(!pMasqueradingVector[7].empty() && pJson.isMember(pMasqueradingVector[7]))
@@ -338,7 +338,7 @@ Orders::Orders(const Json::Value &pJson, const std::vector<std::string> &pMasque
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -364,7 +364,7 @@ Orders::Orders(const Json::Value &pJson, const std::vector<std::string> &pMasque
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -377,7 +377,7 @@ Orders::Orders(const Json::Value &pJson) noexcept(false)
         dirtyFlag_[0]=true;
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<std::string>(pJson["id"].asString());
         }
     }
     if(pJson.isMember("name"))
@@ -388,20 +388,20 @@ Orders::Orders(const Json::Value &pJson) noexcept(false)
             name_=std::make_shared<std::string>(pJson["name"].asString());
         }
     }
-    if(pJson.isMember("customerid"))
+    if(pJson.isMember("customer_id"))
     {
         dirtyFlag_[2]=true;
-        if(!pJson["customerid"].isNull())
+        if(!pJson["customer_id"].isNull())
         {
-            customerid_=std::make_shared<int32_t>((int32_t)pJson["customerid"].asInt64());
+            customerId_=std::make_shared<std::string>(pJson["customer_id"].asString());
         }
     }
-    if(pJson.isMember("totalprice"))
+    if(pJson.isMember("total_price"))
     {
         dirtyFlag_[3]=true;
-        if(!pJson["totalprice"].isNull())
+        if(!pJson["total_price"].isNull())
         {
-            totalprice_=std::make_shared<double>(pJson["totalprice"].asDouble());
+            totalPrice_=std::make_shared<double>(pJson["total_price"].asDouble());
         }
     }
     if(pJson.isMember("discount"))
@@ -412,20 +412,20 @@ Orders::Orders(const Json::Value &pJson) noexcept(false)
             discount_=std::make_shared<double>(pJson["discount"].asDouble());
         }
     }
-    if(pJson.isMember("grandtotal"))
+    if(pJson.isMember("grand_total"))
     {
         dirtyFlag_[5]=true;
-        if(!pJson["grandtotal"].isNull())
+        if(!pJson["grand_total"].isNull())
         {
-            grandtotal_=std::make_shared<double>(pJson["grandtotal"].asDouble());
+            grandTotal_=std::make_shared<double>(pJson["grand_total"].asDouble());
         }
     }
-    if(pJson.isMember("totalitem"))
+    if(pJson.isMember("total_item"))
     {
         dirtyFlag_[6]=true;
-        if(!pJson["totalitem"].isNull())
+        if(!pJson["total_item"].isNull())
         {
-            totalitem_=std::make_shared<int32_t>((int32_t)pJson["totalitem"].asInt64());
+            totalItem_=std::make_shared<int32_t>((int32_t)pJson["total_item"].asInt64());
         }
     }
     if(pJson.isMember("status"))
@@ -444,12 +444,12 @@ Orders::Orders(const Json::Value &pJson) noexcept(false)
             expired_=std::make_shared<std::string>(pJson["expired"].asString());
         }
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
         dirtyFlag_[9]=true;
-        if(!pJson["createdat"].isNull())
+        if(!pJson["created_at"].isNull())
         {
-            auto timeStr = pJson["createdat"].asString();
+            auto timeStr = pJson["created_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -466,16 +466,16 @@ Orders::Orders(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
         dirtyFlag_[10]=true;
-        if(!pJson["updatedat"].isNull())
+        if(!pJson["updated_at"].isNull())
         {
-            auto timeStr = pJson["updatedat"].asString();
+            auto timeStr = pJson["updated_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -492,7 +492,7 @@ Orders::Orders(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -510,7 +510,7 @@ void Orders::updateByMasqueradedJson(const Json::Value &pJson,
     {
         if(!pJson[pMasqueradingVector[0]].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[0]].asInt64());
+            id_=std::make_shared<std::string>(pJson[pMasqueradingVector[0]].asString());
         }
     }
     if(!pMasqueradingVector[1].empty() && pJson.isMember(pMasqueradingVector[1]))
@@ -526,7 +526,7 @@ void Orders::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[2] = true;
         if(!pJson[pMasqueradingVector[2]].isNull())
         {
-            customerid_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[2]].asInt64());
+            customerId_=std::make_shared<std::string>(pJson[pMasqueradingVector[2]].asString());
         }
     }
     if(!pMasqueradingVector[3].empty() && pJson.isMember(pMasqueradingVector[3]))
@@ -534,7 +534,7 @@ void Orders::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[3] = true;
         if(!pJson[pMasqueradingVector[3]].isNull())
         {
-            totalprice_=std::make_shared<double>(pJson[pMasqueradingVector[3]].asDouble());
+            totalPrice_=std::make_shared<double>(pJson[pMasqueradingVector[3]].asDouble());
         }
     }
     if(!pMasqueradingVector[4].empty() && pJson.isMember(pMasqueradingVector[4]))
@@ -550,7 +550,7 @@ void Orders::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[5] = true;
         if(!pJson[pMasqueradingVector[5]].isNull())
         {
-            grandtotal_=std::make_shared<double>(pJson[pMasqueradingVector[5]].asDouble());
+            grandTotal_=std::make_shared<double>(pJson[pMasqueradingVector[5]].asDouble());
         }
     }
     if(!pMasqueradingVector[6].empty() && pJson.isMember(pMasqueradingVector[6]))
@@ -558,7 +558,7 @@ void Orders::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[6] = true;
         if(!pJson[pMasqueradingVector[6]].isNull())
         {
-            totalitem_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[6]].asInt64());
+            totalItem_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[6]].asInt64());
         }
     }
     if(!pMasqueradingVector[7].empty() && pJson.isMember(pMasqueradingVector[7]))
@@ -599,7 +599,7 @@ void Orders::updateByMasqueradedJson(const Json::Value &pJson,
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -625,7 +625,7 @@ void Orders::updateByMasqueradedJson(const Json::Value &pJson,
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
@@ -637,7 +637,7 @@ void Orders::updateByJson(const Json::Value &pJson) noexcept(false)
     {
         if(!pJson["id"].isNull())
         {
-            id_=std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+            id_=std::make_shared<std::string>(pJson["id"].asString());
         }
     }
     if(pJson.isMember("name"))
@@ -648,20 +648,20 @@ void Orders::updateByJson(const Json::Value &pJson) noexcept(false)
             name_=std::make_shared<std::string>(pJson["name"].asString());
         }
     }
-    if(pJson.isMember("customerid"))
+    if(pJson.isMember("customer_id"))
     {
         dirtyFlag_[2] = true;
-        if(!pJson["customerid"].isNull())
+        if(!pJson["customer_id"].isNull())
         {
-            customerid_=std::make_shared<int32_t>((int32_t)pJson["customerid"].asInt64());
+            customerId_=std::make_shared<std::string>(pJson["customer_id"].asString());
         }
     }
-    if(pJson.isMember("totalprice"))
+    if(pJson.isMember("total_price"))
     {
         dirtyFlag_[3] = true;
-        if(!pJson["totalprice"].isNull())
+        if(!pJson["total_price"].isNull())
         {
-            totalprice_=std::make_shared<double>(pJson["totalprice"].asDouble());
+            totalPrice_=std::make_shared<double>(pJson["total_price"].asDouble());
         }
     }
     if(pJson.isMember("discount"))
@@ -672,20 +672,20 @@ void Orders::updateByJson(const Json::Value &pJson) noexcept(false)
             discount_=std::make_shared<double>(pJson["discount"].asDouble());
         }
     }
-    if(pJson.isMember("grandtotal"))
+    if(pJson.isMember("grand_total"))
     {
         dirtyFlag_[5] = true;
-        if(!pJson["grandtotal"].isNull())
+        if(!pJson["grand_total"].isNull())
         {
-            grandtotal_=std::make_shared<double>(pJson["grandtotal"].asDouble());
+            grandTotal_=std::make_shared<double>(pJson["grand_total"].asDouble());
         }
     }
-    if(pJson.isMember("totalitem"))
+    if(pJson.isMember("total_item"))
     {
         dirtyFlag_[6] = true;
-        if(!pJson["totalitem"].isNull())
+        if(!pJson["total_item"].isNull())
         {
-            totalitem_=std::make_shared<int32_t>((int32_t)pJson["totalitem"].asInt64());
+            totalItem_=std::make_shared<int32_t>((int32_t)pJson["total_item"].asInt64());
         }
     }
     if(pJson.isMember("status"))
@@ -704,12 +704,12 @@ void Orders::updateByJson(const Json::Value &pJson) noexcept(false)
             expired_=std::make_shared<std::string>(pJson["expired"].asString());
         }
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
         dirtyFlag_[9] = true;
-        if(!pJson["createdat"].isNull())
+        if(!pJson["created_at"].isNull())
         {
-            auto timeStr = pJson["createdat"].asString();
+            auto timeStr = pJson["created_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -726,16 +726,16 @@ void Orders::updateByJson(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
         dirtyFlag_[10] = true;
-        if(!pJson["updatedat"].isNull())
+        if(!pJson["updated_at"].isNull())
         {
-            auto timeStr = pJson["updatedat"].asString();
+            auto timeStr = pJson["updated_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -752,26 +752,31 @@ void Orders::updateByJson(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                updatedat_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                updatedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
 }
 
-const int32_t &Orders::getValueOfId() const noexcept
+const std::string &Orders::getValueOfId() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
+    const static std::string defaultValue = std::string();
     if(id_)
         return *id_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &Orders::getId() const noexcept
+const std::shared_ptr<std::string> &Orders::getId() const noexcept
 {
     return id_;
 }
-void Orders::setId(const int32_t &pId) noexcept
+void Orders::setId(const std::string &pId) noexcept
 {
-    id_ = std::make_shared<int32_t>(pId);
+    id_ = std::make_shared<std::string>(pId);
+    dirtyFlag_[0] = true;
+}
+void Orders::setId(std::string &&pId) noexcept
+{
+    id_ = std::make_shared<std::string>(std::move(pId));
     dirtyFlag_[0] = true;
 }
 const typename Orders::PrimaryKeyType & Orders::getPrimaryKey() const
@@ -807,47 +812,47 @@ void Orders::setNameToNull() noexcept
     dirtyFlag_[1] = true;
 }
 
-const int32_t &Orders::getValueOfCustomerid() const noexcept
+const std::string &Orders::getValueOfCustomerId() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
-    if(customerid_)
-        return *customerid_;
+    const static std::string defaultValue = std::string();
+    if(customerId_)
+        return *customerId_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &Orders::getCustomerid() const noexcept
+const std::shared_ptr<std::string> &Orders::getCustomerId() const noexcept
 {
-    return customerid_;
+    return customerId_;
 }
-void Orders::setCustomerid(const int32_t &pCustomerid) noexcept
+void Orders::setCustomerId(const std::string &pCustomerId) noexcept
 {
-    customerid_ = std::make_shared<int32_t>(pCustomerid);
+    customerId_ = std::make_shared<std::string>(pCustomerId);
     dirtyFlag_[2] = true;
 }
-void Orders::setCustomeridToNull() noexcept
+void Orders::setCustomerId(std::string &&pCustomerId) noexcept
 {
-    customerid_.reset();
+    customerId_ = std::make_shared<std::string>(std::move(pCustomerId));
     dirtyFlag_[2] = true;
 }
 
-const double &Orders::getValueOfTotalprice() const noexcept
+const double &Orders::getValueOfTotalPrice() const noexcept
 {
     const static double defaultValue = double();
-    if(totalprice_)
-        return *totalprice_;
+    if(totalPrice_)
+        return *totalPrice_;
     return defaultValue;
 }
-const std::shared_ptr<double> &Orders::getTotalprice() const noexcept
+const std::shared_ptr<double> &Orders::getTotalPrice() const noexcept
 {
-    return totalprice_;
+    return totalPrice_;
 }
-void Orders::setTotalprice(const double &pTotalprice) noexcept
+void Orders::setTotalPrice(const double &pTotalPrice) noexcept
 {
-    totalprice_ = std::make_shared<double>(pTotalprice);
+    totalPrice_ = std::make_shared<double>(pTotalPrice);
     dirtyFlag_[3] = true;
 }
-void Orders::setTotalpriceToNull() noexcept
+void Orders::setTotalPriceToNull() noexcept
 {
-    totalprice_.reset();
+    totalPrice_.reset();
     dirtyFlag_[3] = true;
 }
 
@@ -873,47 +878,47 @@ void Orders::setDiscountToNull() noexcept
     dirtyFlag_[4] = true;
 }
 
-const double &Orders::getValueOfGrandtotal() const noexcept
+const double &Orders::getValueOfGrandTotal() const noexcept
 {
     const static double defaultValue = double();
-    if(grandtotal_)
-        return *grandtotal_;
+    if(grandTotal_)
+        return *grandTotal_;
     return defaultValue;
 }
-const std::shared_ptr<double> &Orders::getGrandtotal() const noexcept
+const std::shared_ptr<double> &Orders::getGrandTotal() const noexcept
 {
-    return grandtotal_;
+    return grandTotal_;
 }
-void Orders::setGrandtotal(const double &pGrandtotal) noexcept
+void Orders::setGrandTotal(const double &pGrandTotal) noexcept
 {
-    grandtotal_ = std::make_shared<double>(pGrandtotal);
+    grandTotal_ = std::make_shared<double>(pGrandTotal);
     dirtyFlag_[5] = true;
 }
-void Orders::setGrandtotalToNull() noexcept
+void Orders::setGrandTotalToNull() noexcept
 {
-    grandtotal_.reset();
+    grandTotal_.reset();
     dirtyFlag_[5] = true;
 }
 
-const int32_t &Orders::getValueOfTotalitem() const noexcept
+const int32_t &Orders::getValueOfTotalItem() const noexcept
 {
     const static int32_t defaultValue = int32_t();
-    if(totalitem_)
-        return *totalitem_;
+    if(totalItem_)
+        return *totalItem_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &Orders::getTotalitem() const noexcept
+const std::shared_ptr<int32_t> &Orders::getTotalItem() const noexcept
 {
-    return totalitem_;
+    return totalItem_;
 }
-void Orders::setTotalitem(const int32_t &pTotalitem) noexcept
+void Orders::setTotalItem(const int32_t &pTotalItem) noexcept
 {
-    totalitem_ = std::make_shared<int32_t>(pTotalitem);
+    totalItem_ = std::make_shared<int32_t>(pTotalItem);
     dirtyFlag_[6] = true;
 }
-void Orders::setTotalitemToNull() noexcept
+void Orders::setTotalItemToNull() noexcept
 {
-    totalitem_.reset();
+    totalItem_.reset();
     dirtyFlag_[6] = true;
 }
 
@@ -971,37 +976,37 @@ void Orders::setExpiredToNull() noexcept
     dirtyFlag_[8] = true;
 }
 
-const ::trantor::Date &Orders::getValueOfCreatedat() const noexcept
+const ::trantor::Date &Orders::getValueOfCreatedAt() const noexcept
 {
     const static ::trantor::Date defaultValue = ::trantor::Date();
-    if(createdat_)
-        return *createdat_;
+    if(createdAt_)
+        return *createdAt_;
     return defaultValue;
 }
-const std::shared_ptr<::trantor::Date> &Orders::getCreatedat() const noexcept
+const std::shared_ptr<::trantor::Date> &Orders::getCreatedAt() const noexcept
 {
-    return createdat_;
+    return createdAt_;
 }
-void Orders::setCreatedat(const ::trantor::Date &pCreatedat) noexcept
+void Orders::setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept
 {
-    createdat_ = std::make_shared<::trantor::Date>(pCreatedat);
+    createdAt_ = std::make_shared<::trantor::Date>(pCreatedAt);
     dirtyFlag_[9] = true;
 }
 
-const ::trantor::Date &Orders::getValueOfUpdatedat() const noexcept
+const ::trantor::Date &Orders::getValueOfUpdatedAt() const noexcept
 {
     const static ::trantor::Date defaultValue = ::trantor::Date();
-    if(updatedat_)
-        return *updatedat_;
+    if(updatedAt_)
+        return *updatedAt_;
     return defaultValue;
 }
-const std::shared_ptr<::trantor::Date> &Orders::getUpdatedat() const noexcept
+const std::shared_ptr<::trantor::Date> &Orders::getUpdatedAt() const noexcept
 {
-    return updatedat_;
+    return updatedAt_;
 }
-void Orders::setUpdatedat(const ::trantor::Date &pUpdatedat) noexcept
+void Orders::setUpdatedAt(const ::trantor::Date &pUpdatedAt) noexcept
 {
-    updatedat_ = std::make_shared<::trantor::Date>(pUpdatedat);
+    updatedAt_ = std::make_shared<::trantor::Date>(pUpdatedAt);
     dirtyFlag_[10] = true;
 }
 
@@ -1012,22 +1017,34 @@ void Orders::updateId(const uint64_t id)
 const std::vector<std::string> &Orders::insertColumns() noexcept
 {
     static const std::vector<std::string> inCols={
+        "id",
         "name",
-        "customerid",
-        "totalprice",
+        "customer_id",
+        "total_price",
         "discount",
-        "grandtotal",
-        "totalitem",
+        "grand_total",
+        "total_item",
         "status",
         "expired",
-        "createdat",
-        "updatedat"
+        "created_at",
+        "updated_at"
     };
     return inCols;
 }
 
 void Orders::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 {
+    if(dirtyFlag_[0])
+    {
+        if(getId())
+        {
+            binder << getValueOfId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
     if(dirtyFlag_[1])
     {
         if(getName())
@@ -1041,9 +1058,9 @@ void Orders::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[2])
     {
-        if(getCustomerid())
+        if(getCustomerId())
         {
-            binder << getValueOfCustomerid();
+            binder << getValueOfCustomerId();
         }
         else
         {
@@ -1052,9 +1069,9 @@ void Orders::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[3])
     {
-        if(getTotalprice())
+        if(getTotalPrice())
         {
-            binder << getValueOfTotalprice();
+            binder << getValueOfTotalPrice();
         }
         else
         {
@@ -1074,9 +1091,9 @@ void Orders::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[5])
     {
-        if(getGrandtotal())
+        if(getGrandTotal())
         {
-            binder << getValueOfGrandtotal();
+            binder << getValueOfGrandTotal();
         }
         else
         {
@@ -1085,9 +1102,9 @@ void Orders::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[6])
     {
-        if(getTotalitem())
+        if(getTotalItem())
         {
-            binder << getValueOfTotalitem();
+            binder << getValueOfTotalItem();
         }
         else
         {
@@ -1118,9 +1135,9 @@ void Orders::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[9])
     {
-        if(getCreatedat())
+        if(getCreatedAt())
         {
-            binder << getValueOfCreatedat();
+            binder << getValueOfCreatedAt();
         }
         else
         {
@@ -1129,9 +1146,9 @@ void Orders::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[10])
     {
-        if(getUpdatedat())
+        if(getUpdatedAt())
         {
-            binder << getValueOfUpdatedat();
+            binder << getValueOfUpdatedAt();
         }
         else
         {
@@ -1143,6 +1160,10 @@ void Orders::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 const std::vector<std::string> Orders::updateColumns() const
 {
     std::vector<std::string> ret;
+    if(dirtyFlag_[0])
+    {
+        ret.push_back(getColumnName(0));
+    }
     if(dirtyFlag_[1])
     {
         ret.push_back(getColumnName(1));
@@ -1188,6 +1209,17 @@ const std::vector<std::string> Orders::updateColumns() const
 
 void Orders::updateArgs(drogon::orm::internal::SqlBinder &binder) const
 {
+    if(dirtyFlag_[0])
+    {
+        if(getId())
+        {
+            binder << getValueOfId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
     if(dirtyFlag_[1])
     {
         if(getName())
@@ -1201,9 +1233,9 @@ void Orders::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[2])
     {
-        if(getCustomerid())
+        if(getCustomerId())
         {
-            binder << getValueOfCustomerid();
+            binder << getValueOfCustomerId();
         }
         else
         {
@@ -1212,9 +1244,9 @@ void Orders::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[3])
     {
-        if(getTotalprice())
+        if(getTotalPrice())
         {
-            binder << getValueOfTotalprice();
+            binder << getValueOfTotalPrice();
         }
         else
         {
@@ -1234,9 +1266,9 @@ void Orders::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[5])
     {
-        if(getGrandtotal())
+        if(getGrandTotal())
         {
-            binder << getValueOfGrandtotal();
+            binder << getValueOfGrandTotal();
         }
         else
         {
@@ -1245,9 +1277,9 @@ void Orders::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[6])
     {
-        if(getTotalitem())
+        if(getTotalItem())
         {
-            binder << getValueOfTotalitem();
+            binder << getValueOfTotalItem();
         }
         else
         {
@@ -1278,9 +1310,9 @@ void Orders::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[9])
     {
-        if(getCreatedat())
+        if(getCreatedAt())
         {
-            binder << getValueOfCreatedat();
+            binder << getValueOfCreatedAt();
         }
         else
         {
@@ -1289,9 +1321,9 @@ void Orders::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[10])
     {
-        if(getUpdatedat())
+        if(getUpdatedAt())
         {
-            binder << getValueOfUpdatedat();
+            binder << getValueOfUpdatedAt();
         }
         else
         {
@@ -1318,21 +1350,21 @@ Json::Value Orders::toJson() const
     {
         ret["name"]=Json::Value();
     }
-    if(getCustomerid())
+    if(getCustomerId())
     {
-        ret["customerid"]=getValueOfCustomerid();
+        ret["customer_id"]=getValueOfCustomerId();
     }
     else
     {
-        ret["customerid"]=Json::Value();
+        ret["customer_id"]=Json::Value();
     }
-    if(getTotalprice())
+    if(getTotalPrice())
     {
-        ret["totalprice"]=getValueOfTotalprice();
+        ret["total_price"]=getValueOfTotalPrice();
     }
     else
     {
-        ret["totalprice"]=Json::Value();
+        ret["total_price"]=Json::Value();
     }
     if(getDiscount())
     {
@@ -1342,21 +1374,21 @@ Json::Value Orders::toJson() const
     {
         ret["discount"]=Json::Value();
     }
-    if(getGrandtotal())
+    if(getGrandTotal())
     {
-        ret["grandtotal"]=getValueOfGrandtotal();
+        ret["grand_total"]=getValueOfGrandTotal();
     }
     else
     {
-        ret["grandtotal"]=Json::Value();
+        ret["grand_total"]=Json::Value();
     }
-    if(getTotalitem())
+    if(getTotalItem())
     {
-        ret["totalitem"]=getValueOfTotalitem();
+        ret["total_item"]=getValueOfTotalItem();
     }
     else
     {
-        ret["totalitem"]=Json::Value();
+        ret["total_item"]=Json::Value();
     }
     if(getStatus())
     {
@@ -1374,21 +1406,21 @@ Json::Value Orders::toJson() const
     {
         ret["expired"]=Json::Value();
     }
-    if(getCreatedat())
+    if(getCreatedAt())
     {
-        ret["createdat"]=getCreatedat()->toDbStringLocal();
+        ret["created_at"]=getCreatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["createdat"]=Json::Value();
+        ret["created_at"]=Json::Value();
     }
-    if(getUpdatedat())
+    if(getUpdatedAt())
     {
-        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
+        ret["updated_at"]=getUpdatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["updatedat"]=Json::Value();
+        ret["updated_at"]=Json::Value();
     }
     return ret;
 }
@@ -1423,9 +1455,9 @@ Json::Value Orders::toMasqueradedJson(
         }
         if(!pMasqueradingVector[2].empty())
         {
-            if(getCustomerid())
+            if(getCustomerId())
             {
-                ret[pMasqueradingVector[2]]=getValueOfCustomerid();
+                ret[pMasqueradingVector[2]]=getValueOfCustomerId();
             }
             else
             {
@@ -1434,9 +1466,9 @@ Json::Value Orders::toMasqueradedJson(
         }
         if(!pMasqueradingVector[3].empty())
         {
-            if(getTotalprice())
+            if(getTotalPrice())
             {
-                ret[pMasqueradingVector[3]]=getValueOfTotalprice();
+                ret[pMasqueradingVector[3]]=getValueOfTotalPrice();
             }
             else
             {
@@ -1456,9 +1488,9 @@ Json::Value Orders::toMasqueradedJson(
         }
         if(!pMasqueradingVector[5].empty())
         {
-            if(getGrandtotal())
+            if(getGrandTotal())
             {
-                ret[pMasqueradingVector[5]]=getValueOfGrandtotal();
+                ret[pMasqueradingVector[5]]=getValueOfGrandTotal();
             }
             else
             {
@@ -1467,9 +1499,9 @@ Json::Value Orders::toMasqueradedJson(
         }
         if(!pMasqueradingVector[6].empty())
         {
-            if(getTotalitem())
+            if(getTotalItem())
             {
-                ret[pMasqueradingVector[6]]=getValueOfTotalitem();
+                ret[pMasqueradingVector[6]]=getValueOfTotalItem();
             }
             else
             {
@@ -1500,9 +1532,9 @@ Json::Value Orders::toMasqueradedJson(
         }
         if(!pMasqueradingVector[9].empty())
         {
-            if(getCreatedat())
+            if(getCreatedAt())
             {
-                ret[pMasqueradingVector[9]]=getCreatedat()->toDbStringLocal();
+                ret[pMasqueradingVector[9]]=getCreatedAt()->toDbStringLocal();
             }
             else
             {
@@ -1511,9 +1543,9 @@ Json::Value Orders::toMasqueradedJson(
         }
         if(!pMasqueradingVector[10].empty())
         {
-            if(getUpdatedat())
+            if(getUpdatedAt())
             {
-                ret[pMasqueradingVector[10]]=getUpdatedat()->toDbStringLocal();
+                ret[pMasqueradingVector[10]]=getUpdatedAt()->toDbStringLocal();
             }
             else
             {
@@ -1539,21 +1571,21 @@ Json::Value Orders::toMasqueradedJson(
     {
         ret["name"]=Json::Value();
     }
-    if(getCustomerid())
+    if(getCustomerId())
     {
-        ret["customerid"]=getValueOfCustomerid();
+        ret["customer_id"]=getValueOfCustomerId();
     }
     else
     {
-        ret["customerid"]=Json::Value();
+        ret["customer_id"]=Json::Value();
     }
-    if(getTotalprice())
+    if(getTotalPrice())
     {
-        ret["totalprice"]=getValueOfTotalprice();
+        ret["total_price"]=getValueOfTotalPrice();
     }
     else
     {
-        ret["totalprice"]=Json::Value();
+        ret["total_price"]=Json::Value();
     }
     if(getDiscount())
     {
@@ -1563,21 +1595,21 @@ Json::Value Orders::toMasqueradedJson(
     {
         ret["discount"]=Json::Value();
     }
-    if(getGrandtotal())
+    if(getGrandTotal())
     {
-        ret["grandtotal"]=getValueOfGrandtotal();
+        ret["grand_total"]=getValueOfGrandTotal();
     }
     else
     {
-        ret["grandtotal"]=Json::Value();
+        ret["grand_total"]=Json::Value();
     }
-    if(getTotalitem())
+    if(getTotalItem())
     {
-        ret["totalitem"]=getValueOfTotalitem();
+        ret["total_item"]=getValueOfTotalItem();
     }
     else
     {
-        ret["totalitem"]=Json::Value();
+        ret["total_item"]=Json::Value();
     }
     if(getStatus())
     {
@@ -1595,21 +1627,21 @@ Json::Value Orders::toMasqueradedJson(
     {
         ret["expired"]=Json::Value();
     }
-    if(getCreatedat())
+    if(getCreatedAt())
     {
-        ret["createdat"]=getCreatedat()->toDbStringLocal();
+        ret["created_at"]=getCreatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["createdat"]=Json::Value();
+        ret["created_at"]=Json::Value();
     }
-    if(getUpdatedat())
+    if(getUpdatedAt())
     {
-        ret["updatedat"]=getUpdatedat()->toDbStringLocal();
+        ret["updated_at"]=getUpdatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["updatedat"]=Json::Value();
+        ret["updated_at"]=Json::Value();
     }
     return ret;
 }
@@ -1626,14 +1658,19 @@ bool Orders::validateJsonForCreation(const Json::Value &pJson, std::string &err)
         if(!validJsonOfField(1, "name", pJson["name"], err, true))
             return false;
     }
-    if(pJson.isMember("customerid"))
+    if(pJson.isMember("customer_id"))
     {
-        if(!validJsonOfField(2, "customerid", pJson["customerid"], err, true))
+        if(!validJsonOfField(2, "customer_id", pJson["customer_id"], err, true))
             return false;
     }
-    if(pJson.isMember("totalprice"))
+    else
     {
-        if(!validJsonOfField(3, "totalprice", pJson["totalprice"], err, true))
+        err="The customer_id column cannot be null";
+        return false;
+    }
+    if(pJson.isMember("total_price"))
+    {
+        if(!validJsonOfField(3, "total_price", pJson["total_price"], err, true))
             return false;
     }
     if(pJson.isMember("discount"))
@@ -1641,14 +1678,14 @@ bool Orders::validateJsonForCreation(const Json::Value &pJson, std::string &err)
         if(!validJsonOfField(4, "discount", pJson["discount"], err, true))
             return false;
     }
-    if(pJson.isMember("grandtotal"))
+    if(pJson.isMember("grand_total"))
     {
-        if(!validJsonOfField(5, "grandtotal", pJson["grandtotal"], err, true))
+        if(!validJsonOfField(5, "grand_total", pJson["grand_total"], err, true))
             return false;
     }
-    if(pJson.isMember("totalitem"))
+    if(pJson.isMember("total_item"))
     {
-        if(!validJsonOfField(6, "totalitem", pJson["totalitem"], err, true))
+        if(!validJsonOfField(6, "total_item", pJson["total_item"], err, true))
             return false;
     }
     if(pJson.isMember("status"))
@@ -1661,14 +1698,14 @@ bool Orders::validateJsonForCreation(const Json::Value &pJson, std::string &err)
         if(!validJsonOfField(8, "expired", pJson["expired"], err, true))
             return false;
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(9, "createdat", pJson["createdat"], err, true))
+        if(!validJsonOfField(9, "created_at", pJson["created_at"], err, true))
             return false;
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
-        if(!validJsonOfField(10, "updatedat", pJson["updatedat"], err, true))
+        if(!validJsonOfField(10, "updated_at", pJson["updated_at"], err, true))
             return false;
     }
     return true;
@@ -1706,6 +1743,11 @@ bool Orders::validateMasqueradedJsonForCreation(const Json::Value &pJson,
               if(!validJsonOfField(2, pMasqueradingVector[2], pJson[pMasqueradingVector[2]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[2] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[3].empty())
       {
@@ -1796,14 +1838,14 @@ bool Orders::validateJsonForUpdate(const Json::Value &pJson, std::string &err)
         if(!validJsonOfField(1, "name", pJson["name"], err, false))
             return false;
     }
-    if(pJson.isMember("customerid"))
+    if(pJson.isMember("customer_id"))
     {
-        if(!validJsonOfField(2, "customerid", pJson["customerid"], err, false))
+        if(!validJsonOfField(2, "customer_id", pJson["customer_id"], err, false))
             return false;
     }
-    if(pJson.isMember("totalprice"))
+    if(pJson.isMember("total_price"))
     {
-        if(!validJsonOfField(3, "totalprice", pJson["totalprice"], err, false))
+        if(!validJsonOfField(3, "total_price", pJson["total_price"], err, false))
             return false;
     }
     if(pJson.isMember("discount"))
@@ -1811,14 +1853,14 @@ bool Orders::validateJsonForUpdate(const Json::Value &pJson, std::string &err)
         if(!validJsonOfField(4, "discount", pJson["discount"], err, false))
             return false;
     }
-    if(pJson.isMember("grandtotal"))
+    if(pJson.isMember("grand_total"))
     {
-        if(!validJsonOfField(5, "grandtotal", pJson["grandtotal"], err, false))
+        if(!validJsonOfField(5, "grand_total", pJson["grand_total"], err, false))
             return false;
     }
-    if(pJson.isMember("totalitem"))
+    if(pJson.isMember("total_item"))
     {
-        if(!validJsonOfField(6, "totalitem", pJson["totalitem"], err, false))
+        if(!validJsonOfField(6, "total_item", pJson["total_item"], err, false))
             return false;
     }
     if(pJson.isMember("status"))
@@ -1831,14 +1873,14 @@ bool Orders::validateJsonForUpdate(const Json::Value &pJson, std::string &err)
         if(!validJsonOfField(8, "expired", pJson["expired"], err, false))
             return false;
     }
-    if(pJson.isMember("createdat"))
+    if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(9, "createdat", pJson["createdat"], err, false))
+        if(!validJsonOfField(9, "created_at", pJson["created_at"], err, false))
             return false;
     }
-    if(pJson.isMember("updatedat"))
+    if(pJson.isMember("updated_at"))
     {
-        if(!validJsonOfField(10, "updatedat", pJson["updatedat"], err, false))
+        if(!validJsonOfField(10, "updated_at", pJson["updated_at"], err, false))
             return false;
     }
     return true;
@@ -1935,12 +1977,7 @@ bool Orders::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(isForCreation)
-            {
-                err="The automatic primary key cannot be set";
-                return false;
-            }
-            if(!pJson.isInt())
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -1969,9 +2006,10 @@ bool Orders::validJsonOfField(size_t index,
         case 2:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
-            if(!pJson.isInt())
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -2113,7 +2151,7 @@ void Orders::getMaster_customers(const DbClientPtr &clientPtr,
 {
     const static std::string sql = "select * from master_customers where id = $1";
     *clientPtr << sql
-               << *customerid_
+               << *customerId_
                >> [rcb = std::move(rcb), ecb](const Result &r){
                     if (r.size() == 0)
                     {

@@ -115,7 +115,7 @@ namespace gaboot
     {
         std::string token = req->getHeader("Authorization");
 
-        if (auto body = req->getBody(); util::is_numeric(body) && g_auth_manager->remove(std::stoi(body.data())))
+        if (auto body = req->getBody(); util::is_numeric(body) && g_auth_manager->remove(body.data()))
         {
             token = jwt_generator::parse_token(token);
             jwt_generator::remove(token);
@@ -140,7 +140,7 @@ namespace gaboot
     {
         std::string token = req->getHeader("Authorization");
 
-        if (auto body = req->getBody(); util::is_numeric(body) && g_auth_manager->remove(std::stoi(body.data())))
+        if (auto body = req->getBody(); util::is_numeric(body) && g_auth_manager->remove(body.data()))
         {
             token = jwt_generator::parse_token(token);
             jwt_generator::remove(token);
