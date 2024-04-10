@@ -4,6 +4,7 @@
 #include "validator/validator.hpp"
 #include "interfaces/response.hpp"
 #include "cart/models/Carts.h"
+#include "cart/dto/cart.dto.hpp"
 
 #include <cache_manager/cache_handler.hpp>
 
@@ -47,5 +48,6 @@ namespace gaboot
 	private:
 		cache_handler<Carts> m_cache_cart;
 		response_data m_response;
+		CartsResponse m_cart_response;
 	};
 }

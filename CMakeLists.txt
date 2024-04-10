@@ -136,6 +136,14 @@ target_include_directories(Gaboot PRIVATE
   "${SRC_DIR}/module/payment/models"
   "${SRC_DIR}/module/product/models"
   "${SRC_DIR}/module/wishlist/models"
+  
+  "${SRC_DIR}/module/cart"
+  "${SRC_DIR}/module/category"
+  "${SRC_DIR}/module/customer"
+  "${SRC_DIR}/module/order"
+  "${SRC_DIR}/module/payment"
+  "${SRC_DIR}/module/product"
+  "${SRC_DIR}/module/wishlist"
 )
 
 target_precompile_headers(Gaboot PRIVATE "${SRC_DIR}/pch.h")
