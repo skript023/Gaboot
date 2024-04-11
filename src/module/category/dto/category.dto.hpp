@@ -3,7 +3,7 @@
 
 namespace gaboot
 {
-	struct ActualCategoryRespose
+	struct ActualCategoryResponse
 	{
 		std::string id;
 		std::string name;
