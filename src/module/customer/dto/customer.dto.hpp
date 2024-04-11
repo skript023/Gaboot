@@ -31,10 +31,19 @@ namespace gaboot
 
 		CustomerResponse(std::unique_ptr<ActualCustomerResponse> const& res):
 			id(res->id), 
-			customerId(res->customer_id),
-			productId(res->product_id),
-			price(res->price),
-			quantity(res->quantity),
+			firstname(res->firstname),
+			lastname(res->lastname),
+			username(res->username),
+			email(res->email),
+			phone_number(res->phone_number),
+			address_detail(res->address_detail),
+			latitude(res->latitude),
+			longitude(res->longitude),
+			password(res->password),
+			token(res->token),
+			is_active(res->is_active),
+			image_path(res->image_path),
+			thumbnail_path(res->thumbnail_path),
 			createdAt(res->created_at),
 			updatedAt(res->updated_at)
 		{

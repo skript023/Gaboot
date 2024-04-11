@@ -22,10 +22,10 @@ namespace gaboot
 
 		CategoryResponse(std::unique_ptr<ActualCategoryResponse> const& res):
 			id(res->id), 
-			customerId(res->customer_id),
-			productId(res->product_id),
-			price(res->price),
-			quantity(res->quantity),
+			name(res->name),
+			description(res->description),
+			imagePath(res->image_path),
+			thumbnailPath(res->thumbnail_path),
 			createdAt(res->created_at),
 			updatedAt(res->updated_at)
 		{
