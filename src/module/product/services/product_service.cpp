@@ -36,7 +36,7 @@ namespace gaboot
 			}
 
 			std::ranges::for_each(products.begin(), products.end(), [this](MasterProducts const& product) {
-				m_response.m_data.append(product.toJson());
+				m_response.m_data.append(m_product_response.from_json(product.toJson()).to_json());
 			});
 
 			const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
@@ -125,7 +125,7 @@ namespace gaboot
 
 			m_response.m_message = "Success retrieve products data";
 			m_response.m_success = true;
-			m_response.m_data = product->toJson();
+			m_response.m_data = m_product_response.from_json(product->toJson()).to_json();
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		} EXCEPT_CLAUSE
