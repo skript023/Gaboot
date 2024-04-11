@@ -6,6 +6,7 @@
 #include "interfaces/response.hpp"
 
 #include "category/models/Categories.h"
+#include "category/dto/category.dto.hpp"
 #include "cache_manager/cache_handler.hpp"
 
 using namespace drogon;
@@ -52,5 +53,6 @@ namespace gaboot
 		std::string m_error;
 		Json::Value m_data;
 		cache_handler<Categories> m_cache_category;
+		CategoryResponse m_category_response;
 	};
 }

@@ -87,7 +87,7 @@ namespace gaboot
 			Json::Value data(Json::arrayValue);
 
 			std::ranges::for_each(categories.begin(), categories.end(), [this](Categories const& category) {
-				m_response.m_data.append(category.toJson());
+				m_response.m_data.append(m_category_response.from_json(category.toJson()).to_json());
 			});
 
 			const size_t lastPage = (categories.size() / (limit + (categories.size() % limit))) == 0 ? 0 : 1;
@@ -116,7 +116,7 @@ namespace gaboot
 
 			m_response.m_message = "Success retrieve category data";
 			m_response.m_success = true;
-			m_response.m_data = category->toJson();
+			m_response.m_data = m_category_response.from_json(category->toJson()).to_json();
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		} EXCEPT_CLAUSE

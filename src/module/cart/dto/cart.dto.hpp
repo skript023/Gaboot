@@ -40,13 +40,15 @@ namespace gaboot
 		std::string createdAt;
 		std::string updatedAt;
 
-		void from_json(Json::Value const& json)
+		CartsResponse from_json(Json::Value const& json)
 		{
 			auto njson = nlohmann::json::parse(json.toStyledString());
 
 			const auto response = std::make_unique<ActualCartsResponse>(njson.get<ActualCartsResponse>());
 
 			*this = response;
+
+			return *this;
 		}
 
 		Json::Value to_json()
