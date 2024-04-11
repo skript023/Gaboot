@@ -5,6 +5,7 @@
 #include <cache_manager/cache_handler.hpp>
 #include <product/models/MasterProducts.h>
 #include <product/models/ProductImages.h>
+#include <product/dto/product.dto.hpp>
 
 
 using namespace drogon;
