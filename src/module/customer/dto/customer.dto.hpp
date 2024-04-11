@@ -12,11 +12,11 @@ namespace gaboot
 		std::string email;
 		std::string phone_number;
 		std::string address_detail;
-		std::string latitude;
-		std::string longitude;
+		double latitude;
+		double longitude;
 		std::string password;
 		std::string token;
-		std::string is_active;
+		bool is_active;
 		std::string image_path;
 		std::string thumbnail_path;
 		std::string created_at;
@@ -57,8 +57,8 @@ namespace gaboot
 		std::string email;
 		std::string phoneNumber;
 		std::string addressDetail;
-		std::string latitude;
-		std::string longitude;
+		double latitude;
+		double longitude;
 		std::string password;
 		std::string token;
 		std::string isActive;
