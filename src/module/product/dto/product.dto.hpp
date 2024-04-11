@@ -10,12 +10,12 @@ namespace gaboot
 		std::string description;
 		double price;
 		int32_t stock;
-		int32_t dimension;
-		int32_t weight;
-		int32_t weight_unit;
-		int32_t category_id;
+		std::string dimension;
+		double weight;
+		std::string weight_unit;
+		std::string category_id;
 		int32_t total_sales;
-		int32_t is_active;
+		bool is_active;
 		std::string created_at;
 		std::string updated_at;
 

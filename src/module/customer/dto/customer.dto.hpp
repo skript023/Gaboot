@@ -61,7 +61,7 @@ namespace gaboot
 		double longitude;
 		std::string password;
 		std::string token;
-		std::string isActive;
+		bool isActive;
 		std::string imagePath;
 		std::string thumbnailPath;
 		std::string createdAt;
