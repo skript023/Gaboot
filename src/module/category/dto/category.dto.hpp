@@ -1,33 +1,37 @@
 #pragma once
 #include <pch.h>
+#include <Categories.h>
+
+using namespace drogon;
+using namespace orm;
+using namespace drogon_model::gaboot;
 
 namespace gaboot
 {
-	struct ActualCategoryResponse
-	{
-		std::string id;
-		std::string name;
-		std::string description;
-		std::string image_path;
-		std::string thumbnail_path;
-		std::string created_at;
-		std::string updated_at;
-
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ActualCategoryResponse, id, name, description, image_path, thumbnail_path, created_at, updated_at)
-	};
-
 	struct CategoryResponse
 	{
 		CategoryResponse() = default;
 
-		CategoryResponse(std::unique_ptr<ActualCategoryResponse> const& res):
-			id(res->id), 
-			name(res->name),
-			description(res->description),
-			imagePath(res->image_path),
-			thumbnailPath(res->thumbnail_path),
-			createdAt(res->created_at),
-			updatedAt(res->updated_at)
+		CategoryResponse(Categories* res) :
+			id(res->getValueOfId()),
+			name(res->getValueOfName()),
+			description(res->getValueOfDescription()),
+			imagePath(res->getValueOfImagePath()),
+			thumbnailPath(res->getValueOfThumbnailPath()),
+			createdAt(res->getValueOfCreatedAt().toDbStringLocal()),
+			updatedAt(res->getValueOfUpdatedAt().toDbStringLocal())
+		{
+
+		}
+		
+		CategoryResponse(Categories const& res) :
+			id(res.getValueOfId()),
+			name(res.getValueOfName()),
+			description(res.getValueOfDescription()),
+			imagePath(res.getValueOfImagePath()),
+			thumbnailPath(res.getValueOfThumbnailPath()),
+			createdAt(res.getValueOfCreatedAt().toDbStringLocal()),
+			updatedAt(res.getValueOfUpdatedAt().toDbStringLocal())
 		{
 
 		}
@@ -40,17 +44,6 @@ namespace gaboot
 		std::string createdAt;
 		std::string updatedAt;
 
-		CategoryResponse from_json(Json::Value const& json)
-		{
-			auto njson = nlohmann::json::parse(json.toStyledString());
-
-			const auto response = std::make_unique<ActualCategoryResponse>(njson.get<ActualCategoryResponse>());
-
-			*this = response;
-
-            return *this;
-		}
-
 		Json::Value to_json()
 		{
 			nlohmann::json json = *this;
@@ -61,6 +54,7 @@ namespace gaboot
 
 			return data;
 		}
+
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(CategoryResponse, id, name, description, imagePath, thumbnailPath, createdAt, updatedAt)
 	};
 }

@@ -23,4 +23,8 @@ namespace gaboot
 	{
 		callback(m_product_service.remove(req, std::move(id)));
 	}
+	void products::productWithImages(HttpRequestPtr const& req, response_t&& callback)
+	{
+		callback(m_product_service.getProductWithImage(req));
+	}
 }

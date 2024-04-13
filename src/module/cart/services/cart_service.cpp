@@ -76,7 +76,8 @@ namespace gaboot
             }
 
             std::ranges::for_each(carts.begin(), carts.end(), [this](Carts const& cart) {
-                m_response.m_data.append(m_cart_response.from_json(cart.toJson()).to_json());
+                CartsResponse c = cart;
+                m_response.m_data.append(c.to_json());
 			});
 
             m_response.m_message = "Success retreive carts data";
@@ -96,13 +97,13 @@ namespace gaboot
 
 			this->load_cache();
 
-			const auto cart = m_cache_cart.find(id);
+            CartsResponse cart = m_cache_cart.find(id);
 
-			if (!cart) throw NotFoundException("Cart data is not found");
+			if (!&cart) throw NotFoundException("Cart data is not found");
 
 			m_response.m_message = "Success retrieve cart data";
 			m_response.m_success = true;
-			m_response.m_data = m_cart_response.from_json(cart->toJson()).to_json();
+            m_response.m_data = cart.to_json();
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
         } EXCEPT_CLAUSE

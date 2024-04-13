@@ -22,6 +22,7 @@ namespace gaboot
         ADD_METHOD_TO(products::findOne, "/products/{id}", Get);
         //ADD_METHOD_TO(products::update, "/products/{id}", Put, ADMIN_MIDDLEWARE);
         //ADD_METHOD_TO(products::remove, "/products/{id}", Delete, ADMIN_MIDDLEWARE);
+        ADD_METHOD_TO(products::productWithImages, "/products/product-image", Get);
         METHOD_LIST_END
         // your declaration of processing function maybe like this:
         // void get(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, int p1, std::string p2);
@@ -31,5 +32,6 @@ namespace gaboot
         void findOne(HttpRequestPtr const&, response_t&&, std::string&& id);
         void update(HttpRequestPtr const&, response_t&&, std::string&& id);
         void remove(HttpRequestPtr const&, response_t&&, std::string&& id);
+        void productWithImages(HttpRequestPtr const&, response_t&&);
     };
 }

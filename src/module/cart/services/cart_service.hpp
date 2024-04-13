@@ -48,6 +48,5 @@ namespace gaboot
 	private:
 		cache_handler<Carts> m_cache_cart;
 		response_data m_response;
-		CartsResponse m_cart_response;
 	};
 }

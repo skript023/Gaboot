@@ -34,6 +34,7 @@ namespace gaboot
 		HttpResponsePtr update(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr remove(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr getProductByCategory(HttpRequestPtr const&, std::string&&);
+		HttpResponsePtr getProductWithImage(HttpRequestPtr const& req);
 	private:
 		void load_cache()
 		{

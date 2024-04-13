@@ -54,10 +54,10 @@ class ProductImages
         static const std::string _updated_at;
     };
 
-    const static int primaryKeyNumber;
-    const static std::string tableName;
-    const static bool hasPrimaryKey;
-    const static std::string primaryKeyName;
+    static const int primaryKeyNumber;
+    static const std::string tableName;
+    static const bool hasPrimaryKey;
+    static const std::string primaryKeyName;
     using PrimaryKeyType = std::string;
     const PrimaryKeyType &getPrimaryKey() const;
 
@@ -172,9 +172,9 @@ class ProductImages
     Json::Value toJson() const;
     Json::Value toMasqueradedJson(const std::vector<std::string> &pMasqueradingVector) const;
     /// Relationship interfaces
-    std::vector<MasterProducts> getMaster_products(const drogon::orm::DbClientPtr &clientPtr) const;
+    MasterProducts getMaster_products(const drogon::orm::DbClientPtr &clientPtr) const;
     void getMaster_products(const drogon::orm::DbClientPtr &clientPtr,
-                            const std::function<void(std::vector<MasterProducts>)> &rcb,
+                            const std::function<void(MasterProducts)> &rcb,
                             const drogon::orm::ExceptionCallback &ecb) const;
   private:
     friend drogon::orm::Mapper<ProductImages>;

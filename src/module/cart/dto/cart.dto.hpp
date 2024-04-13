@@ -1,35 +1,39 @@
 #pragma once
 #include <pch.h>
+#include <cart/models/Carts.h>
+
+using namespace drogon;
+using namespace orm;
+using namespace drogon_model::gaboot;
 
 namespace gaboot
 {
-	struct ActualCartsResponse
-	{
-		std::string id;
-		std::string customer_id;
-		std::string product_id;
-		double price;
-		int32_t quantity;
-		std::string created_at;
-		std::string updated_at;
-
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ActualCartsResponse, id, customer_id, product_id, price, quantity, created_at, updated_at)
-	};
-
 	struct CartsResponse
 	{
 		CartsResponse() = default;
 
-		CartsResponse(std::unique_ptr<ActualCartsResponse> const& res):
-			id(res->id), 
-			customerId(res->customer_id),
-			productId(res->product_id),
-			price(res->price),
-			quantity(res->quantity),
-			createdAt(res->created_at),
-			updatedAt(res->updated_at)
+		CartsResponse(Carts const& res):
+			id(res.getValueOfId()), 
+			customerId(res.getValueOfCustomerId()),
+			productId(res.getValueOfProductId()),
+			price(res.getValueOfPrice()),
+			quantity(res.getValueOfQuantity()),
+			createdAt(res.getValueOfCreatedAt().toDbStringLocal()),
+			updatedAt(res.getValueOfUpdatedAt().toDbStringLocal())
 		{
 
+		}
+
+		CartsResponse(Carts* res) :
+			id(res->getValueOfId()),
+			customerId(res->getValueOfCustomerId()),
+			productId(res->getValueOfProductId()),
+			price(res->getValueOfPrice()),
+			quantity(res->getValueOfQuantity()),
+			createdAt(res->getValueOfCreatedAt().toDbStringLocal()),
+			updatedAt(res->getValueOfUpdatedAt().toDbStringLocal())
+		{
+			//if (!res) throw NotFoundException("Cart not found");
 		}
 
 		std::string id;
@@ -39,17 +43,6 @@ namespace gaboot
 		int32_t quantity;
 		std::string createdAt;
 		std::string updatedAt;
-
-		CartsResponse from_json(Json::Value const& json)
-		{
-			auto njson = nlohmann::json::parse(json.toStyledString());
-
-			const auto response = std::make_unique<ActualCartsResponse>(njson.get<ActualCartsResponse>());
-
-			*this = response;
-
-			return *this;
-		}
 
 		Json::Value to_json()
 		{

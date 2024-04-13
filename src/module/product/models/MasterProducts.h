@@ -40,6 +40,7 @@ namespace gaboot
 {
 class Carts;
 class Categories;
+class ProductImages;
 class Wishlists;
 
 class MasterProducts
@@ -62,10 +63,10 @@ class MasterProducts
         static const std::string _updated_at;
     };
 
-    const static int primaryKeyNumber;
-    const static std::string tableName;
-    const static bool hasPrimaryKey;
-    const static std::string primaryKeyName;
+    static const int primaryKeyNumber;
+    static const std::string tableName;
+    static const bool hasPrimaryKey;
+    static const std::string primaryKeyName;
     using PrimaryKeyType = std::string;
     const PrimaryKeyType &getPrimaryKey() const;
 
@@ -233,18 +234,18 @@ class MasterProducts
     void getCategories(const drogon::orm::DbClientPtr &clientPtr,
                        const std::function<void(Categories)> &rcb,
                        const drogon::orm::ExceptionCallback &ecb) const;
-    std::vector<Wishlists> getWishlists(const drogon::orm::DbClientPtr &clientPtr) const;
+    std::vector<ProductImages> getProduct_images(const drogon::orm::DbClientPtr &clientPtr) const;
+    void getProduct_images(const drogon::orm::DbClientPtr &clientPtr,
+                           const std::function<void(std::vector<ProductImages>)> &rcb,
+                           const drogon::orm::ExceptionCallback &ecb) const;
+    Wishlists getWishlists(const drogon::orm::DbClientPtr &clientPtr) const;
     void getWishlists(const drogon::orm::DbClientPtr &clientPtr,
-                      const std::function<void(std::vector<Wishlists>)> &rcb,
+                      const std::function<void(Wishlists)> &rcb,
                       const drogon::orm::ExceptionCallback &ecb) const;
     Carts getCarts(const drogon::orm::DbClientPtr &clientPtr) const;
     void getCarts(const drogon::orm::DbClientPtr &clientPtr,
                   const std::function<void(Carts)> &rcb,
                   const drogon::orm::ExceptionCallback &ecb) const;
-    Wishlists getWishlist(const drogon::orm::DbClientPtr &clientPtr) const;
-    void getWishlist(const drogon::orm::DbClientPtr &clientPtr,
-                      const std::function<void(Wishlists)> &rcb,
-                      const drogon::orm::ExceptionCallback &ecb) const;
   private:
     friend drogon::orm::Mapper<MasterProducts>;
     friend drogon::orm::BaseBuilder<MasterProducts, true, true>;

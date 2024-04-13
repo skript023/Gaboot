@@ -1,45 +1,107 @@
 #pragma once
 #include <pch.h>
+#include <product/models/MasterProducts.h>
+#include <product/models/ProductImages.h>
+
+using namespace drogon;
+using namespace orm;
+using namespace drogon_model::gaboot;
 
 namespace gaboot
 {
-	struct ActualProductResponse
-	{
-		std::string id;
-		std::string name;
-		std::string description;
-		double price;
-		int32_t stock;
-		std::string dimension;
-		double weight;
-		std::string weight_unit;
-		std::string category_id;
-		int32_t total_sales;
-		bool is_active;
-		std::string created_at;
-		std::string updated_at;
-
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ActualProductResponse, id, name, description, price, stock, dimension, weight, weight_unit, category_id, total_sales, is_active, created_at, updated_at)
-	};
-
 	struct ProductResponse
 	{
+		struct ProductImageResponse
+		{
+			ProductImageResponse operator=(ProductImages const& res)
+			{
+				id = res.getValueOfId();
+				imagePath = res.getValueOfImagePath();
+				thumbnailPath = res.getValueOfThumbnailPath();
+				productId = res.getValueOfProductId();
+				isCover = res.getValueOfIsCover();
+				createdAt = res.getValueOfCreatedAt().toDbStringLocal();
+				updatedAt = res.getValueOfUpdatedAt().toDbStringLocal();
+
+				return *this;
+			}
+
+			std::string id;
+			std::string imagePath;
+			std::string thumbnailPath;
+			std::string productId;
+			bool isCover;
+			std::string updatedAt;
+			std::string createdAt;
+
+			Json::Value to_json()
+			{
+				nlohmann::json json = *this;
+
+				Json::Value data;
+				Json::Reader reader;
+
+				reader.parse(json.dump(), data);
+
+				return data;
+			}
+
+			NLOHMANN_DEFINE_TYPE_INTRUSIVE(ProductImageResponse, id, imagePath, thumbnailPath, productId, isCover, updatedAt, createdAt)
+		};
+
 		ProductResponse() = default;
 
-		ProductResponse(std::unique_ptr<ActualProductResponse> const& res):
-			id(res->id), 
-			name(res->name),
-			description(res->description),
-			price(res->price),
-			stock(res->stock),
-			dimension(res->dimension),
-			weight(res->weight),
-			weightUnit(res->weight_unit),
-			categoryId(res->category_id),
-			totalSales(res->total_sales),
-			isActive(res->is_active),
-			createdAt(res->created_at),
-			updatedAt(res->updated_at)
+		ProductResponse(std::vector<MasterProducts> products, std::vector<ProductResponse> response)
+		{
+			std::ranges::for_each(products.begin(), products.end(), [this](MasterProducts const& res) {
+				id = res.getValueOfId();
+				name = res.getValueOfName();
+				description = res.getValueOfDescription();
+				price = res.getValueOfPrice();
+				stock = res.getValueOfStock();
+				dimension = res.getValueOfDimension();
+				weight = res.getValueOfWeight();
+				weightUnit = res.getValueOfWeightUnit();
+				categoryId = res.getValueOfCategoryId();
+				totalSales = res.getValueOfTotalSales();
+				isActive = res.getValueOfIsActive();
+				createdAt = res.getValueOfCreatedAt().toDbStringLocal();
+				updatedAt = res.getValueOfUpdatedAt().toDbStringLocal();
+			});
+		}
+		
+		ProductResponse(MasterProducts* res) :
+			id(res->getValueOfId()),
+			name(res->getValueOfName()),
+			description(res->getValueOfDescription()),
+			price(res->getValueOfPrice()),
+			stock(res->getValueOfStock()),
+			dimension(res->getValueOfDimension()),
+			weight(res->getValueOfWeight()),
+			weightUnit(res->getValueOfWeightUnit()),
+			categoryId(res->getValueOfCategoryId()),
+			totalSales(res->getValueOfTotalSales()),
+			isActive(res->getValueOfIsActive()),
+			createdAt(res->getValueOfCreatedAt().toDbStringLocal()),
+			updatedAt(res->getValueOfUpdatedAt().toDbStringLocal())
+		{
+			//if (!res) throw NotFoundException("Product data is empty 0 data found");
+		}
+
+		ProductResponse(MasterProducts res):
+			id(res.getValueOfId()), 
+			name(res.getValueOfName()),
+			description(res.getValueOfDescription()),
+			price(res.getValueOfPrice()),
+			stock(res.getValueOfStock()),
+			dimension(res.getValueOfDimension()),
+			weight(res.getValueOfWeight()),
+			weightUnit(res.getValueOfWeightUnit()),
+			categoryId(res.getValueOfCategoryId()),
+			totalSales(res.getValueOfTotalSales()),
+			isActive(res.getValueOfIsActive()),
+			createdAt(res.getValueOfCreatedAt().toDbStringLocal()),
+			updatedAt(res.getValueOfUpdatedAt().toDbStringLocal())
 		{
 
 		}
@@ -57,21 +119,44 @@ namespace gaboot
 		bool isActive;
 		std::string createdAt;
 		std::string updatedAt;
+		std::vector<ProductImageResponse> images;
 
-		ProductResponse from_json(Json::Value const& json)
+		void push(ProductImages image)
 		{
-			auto njson = nlohmann::json::parse(json.toStyledString());
+			ProductResponse::ProductImageResponse res;
+			res.id = image.getValueOfId();
+			res.imagePath = image.getValueOfImagePath();
+			res.thumbnailPath = image.getValueOfThumbnailPath();
+			res.productId = image.getValueOfProductId();
+			res.isCover = image.getValueOfIsCover();
+			res.createdAt = image.getValueOfCreatedAt().toDbStringLocal();
+			res.updatedAt = image.getValueOfUpdatedAt().toDbStringLocal();
 
-			const auto response = std::make_unique<ActualProductResponse>(njson.get<ActualProductResponse>());
+			images.push_back(res);
+		}
+		
+		void push(std::vector<ProductImages> images)
+		{
+			std::ranges::for_each(images.begin(), images.end(), [this](ProductImages const& image) {
+				ProductImageResponse res;
+				res.id = image.getValueOfId();
+				res.imagePath = image.getValueOfImagePath();
+				res.thumbnailPath = image.getValueOfThumbnailPath();
+				res.productId = image.getValueOfProductId();
+				res.isCover = image.getValueOfIsCover();
+				res.createdAt = image.getValueOfCreatedAt().toDbStringLocal();
+				res.updatedAt = image.getValueOfUpdatedAt().toDbStringLocal();
 
-			*this = response;
-
-			return *this;
+				this->images.push_back(res);
+			});
 		}
 
 		Json::Value to_json()
 		{
 			nlohmann::json json = *this;
+
+			if (images.empty()) json.erase("images");
+
 			Json::Value data;
 			Json::Reader reader;
 			
@@ -79,6 +164,6 @@ namespace gaboot
 
 			return data;
 		}
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ProductResponse, id, name, description, price, stock, dimension, weight, weightUnit, categoryId, totalSales, isActive, createdAt, updatedAt)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ProductResponse, id, name, description, price, stock, dimension, weight, weightUnit, categoryId, totalSales, isActive, createdAt, updatedAt, images)
 	};
 }

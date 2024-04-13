@@ -8,6 +8,7 @@
 #include "MasterProducts.h"
 #include "Carts.h"
 #include "Categories.h"
+#include "ProductImages.h"
 #include "Wishlists.h"
 #include <drogon/utils/Utilities.h>
 #include <string>
@@ -847,7 +848,7 @@ void MasterProducts::updateByJson(const Json::Value &pJson) noexcept(false)
 
 const std::string &MasterProducts::getValueOfId() const noexcept
 {
-    const static std::string defaultValue = std::string();
+    static const std::string defaultValue = std::string();
     if(id_)
         return *id_;
     return defaultValue;
@@ -874,7 +875,7 @@ const typename MasterProducts::PrimaryKeyType & MasterProducts::getPrimaryKey() 
 
 const std::string &MasterProducts::getValueOfName() const noexcept
 {
-    const static std::string defaultValue = std::string();
+    static const std::string defaultValue = std::string();
     if(name_)
         return *name_;
     return defaultValue;
@@ -896,7 +897,7 @@ void MasterProducts::setName(std::string &&pName) noexcept
 
 const std::string &MasterProducts::getValueOfDescription() const noexcept
 {
-    const static std::string defaultValue = std::string();
+    static const std::string defaultValue = std::string();
     if(description_)
         return *description_;
     return defaultValue;
@@ -918,7 +919,7 @@ void MasterProducts::setDescription(std::string &&pDescription) noexcept
 
 const double &MasterProducts::getValueOfPrice() const noexcept
 {
-    const static double defaultValue = double();
+    static const double defaultValue = double();
     if(price_)
         return *price_;
     return defaultValue;
@@ -935,7 +936,7 @@ void MasterProducts::setPrice(const double &pPrice) noexcept
 
 const int32_t &MasterProducts::getValueOfStock() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
+    static const int32_t defaultValue = int32_t();
     if(stock_)
         return *stock_;
     return defaultValue;
@@ -957,7 +958,7 @@ void MasterProducts::setStockToNull() noexcept
 
 const std::string &MasterProducts::getValueOfDimension() const noexcept
 {
-    const static std::string defaultValue = std::string();
+    static const std::string defaultValue = std::string();
     if(dimension_)
         return *dimension_;
     return defaultValue;
@@ -979,7 +980,7 @@ void MasterProducts::setDimension(std::string &&pDimension) noexcept
 
 const double &MasterProducts::getValueOfWeight() const noexcept
 {
-    const static double defaultValue = double();
+    static const double defaultValue = double();
     if(weight_)
         return *weight_;
     return defaultValue;
@@ -996,7 +997,7 @@ void MasterProducts::setWeight(const double &pWeight) noexcept
 
 const std::string &MasterProducts::getValueOfWeightUnit() const noexcept
 {
-    const static std::string defaultValue = std::string();
+    static const std::string defaultValue = std::string();
     if(weightUnit_)
         return *weightUnit_;
     return defaultValue;
@@ -1018,7 +1019,7 @@ void MasterProducts::setWeightUnit(std::string &&pWeightUnit) noexcept
 
 const std::string &MasterProducts::getValueOfCategoryId() const noexcept
 {
-    const static std::string defaultValue = std::string();
+    static const std::string defaultValue = std::string();
     if(categoryId_)
         return *categoryId_;
     return defaultValue;
@@ -1040,7 +1041,7 @@ void MasterProducts::setCategoryId(std::string &&pCategoryId) noexcept
 
 const int32_t &MasterProducts::getValueOfTotalSales() const noexcept
 {
-    const static int32_t defaultValue = int32_t();
+    static const int32_t defaultValue = int32_t();
     if(totalSales_)
         return *totalSales_;
     return defaultValue;
@@ -1057,7 +1058,7 @@ void MasterProducts::setTotalSales(const int32_t &pTotalSales) noexcept
 
 const bool &MasterProducts::getValueOfIsActive() const noexcept
 {
-    const static bool defaultValue = bool();
+    static const bool defaultValue = bool();
     if(isActive_)
         return *isActive_;
     return defaultValue;
@@ -1074,7 +1075,7 @@ void MasterProducts::setIsActive(const bool &pIsActive) noexcept
 
 const ::trantor::Date &MasterProducts::getValueOfCreatedAt() const noexcept
 {
-    const static ::trantor::Date defaultValue = ::trantor::Date();
+    static const ::trantor::Date defaultValue = ::trantor::Date();
     if(createdAt_)
         return *createdAt_;
     return defaultValue;
@@ -1091,7 +1092,7 @@ void MasterProducts::setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept
 
 const ::trantor::Date &MasterProducts::getValueOfUpdatedAt() const noexcept
 {
-    const static ::trantor::Date defaultValue = ::trantor::Date();
+    static const ::trantor::Date defaultValue = ::trantor::Date();
     if(updatedAt_)
         return *updatedAt_;
     return defaultValue;
@@ -2469,27 +2470,31 @@ bool MasterProducts::validJsonOfField(size_t index,
     }
     return true;
 }
-
-Categories MasterProducts::getCategories(const drogon::orm::DbClientPtr &clientPtr) const {
-    std::shared_ptr<std::promise<Categories>> pro(new std::promise<Categories>);
-    std::future<Categories> f = pro->get_future();
-    getCategories(clientPtr, [&pro] (Categories result) {
-        try {
-            pro->set_value(result);
-        }
-        catch (...) {
-            pro->set_exception(std::current_exception());
-        }
-    }, [&pro] (const DrogonDbException &err) {
-        pro->set_exception(std::make_exception_ptr(err));
-    });
-    return f.get();
+Categories MasterProducts::getCategories(const DbClientPtr &clientPtr) const {
+    static const std::string sql = "select * from categories where id = $1";
+    Result r(nullptr);
+    {
+        auto binder = *clientPtr << sql;
+        binder << *categoryId_ << Mode::Blocking >>
+            [&r](const Result &result) { r = result; };
+        binder.exec();
+    }
+    if (r.size() == 0)
+    {
+        throw UnexpectedRows("0 rows found");
+    }
+    else if (r.size() > 1)
+    {
+        throw UnexpectedRows("Found more than one row");
+    }
+    return Categories(r[0]);
 }
+
 void MasterProducts::getCategories(const DbClientPtr &clientPtr,
                                    const std::function<void(Categories)> &rcb,
                                    const ExceptionCallback &ecb) const
 {
-    const static std::string sql = "select * from categories where id = $1";
+    static const std::string sql = "select * from categories where id = $1";
     *clientPtr << sql
                << *categoryId_
                >> [rcb = std::move(rcb), ecb](const Result &r){
@@ -2508,99 +2513,67 @@ void MasterProducts::getCategories(const DbClientPtr &clientPtr,
                }
                >> ecb;
 }
-std::vector<Wishlists> MasterProducts::getWishlists(const drogon::orm::DbClientPtr &clientPtr) const {
-    std::shared_ptr<std::promise<std::vector<Wishlists>>> pro(new std::promise<std::vector<Wishlists>>);
-    std::future<std::vector<Wishlists>> f = pro->get_future();
-    getWishlists(clientPtr, [&pro] (std::vector<Wishlists> result) {
-        try {
-            pro->set_value(result);
-        }
-        catch (...) {
-            pro->set_exception(std::current_exception());
-        }
-    }, [&pro] (const DrogonDbException &err) {
-        pro->set_exception(std::make_exception_ptr(err));
-    });
-    return f.get();
+std::vector<ProductImages> MasterProducts::getProduct_images(const DbClientPtr &clientPtr) const {
+    static const std::string sql = "select * from product_images where product_id = $1";
+    Result r(nullptr);
+    {
+        auto binder = *clientPtr << sql;
+        binder << *id_ << Mode::Blocking >>
+            [&r](const Result &result) { r = result; };
+        binder.exec();
+    }
+    std::vector<ProductImages> ret;
+    ret.reserve(r.size());
+    for (auto const &row : r)
+    {
+        ret.emplace_back(ProductImages(row));
+    }
+    return ret;
 }
-void MasterProducts::getWishlists(const DbClientPtr &clientPtr,
-                                  const std::function<void(std::vector<Wishlists>)> &rcb,
-                                  const ExceptionCallback &ecb) const
+
+void MasterProducts::getProduct_images(const DbClientPtr &clientPtr,
+                                       const std::function<void(std::vector<ProductImages>)> &rcb,
+                                       const ExceptionCallback &ecb) const
 {
-    const static std::string sql = "select * from wishlists where productId = $1";
+    static const std::string sql = "select * from product_images where product_id = $1";
     *clientPtr << sql
                << *id_
                >> [rcb = std::move(rcb)](const Result &r){
-                   std::vector<Wishlists> ret;
+                   std::vector<ProductImages> ret;
                    ret.reserve(r.size());
                    for (auto const &row : r)
                    {
-                       ret.emplace_back(Wishlists(row));
+                       ret.emplace_back(ProductImages(row));
                    }
                    rcb(ret);
                }
                >> ecb;
 }
-
-Carts MasterProducts::getCarts(const drogon::orm::DbClientPtr &clientPtr) const {
-    std::shared_ptr<std::promise<Carts>> pro(new std::promise<Carts>);
-    std::future<Carts> f = pro->get_future();
-    getCarts(clientPtr, [&pro] (Carts result) {
-        try {
-            pro->set_value(result);
-        }
-        catch (...) {
-            pro->set_exception(std::current_exception());
-        }
-    }, [&pro] (const DrogonDbException &err) {
-        pro->set_exception(std::make_exception_ptr(err));
-    });
-    return f.get();
-}
-void MasterProducts::getCarts(const DbClientPtr &clientPtr,
-                              const std::function<void(Carts)> &rcb,
-                              const ExceptionCallback &ecb) const
-{
-    const static std::string sql = "select * from carts where productId = $1";
-    *clientPtr << sql
-               << *id_
-               >> [rcb = std::move(rcb), ecb](const Result &r){
-                    if (r.size() == 0)
-                    {
-                        ecb(UnexpectedRows("0 rows found"));
-                    }
-                    else if (r.size() > 1)
-                    {
-                        ecb(UnexpectedRows("Found more than one row"));
-                    }
-                    else
-                    {
-                        rcb(Carts(r[0]));
-                    }
-               }
-               >> ecb;
+Wishlists MasterProducts::getWishlists(const DbClientPtr &clientPtr) const {
+    static const std::string sql = "select * from wishlists where product_id = $1";
+    Result r(nullptr);
+    {
+        auto binder = *clientPtr << sql;
+        binder << *id_ << Mode::Blocking >>
+            [&r](const Result &result) { r = result; };
+        binder.exec();
+    }
+    if (r.size() == 0)
+    {
+        throw UnexpectedRows("0 rows found");
+    }
+    else if (r.size() > 1)
+    {
+        throw UnexpectedRows("Found more than one row");
+    }
+    return Wishlists(r[0]);
 }
 
-Wishlists MasterProducts::getWishlist(const drogon::orm::DbClientPtr &clientPtr) const {
-    std::shared_ptr<std::promise<Wishlists>> pro(new std::promise<Wishlists>);
-    std::future<Wishlists> f = pro->get_future();
-    getWishlist(clientPtr, [&pro] (Wishlists result) {
-        try {
-            pro->set_value(result);
-        }
-        catch (...) {
-            pro->set_exception(std::current_exception());
-        }
-    }, [&pro] (const DrogonDbException &err) {
-        pro->set_exception(std::make_exception_ptr(err));
-    });
-    return f.get();
-}
-void MasterProducts::getWishlist(const DbClientPtr &clientPtr,
+void MasterProducts::getWishlists(const DbClientPtr &clientPtr,
                                   const std::function<void(Wishlists)> &rcb,
                                   const ExceptionCallback &ecb) const
 {
-    const static std::string sql = "select * from wishlists where productId = $1";
+    static const std::string sql = "select * from wishlists where product_id = $1";
     *clientPtr << sql
                << *id_
                >> [rcb = std::move(rcb), ecb](const Result &r){
@@ -2615,6 +2588,49 @@ void MasterProducts::getWishlist(const DbClientPtr &clientPtr,
                     else
                     {
                         rcb(Wishlists(r[0]));
+                    }
+               }
+               >> ecb;
+}
+Carts MasterProducts::getCarts(const DbClientPtr &clientPtr) const {
+    static const std::string sql = "select * from carts where product_id = $1";
+    Result r(nullptr);
+    {
+        auto binder = *clientPtr << sql;
+        binder << *id_ << Mode::Blocking >>
+            [&r](const Result &result) { r = result; };
+        binder.exec();
+    }
+    if (r.size() == 0)
+    {
+        throw UnexpectedRows("0 rows found");
+    }
+    else if (r.size() > 1)
+    {
+        throw UnexpectedRows("Found more than one row");
+    }
+    return Carts(r[0]);
+}
+
+void MasterProducts::getCarts(const DbClientPtr &clientPtr,
+                              const std::function<void(Carts)> &rcb,
+                              const ExceptionCallback &ecb) const
+{
+    static const std::string sql = "select * from carts where product_id = $1";
+    *clientPtr << sql
+               << *id_
+               >> [rcb = std::move(rcb), ecb](const Result &r){
+                    if (r.size() == 0)
+                    {
+                        ecb(UnexpectedRows("0 rows found"));
+                    }
+                    else if (r.size() > 1)
+                    {
+                        ecb(UnexpectedRows("Found more than one row"));
+                    }
+                    else
+                    {
+                        rcb(Carts(r[0]));
                     }
                }
                >> ecb;

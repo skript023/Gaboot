@@ -36,7 +36,8 @@ namespace gaboot
 			}
 
 			std::ranges::for_each(products.begin(), products.end(), [this](MasterProducts const& product) {
-				m_response.m_data.append(m_product_response.from_json(product.toJson()).to_json());
+				m_product_response = product;
+				m_response.m_data.append(m_product_response.to_json());
 			});
 
 			const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
@@ -119,13 +120,11 @@ namespace gaboot
 
 			this->load_cache();
 
-			const auto product = m_cache_product.find(id);
-
-			if (!product) throw NotFoundException("Product data is empty 0 data found");
+			m_product_response = m_cache_product.find(id);
 
 			m_response.m_message = "Success retrieve products data";
 			m_response.m_success = true;
-			m_response.m_data = m_product_response.from_json(product->toJson()).to_json();
+			m_response.m_data = m_product_response.to_json();
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		} EXCEPT_CLAUSE
@@ -187,7 +186,6 @@ namespace gaboot
 				upload.save();
 			}
 
-			m_response.m_data = product.toJson();
 			m_response.m_message = "Success update customer data.";
 			m_response.m_success = true;
 
@@ -264,4 +262,27 @@ namespace gaboot
 		EXCEPT_CLAUSE
 	}
 
+	HttpResponsePtr product_service::getProductWithImage(HttpRequestPtr const& req)
+	{
+		auto& limitParam = req->getParameter("limit");
+		auto& pageParam = req->getParameter("page");
+
+		const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
+		const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
+
+		const auto products = db().findAll();
+		std::ranges::for_each(products.begin(), products.end(), [this](MasterProducts product) {
+			m_product_response = product;
+			m_product_response.push(product.getProduct_images(DATABASE_CLIENT));
+			m_response.m_data.append(m_product_response.to_json());
+		});
+
+		const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
+
+		m_response.m_message = "Success retreive products data";
+		m_response.m_success = true;
+		m_response.m_last_page = lastPage;
+
+		return HttpResponse::newHttpJsonResponse(m_response.to_json());
+	}
 }

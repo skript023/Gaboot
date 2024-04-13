@@ -587,7 +587,7 @@ void ProductImages::updateByJson(const Json::Value &pJson) noexcept(false)
 
 const std::string &ProductImages::getValueOfId() const noexcept
 {
-    const static std::string defaultValue = std::string();
+    static const std::string defaultValue = std::string();
     if(id_)
         return *id_;
     return defaultValue;
@@ -614,7 +614,7 @@ const typename ProductImages::PrimaryKeyType & ProductImages::getPrimaryKey() co
 
 const std::string &ProductImages::getValueOfImagePath() const noexcept
 {
-    const static std::string defaultValue = std::string();
+    static const std::string defaultValue = std::string();
     if(imagePath_)
         return *imagePath_;
     return defaultValue;
@@ -636,7 +636,7 @@ void ProductImages::setImagePath(std::string &&pImagePath) noexcept
 
 const std::string &ProductImages::getValueOfThumbnailPath() const noexcept
 {
-    const static std::string defaultValue = std::string();
+    static const std::string defaultValue = std::string();
     if(thumbnailPath_)
         return *thumbnailPath_;
     return defaultValue;
@@ -658,7 +658,7 @@ void ProductImages::setThumbnailPath(std::string &&pThumbnailPath) noexcept
 
 const std::string &ProductImages::getValueOfProductId() const noexcept
 {
-    const static std::string defaultValue = std::string();
+    static const std::string defaultValue = std::string();
     if(productId_)
         return *productId_;
     return defaultValue;
@@ -680,7 +680,7 @@ void ProductImages::setProductId(std::string &&pProductId) noexcept
 
 const bool &ProductImages::getValueOfIsCover() const noexcept
 {
-    const static bool defaultValue = bool();
+    static const bool defaultValue = bool();
     if(isCover_)
         return *isCover_;
     return defaultValue;
@@ -697,7 +697,7 @@ void ProductImages::setIsCover(const bool &pIsCover) noexcept
 
 const ::trantor::Date &ProductImages::getValueOfCreatedAt() const noexcept
 {
-    const static ::trantor::Date defaultValue = ::trantor::Date();
+    static const ::trantor::Date defaultValue = ::trantor::Date();
     if(createdAt_)
         return *createdAt_;
     return defaultValue;
@@ -719,7 +719,7 @@ void ProductImages::setCreatedAtToNull() noexcept
 
 const ::trantor::Date &ProductImages::getValueOfUpdatedAt() const noexcept
 {
-    const static ::trantor::Date defaultValue = ::trantor::Date();
+    static const ::trantor::Date defaultValue = ::trantor::Date();
     if(updatedAt_)
         return *updatedAt_;
     return defaultValue;
@@ -1518,36 +1518,46 @@ bool ProductImages::validJsonOfField(size_t index,
     }
     return true;
 }
-std::vector<MasterProducts> ProductImages::getMaster_products(const drogon::orm::DbClientPtr &clientPtr) const {
-    std::shared_ptr<std::promise<std::vector<MasterProducts>>> pro(new std::promise<std::vector<MasterProducts>>);
-    std::future<std::vector<MasterProducts>> f = pro->get_future();
-    getMaster_products(clientPtr, [&pro] (std::vector<MasterProducts> result) {
-        try {
-            pro->set_value(result);
-        }
-        catch (...) {
-            pro->set_exception(std::current_exception());
-        }
-    }, [&pro] (const DrogonDbException &err) {
-        pro->set_exception(std::make_exception_ptr(err));
-    });
-    return f.get();
+MasterProducts ProductImages::getMaster_products(const DbClientPtr &clientPtr) const {
+    static const std::string sql = "select * from master_products where id = $1";
+    Result r(nullptr);
+    {
+        auto binder = *clientPtr << sql;
+        binder << *productId_ << Mode::Blocking >>
+            [&r](const Result &result) { r = result; };
+        binder.exec();
+    }
+    if (r.size() == 0)
+    {
+        throw UnexpectedRows("0 rows found");
+    }
+    else if (r.size() > 1)
+    {
+        throw UnexpectedRows("Found more than one row");
+    }
+    return MasterProducts(r[0]);
 }
+
 void ProductImages::getMaster_products(const DbClientPtr &clientPtr,
-                                       const std::function<void(std::vector<MasterProducts>)> &rcb,
+                                       const std::function<void(MasterProducts)> &rcb,
                                        const ExceptionCallback &ecb) const
 {
-    const static std::string sql = "select * from master_products where id = $1";
+    static const std::string sql = "select * from master_products where id = $1";
     *clientPtr << sql
                << *productId_
-               >> [rcb = std::move(rcb)](const Result &r){
-                   std::vector<MasterProducts> ret;
-                   ret.reserve(r.size());
-                   for (auto const &row : r)
-                   {
-                       ret.emplace_back(MasterProducts(row));
-                   }
-                   rcb(ret);
+               >> [rcb = std::move(rcb), ecb](const Result &r){
+                    if (r.size() == 0)
+                    {
+                        ecb(UnexpectedRows("0 rows found"));
+                    }
+                    else if (r.size() > 1)
+                    {
+                        ecb(UnexpectedRows("Found more than one row"));
+                    }
+                    else
+                    {
+                        rcb(MasterProducts(r[0]));
+                    }
                }
                >> ecb;
 }

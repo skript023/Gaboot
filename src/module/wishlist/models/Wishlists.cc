@@ -501,7 +501,7 @@ void Wishlists::updateByJson(const Json::Value &pJson) noexcept(false)
 
 const std::string &Wishlists::getValueOfId() const noexcept
 {
-    const static std::string defaultValue = std::string();
+    static const std::string defaultValue = std::string();
     if(id_)
         return *id_;
     return defaultValue;
@@ -528,7 +528,7 @@ const typename Wishlists::PrimaryKeyType & Wishlists::getPrimaryKey() const
 
 const std::string &Wishlists::getValueOfProductId() const noexcept
 {
-    const static std::string defaultValue = std::string();
+    static const std::string defaultValue = std::string();
     if(productId_)
         return *productId_;
     return defaultValue;
@@ -550,7 +550,7 @@ void Wishlists::setProductId(std::string &&pProductId) noexcept
 
 const std::string &Wishlists::getValueOfCategory() const noexcept
 {
-    const static std::string defaultValue = std::string();
+    static const std::string defaultValue = std::string();
     if(category_)
         return *category_;
     return defaultValue;
@@ -572,7 +572,7 @@ void Wishlists::setCategory(std::string &&pCategory) noexcept
 
 const ::trantor::Date &Wishlists::getValueOfCreatedAt() const noexcept
 {
-    const static ::trantor::Date defaultValue = ::trantor::Date();
+    static const ::trantor::Date defaultValue = ::trantor::Date();
     if(createdAt_)
         return *createdAt_;
     return defaultValue;
@@ -589,7 +589,7 @@ void Wishlists::setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept
 
 const ::trantor::Date &Wishlists::getValueOfUpdatedAt() const noexcept
 {
-    const static ::trantor::Date defaultValue = ::trantor::Date();
+    static const ::trantor::Date defaultValue = ::trantor::Date();
     if(updatedAt_)
         return *updatedAt_;
     return defaultValue;
@@ -1188,42 +1188,39 @@ bool Wishlists::validJsonOfField(size_t index,
     }
     return true;
 }
-
-MasterProducts Wishlists::getMaster_products(const drogon::orm::DbClientPtr &clientPtr) const {
-    std::shared_ptr<std::promise<MasterProducts>> pro(new std::promise<MasterProducts>);
-    std::future<MasterProducts> f = pro->get_future();
-    getMaster_products(clientPtr, [&pro] (MasterProducts result) {
-        try {
-            pro->set_value(result);
-        }
-        catch (...) {
-            pro->set_exception(std::current_exception());
-        }
-    }, [&pro] (const DrogonDbException &err) {
-        pro->set_exception(std::make_exception_ptr(err));
-    });
-    return f.get();
+std::vector<MasterProducts> Wishlists::getMaster_products(const DbClientPtr &clientPtr) const {
+    static const std::string sql = "select * from master_products where id = $1";
+    Result r(nullptr);
+    {
+        auto binder = *clientPtr << sql;
+        binder << *productId_ << Mode::Blocking >>
+            [&r](const Result &result) { r = result; };
+        binder.exec();
+    }
+    std::vector<MasterProducts> ret;
+    ret.reserve(r.size());
+    for (auto const &row : r)
+    {
+        ret.emplace_back(MasterProducts(row));
+    }
+    return ret;
 }
+
 void Wishlists::getMaster_products(const DbClientPtr &clientPtr,
-                                   const std::function<void(MasterProducts)> &rcb,
+                                   const std::function<void(std::vector<MasterProducts>)> &rcb,
                                    const ExceptionCallback &ecb) const
 {
-    const static std::string sql = "select * from master_products where orderId = $1";
+    static const std::string sql = "select * from master_products where id = $1";
     *clientPtr << sql
                << *productId_
-               >> [rcb = std::move(rcb), ecb](const Result &r){
-                    if (r.size() == 0)
-                    {
-                        ecb(UnexpectedRows("0 rows found"));
-                    }
-                    else if (r.size() > 1)
-                    {
-                        ecb(UnexpectedRows("Found more than one row"));
-                    }
-                    else
-                    {
-                        rcb(MasterProducts(r[0]));
-                    }
+               >> [rcb = std::move(rcb)](const Result &r){
+                   std::vector<MasterProducts> ret;
+                   ret.reserve(r.size());
+                   for (auto const &row : r)
+                   {
+                       ret.emplace_back(MasterProducts(row));
+                   }
+                   rcb(ret);
                }
                >> ecb;
 }
