@@ -13,19 +13,6 @@ namespace gaboot
 	{
 		struct ProductImageResponse
 		{
-			ProductImageResponse operator=(ProductImages const& res)
-			{
-				id = res.getValueOfId();
-				imagePath = res.getValueOfImagePath();
-				thumbnailPath = res.getValueOfThumbnailPath();
-				productId = res.getValueOfProductId();
-				isCover = res.getValueOfIsCover();
-				createdAt = res.getValueOfCreatedAt().toDbStringLocal();
-				updatedAt = res.getValueOfUpdatedAt().toDbStringLocal();
-
-				return *this;
-			}
-
 			std::string id;
 			std::string imagePath;
 			std::string thumbnailPath;
@@ -44,6 +31,17 @@ namespace gaboot
 				reader.parse(json.dump(), data);
 
 				return data;
+			}
+
+			inline void operator=(ProductImages&& res)
+			{
+				id = res.getValueOfId();
+				imagePath = res.getValueOfImagePath();
+				thumbnailPath = res.getValueOfThumbnailPath();
+				productId = res.getValueOfProductId();
+				isCover = res.getValueOfIsCover();
+				createdAt = res.getValueOfCreatedAt().toDbStringLocal();
+				updatedAt = res.getValueOfUpdatedAt().toDbStringLocal();
 			}
 
 			NLOHMANN_DEFINE_TYPE_INTRUSIVE(ProductImageResponse, id, imagePath, thumbnailPath, productId, isCover, updatedAt, createdAt)
@@ -123,7 +121,7 @@ namespace gaboot
 
 		void push(ProductImages image)
 		{
-			ProductResponse::ProductImageResponse res;
+			ProductImageResponse res;
 			res.id = image.getValueOfId();
 			res.imagePath = image.getValueOfImagePath();
 			res.thumbnailPath = image.getValueOfThumbnailPath();

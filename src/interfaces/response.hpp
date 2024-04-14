@@ -35,5 +35,10 @@ namespace gaboot
             m_last_page = 0;
             m_last_page = 0;
         }
+
+        template<typename T>
+        inline void operator=(T&& args) { m_data = args.to_json(); }
+        template<typename T>
+        inline void operator<<(T&& args) { m_data.append(args.to_json()); }
 	};
 }

@@ -37,7 +37,7 @@ namespace gaboot
 
 			std::ranges::for_each(products.begin(), products.end(), [this](MasterProducts const& product) {
 				m_product_response = product;
-				m_response.m_data.append(m_product_response.to_json());
+				m_response << m_product_response;
 			});
 
 			const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
@@ -124,7 +124,7 @@ namespace gaboot
 
 			m_response.m_message = "Success retrieve products data";
 			m_response.m_success = true;
-			m_response.m_data = m_product_response.to_json();
+			m_response = m_product_response;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		} EXCEPT_CLAUSE
@@ -151,13 +151,13 @@ namespace gaboot
 
 			upload_file upload(&file, std::to_string(trantor::Date::now().microSecondsSinceEpoch()), "products");
 
-			m_data["updatedAt"] = trantor::Date::now().toDbStringLocal();
+			m_data["updated_at"] = trantor::Date::now().toDbStringLocal();
 
 			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
 			{
-				m_data_image["imagePath"] = upload.get_image_path();
-				m_data_image["thumbnailPath"] = upload.get_thumbnail_path();
-				m_data_image["updatedAt"] = trantor::Date::now().toDbStringLocal();
+				m_data_image["image_path"] = upload.get_image_path();
+				m_data_image["thumbnail_path"] = upload.get_thumbnail_path();
+				m_data_image["updated_at"] = trantor::Date::now().toDbStringLocal();
 			}
 
 			MasterProducts product(m_data);
@@ -248,7 +248,8 @@ namespace gaboot
 			}
 
 			std::ranges::for_each(products.begin(), products.end(), [this](MasterProducts const& product) {
-				m_response.m_data.append(product.toJson());
+				m_product_response = product;
+				m_response << m_product_response;
 			});
 
 			const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
@@ -274,7 +275,7 @@ namespace gaboot
 		std::ranges::for_each(products.begin(), products.end(), [this](MasterProducts product) {
 			m_product_response = product;
 			m_product_response.push(product.getProduct_images(DATABASE_CLIENT));
-			m_response.m_data.append(m_product_response.to_json());
+			m_response << m_product_response;
 		});
 
 		const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;

@@ -48,6 +48,5 @@ namespace gaboot
 		cache_handler<Orders> m_cache_order;
 		response_data m_response;
 		std::string m_error;
-		Json::Value m_data;
 	};
 }
