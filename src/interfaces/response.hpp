@@ -5,6 +5,7 @@
 
 namespace gaboot
 {
+    template<typename T>
 	struct response_data
 	{
         Json::Value m_data;
@@ -36,9 +37,22 @@ namespace gaboot
             m_last_page = 0;
         }
 
-        template<typename T>
-        inline void operator=(T&& args) { m_data = args.to_json(); }
-        template<typename T>
-        inline void operator<<(T&& args) { m_data.append(args.to_json()); }
+        template<typename U>
+        typename std::enable_if<std::is_same<U, std::vector<typename U::value_type>>::value, void>::type
+            operator=(const U& args) {
+            for (const auto& item : args)
+            {
+                m_response = item; m_data.append(m_response.to_json());
+            }
+        }
+
+        template<typename U>
+        typename std::enable_if<!std::is_same<U, std::vector<typename U::value_type>>::value, void>::type
+            operator=(const U& args) {
+            m_response = args; m_data = m_response.to_json();
+        }
+
+    private:
+        T m_response;
 	};
 }

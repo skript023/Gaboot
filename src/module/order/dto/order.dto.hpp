@@ -31,10 +31,10 @@ namespace gaboot
 			id(res->getValueOfId()),
 			name(res->getValueOfName()),
 			customerId(res->getValueOfCustomerId()),
-			totalPrice(res->getTotalPrice()),
+			totalPrice(res->getValueOfTotalPrice()),
 			discount(res->getValueOfDiscount()),
 			grandTotal(res->getValueOfGrandTotal()),
-			totalItem(res->getTotalItem()),
+			totalItem(res->getValueOfTotalItem()),
 			status(res->getValueOfStatus()),
 			expired(res->getValueOfExpired()),
 			createdAt(res->getValueOfCreatedAt().toDbStringLocal()),
@@ -47,10 +47,10 @@ namespace gaboot
 			id(res.getValueOfId()),
 			name(res.getValueOfName()),
 			customerId(res.getValueOfCustomerId()),
-			totalPrice(res.getTotalPrice()),
+			totalPrice(res.getValueOfTotalPrice()),
 			discount(res.getValueOfDiscount()),
 			grandTotal(res.getValueOfGrandTotal()),
-			totalItem(res.getTotalItem()),
+			totalItem(res.getValueOfTotalItem()),
 			status(res.getValueOfStatus()),
 			expired(res.getValueOfExpired()),
 			createdAt(res.getValueOfCreatedAt().toDbStringLocal()),
@@ -62,10 +62,10 @@ namespace gaboot
 		std::string id;
 		std::string name;
 		std::string customerId;
-		std::string totalPrice;
-		std::string discount;
-		std::string grandTotal;
-		std::string totalItem;
+		double totalPrice;
+		double discount;
+		double grandTotal;
+		int totalItem;
 		std::string status;
 		std::string expired;
 		std::string createdAt;

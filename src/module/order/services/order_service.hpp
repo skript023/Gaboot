@@ -6,6 +6,7 @@
 #include "interfaces/response.hpp"
 #include "order/models/Orders.h"
 #include <cache_manager/cache_handler.hpp>
+#include <dto/order.dto.hpp>
 
 using namespace drogon;
 using namespace orm;
@@ -46,7 +47,7 @@ namespace gaboot
 		}
 	private:
 		cache_handler<Orders> m_cache_order;
-		response_data m_response;
+		response_data<OrderResponse> m_response;
 		std::string m_error;
 	};
 }
