@@ -35,10 +35,7 @@ namespace gaboot
 				return HttpResponse::newHttpJsonResponse(m_response.to_json());
 			}
 
-			std::ranges::for_each(products.begin(), products.end(), [this](MasterProducts const& product) {
-				m_product_response = product;
-				m_response << m_product_response;
-			});
+			m_response = products;
 
 			const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
 
@@ -120,11 +117,13 @@ namespace gaboot
 
 			this->load_cache();
 
-			m_product_response = m_cache_product.find(id);
+			ProductResponse product = m_cache_product.find(id);
+
+			m_response = product;
 
 			m_response.m_message = "Success retrieve products data";
 			m_response.m_success = true;
-			m_response = m_product_response;
+			m_response.m_data = product.to_json();
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		} EXCEPT_CLAUSE
@@ -247,10 +246,7 @@ namespace gaboot
 				throw NotFoundException("Product which related to that category not found");
 			}
 
-			std::ranges::for_each(products.begin(), products.end(), [this](MasterProducts const& product) {
-				m_product_response = product;
-				m_response << m_product_response;
-			});
+			m_response = products;
 
 			const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
 
@@ -272,11 +268,7 @@ namespace gaboot
 		const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
 		const auto products = db().findAll();
-		std::ranges::for_each(products.begin(), products.end(), [this](MasterProducts product) {
-			m_product_response = product;
-			m_product_response.push(product.getProduct_images(DATABASE_CLIENT));
-			m_response << m_product_response;
-		});
+		m_response = products;
 
 		const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
 

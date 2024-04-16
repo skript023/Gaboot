@@ -47,7 +47,7 @@ namespace gaboot
         }
 
         template<typename U>
-        typename std::enable_if<!std::is_same<U, std::vector<typename U::value_type>>::value, void>::type
+        typename std::enable_if<std::is_same<U, T>::value, void>::type
             operator=(const U& args) {
             m_response = args; m_data = m_response.to_json();
         }
