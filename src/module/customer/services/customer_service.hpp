@@ -5,6 +5,7 @@
 #include "validator/validator.hpp"
 #include "interfaces/response.hpp"
 #include "module/customer/models/MasterCustomers.h"
+#include <dto/customer.dto.hpp>
 
 using namespace drogon;
 using namespace orm;
@@ -38,7 +39,7 @@ namespace gaboot
 		HttpResponsePtr getImage(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr getThumbnail(HttpRequestPtr const&, std::string&&);
 	private:
-		response_data m_response;
+		response_data<CustomerResponse> m_response;
 		std::string m_error;
 		Json::Value m_data;
 	};

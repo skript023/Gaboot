@@ -29,17 +29,12 @@ namespace gaboot
                 return HttpResponse::newHttpJsonResponse(m_response.to_json());
             }
 
-            Json::Value data(Json::arrayValue);
-
-            std::ranges::for_each(customers.begin(), customers.end(), [this](MasterCustomers const& customer) {
-                m_response.m_data.append(customer.toJson());
-            });
+            m_response = customers;
 
             const size_t lastPage = customers.size() / limit + (customers.size() % limit) == 0 ? 0 : 1;
 
             m_response.m_message = "Success retreive customers data";
             m_response.m_success = true;
-            m_response.m_data = data;
             m_response.m_last_page = lastPage;
 
             return HttpResponse::newHttpJsonResponse(m_response.to_json());
@@ -109,13 +104,13 @@ namespace gaboot
                 throw BadRequestException("Requirement doesn't match");
             }
 
-            const auto user = db().findByPrimaryKey(id);
+            CustomerResponse user = db().findByPrimaryKey(id);
 
-            if (!user.getId()) throw NotFoundException("Unable retrieve customer detail");
+            //if (!user.getId()) throw NotFoundException("Unable retrieve customer detail");
 
             m_response.m_message = "Success retrieve customers data";
             m_response.m_success = true;
-            m_response.m_data = user.toJson();
+            m_response = user;
 
             return HttpResponse::newHttpJsonResponse(m_response.to_json());
         } EXCEPT_CLAUSE

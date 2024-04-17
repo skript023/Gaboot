@@ -82,13 +82,13 @@ namespace gaboot
 
 			this->load_cache();
 
-			const auto order = m_cache_order.find(id);
+			OrderResponse order = m_cache_order.find(id);
 
-			if (!order) throw NotFoundException("Order data is not found");
+			//if (!order) throw NotFoundException("Order data is not found");
 
 			m_response.m_message = "Success retrieve order data";
 			m_response.m_success = true;
-			m_response.m_data = order->toJson();
+			m_response = order;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		} EXCEPT_CLAUSE

@@ -68,12 +68,9 @@ namespace gaboot
 				return HttpResponse::newHttpJsonResponse(m_response.to_json());
 			}
 
-			std::ranges::for_each(wishlists.begin(), wishlists.end(), [this](Wishlists const& wishlist) {
-				m_response.m_data.append(wishlist.toJson());
-			});
-
 			const size_t lastPage = (wishlists.size() / (limit + (wishlists.size() % limit))) == 0 ? 0 : 1;
 
+			m_response = wishlists;
 			m_response.m_message = "Success retreive wishlists data";
 			m_response.m_success = true;
 			m_response.m_last_page = lastPage;

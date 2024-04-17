@@ -32,7 +32,8 @@
           "value": "x64-linux",
           "type": "STRING"
         }
-      ]
+      ],
+      "cmakeToolchain": "${projectDir}\\conan\\Linux\\build\\Release\\generators\\conan_toolchain.cmake"
     }
   ]
 }

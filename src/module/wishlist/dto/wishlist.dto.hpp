@@ -49,6 +49,6 @@ namespace gaboot
 			return data;
 		}
 
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(WishlistResponse, id, name, description, imagePath, thumbnailPath, createdAt, updatedAt)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(WishlistResponse, id, productId, category, createdAt, updatedAt)
 	};
 }

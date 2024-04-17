@@ -6,6 +6,7 @@
 #include "validator/validator.hpp"
 #include "interfaces/response.hpp"
 #include "cache_manager/cache_handler.hpp"
+#include <dto/wishlist.dto.hpp>
 
 
 using namespace drogon;
@@ -47,7 +48,7 @@ namespace gaboot
 		}
 	private:
 		cache_handler<Wishlists> m_cache_wishlist;
-		response_data m_response;
+		response_data<WishlistResponse> m_response;
 		std::string m_error;
 	};
 }
