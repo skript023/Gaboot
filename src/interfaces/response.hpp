@@ -5,7 +5,7 @@
 
 namespace gaboot
 {
-    template<typename T>
+    template<class T>
 	struct response_data
 	{
         Json::Value m_data;
