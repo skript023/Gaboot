@@ -89,13 +89,13 @@ namespace gaboot
 
 			this->load_cache();
 
-			const auto user = m_cache_wishlist.find(id);
+			WishlistResponse wishlist = m_cache_wishlist.find(id);
 
-			if (!user) throw NotFoundException("Unable retrieve wishlist detail");
+			// if (!wishlist) throw NotFoundException("Unable retrieve wishlist detail");
 
 			m_response.m_message = "Success retrieve wishlist data";
 			m_response.m_success = true;
-			m_response.m_data = user->toJson();
+			m_response = wishlist;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		} EXCEPT_CLAUSE
@@ -124,7 +124,9 @@ namespace gaboot
 			if (!m_cache_wishlist.update(id, *wishlist) || !db().updateFuture(*wishlist).get())
 				throw BadRequestException("Unable to update non-existing record");
 
-			m_response.m_data = wishlist->toJson();
+			WishlistResponse wishlistR = wishlist;
+
+			m_response = wishlistR;
 			m_response.m_message = "Success update wishlist data.";
 			m_response.m_success = true;
 

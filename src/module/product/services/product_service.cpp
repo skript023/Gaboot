@@ -123,7 +123,6 @@ namespace gaboot
 
 			m_response.m_message = "Success retrieve products data";
 			m_response.m_success = true;
-			m_response.m_data = product.to_json();
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		} EXCEPT_CLAUSE
