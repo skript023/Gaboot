@@ -1,6 +1,7 @@
 [requires]
 opencv/4.9.0
 drogon/1.9.3
+libxml2/2.12.3
 [generators]
 CMakeDeps
 CMakeToolchain
