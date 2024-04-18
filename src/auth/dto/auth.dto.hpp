@@ -4,6 +4,8 @@ namespace gaboot
 {
 	struct AuthResponse
 	{
+		std::string success;
+		std::string message;
 		std::string token;
 
 		Json::Value to_json()
@@ -17,6 +19,6 @@ namespace gaboot
 			return data;
 		}
 
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(AuthResponse, token)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(AuthResponse, success, message, token)
 	};
 }

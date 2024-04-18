@@ -86,11 +86,11 @@ namespace gaboot
 
 			Json::Value data(Json::arrayValue);
 
-			m_response = categories;
 
 			const size_t lastPage = (categories.size() / (limit + (categories.size() % limit))) == 0 ? 0 : 1;
 
 			m_response.m_message = "Success retreive categories data";
+			m_response.m_data = categories;
 			m_response.m_success = true;
 			m_response.m_last_page = lastPage;
 
@@ -108,13 +108,13 @@ namespace gaboot
 
 			this->load_cache();
 
-			CategoryResponse category = m_cache_category.find(id);
+			auto category = m_cache_category.find(id);
 
-			if (!&category) throw NotFoundException("Unable retrieve category detail");
+			if (!category) throw NotFoundException("Unable retrieve category detail");
 
 			m_response.m_message = "Success retrieve category data";
 			m_response.m_success = true;
-			m_response.m_data = category.to_json();
+			m_response.m_data = category;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		} EXCEPT_CLAUSE

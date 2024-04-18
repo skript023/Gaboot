@@ -29,14 +29,14 @@ namespace gaboot
             return m_token;
         }
 
-        Json::Value result()
+        AuthResponse result()
         {
-            Json::Value token;
-            token["message"] = "Token successfully generated";
-            token["token"] = m_token;
-            token["success"] = true;
+            AuthResponse response;
+            response.message = "Token successfully generated";
+            response.token = m_token;
+            response.success = true;
 
-            return token;
+            return response;
         }
 
         static void log_token()

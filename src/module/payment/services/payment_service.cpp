@@ -69,11 +69,11 @@ namespace gaboot
 				throw NotFoundException(fmt::format("Unable found transaction id {}", transactionId));
 			}
 
-			m_response.m_message = "Transaction found";
+			/*m_response.m_message = "Transaction found";
 			m_response.m_success = true;
-			m_response.m_data = transaction[0].toJson();
+			m_response.m_data = transaction[0].toJson();*/
 
-			return HttpResponse::newHttpJsonResponse(m_response.to_json());
+			return HttpResponse::newHttpJsonResponse(transaction[0].toJson());
 		} EXCEPT_CLAUSE
     }
     HttpResponsePtr payment_service::callback(HttpRequestPtr const &req)
@@ -90,7 +90,7 @@ namespace gaboot
 
 			auto args = Criteria(Payments::Cols::_transaction_id, CompareOperator::EQ, payment.transaction_id);
 
-			switch (jenkins::hash(payment.transaction_status))
+			/*switch (jenkins::hash(payment.transaction_status))
 			{
 				case JENKINS_HASH("settlement"):
 					if (auto record = db().updateBy({ Payments::Cols::_transaction_status }, args, payment.transaction_status); !record)
@@ -111,9 +111,9 @@ namespace gaboot
 			}
 
 			m_response.m_message = "Payment callback called successfully, but nothing to be updated";
-			m_response.m_success = true;
+			m_response.m_success = true;*/
 
-			return HttpResponse::newHttpJsonResponse(m_response.to_json());
+			return HttpResponse::newHttpJsonResponse(json);
 		} EXCEPT_CLAUSE
 	}
 }

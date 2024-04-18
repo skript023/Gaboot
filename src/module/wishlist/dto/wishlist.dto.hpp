@@ -10,43 +10,70 @@ namespace gaboot
 {
 	struct WishlistResponse
 	{
-		WishlistResponse() = default;
-
-		WishlistResponse(Wishlists* res) :
-			id(res->getValueOfId()),
-			productId(res->getValueOfProductId()),
-			category(res->getValueOfCategory()),
-			createdAt(res->getValueOfCreatedAt().toDbStringLocal()),
-			updatedAt(res->getValueOfUpdatedAt().toDbStringLocal())
-		{
-
-		}
-
-		WishlistResponse(Wishlists const& res) :
-			id(res.getValueOfId()),
-			productId(res.getValueOfProductId()),
-			category(res.getValueOfCategory()),
-			createdAt(res.getValueOfCreatedAt().toDbStringLocal()),
-			updatedAt(res.getValueOfUpdatedAt().toDbStringLocal())
-		{
-
-		}
-
 		std::string id;
 		std::string productId;
 		std::string category;
 		std::string createdAt;
 		std::string updatedAt;
+		std::vector<WishlistResponse> m_vector;
 
 		Json::Value to_json()
 		{
-			nlohmann::json json = *this;
+			nlohmann::json json;
+
+			if (m_vector.empty())
+			{
+				json = *this;
+			}
+			else
+			{
+				for (auto& var : m_vector)
+				{
+					json.emplace_back(var);
+				}
+			}
+
 			Json::Value data;
 			Json::Reader reader;
 
 			reader.parse(json.dump(), data);
 
 			return data;
+		}
+
+		template<typename U>
+		std::enable_if<std::is_same<U, std::vector<Wishlists>>::value, void>::type operator=(const U& args)
+		{
+			for (const auto& res : args)
+			{
+				id = res.getValueOfId();
+				productId = res.getValueOfProductId();
+				category = res.getValueOfCategory();
+				createdAt = res.getValueOfCreatedAt().toDbStringLocal();
+				updatedAt = res.getValueOfUpdatedAt().toDbStringLocal();
+
+				m_vector.emplace_back(*this);
+			}
+		}
+
+		template<typename U>
+		std::enable_if<std::is_same<U, Wishlists>::value, void>::type operator=(const U& args)
+		{
+			id = args.getValueOfId();
+			productId = args.getValueOfProductId();
+			category = args.getValueOfCategory();
+			createdAt = args.getValueOfCreatedAt().toDbStringLocal();
+			updatedAt = args.getValueOfUpdatedAt().toDbStringLocal();
+		}
+
+		template<typename U>
+		std::enable_if<std::is_same<U, Wishlists*>::value, void>::type operator=(U args)
+		{
+			id = args->getValueOfId();
+			productId = args->getValueOfProductId();
+			category = args->getValueOfCategory();
+			createdAt = args->getValueOfCreatedAt().toDbStringLocal();
+			updatedAt = args->getValueOfUpdatedAt().toDbStringLocal();
 		}
 
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(WishlistResponse, id, productId, category, createdAt, updatedAt)

@@ -31,7 +31,7 @@ namespace gaboot
         HttpResponsePtr callback(HttpRequestPtr const&);
     private:
         Json::Value m_data;
-        response_data m_response;
+        //response_data m_response;
         item_detail m_items;
         customer_detail m_customer;
     };

@@ -35,12 +35,11 @@ namespace gaboot
 				return HttpResponse::newHttpJsonResponse(m_response.to_json());
 			}
 
-			m_response = products;
-
 			const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
 
 			m_response.m_message = "Success retreive products data";
 			m_response.m_success = true;
+			m_response.m_data = products;
 			m_response.m_last_page = lastPage;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
@@ -117,11 +116,10 @@ namespace gaboot
 
 			this->load_cache();
 
-			ProductResponse product = m_cache_product.find(id);
-
-			m_response = product;
+			auto product = m_cache_product.find(id);
 
 			m_response.m_message = "Success retrieve products data";
+			m_response.m_data = product;
 			m_response.m_success = true;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
@@ -245,10 +243,9 @@ namespace gaboot
 				throw NotFoundException("Product which related to that category not found");
 			}
 
-			m_response = products;
-
 			const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
 
+			m_response.m_data = products;
 			m_response.m_message = "Success retreive products data";
 			m_response.m_success = true;
 			m_response.m_last_page = lastPage;
@@ -267,11 +264,11 @@ namespace gaboot
 		const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
 		const auto products = db().findAll();
-		m_response = products;
 
 		const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
 
 		m_response.m_message = "Success retreive products data";
+		m_response.m_data = products;
 		m_response.m_success = true;
 		m_response.m_last_page = lastPage;
 

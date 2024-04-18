@@ -75,9 +75,9 @@ namespace gaboot
                 return HttpResponse::newHttpJsonResponse(m_response.to_json());
             }
 
-            m_response = carts;
 
             m_response.m_message = "Success retreive carts data";
+            m_response.m_data = carts;
 			m_response.m_success = true;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
@@ -94,13 +94,13 @@ namespace gaboot
 
 			this->load_cache();
 
-            CartsResponse cart = m_cache_cart.find(id);
+            auto cart = m_cache_cart.find(id);
 
-			if (!&cart) throw NotFoundException("Cart data is not found");
+			if (!cart) throw NotFoundException("Cart data is not found");
 
 			m_response.m_message = "Success retrieve cart data";
 			m_response.m_success = true;
-            m_response.m_data = cart.to_json();
+            m_response.m_data = cart;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
         } EXCEPT_CLAUSE

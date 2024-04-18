@@ -29,11 +29,10 @@ namespace gaboot
                 return HttpResponse::newHttpJsonResponse(m_response.to_json());
             }
 
-            m_response = customers;
-
             const size_t lastPage = customers.size() / limit + (customers.size() % limit) == 0 ? 0 : 1;
 
             m_response.m_message = "Success retreive customers data";
+            m_response.m_data = customers;
             m_response.m_success = true;
             m_response.m_last_page = lastPage;
 
@@ -104,13 +103,13 @@ namespace gaboot
                 throw BadRequestException("Requirement doesn't match");
             }
 
-            CustomerResponse user = db().findByPrimaryKey(id);
+            auto user = db().findByPrimaryKey(id);
 
-            //if (!user.getId()) throw NotFoundException("Unable retrieve customer detail");
+            if (!user.getId()) throw NotFoundException("Unable retrieve customer detail");
 
             m_response.m_message = "Success retrieve customers data";
             m_response.m_success = true;
-            m_response = user;
+            m_response.m_data = user;
 
             return HttpResponse::newHttpJsonResponse(m_response.to_json());
         } EXCEPT_CLAUSE
@@ -238,7 +237,7 @@ namespace gaboot
             customer_data.removeMember("isActive");
             customer_data.removeMember("token");
 
-            m_response.m_data = customer_data;
+            m_response.m_data = customer;
             m_response.m_message = "Success retreive customers profile";
             m_response.m_success = true;
 

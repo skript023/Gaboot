@@ -72,9 +72,11 @@ namespace gaboot
                 std::string salt = sha256::encode(fmt::format("{}:{}", username, password) + SECRET + std::to_string(rand()));
                 auto token = sha256::encode(salt);
 
-                m_response.m_data["token"] = token;
+                m_response.m_data.success = true;
+                m_response.m_data.message = "Token successfully generated";
+                m_response.m_data.token = token;
                 
-                user.updateByJson(m_response.m_data);
+                user.updateByJson(m_response.m_data.token);
 
                 db().update(user);
 

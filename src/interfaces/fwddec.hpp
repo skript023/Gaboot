@@ -3,7 +3,8 @@
 
 namespace gaboot
 {
-    struct response_data;
+    template<class T>
+    class response_data;
     struct customer_detail;
     struct item_detail;
     struct shipping_address;

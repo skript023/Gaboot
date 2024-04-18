@@ -25,40 +25,6 @@ namespace gaboot
 
 	struct OrderResponse
 	{
-		OrderResponse() = default;
-
-		OrderResponse(Orders* res) :
-			id(res->getValueOfId()),
-			name(res->getValueOfName()),
-			customerId(res->getValueOfCustomerId()),
-			totalPrice(res->getValueOfTotalPrice()),
-			discount(res->getValueOfDiscount()),
-			grandTotal(res->getValueOfGrandTotal()),
-			totalItem(res->getValueOfTotalItem()),
-			status(res->getValueOfStatus()),
-			expired(res->getValueOfExpired()),
-			createdAt(res->getValueOfCreatedAt().toDbStringLocal()),
-			updatedAt(res->getValueOfUpdatedAt().toDbStringLocal())
-		{
-
-		}
-
-		OrderResponse(Orders const& res) :
-			id(res.getValueOfId()),
-			name(res.getValueOfName()),
-			customerId(res.getValueOfCustomerId()),
-			totalPrice(res.getValueOfTotalPrice()),
-			discount(res.getValueOfDiscount()),
-			grandTotal(res.getValueOfGrandTotal()),
-			totalItem(res.getValueOfTotalItem()),
-			status(res.getValueOfStatus()),
-			expired(res.getValueOfExpired()),
-			createdAt(res.getValueOfCreatedAt().toDbStringLocal()),
-			updatedAt(res.getValueOfUpdatedAt().toDbStringLocal())
-		{
-
-		}
-
 		std::string id;
 		std::string name;
 		std::string customerId;
@@ -71,16 +37,83 @@ namespace gaboot
 		std::string createdAt;
 		std::string updatedAt;
 		std::vector<OrderDetail> detail;
+		std::vector<OrderResponse> m_vector;
 
 		Json::Value to_json()
 		{
-			nlohmann::json json = *this;
+			nlohmann::json json;
+
+			if (m_vector.empty())
+			{
+				json = *this;
+			}
+			else
+			{
+				for (auto& var : m_vector)
+				{
+					json.emplace_back(var);
+				}
+			}
+
 			Json::Value data;
 			Json::Reader reader;
 
 			reader.parse(json.dump(), data);
 
 			return data;
+		}
+
+		template<typename U>
+		std::enable_if<std::is_same<U, std::vector<Orders>>::value, void>::type operator=(const U& args)
+		{
+			for (const auto& res : args)
+			{
+				id = res.getValueOfId();
+				name = res.getValueOfName();
+				customerId = res.getValueOfCustomerId();
+				totalPrice = res.getValueOfTotalPrice();
+				discount = res.getValueOfDiscount();
+				grandTotal = res.getValueOfGrandTotal();
+				totalItem = res.getValueOfTotalItem();
+				status = res.getValueOfStatus();
+				expired = res.getValueOfExpired();
+				createdAt = res.getValueOfCreatedAt().toDbStringLocal();
+				updatedAt = res.getValueOfUpdatedAt().toDbStringLocal();
+
+				m_vector.emplace_back(*this);
+			}
+		}
+
+		template<typename U>
+		std::enable_if<std::is_same<U, Orders>::value, void>::type operator=(const U& args)
+		{
+			id = args.getValueOfId();
+			name = args.getValueOfName();
+			customerId = args.getValueOfCustomerId();
+			totalPrice = args.getValueOfTotalPrice();
+			discount = args.getValueOfDiscount();
+			grandTotal = args.getValueOfGrandTotal();
+			totalItem = args.getValueOfTotalItem();
+			status = args.getValueOfStatus();
+			expired = args.getValueOfExpired();
+			createdAt = args.getValueOfCreatedAt().toDbStringLocal();
+			updatedAt = args.getValueOfUpdatedAt().toDbStringLocal();
+		}
+
+		template<typename U>
+		std::enable_if<std::is_same<U, Orders*>::value, void>::type operator=(U args)
+		{
+			id = args->getValueOfId();
+			name = args->getValueOfName();
+			customerId = args->getValueOfCustomerId();
+			totalPrice = args->getValueOfTotalPrice();
+			discount = args->getValueOfDiscount();
+			grandTotal = args->getValueOfGrandTotal();
+			totalItem = args->getValueOfTotalItem();
+			status = args->getValueOfStatus();
+			expired = args->getValueOfExpired();
+			createdAt = args->getValueOfCreatedAt().toDbStringLocal();
+			updatedAt = args->getValueOfUpdatedAt().toDbStringLocal();
 		}
 
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(OrderResponse, id, name, customerId, totalPrice, discount, grandTotal, totalItem, status, expired, detail, createdAt, updatedAt)

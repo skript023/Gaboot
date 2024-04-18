@@ -9,50 +9,6 @@ namespace gaboot
 {
 	struct CustomerResponse
 	{
-		CustomerResponse() = default;
-
-		CustomerResponse(MasterCustomers* res):
-			id(res->getValueOfId()), 
-			firstname(res->getValueOfFirstname()),
-			lastname(res->getValueOfLastname()),
-			username(res->getValueOfUsername()),
-			email(res->getValueOfEmail()),
-			phoneNumber(res->getValueOfPhoneNumber()),
-			addressDetail(res->getValueOfAddressDetail()),
-			latitude(res->getValueOfLatitude()),
-			longitude(res->getValueOfLongitude()),
-			password(res->getValueOfPassword()),
-			token(res->getValueOfToken()),
-			isActive(res->getValueOfIsActive()),
-			imagePath(res->getValueOfImagePath()),
-			thumbnailPath(res->getValueOfThumbnailPath()),
-			createdAt(res->getValueOfCreatedAt().toDbStringLocal()),
-			updatedAt(res->getValueOfUpdatedAt().toDbStringLocal())
-		{
-
-		}
-		
-		CustomerResponse(MasterCustomers const& res):
-			id(res.getValueOfId()), 
-			firstname(res.getValueOfFirstname()),
-			lastname(res.getValueOfLastname()),
-			username(res.getValueOfUsername()),
-			email(res.getValueOfEmail()),
-			phoneNumber(res.getValueOfPhoneNumber()),
-			addressDetail(res.getValueOfAddressDetail()),
-			latitude(res.getValueOfLatitude()),
-			longitude(res.getValueOfLongitude()),
-			password(res.getValueOfPassword()),
-			token(res.getValueOfToken()),
-			isActive(res.getValueOfIsActive()),
-			imagePath(res.getValueOfImagePath()),
-			thumbnailPath(res.getValueOfThumbnailPath()),
-			createdAt(res.getValueOfCreatedAt().toDbStringLocal()),
-			updatedAt(res.getValueOfUpdatedAt().toDbStringLocal())
-		{
-
-		}
-
 		std::string id;
 		std::string firstname;
 		std::string lastname;
@@ -69,10 +25,23 @@ namespace gaboot
 		std::string thumbnailPath;
 		std::string createdAt;
 		std::string updatedAt;
+		std::vector<CustomerResponse> m_vector;
 
 		Json::Value to_json()
 		{
-			nlohmann::json json = *this;
+			nlohmann::json json;
+
+			if (m_vector.empty())
+			{
+				json = *this;
+			}
+			else
+			{
+				for (auto& var : m_vector)
+				{
+					json.emplace_back(var);
+				}
+			}
 			Json::Value data;
 			Json::Reader reader;
 			
@@ -80,6 +49,75 @@ namespace gaboot
 
 			return data;
 		}
+
+		template<typename U>
+		typename std::enable_if<std::is_same<U, std::vector<MasterCustomers>>::value, void>::type operator=(const U& args)
+		{
+			for (const auto& res : args)
+			{
+				id = res.getValueOfId();
+				firstname = res.getValueOfFirstname();
+				lastname = res.getValueOfLastname();
+				username = res.getValueOfUsername();
+				email = res.getValueOfEmail();
+				phoneNumber = res.getValueOfPhoneNumber();
+				addressDetail = res.getValueOfAddressDetail();
+				latitude = res.getValueOfLatitude();
+				longitude = res.getValueOfLongitude();
+				password = res.getValueOfPassword();
+				token = res.getValueOfToken();
+				isActive = res.getValueOfIsActive();
+				imagePath = res.getValueOfImagePath();
+				thumbnailPath = res.getValueOfThumbnailPath();
+				createdAt = res.getValueOfCreatedAt().toDbStringLocal();
+				updatedAt = res.getValueOfUpdatedAt().toDbStringLocal();
+
+				m_vector.emplace_back(*this);
+			}
+		}
+
+		template<typename U>
+		typename std::enable_if<std::is_same<U, MasterCustomers>::value, void>::type operator=(const U& args)
+		{
+			id = args.getValueOfId();
+			firstname = args.getValueOfFirstname();
+			lastname = args.getValueOfLastname();
+			username = args.getValueOfUsername();
+			email = args.getValueOfEmail();
+			phoneNumber = args.getValueOfPhoneNumber();
+			addressDetail = args.getValueOfAddressDetail();
+			latitude = args.getValueOfLatitude();
+			longitude = args.getValueOfLongitude();
+			password = args.getValueOfPassword();
+			token = args.getValueOfToken();
+			isActive = args.getValueOfIsActive();
+			imagePath = args.getValueOfImagePath();
+			thumbnailPath = args.getValueOfThumbnailPath();
+			createdAt = args.getValueOfCreatedAt().toDbStringLocal();
+			updatedAt = args.getValueOfUpdatedAt().toDbStringLocal();
+		}
+
+		template<typename U>
+		typename std::enable_if<std::is_same<U, MasterCustomers*>::value, void>::type operator=(U args)
+		{
+			id = args->getValueOfId();
+			firstname = args->getValueOfFirstname();
+			lastname = args->getValueOfLastname();
+			username = args->getValueOfUsername();
+			email = args->getValueOfEmail();
+			phoneNumber = args->getValueOfPhoneNumber();
+			addressDetail = args->getValueOfAddressDetail();
+			latitude = args->getValueOfLatitude();
+			longitude = args->getValueOfLongitude();
+			password = args->getValueOfPassword();
+			token = args->getValueOfToken();
+			isActive = args->getValueOfIsActive();
+			imagePath = args->getValueOfImagePath();
+			thumbnailPath = args->getValueOfThumbnailPath();
+			createdAt = args->getValueOfCreatedAt().toDbStringLocal();
+			updatedAt = args->getValueOfUpdatedAt().toDbStringLocal();
+		}
+
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(CustomerResponse, id, firstname, lastname, username, email, phoneNumber, addressDetail, latitude, longitude, password, token, isActive, imagePath, thumbnailPath, createdAt, updatedAt)
 	};
 }

@@ -2,6 +2,7 @@
 #include <pch.h>
 
 #include "interfaces/response.hpp"
+#include <performance/dto/performance.dto.hpp>
 
 using namespace drogon;
 
@@ -21,6 +22,6 @@ namespace gaboot
 
 		HttpResponsePtr get_server_status(HttpRequestPtr const& req);
 	private:
-		response_data m_response;
+		response_data<PerformanceResponse> m_response;
 	};
 }
