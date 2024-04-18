@@ -1,8 +1,8 @@
 #pragma once
 
-namespace gaboot
+namespace gaboot::server
 {
-	struct server_version
+	struct version
 	{
 		static const char* GIT_SHA1;
 		static const char* GIT_DATE;

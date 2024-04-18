@@ -39,8 +39,8 @@ jobs:
       - name: Echo list of files before removal
         run: ls
 
-      - name: Remove CMakeUserPresets.json
-        run: sudo rm CMakeUserPresets.json
+      #- name: Remove CMakeUserPresets.json
+      #  run: sudo rm CMakeUserPresets.json
 
       - name: Echo list of files after removal
         run: ls

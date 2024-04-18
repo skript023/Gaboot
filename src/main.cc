@@ -29,7 +29,7 @@ int main()
                                                                    |___/ 
 )kek";
 
-    LOG(INFO) << fmt::format("\n\tGit Info\n\tBranch:\t{}\n\tHash:\t{}\n\tDate:\t{}", server_version::GIT_BRANCH, server_version::GIT_SHA1, server_version::GIT_DATE);
+    LOG(INFO) << fmt::format("\n\tGit Info\n\tBranch:\t{}\n\tHash:\t{}\n\tDate:\t{}", server::version::GIT_BRANCH, server::version::GIT_SHA1, server::version::GIT_DATE);
 
     LOG(INFO) << "Admin middleware is " << BASIC_MIDDLEWARE_STATUS;
     LOG(INFO) << "Customer middleware is " << CUSTOMER_MIDDLEWARE_STATUS;
