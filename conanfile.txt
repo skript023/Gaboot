@@ -1,6 +1,6 @@
 [requires]
 drogon/1.9.3
-opencv/4.8.1
+opencv/4.8.1 @ override=True
 [generators]
 CMakeDeps
 CMakeToolchain
