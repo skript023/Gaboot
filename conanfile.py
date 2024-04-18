@@ -21,7 +21,7 @@ class Gaboot(ConanFile):
 
     def requirements(self):
         self.requires("drogon/1.9.3")
-        self.requires("opencv/4.9.0", override=True)
+        self.requires("opencv/4.9.0")
 
     def layout(self):
         cmake_layout(self)
