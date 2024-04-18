@@ -34,7 +34,7 @@ jobs:
           sudo conan config install https://bitbucket.org/telkom-workspace/gaboot-backend/downloads/config_linux.zip
 
       - name: Install Package
-        run: sudo conan install conanfile.txt -of=conan/Linux --build=missing
+        run: sudo conan install conanfile.py -of=conan/Linux --build=missing
 
       - name: Echo list of files before removal
         run: ls
