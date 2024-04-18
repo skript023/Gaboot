@@ -23,7 +23,7 @@ jobs:
           conan config install https://bitbucket.org/telkom-workspace/gaboot-backend/downloads/config.zip
 
       - name: Install Package
-        run: conan install conanfile.txt -of=conan/Windows --build=missing
+        run: conan install conanfile.py -of=conan/Windows --build=missing
 
       - name: Remove CMakeUserPresets.json
         run: rm CMakeUserPresets.json
