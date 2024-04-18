@@ -19,7 +19,7 @@ jobs:
 
       - name: Install Conan
         run: |
-          pip install conan
+          sudo pip install conan==2.2.2
           conan config install https://bitbucket.org/telkom-workspace/gaboot-backend/downloads/config.zip
 
       - name: Install Package
