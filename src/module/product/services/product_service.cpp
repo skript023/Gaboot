@@ -267,6 +267,10 @@ namespace gaboot
 
 		const size_t lastPage = (products.size() / (limit + (products.size() % limit))) == 0 ? 0 : 1;
 
+		std::ranges::for_each(products.begin(), products.end(), [this](MasterProducts product) {
+			auto images = product.getProduct_images(DATABASE_CLIENT);
+			m_response.m_data.push(images);
+		});
 		m_response.m_message = "Success retreive products data";
 		m_response.m_data = products;
 		m_response.m_success = true;

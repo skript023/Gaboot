@@ -153,6 +153,7 @@ namespace gaboot
 		{
 			for (const auto& res : args)
 			{
+				this->push(res.getProduct_images(DATABASE_CLIENT));
 				id = res.getValueOfId();
 				name = res.getValueOfName();
 				description = res.getValueOfDescription();
@@ -174,6 +175,7 @@ namespace gaboot
 		template<typename U>
 		std::enable_if<std::is_same<U, MasterProducts>::value, void>::type operator=(const U& args)
 		{
+			this->push(args.getProduct_images(DATABASE_CLIENT));
 			id = args.getValueOfId();
 			name = args.getValueOfName();
 			description = args.getValueOfDescription();
@@ -192,6 +194,7 @@ namespace gaboot
 		template<typename U>
 		std::enable_if<std::is_same<U, MasterProducts*>::value, void>::type operator=(U args)
 		{
+			this->push(args->getProduct_images(DATABASE_CLIENT));
 			id = args->getValueOfId();
 			name = args->getValueOfName();
 			description = args->getValueOfDescription();
