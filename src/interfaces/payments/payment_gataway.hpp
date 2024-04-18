@@ -1,16 +1,22 @@
 #pragma once
 
 #include <pch.h>
+#include <payment/models/Payments.h>
+
+using namespace drogon;
+using namespace orm;
+using namespace drogon_model::gaboot;
+
 
 namespace gaboot
 {
-	struct payment_failed
+	struct payment_status
 	{
 		std::string id;
 		int status_code;
 		std::string status_message;
 
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(payment_failed, id, status_code, status_message)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(payment_status, id, status_code, status_message)
 	};
 
 	struct bank_response
@@ -21,21 +27,8 @@ namespace gaboot
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(bank_response, bank, va_number)
 	};
 
-	struct payment_gateway : public payment_failed
+	struct payment_gateway : public payment_status
 	{
-		payment_gateway() = default;
-		payment_gateway(nlohmann::json const& json)
-		{
-			if (json["status_code"] == 201)
-			{
-				*this = json.get<payment_gateway>();
-			}
-			else
-			{
-				m_failed = json.get<payment_failed>();
-			}
-		}
-
 		std::string order_id;
 		std::string gross_amount;
 		std::string currency;
@@ -47,26 +40,26 @@ namespace gaboot
 		std::string transaction_time;
 		std::string fraud_status;
 		std::vector<bank_response> va_numbers;
-		payment_failed m_failed;
+		payment_status m_status;
 
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(payment_gateway, status_code, status_message, order_id, gross_amount, currency, expiry_time, merchant_id, payment_type, transaction_id, transaction_status, transaction_time, fraud_status, va_numbers)
 
 		void from_json(nlohmann::json const& json)
 		{
-			if (json["status_code"] == 201)
+			if (json["status_code"] == 201 || json["status_code"] == 200)
 			{
 				*this = json.get<payment_gateway>();
 			}
 			else
 			{
-				m_failed = json.get<payment_failed>();
+				m_status = json.get<payment_status>();
 			}
 		}
 		Json::Value to_json()
 		{
 			nlohmann::json json;
-			if (this->status_code != 201)
-				json = m_failed;
+			if (this->status_code != 201 || this->status_code != 200)
+				json = m_status;
 			else
 				json = *this;
 
@@ -76,6 +69,42 @@ namespace gaboot
 			reader.parse(json.dump(), data);
 
 			return data;
+		}
+
+		template<typename U>
+		std::enable_if<std::is_same<U, nlohmann::json>::value, void>::type operator=(U const& json)
+		{
+			if (json["status_code"] == 201)
+			{
+				*this = json.get<payment_gateway>();
+			}
+			else
+			{
+				m_status = json.get<payment_status>();
+			}
+		}
+
+		/*inline void operator=(const std::vector<Payments>& payments)
+		{
+			for (const auto& payment : payments)
+			{
+
+			}
+		}*/
+
+		inline void operator=(const Payments& payment)
+		{
+			this->id = payment.getValueOfId();
+			this->transaction_id = payment.getValueOfTransactionId();
+			this->transaction_status = payment.getValueOfTransactionStatus();
+			this->transaction_time = payment.getValueOfTransactionTime();
+			this->va_numbers[0].va_number = payment.getValueOfVaNumber();
+			this->currency = payment.getValueOfCurrency();
+			this->expiry_time = payment.getValueOfExpiryTime();
+			this->fraud_status = payment.getValueOfFraudStatus();
+			this->merchant_id = payment.getValueOfMerchantId();
+			this->payment_type = payment.getValueOfPaymentType();
+			this->va_numbers[0].bank = payment.getValueOfBank();
 		}
 	}; 
 }

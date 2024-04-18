@@ -4,10 +4,6 @@
 #include "exception/exception.hpp"
 #include "formatter/money_formatter.hpp"
 
-#include "payments/item_detail.hpp"
-#include "payments/customer_detail.hpp"
-#include "payments/payment_gataway.hpp"
-
 #include "util/hash/jenkins.hpp"
 
 namespace gaboot
@@ -56,24 +52,24 @@ namespace gaboot
     {
         TRY_CLAUSE
 		{
-			if (transactionId.empty() || util::is_numeric(transactionId))
+			if (transactionId.empty())
 			{
 				throw BadRequestException("Parameter is invalid");
 			}
 
-			auto args = Criteria(Payments::Cols::_transaction_id, CompareOperator::EQ, transactionId);
-			auto transaction = db().findBy(args);
+			auto args = Criteria(Payments::Cols::_transaction_id, CompareOperator::EQ, std::move(transactionId));
+			const auto transaction = db().findOne(args);
 
-			if (transaction.empty())
+			if (transaction.toJson().empty())
 			{
 				throw NotFoundException(fmt::format("Unable found transaction id {}", transactionId));
 			}
 
-			/*m_response.m_message = "Transaction found";
+			m_response.m_message = "Transaction found";
 			m_response.m_success = true;
-			m_response.m_data = transaction[0].toJson();*/
+			m_response.m_data = transaction;
 
-			return HttpResponse::newHttpJsonResponse(transaction[0].toJson());
+			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		} EXCEPT_CLAUSE
     }
     HttpResponsePtr payment_service::callback(HttpRequestPtr const &req)
@@ -90,7 +86,7 @@ namespace gaboot
 
 			auto args = Criteria(Payments::Cols::_transaction_id, CompareOperator::EQ, payment.transaction_id);
 
-			/*switch (jenkins::hash(payment.transaction_status))
+			switch (jenkins::hash(payment.transaction_status))
 			{
 				case JENKINS_HASH("settlement"):
 					if (auto record = db().updateBy({ Payments::Cols::_transaction_status }, args, payment.transaction_status); !record)
@@ -111,7 +107,7 @@ namespace gaboot
 			}
 
 			m_response.m_message = "Payment callback called successfully, but nothing to be updated";
-			m_response.m_success = true;*/
+			m_response.m_success = true;
 
 			return HttpResponse::newHttpJsonResponse(json);
 		} EXCEPT_CLAUSE
