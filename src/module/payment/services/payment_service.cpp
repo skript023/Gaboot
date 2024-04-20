@@ -12,25 +12,25 @@ namespace gaboot
 	{
 		auto& json = *req->getJsonObject();
 
-		payment_gateway payment;
+		const auto payment = std::make_unique<payment_gateway>();
 
 		try
 		{
-			TRANSACTION_BEGIN_CLAUSE(json, &payment)
+			TRANSACTION_BEGIN_CLAUSE(json, &(*payment))
 			{
 				Payments payments;
-				payments.setOrderId(payment.order_id);
-				payments.setGrossAmount(stod(payment.gross_amount));
-				payments.setBank(payment.va_numbers[0].bank);
-				payments.setVaNumber(payment.va_numbers[0].va_number);
-				payments.setCurrency(payment.currency);
-				payments.setExpiryTime(payment.expiry_time);
-				payments.setMerchantId(payment.merchant_id);
-				payments.setPaymentType(payment.payment_type);
-				payments.setTransactionId(payment.transaction_id);
-				payments.setTransactionStatus(payment.transaction_status);
-				payments.setTransactionTime(payment.transaction_time);
-				payments.setFraudStatus(payment.fraud_status);
+				payments.setOrderId(payment->order_id);
+				payments.setGrossAmount(stod(payment->gross_amount));
+				payments.setBank(payment->va_numbers[0].bank);
+				payments.setVaNumber(payment->va_numbers[0].va_number);
+				payments.setCurrency(payment->currency);
+				payments.setExpiryTime(payment->expiry_time);
+				payments.setMerchantId(payment->merchant_id);
+				payments.setPaymentType(payment->payment_type);
+				payments.setTransactionId(payment->transaction_id);
+				payments.setTransactionStatus(payment->transaction_status);
+				payments.setTransactionTime(payment->transaction_time);
+				payments.setFraudStatus(payment->fraud_status);
 				payments.setName(json["name"].asString());
 				payments.setDescription(json["description"].asString());
 
@@ -42,6 +42,8 @@ namespace gaboot
 				TRANSACTION_SUCCESS(payment);
 
 			} TRANSACTION_END_CLAUSE
+
+			LOG(INFO) << "Status Code : " << payment->status_code;
 
 			TRANSACTION_FAILED(payment);
 		}
@@ -82,16 +84,16 @@ namespace gaboot
 
 			json["status_code"] = stoi(json["status_code"].asString());
 
-			payment_gateway payment;
+			const auto payment = std::make_unique<payment_gateway>();
 
-			payment.from_json(util::to_nlohmann_json(json));
+			payment->from_json(util::to_nlohmann_json(json));
 
-			auto args = Criteria(Payments::Cols::_transaction_id, CompareOperator::EQ, payment.transaction_id);
+			auto args = Criteria(Payments::Cols::_transaction_id, CompareOperator::EQ, payment->transaction_id);
 
-			switch (jenkins::hash(payment.transaction_status))
+			switch (jenkins::hash(payment->transaction_status))
 			{
 				case JENKINS_HASH("settlement"):
-					if (auto record = db().updateBy({ Payments::Cols::_transaction_status }, args, payment.transaction_status); !record)
+					if (auto record = db().updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
 						throw InternalServerErrorException("Failed update transaction");
 
 					m_response.m_message = "Payment status updated as paid";
@@ -99,7 +101,7 @@ namespace gaboot
 
 					return HttpResponse::newHttpJsonResponse(m_response.to_json());
 				case JENKINS_HASH("expired"):
-					if (auto record = db().updateBy({ Payments::Cols::_transaction_status }, args, payment.transaction_status); !record)
+					if (auto record = db().updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
 						throw InternalServerErrorException("Failed update transaction");
 
 					m_response.m_message = "Payment status updated as expired";

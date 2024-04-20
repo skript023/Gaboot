@@ -130,7 +130,7 @@ namespace gaboot
 
             midtrans->from_json(json);
 
-            if (json["status_code"] == 201 && res.status_code == 200)
+            if (midtrans->status_code == 201 && res.status_code == 200)
             {
                 return true;
             }
