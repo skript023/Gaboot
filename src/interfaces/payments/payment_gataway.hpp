@@ -66,7 +66,8 @@ namespace gaboot
 			return data;
 		}
 
-		inline void operator=(nlohmann::json const& json)
+		template<typename U>
+		std::enable_if<std::is_same<U, nlohmann::json>::value, void>::type operator=(nlohmann::json const& json)
 		{
 			if (json["status_code"] >= 200 || json["status_code"] <= 299)
 			{
@@ -78,7 +79,8 @@ namespace gaboot
 			}
 		}
 
-		inline void operator=(const std::string& payment)
+		template<typename U>
+		std::enable_if<std::is_same<U, std::string>::value, void>::type operator=(U const& payment)
 		{
 			if (util::is_json(payment))
 			{
@@ -88,7 +90,8 @@ namespace gaboot
 			}
 		}
 
-		inline void operator=(const Payments& payment)
+		template<typename U>
+		std::enable_if<std::is_same<U, Payments>::value, void>::type operator=(U const& payment)
 		{
 			this->id = payment.getValueOfId();
 			this->order_id = payment.getValueOfOrderId();
