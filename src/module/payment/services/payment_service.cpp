@@ -94,7 +94,7 @@ namespace gaboot
 			{
 				case JENKINS_HASH("settlement"):
 					if (auto record = db().updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
-						throw InternalServerErrorException("Failed update transaction");
+						throw InternalServerErrorException("Failed update transaction, transaction doesn't exist");
 
 					m_response.m_message = "Payment status updated as paid";
 					m_response.m_success = true;
@@ -102,7 +102,7 @@ namespace gaboot
 					return HttpResponse::newHttpJsonResponse(m_response.to_json());
 				case JENKINS_HASH("capture"):
 					if (auto record = db().updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
-						throw InternalServerErrorException("Failed update transaction");
+						throw InternalServerErrorException("Failed update transaction, transaction doesn't exist");
 
 					m_response.m_message = "Payment status updated as capture";
 					m_response.m_success = true;
@@ -110,7 +110,7 @@ namespace gaboot
 					return HttpResponse::newHttpJsonResponse(m_response.to_json());
 				case JENKINS_HASH("cancel"):
 					if (auto record = db().updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
-						throw InternalServerErrorException("Failed update transaction");
+						throw InternalServerErrorException("Failed update transaction, transaction doesn't exist");
 
 					m_response.m_message = "Payment status updated as cancel";
 					m_response.m_success = true;
@@ -118,7 +118,7 @@ namespace gaboot
 					return HttpResponse::newHttpJsonResponse(m_response.to_json());
 				case JENKINS_HASH("deny"):
 					if (auto record = db().updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
-						throw InternalServerErrorException("Failed update transaction");
+						throw InternalServerErrorException("Failed update transaction, transaction doesn't exist");
 
 					m_response.m_message = "Payment status updated as deny, because fraud detected";
 					m_response.m_success = true;
@@ -126,7 +126,7 @@ namespace gaboot
 					return HttpResponse::newHttpJsonResponse(m_response.to_json());
 				case JENKINS_HASH("failure"):
 					if (auto record = db().updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
-						throw InternalServerErrorException("Failed update transaction");
+						throw InternalServerErrorException("Failed update transaction, transaction doesn't exist");
 
 					m_response.m_message = "Payment status updated as failure";
 					m_response.m_success = true;
@@ -134,7 +134,7 @@ namespace gaboot
 					return HttpResponse::newHttpJsonResponse(m_response.to_json());
 				case JENKINS_HASH("expired"):
 					if (auto record = db().updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
-						throw InternalServerErrorException("Failed update transaction");
+						throw InternalServerErrorException("Failed update transaction, transaction doesn't exist");
 
 					m_response.m_message = "Payment status updated as expired";
 					m_response.m_success = true;

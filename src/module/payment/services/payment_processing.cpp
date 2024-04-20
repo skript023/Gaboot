@@ -107,18 +107,18 @@ namespace gaboot
         cpr::Header header = {
             { "Accept", "application/json" },
             { "Content-Type", "application/json" },
-            { "Authorization", token }
+            { "Authorization", "Basic U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg=" }
         };
 
         cpr::Body body = m_json.dump();
 
-        LOG(INFO_TO_FILE) << "Request payment to " << m_url;
+        LOG(INFO) << "Request payment to " << m_url;
 
-        LOG(INFO_TO_FILE) << m_json.dump();
+        LOG(INFO) << m_json.dump();
 
         auto res = cpr::Post(m_url, body, header);
 
-        LOG(INFO_TO_FILE) << "Result after request " << res.text;
+        LOG(INFO) << "Result after request " << res.text;
 
         if (!res.status_code) throw std::runtime_error("UNKNOWN ERROR 01 - Check your internet access or invalid request");
 
@@ -128,7 +128,7 @@ namespace gaboot
 
             json["status_code"] = std::stol(json["status_code"].get<std::string>());
 
-            *midtrans = json;
+            midtrans->from_json(json);
 
             if (midtrans->status_code == 201 && res.status_code == 200)
             {

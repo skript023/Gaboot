@@ -44,7 +44,7 @@ namespace gaboot
 
 		void from_json(nlohmann::json const& json)
 		{
-			if (json["status_code"] >= 200 || json["status_code"] <= 299)
+			if (json["status_code"] >= 200 && json["status_code"] <= 299)
 			{
 				*this = json.get<payment_gateway>();
 			}
@@ -61,22 +61,9 @@ namespace gaboot
 			Json::Value data;
 			Json::Reader reader;
 
-			reader.parse((this->status_code >= 200 || this->status_code <= 299) ? success.dump() : fail.dump(), data);
+			reader.parse((this->status_code >= 200 && this->status_code <= 299) ? success.dump() : fail.dump(), data);
 
 			return data;
-		}
-
-		template<typename U>
-		std::enable_if<std::is_same<U, nlohmann::json>::value, void>::type operator=(nlohmann::json const& json)
-		{
-			if (json["status_code"] >= 200 || json["status_code"] <= 299)
-			{
-				*this = json.get<payment_gateway>();
-			}
-			else
-			{
-				m_status = json.get<payment_status>();
-			}
 		}
 
 		template<typename U>
