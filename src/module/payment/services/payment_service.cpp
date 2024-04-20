@@ -86,7 +86,7 @@ namespace gaboot
 
 			const auto payment = std::make_unique<payment_gateway>();
 
-			payment->from_json(util::to_nlohmann_json(json));
+			*payment = json.toStyledString();
 
 			auto args = Criteria(Payments::Cols::_transaction_id, CompareOperator::EQ, payment->transaction_id);
 

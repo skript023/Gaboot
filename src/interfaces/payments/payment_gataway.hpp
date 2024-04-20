@@ -44,7 +44,7 @@ namespace gaboot
 
 		void from_json(nlohmann::json const& json)
 		{
-			if (json["status_code"] == 201 || json["status_code"] == 200)
+			if (json["status_code"] >= 200 || json["status_code"] <= 299)
 			{
 				*this = json.get<payment_gateway>();
 			}
@@ -55,21 +55,20 @@ namespace gaboot
 		}
 		Json::Value to_json()
 		{
-			LOG(INFO) << "Result is " << (this->status_code == 200 || this->status_code == 201);
 			nlohmann::json success = *this;
 			nlohmann::json fail = m_status;
 
 			Json::Value data;
 			Json::Reader reader;
 
-			reader.parse((this->status_code == 200 || this->status_code == 201) ? success.dump() : fail.dump(), data);
+			reader.parse((this->status_code >= 200 || this->status_code <= 299) ? success.dump() : fail.dump(), data);
 
 			return data;
 		}
 
 		inline void operator=(nlohmann::json const& json)
 		{
-			if (json["status_code"] == 201 || json["status_code"] == 200)
+			if (json["status_code"] >= 200 || json["status_code"] <= 299)
 			{
 				*this = json.get<payment_gateway>();
 			}
@@ -79,13 +78,15 @@ namespace gaboot
 			}
 		}
 
-		/*inline void operator=(const std::vector<Payments>& payments)
+		inline void operator=(const std::string& payment)
 		{
-			for (const auto& payment : payments)
+			if (util::is_json(payment))
 			{
+				auto j = nlohmann::json::parse(payment);
 
+				this->from_json(j);
 			}
-		}*/
+		}
 
 		inline void operator=(const Payments& payment)
 		{
