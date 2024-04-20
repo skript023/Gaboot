@@ -108,7 +108,7 @@ jobs:
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} export PGPASSWORD="${{ secrets.DB_PASSWORD }}"
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/"
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
-          if docker ps --format '{{.Names}}' | grep -q "gaboot-shop-database"; then
+          if sudo docker ps --format '{{.Names}}' | grep -q "gaboot-shop-database"; then
             cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose up -d --build gaboot-api
           else
             cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose down
