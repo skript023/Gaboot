@@ -19,6 +19,8 @@ namespace gaboot
 			TRANSACTION_BEGIN_CLAUSE(json, &payment)
 			{
 				Payments payments;
+				payments.setOrderId(payment.order_id);
+				payments.setGrossAmount(payment.gross_amount);
 				payments.setBank(payment.va_numbers[0].bank);
 				payments.setVaNumber(payment.va_numbers[0].va_number);
 				payments.setCurrency(payment.currency);

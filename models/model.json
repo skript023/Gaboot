@@ -65,6 +65,16 @@
         "enable_reverse": true
       },
       {
+        "type": "has one",
+        "original_table_name": "orders",
+        "original_table_alias": "orders",
+        "original_key": "id",
+        "target_table_name": "payments",
+        "target_table_alias": "payments",
+        "target_key": "order_id",
+        "enable_reverse": true
+      },
+      {
         "type": "has many",
         "original_table_name": "master_products",
         "original_table_alias": "master_products",
@@ -84,16 +94,6 @@
         "target_key": "id",
         "enable_reverse": true
       },
-      //{
-      //  "type": "has many",
-      //  "original_table_name": "categories",
-      //  "original_table_alias": "categories",
-      //  "original_key": "id",
-      //  "target_table_name": "master_products",
-      //  "target_table_alias": "master_products",
-      //  "target_key": "category_id",
-      //  "enable_reverse": true
-      //},
       {
         "type": "has many",
         "original_table_name": "master_customers",

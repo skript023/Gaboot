@@ -38,6 +38,7 @@ namespace drogon_model
 {
 namespace gaboot
 {
+class Orders;
 
 class Payments
 {
@@ -45,6 +46,8 @@ class Payments
     struct Cols
     {
         static const std::string _id;
+        static const std::string _order_id;
+        static const std::string _gross_amount;
         static const std::string _name;
         static const std::string _transaction_id;
         static const std::string _merchant_id;
@@ -118,6 +121,24 @@ class Payments
     ///Set the value of the column id
     void setId(const std::string &pId) noexcept;
     void setId(std::string &&pId) noexcept;
+
+    /**  For column order_id  */
+    ///Get the value of the column order_id, returns the default value if the column is null
+    const std::string &getValueOfOrderId() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<std::string> &getOrderId() const noexcept;
+    ///Set the value of the column order_id
+    void setOrderId(const std::string &pOrderId) noexcept;
+    void setOrderId(std::string &&pOrderId) noexcept;
+
+    /**  For column gross_amount  */
+    ///Get the value of the column gross_amount, returns the default value if the column is null
+    const double &getValueOfGrossAmount() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<double> &getGrossAmount() const noexcept;
+    ///Set the value of the column gross_amount
+    void setGrossAmount(const double &pGrossAmount) noexcept;
+    void setGrossAmountToNull() noexcept;
 
     /**  For column name  */
     ///Get the value of the column name, returns the default value if the column is null
@@ -256,12 +277,16 @@ class Payments
     void setUpdatedAt(const ::trantor::Date &pUpdatedAt) noexcept;
 
 
-    static size_t getColumnNumber() noexcept {  return 15;  }
+    static size_t getColumnNumber() noexcept {  return 17;  }
     static const std::string &getColumnName(size_t index) noexcept(false);
 
     Json::Value toJson() const;
     Json::Value toMasqueradedJson(const std::vector<std::string> &pMasqueradingVector) const;
     /// Relationship interfaces
+    Orders getOrders(const drogon::orm::DbClientPtr &clientPtr) const;
+    void getOrders(const drogon::orm::DbClientPtr &clientPtr,
+                   const std::function<void(Orders)> &rcb,
+                   const drogon::orm::ExceptionCallback &ecb) const;
   private:
     friend drogon::orm::Mapper<Payments>;
     friend drogon::orm::BaseBuilder<Payments, true, true>;
@@ -278,6 +303,8 @@ class Payments
     ///For mysql or sqlite3
     void updateId(const uint64_t id);
     std::shared_ptr<std::string> id_;
+    std::shared_ptr<std::string> orderId_;
+    std::shared_ptr<double> grossAmount_;
     std::shared_ptr<std::string> name_;
     std::shared_ptr<std::string> transactionId_;
     std::shared_ptr<std::string> merchantId_;
@@ -303,7 +330,7 @@ class Payments
         const bool notNull_;
     };
     static const std::vector<MetaData> metaData_;
-    bool dirtyFlag_[15]={ false };
+    bool dirtyFlag_[17]={ false };
   public:
     static const std::string &sqlForFindingByPrimaryKey()
     {
@@ -329,73 +356,84 @@ class Payments
         }
         if(dirtyFlag_[1])
         {
-            sql += "name,";
+            sql += "order_id,";
             ++parametersCount;
         }
-        if(dirtyFlag_[2])
+        sql += "gross_amount,";
+        ++parametersCount;
+        if(!dirtyFlag_[2])
         {
-            sql += "transaction_id,";
-            ++parametersCount;
+            needSelection=true;
         }
         if(dirtyFlag_[3])
         {
-            sql += "merchant_id,";
+            sql += "name,";
             ++parametersCount;
         }
         if(dirtyFlag_[4])
         {
-            sql += "payment_type,";
+            sql += "transaction_id,";
             ++parametersCount;
         }
         if(dirtyFlag_[5])
         {
-            sql += "description,";
+            sql += "merchant_id,";
             ++parametersCount;
         }
         if(dirtyFlag_[6])
         {
-            sql += "transaction_time,";
+            sql += "payment_type,";
             ++parametersCount;
         }
         if(dirtyFlag_[7])
         {
-            sql += "transaction_status,";
+            sql += "description,";
             ++parametersCount;
         }
         if(dirtyFlag_[8])
         {
-            sql += "fraud_status,";
+            sql += "transaction_time,";
             ++parametersCount;
         }
         if(dirtyFlag_[9])
         {
-            sql += "bank,";
+            sql += "transaction_status,";
             ++parametersCount;
         }
         if(dirtyFlag_[10])
         {
-            sql += "va_number,";
+            sql += "fraud_status,";
             ++parametersCount;
         }
         if(dirtyFlag_[11])
         {
-            sql += "currency,";
+            sql += "bank,";
             ++parametersCount;
         }
         if(dirtyFlag_[12])
+        {
+            sql += "va_number,";
+            ++parametersCount;
+        }
+        if(dirtyFlag_[13])
+        {
+            sql += "currency,";
+            ++parametersCount;
+        }
+        if(dirtyFlag_[14])
         {
             sql += "expiry_time,";
             ++parametersCount;
         }
         sql += "created_at,";
         ++parametersCount;
-        if(!dirtyFlag_[13])
+        if(!dirtyFlag_[15])
         {
             needSelection=true;
         }
         sql += "updated_at,";
         ++parametersCount;
-        if(!dirtyFlag_[14])
+        if(!dirtyFlag_[16])
         {
             needSelection=true;
         }
@@ -428,6 +466,10 @@ class Payments
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
+        }
+        else
+        {
+            sql +="default,";
         }
         if(dirtyFlag_[3])
         {
@@ -484,11 +526,21 @@ class Payments
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
+        if(dirtyFlag_[14])
+        {
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
+        }
+        if(dirtyFlag_[15])
+        {
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
+        }
         else
         {
             sql +="default,";
         }
-        if(dirtyFlag_[14])
+        if(dirtyFlag_[16])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);

@@ -30,7 +30,7 @@ namespace gaboot
 	struct payment_gateway : public payment_status
 	{
 		std::string order_id;
-		std::string gross_amount;
+		double gross_amount;
 		std::string currency;
 		std::string expiry_time;
 		std::string merchant_id;
@@ -41,8 +41,6 @@ namespace gaboot
 		std::string fraud_status;
 		std::vector<bank_response> va_numbers;
 		payment_status m_status;
-
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(payment_gateway, status_code, status_message, order_id, gross_amount, currency, expiry_time, merchant_id, payment_type, transaction_id, transaction_status, transaction_time, fraud_status, va_numbers)
 
 		void from_json(nlohmann::json const& json)
 		{
@@ -105,5 +103,7 @@ namespace gaboot
 			this->payment_type = payment.getValueOfPaymentType();
 			this->va_numbers[0].bank = payment.getValueOfBank();
 		}
+
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(payment_gateway, status_code, status_message, order_id, gross_amount, currency, expiry_time, merchant_id, payment_type, transaction_id, transaction_status, transaction_time, fraud_status, va_numbers)
 	}; 
 }
