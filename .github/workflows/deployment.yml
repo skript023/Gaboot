@@ -94,11 +94,12 @@ jobs:
         
       - name: Deploy code
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/"
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/ && sudo rm -f Gaboot.zip"
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/ && sudo wget https://github.com/skript023/Gaboot/releases/download/v1.0.0/Gaboot.zip" -O Gaboot.zip
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/ && sudo rm -r Linux/"
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/ && sudo unzip -o Gaboot.zip"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/
+          sudo rm -f Gaboot.zip
+          sudo wget https://github.com/skript023/Gaboot/releases/download/v1.0.0/Gaboot.zip" -O Gaboot.zip
+          sudo rm -r Linux/
+          sudo unzip -o Gaboot.zip
+          "
           
       #- name: Stop existing Docker containers
       #  run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose down"
@@ -108,6 +109,7 @@ jobs:
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} export PGPASSWORD="${{ secrets.DB_PASSWORD }}"
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/"
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+          export PGPASSWORD='${{ secrets.DB_PASSWORD }}'
           if sudo docker ps --format '{{.Names}}' | grep -q "gaboot-shop-database"; then
             cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker compose up -d --build gaboot-api
           else
