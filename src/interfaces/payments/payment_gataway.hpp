@@ -71,10 +71,9 @@ namespace gaboot
 			return data;
 		}
 
-		template<typename U>
-		std::enable_if<std::is_same<U, nlohmann::json>::value, void>::type operator=(U const& json)
+		inline void operator=(nlohmann::json const& json)
 		{
-			if (json["status_code"] == 201)
+			if (json["status_code"] == 201 || json["status_code"] == 200)
 			{
 				*this = json.get<payment_gateway>();
 			}
