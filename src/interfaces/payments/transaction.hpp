@@ -22,7 +22,7 @@ namespace gaboot
 		{
 			this->m_payment_type.clear();
 			this->m_transaction_details.order_id.clear();
-			this->m_transaction_details.gross_amount = 0;
+			this->m_transaction_details.gross_amount = 0.0;
 			this->m_bank_transfer.m_bank.clear();
 			this->m_item_details.clear();
 			this->m_customer_detail.m_first_name.clear();
@@ -47,7 +47,7 @@ namespace gaboot
 		{
 			this->m_payment_type = "bank_transfer";
 			this->m_transaction_details.order_id = json["order_id"].asString();
-			this->m_transaction_details.gross_amount = json["gross_amount"].asInt();
+			this->m_transaction_details.gross_amount = json["gross_amount"].asDouble();
 			this->m_bank_transfer.m_bank = json["bank_type"].asString();
 
 			if (json.isMember("product"))
@@ -56,7 +56,7 @@ namespace gaboot
 				{
 					item_detail items;
 
-					items.m_id = product["id"].asInt64();
+					items.m_id = product["id"].asString();
 					items.m_name = product["name"].asString();
 					items.m_price = product["price"].asDouble();
 					items.m_quantity = product["quantity"].asInt64();

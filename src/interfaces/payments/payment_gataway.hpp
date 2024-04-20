@@ -30,7 +30,7 @@ namespace gaboot
 	struct payment_gateway : public payment_status
 	{
 		std::string order_id;
-		double gross_amount;
+		std::string gross_amount;
 		std::string currency;
 		std::string expiry_time;
 		std::string merchant_id;
@@ -55,16 +55,14 @@ namespace gaboot
 		}
 		Json::Value to_json()
 		{
-			nlohmann::json json;
-			if (this->status_code != 201 || this->status_code != 200)
-				json = m_status;
-			else
-				json = *this;
+			LOG(INFO) << "Result is " << (this->status_code == 200 || this->status_code == 201);
+			nlohmann::json success = *this;
+			nlohmann::json fail = m_status;
 
 			Json::Value data;
 			Json::Reader reader;
 
-			reader.parse(json.dump(), data);
+			reader.parse((this->status_code == 200 || this->status_code == 201) ? success.dump() : fail.dump(), data);
 
 			return data;
 		}
@@ -92,6 +90,8 @@ namespace gaboot
 		inline void operator=(const Payments& payment)
 		{
 			this->id = payment.getValueOfId();
+			this->order_id = payment.getValueOfOrderId();
+			this->gross_amount = payment.getValueOfGrossAmount();
 			this->transaction_id = payment.getValueOfTransactionId();
 			this->transaction_status = payment.getValueOfTransactionStatus();
 			this->transaction_time = payment.getValueOfTransactionTime();
