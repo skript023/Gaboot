@@ -112,8 +112,9 @@ namespace gaboot
 
 			m_response.m_message = "Payment callback called successfully, but nothing to be updated";
 			m_response.m_success = true;
+			m_response.m_data = *payment;
 
-			return HttpResponse::newHttpJsonResponse(json);
+			return HttpResponse::newHttpJsonResponse(m_response.to_json());
 		} EXCEPT_CLAUSE
 	}
 }
