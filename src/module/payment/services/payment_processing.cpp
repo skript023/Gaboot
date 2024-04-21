@@ -112,13 +112,13 @@ namespace gaboot
 
         cpr::Body body = m_json.dump();
 
-        LOG(INFO) << "Request payment to " << m_url;
+        LOG(INFO_TO_FILE) << "Request payment to " << m_url;
 
-        LOG(INFO) << m_json.dump();
+        LOG(INFO_TO_FILE) << m_json.dump();
 
         auto res = cpr::Post(m_url, body, header);
 
-        LOG(INFO) << "Result after request " << res.text;
+        LOG(INFO_TO_FILE) << "Result after request " << res.text;
 
         if (!res.status_code) throw std::runtime_error("UNKNOWN ERROR 01 - Check your internet access or invalid request");
 

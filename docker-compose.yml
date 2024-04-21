@@ -35,8 +35,8 @@ services:
         links:
             - gaboot-database
         volumes:
-            - ./container/uploads:/usr/local/bin/gaboot/uploads/
-            - ./container/Drogon Log:/usr/local/bin/gaboot/Drogon Log/
+            - ./container/uploads:/home/skript023/gbt-backend/Linux/uploads/
+            - ./container/DrogonLog:/home/skript023/gbt-backend/Linux/DrogonLog/
             - ./container/Service:/var/log/
 networks:
    gaboot:

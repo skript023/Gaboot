@@ -79,7 +79,7 @@ namespace gaboot
 			}
 #endif
 
-			m_file_path /= "Drogon Log";
+			m_file_path /= "DrogonLog";
 			m_backup_path = m_file_path;
 			m_backup_path /= "Backup";
 			try
@@ -105,7 +105,7 @@ namespace gaboot
 
 				m_event_file_path = m_file_path;
 				m_file_path /= "Drogon.log";
-				m_event_file_path /= "Drogon Events.log";
+				m_event_file_path /= "DrogonEvents.log";
 
 				if (std::filesystem::exists(m_file_path))
 				{
@@ -113,8 +113,8 @@ namespace gaboot
 					auto timet = to_time_t(file_time);
 					auto local_time = std::localtime(&timet);
 
-					auto bigbase_timestamp = fmt::format("{:0>2}-{:0>2}-{}-{:0>2}-{:0>2}-{:0>2} Drogon.log", local_time->tm_mon + 1, local_time->tm_mday, local_time->tm_year + 1900, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
-					auto drogon_events_timestamp = fmt::format("{:0>2}-{:0>2}-{}-{:0>2}-{:0>2}-{:0>2} DrogonEvents.log", local_time->tm_mon + 1, local_time->tm_mday, local_time->tm_year + 1900, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
+					auto bigbase_timestamp = fmt::format("{:0>2}-{:0>2}-{}-{:0>2}-{:0>2}-{:0>2}_Drogon.log", local_time->tm_mon + 1, local_time->tm_mday, local_time->tm_year + 1900, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
+					auto drogon_events_timestamp = fmt::format("{:0>2}-{:0>2}-{}-{:0>2}-{:0>2}-{:0>2}_DrogonEvents.log", local_time->tm_mon + 1, local_time->tm_mday, local_time->tm_year + 1900, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
 
 					std::filesystem::copy_file(m_file_path, m_backup_path / bigbase_timestamp);
 					if (std::filesystem::exists(m_event_file_path) && !std::filesystem::is_empty(m_event_file_path))
