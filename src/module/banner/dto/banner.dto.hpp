@@ -1,6 +1,6 @@
 #pragma once
 #include <pch.h>
-#include <Categories.h>
+#include <banner/models/Banners.h>
 
 using namespace drogon;
 using namespace orm;
@@ -8,16 +8,15 @@ using namespace drogon_model::gaboot;
 
 namespace gaboot
 {
-	struct CategoryResponse
+	struct BannerResponse
 	{
 		std::string id;
 		std::string name;
-		std::string description;
 		std::string imagePath;
 		std::string thumbnailPath;
 		std::string createdAt;
 		std::string updatedAt;
-		std::vector<CategoryResponse> m_vector;
+		std::vector<BannerResponse> m_vector;
 
 		Json::Value to_json()
 		{
@@ -37,7 +36,7 @@ namespace gaboot
 
 			Json::Value data;
 			Json::Reader reader;
-			
+
 			reader.parse(json.dump(), data);
 
 			if (!m_vector.empty()) m_vector.clear();
@@ -46,13 +45,12 @@ namespace gaboot
 		}
 
 		template<typename U>
-		std::enable_if<std::is_same<U, std::vector<Categories>>::value, void>::type operator=(const U& args)
+		std::enable_if<std::is_same<U, std::vector<Banners>>::value, void>::type operator=(const U& args)
 		{
 			for (const auto& res : args)
 			{
 				id = res.getValueOfId();
 				name = res.getValueOfName();
-				description = res.getValueOfDescription();
 				imagePath = res.getValueOfImagePath();
 				thumbnailPath = res.getValueOfThumbnailPath();
 				createdAt = res.getValueOfCreatedAt().toDbStringLocal();
@@ -63,11 +61,10 @@ namespace gaboot
 		}
 
 		template<typename U>
-		std::enable_if<std::is_same<U, Categories>::value, void>::type operator=(const U& args)
+		std::enable_if<std::is_same<U, Banners>::value, void>::type operator=(const U& args)
 		{
 			id = args.getValueOfId();
 			name = args.getValueOfName();
-			description = args.getValueOfDescription();
 			imagePath = args.getValueOfImagePath();
 			thumbnailPath = args.getValueOfThumbnailPath();
 			createdAt = args.getValueOfCreatedAt().toDbStringLocal();
@@ -75,17 +72,16 @@ namespace gaboot
 		}
 
 		template<typename U>
-		std::enable_if<std::is_same<U, Categories*>::value, void>::type operator=(U args)
+		std::enable_if<std::is_same<U, Banners*>::value, void>::type operator=(U args)
 		{
 			id = args->getValueOfId();
 			name = args->getValueOfName();
-			description = args->getValueOfDescription();
 			imagePath = args->getValueOfImagePath();
 			thumbnailPath = args->getValueOfThumbnailPath();
 			createdAt = args->getValueOfCreatedAt().toDbStringLocal();
 			updatedAt = args->getValueOfUpdatedAt().toDbStringLocal();
 		}
 
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(CategoryResponse, id, name, description, imagePath, thumbnailPath, createdAt, updatedAt)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(BannerResponse, id, name, imagePath, thumbnailPath, createdAt, updatedAt)
 	};
 }

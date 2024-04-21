@@ -60,6 +60,8 @@ namespace gaboot
 
 			reader.parse(json.dump(), data);
 
+			if (!m_vector.empty()) m_vector.clear();
+
 			return data;
 		}
 

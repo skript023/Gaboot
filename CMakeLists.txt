@@ -144,6 +144,7 @@ target_include_directories(Gaboot PRIVATE
   "${SRC_DIR}/module/payment"
   "${SRC_DIR}/module/product"
   "${SRC_DIR}/module/wishlist"
+  "${SRC_DIR}/module/banner"
 )
 
 target_precompile_headers(Gaboot PRIVATE "${SRC_DIR}/pch.h")
