@@ -20,6 +20,13 @@ namespace gaboot
 		std::string createdAt;
 		std::string updatedAt;
 
+		bool empty()
+		{
+			return id.empty() && orderId.empty() && productId.empty() && price.empty() &&
+				discount.empty() && quantity.empty() && total.empty() && createdAt.empty() &&
+				updatedAt.empty();
+		}
+
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(OrderDetail, id, orderId, productId, price, discount, quantity, total, createdAt, updatedAt)
 	};
 
@@ -38,6 +45,11 @@ namespace gaboot
 		std::string updatedAt;
 		std::vector<OrderDetail> detail;
 		std::vector<OrderResponse> m_vector;
+
+		bool empty()
+		{
+			return id.empty();
+		}
 
 		Json::Value to_json()
 		{

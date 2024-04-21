@@ -8,6 +8,11 @@ namespace gaboot
 		std::string message;
 		std::string token;
 
+		bool empty()
+		{
+			return success.empty() && message.empty() && token.empty();
+		}
+
 		Json::Value to_json()
 		{
 			nlohmann::json json = *this;

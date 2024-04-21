@@ -19,6 +19,12 @@ namespace gaboot
 		std::string updatedAt;
 		std::vector<CartsResponse> m_vector;
 
+		bool empty()
+		{
+			return id.empty() && customerId.empty() && productId.empty() &&
+				price == 0.0 && quantity == 0 && createdAt.empty() && updatedAt.empty();
+		}
+
 		Json::Value to_json()
 		{
 			nlohmann::json json;

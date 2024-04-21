@@ -19,6 +19,13 @@ namespace gaboot
 		std::string updatedAt;
 		std::vector<CategoryResponse> m_vector;
 
+		bool empty()
+		{
+			return id.empty() && name.empty() && description.empty() &&
+				imagePath.empty() && thumbnailPath.empty() &&
+				createdAt.empty() && updatedAt.empty();
+		}
+
 		Json::Value to_json()
 		{
 			nlohmann::json json;

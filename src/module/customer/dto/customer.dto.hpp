@@ -27,6 +27,15 @@ namespace gaboot
 		std::string updatedAt;
 		std::vector<CustomerResponse> m_vector;
 
+		bool empty()
+		{
+			return id.empty() && firstname.empty() && lastname.empty() && username.empty() &&
+				email.empty() && phoneNumber.empty() && addressDetail.empty() &&
+				latitude == 0.0 && longitude == 0.0 && password.empty() &&
+				token.empty() && !isActive && imagePath.empty() &&
+				thumbnailPath.empty() && createdAt.empty() && updatedAt.empty();
+		}
+
 		Json::Value to_json()
 		{
 			nlohmann::json json;

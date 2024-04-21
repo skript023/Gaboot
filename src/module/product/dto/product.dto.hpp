@@ -88,6 +88,14 @@ namespace gaboot
 		std::vector<ProductImageResponse> images;
 		std::vector<ProductResponse> m_vector;
 
+		bool empty()
+		{
+			return id.empty() && name.empty() && description.empty() && price == 0.0 &&
+				stock == 0 && dimension.empty() && weight == 0.0 && weightUnit.empty() &&
+				categoryId.empty() && totalSales == 0 && !isActive && createdAt.empty() &&
+				updatedAt.empty() && images.empty();
+		}
+
 		void push(ProductImages image)
 		{
 			ProductImageResponse res;

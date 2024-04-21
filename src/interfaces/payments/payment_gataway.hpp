@@ -42,6 +42,15 @@ namespace gaboot
 		std::vector<bank_response> va_numbers;
 		payment_status m_status;
 
+		bool empty()
+		{
+			return id.empty() && status_code == 0 && status_message.empty() &&
+				order_id.empty() && gross_amount.empty() && currency.empty() &&
+				expiry_time.empty() && merchant_id.empty() && payment_type.empty() &&
+				transaction_id.empty() && transaction_status.empty() &&
+				transaction_time.empty() && fraud_status.empty() && va_numbers.empty();
+		}
+
 		void from_json(nlohmann::json const& json)
 		{
 			if (json["status_code"] >= 200 && json["status_code"] <= 299)

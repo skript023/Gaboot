@@ -12,6 +12,11 @@ namespace gaboot
 		std::string cpu_usage;
 		std::string memory_usage;
 
+		bool empty()
+		{
+			return total_core == 0 && cpu_usage.empty() && memory_usage.empty();
+		}
+
 		Json::Value to_json()
 		{
 			nlohmann::json json = *this;

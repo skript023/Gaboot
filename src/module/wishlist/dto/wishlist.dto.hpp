@@ -17,6 +17,11 @@ namespace gaboot
 		std::string updatedAt;
 		std::vector<WishlistResponse> m_vector;
 
+		bool empty()
+		{
+			return id.empty() && productId.empty() && category.empty() && createdAt.empty() && updatedAt.empty();
+		}
+
 		Json::Value to_json()
 		{
 			nlohmann::json json;

@@ -18,9 +18,9 @@ namespace gaboot
         Json::Value to_json() 
         {
             Json::Value json;
-            m_json = m_data.to_json();
+
             if (!m_message.empty()) json["message"] = m_message;
-            if (!m_json.empty()) json["data"] = m_json;
+            if (!m_data.empty()) json["data"] = m_data.to_json();;
             if (m_last_page != 0) json["lastPage"] = m_last_page;
             if (m_total_data != 0) json["totalData"] = m_total_data;
             json["success"] = m_success;
@@ -33,12 +33,9 @@ namespace gaboot
         void clear()
         {
             m_message.clear();
-            m_json.clear();
             m_success = false;
             m_last_page = 0;
             m_last_page = 0;
         }
-    private:
-        Json::Value m_json;
 	};
 }
