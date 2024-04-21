@@ -107,7 +107,7 @@ namespace gaboot
         cpr::Header header = {
             { "Accept", "application/json" },
             { "Content-Type", "application/json" },
-            { "Authorization", "Basic U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg=" }
+            { "Authorization", token }
         };
 
         cpr::Body body = m_json.dump();
