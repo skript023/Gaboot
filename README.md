@@ -9,7 +9,7 @@
         <img src="https://img.shields.io/github/actions/workflow/status/skript023/Gaboot/main.yaml?branch=main&style=flat-square"/>
     </a>
     <a href="https://github.com/skript023/Gaboot/actions">
-        <img src="https://img.shields.io/github/actions/workflow/status/skript023/Gaboot/deployment.yml?branch=main&style=flat-square"/>
+        <img src="https://img.shields.io/github/actions/workflow/status/skript023/Gaboot/deployment.yml?branch=main&style=flat-square&label=deploy"/>
     </a>
     <br>
     Gaboot E-Commerce Backend Server
