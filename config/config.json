@@ -45,9 +45,9 @@
         //filename: Sqlite3 db file name
         //"filename":"",
         //host: Server address,localhost by default
-        "host": "gaboot-database",
+        "host": "103.127.97.223",
         //port: Server port, 5432 by default
-        "port": 5432,
+        "port": 5433,
         //dbname: Database name
         "dbname": "gaboot",
         //user: 'postgres' by default

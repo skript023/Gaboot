@@ -99,22 +99,22 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/ && sudo rm -r Linux/"
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/ && sudo unzip -o Gaboot.zip"
           
-      #- name: Stop existing Docker containers
-      #  run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker-compose down"
+      - name: Deploy to docker containers
+        run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker compose up -d --build"
 
-      - name: Build and start Docker containers
-        run: |
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
-          export PGPASSWORD='${{ secrets.DB_PASSWORD }}'
-          if sudo docker ps --format '{{.Names}}' | grep -q "gaboot-shop-database"; then
-            cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker compose up -d --build gaboot-api
-            cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker compose restart
-          else
-            cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker compose down 
-            cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker compose up --build -d 
-            cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker cp ../gaboot.sql gaboot-shop-database:/docker-entrypoint-initdb.d/gaboot.sql 
-            cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker exec -i gaboot-shop-database psql -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -f docker-entrypoint-initdb.d/gaboot.sql
-          fi"
+      #- name: Build and start Docker containers
+      #  run: |
+      #    ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+      #    export PGPASSWORD='${{ secrets.DB_PASSWORD }}'
+      #    if sudo docker ps --format '{{.Names}}' | grep -q "gaboot-shop-database"; then
+      #      cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker compose up -d --build gaboot-api
+      #      cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker compose restart
+      #    else
+      #      cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker compose down 
+      #      cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker compose up --build -d 
+      #      cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker cp ../gaboot.sql gaboot-shop-database:/docker-entrypoint-initdb.d/gaboot.sql 
+      #      cd /home/${{ secrets.SERVER_USER }}/gbt-backend/Linux/ && sudo docker exec -i gaboot-shop-database psql -U ${{ secrets.DB_USER }} -W ${{ secrets.DB_PASSWORD }} -f docker-entrypoint-initdb.d/gaboot.sql
+      #    fi"
       
       #- name: Connect to PostgreSQL and run SQL query
       #  run: |
