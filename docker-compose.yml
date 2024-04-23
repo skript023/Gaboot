@@ -1,24 +1,5 @@
 version: "3.5"
 services:
-     gaboot-database:
-        image: postgres:latest
-        restart: on-failure
-        container_name: gaboot-shop-database
-        environment:
-            POSTGRES_DB: gaboot
-            POSTGRES_USER: docker
-            POSTGRES_PASSWORD: gaboot
-        ports:
-            - 5433:5432
-        expose:
-            - 5432
-        networks:
-            - gaboot
-        shm_size: 128mb
-        volumes:
-            - ./postgres:/dev/shm
-            - ./postgres/data:/var/lib/postgresql/data
-            - ./postgres/config:/etc/postgresql/
      gaboot-api:
         build: 
             context: .
