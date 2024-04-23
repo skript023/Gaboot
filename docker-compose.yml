@@ -9,6 +9,9 @@ services:
         init: true
         ports:
             - 5000:8080
+        env_file:
+          - path: .env
+            required: true
         networks:
             - gaboot
         volumes:
