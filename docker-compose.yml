@@ -9,12 +9,8 @@ services:
         init: true
         ports:
             - 5000:8080
-        depends_on:
-            - gaboot-database
         networks:
             - gaboot
-        links:
-            - gaboot-database
         volumes:
             - ./container/uploads:/home/skript023/gbt-backend/Linux/uploads/
             - ./container/DrogonLog:/home/skript023/gbt-backend/Linux/DrogonLog/
