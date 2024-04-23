@@ -58,7 +58,7 @@
 #define UPLOAD_PATH drogon::app().getUploadPath()
 #define DATABASE_CLIENT drogon::app().getDbClient()
 
-#define SECRET "QmFoYXNhQXN1MTIz"
+#define SECRET std::getenv("SECRET")
 #define SERVER_KEY std::getenv("SERVER_KEY")
 
 #ifdef BASIC_MIDDLEWARE_DISABLE
