@@ -59,7 +59,7 @@
 #define DATABASE_CLIENT drogon::app().getDbClient()
 
 #define SECRET "QmFoYXNhQXN1MTIz"
-#define SERVER_KEY "U0ItTWlkLXNlcnZlci1GTzllNFFRTlZjVVJmUEYtb2UxMWU5ZFg="
+#define SERVER_KEY std::getenv("SERVER_KEY")
 
 #ifdef BASIC_MIDDLEWARE_DISABLE
 #define BASIC_MIDDLEWARE
