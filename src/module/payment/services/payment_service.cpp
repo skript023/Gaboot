@@ -39,13 +39,19 @@ namespace gaboot
 
 				db().insert(payments);
 
-				TRANSACTION_SUCCESS(payment);
+				m_response.m_success = true;
+				m_response.m_message = "Payment success created";
+				m_response.m_data = *payment;
+
+				TRANSACTION_SUCCESS(m_response);
 
 			} TRANSACTION_END_CLAUSE
 
-			LOG(INFO) << "Status Code : " << payment->status_code;
+			m_response.m_success = false;
+			m_response.m_message = "Failed create payment";
+			m_response.m_data = *payment;
 
-			TRANSACTION_FAILED(payment);
+			TRANSACTION_FAILED(m_response);
 		}
 		catch (const std::exception& e)
 		{

@@ -46,7 +46,7 @@ namespace gaboot
 
     #define TRANSACTION_BEGIN_CLAUSE(json, midtrans) g_payment_processing->start_payment(json); if (g_payment_processing->make_payment(midtrans)) {
     #define TRANSACTION_END_CLAUSE }
-    #define TRANSACTION_FAILED(midtrans) auto response = HttpResponse::newHttpJsonResponse(midtrans->to_json()); response->setStatusCode((HttpStatusCode)midtrans->m_status.status_code); return response;
-    #define TRANSACTION_SUCCESS(midtrans) auto response = HttpResponse::newHttpJsonResponse(midtrans->to_json()); response->setStatusCode((HttpStatusCode)midtrans->status_code); return response;
+    #define TRANSACTION_FAILED(midtrans) auto response = HttpResponse::newHttpJsonResponse(midtrans.to_json()); response->setStatusCode((HttpStatusCode)midtrans.m_data.status_code); return response;
+    #define TRANSACTION_SUCCESS(midtrans) auto response = HttpResponse::newHttpJsonResponse(midtrans.to_json()); response->setStatusCode((HttpStatusCode)midtrans.m_data.status_code); return response;
     #define TRANSACTION_ERROR(msg) return CustomException<k500InternalServerError>(fmt::format("Unable to create payment, error caught on {}", msg)).response();
 }
