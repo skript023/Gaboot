@@ -72,7 +72,7 @@ namespace gaboot
 
 			if (transaction.toJson().empty())
 			{
-				throw NotFoundException(fmt::format("Unable found transaction id {}", transactionId));
+				throw NotFoundException(fmt::format("Unable found transaction id {}", std::move(transactionId)));
 			}
 
 			m_response.m_message = "Transaction found";
