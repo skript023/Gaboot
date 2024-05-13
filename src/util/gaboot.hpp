@@ -241,18 +241,18 @@ namespace gaboot::util
 
         // Add 24 hours to the current time
         auto in_24_hours = now + std::chrono::hours(24);
+#ifdef _WIN32
 
         // Convert to local time
         auto time = std::chrono::current_zone()->to_local(in_24_hours);
 
         // Format the time
-#ifdef _WIN32
         std::ostringstream oss;
         oss << std::format("{:%Y-%m-%d %X}", time);
 #elif __linux__
         std::ostringstream oss;
 
-        oss << fmt::format("{:%Y-%m-%d %H:%M:%S}", fmt::localtime(time));
+        oss << fmt::format("{:%Y-%m-%d %H:%M:%S}", fmt::localtime(in_24_hours));
 #endif
         return oss.str();
     }
