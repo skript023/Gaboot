@@ -4,14 +4,6 @@
 
 namespace gaboot
 {
-	order_service::order_service()
-	{
-		this->load_cache();
-	}
-	order_service::~order_service() noexcept
-	{
-		m_cache_order.clear();
-	}
 	HttpResponsePtr order_service::create(HttpRequestPtr const& req)
 	{
 		TRY_CLAUSE
@@ -30,7 +22,7 @@ namespace gaboot
 			order.setCreatedAt(trantor::Date().now());
 			order.setUpdatedAt(trantor::Date().now());
 
-			orders().insert(order);
+			db().insert(order);
 			m_cache_order.clear();
 
 			m_response.m_message = "Success create order";
@@ -52,7 +44,7 @@ namespace gaboot
 			const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
 			auto callback = [customer](const Orders& entry) -> bool { return entry.getValueOfCustomerId() == customer; };
-			auto orders = customer.empty() ? m_cache_order.limit(limit).offset(page * limit).find_all() : m_cache_order.find(callback);
+			auto orders = customer.empty() ? db().limit(limit).offset(page * limit).findAll() : db().findBy(Criteria(Orders::Cols::_customer_id, CompareOperator::EQ, customer));
 
 			if (orders.empty())
 			{
@@ -80,11 +72,7 @@ namespace gaboot
 				throw BadRequestException("Parameter is invalid");
 			}
 
-			this->load_cache();
-
-			auto order = m_cache_order.find(id);
-
-			//if (!order) throw NotFoundException("Order data is not found");
+			auto order = db().findByPrimaryKey(id);
 
 			m_response.m_message = "Success retrieve order data";
 			m_response.m_success = true;
@@ -108,7 +96,7 @@ namespace gaboot
 
 			order->updateByJson(*json);
 
-			orders().update(*order);
+			db().update(*order);
 
 			m_cache_order.clear();
 

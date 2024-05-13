@@ -19,8 +19,8 @@ namespace gaboot
 	{
 		Mapper<Categories> db() { return Mapper<Categories>(DATABASE_CLIENT); }
 	public:
-		explicit category_service();
-		~category_service();
+		explicit category_service() = default;
+		~category_service() noexcept = default;
 
 		category_service(category_service const& that) = delete;
 		category_service& operator=(category_service const& that) = delete;

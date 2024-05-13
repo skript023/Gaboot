@@ -4,14 +4,6 @@
 
 namespace gaboot
 {
-	product_service::product_service()
-	{
-		this->load_cache();
-	}
-	product_service::~product_service()
-	{
-		m_cache_product.clear();
-	}
 	HttpResponsePtr product_service::findAll(HttpRequestPtr const& req)
 	{
 		TRY_CLAUSE
@@ -23,9 +15,7 @@ namespace gaboot
 			const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
 			const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
-			this->load_cache();
-
-			const auto products = categoryId.empty() ? m_cache_product.limit(limit).offset(page * limit).find_all() : m_cache_product.find([categoryId](const MasterProducts& entry) -> bool { return entry.getValueOfCategoryId() == categoryId; });
+			const auto products = categoryId.empty() ? db().limit(limit).offset(page * limit).findAll() : db().findBy(Criteria(MasterProducts::Cols::_category_id, CompareOperator::EQ, categoryId));
 
 			if (products.empty())
 			{
@@ -114,9 +104,7 @@ namespace gaboot
 				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
-			this->load_cache();
-
-			auto product = m_cache_product.find(id);
+			auto product = db().findByPrimaryKey(id);
 
 			m_response.m_message = "Success retrieve products data";
 			m_response.m_data = product;
@@ -160,11 +148,6 @@ namespace gaboot
 			product.setId(id);
 			product.setUpdatedAt(trantor::Date::now());
 
-			this->load_cache();
-
-			if (!m_cache_product.update(id, product))
-				throw NotFoundException("Unable to update non-existing product");
-
 			if (const auto record = db().updateFuture(product).get(); !record)
 				throw NotFoundException("Unable to update non-existing product");
 
@@ -197,11 +180,7 @@ namespace gaboot
 				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
-			this->load_cache();
-
 			const auto record = db().deleteByPrimaryKey(id);
-
-			m_cache_product.remove(id);
 
 			if (!record)
 			{
@@ -234,9 +213,7 @@ namespace gaboot
 
 			auto args = Criteria(MasterProducts::Cols::_category_id, CompareOperator::EQ, id);
 
-			const auto products = m_cache_product.find([id](const MasterProducts& entry) -> bool {
-				return entry.getValueOfCategoryId() == id;
-			});
+			const auto products = db().findBy(args);
 
 			if (products.empty())
 			{

@@ -5,16 +5,6 @@
 
 namespace gaboot
 {
-    cart_service::cart_service()
-    {
-        this->load_cache();
-    }
-
-    cart_service::~cart_service() noexcept
-    {
-        m_cache_cart.clear();
-    }
-
     HttpResponsePtr cart_service::create(HttpRequestPtr const &req)
     {
         TRY_CLAUSE
@@ -63,9 +53,7 @@ namespace gaboot
             auto customerCallback = [customer](const Carts& entry) -> bool { return entry.getValueOfCustomerId() == customer; };
             auto productCallback = [product](const Carts& entry) -> bool { return entry.getValueOfProductId() == product; };
 
-            this->load_cache();
-
-            auto carts = !customer.empty() ?  m_cache_cart.find(customerCallback) : !product.empty() ? m_cache_cart.find(productCallback) : m_cache_cart.limit(limit).offset(page * limit).find_all();
+            auto carts = !customer.empty() ?  db().findBy(Criteria(Carts::Cols::_product_id, CompareOperator::EQ, product)) : !product.empty() ? db().findBy(Criteria(Carts::Cols::_customer_id, CompareOperator::EQ, customer))  : m_cache_cart.limit(limit).offset(page * limit).find_all();
 
             if (carts.empty())
             {
@@ -92,11 +80,7 @@ namespace gaboot
 				throw BadRequestException("Parameter is invalid");
 			}
 
-			this->load_cache();
-
-            auto cart = m_cache_cart.find(id);
-
-			if (!cart) throw NotFoundException("Cart data is not found");
+            auto cart = db().findByPrimaryKey(id);
 
 			m_response.m_message = "Success retrieve cart data";
 			m_response.m_success = true;
@@ -114,16 +98,12 @@ namespace gaboot
             if (id.empty())
                 throw BadRequestException("Parameter is invalid");
 
-            this->load_cache();
+            auto cart = db().findByPrimaryKey(id);
 
-            auto cart = m_cache_cart.find(id);
+            cart.updateByJson(*json);
 
-            cart->updateByJson(*json);
-
-            if (!db().update(*cart) || !m_cache_cart.update(id, *cart))
+            if (!db().update(cart))
                 throw BadRequestException("Unable to update non-existing cart");
-
-            m_cache_cart.clear();
 
             m_response.m_message = "Success update cart data.";
 			m_response.m_success = true;
@@ -138,9 +118,7 @@ namespace gaboot
             if (id.empty())
                 throw BadRequestException("Parameter is invalid");
 
-            this->load_cache();
-
-            if (!db().deleteByPrimaryKey(id) || !m_cache_cart.remove(id))
+            if (!db().deleteByPrimaryKey(id))
                 throw BadRequestException("Unable delete non-existing cart");
 
             m_response.m_message = "Success delete cart";

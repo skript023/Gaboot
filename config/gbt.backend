@@ -1,0 +1,16 @@
+server {
+    # Listen on port 80
+    listen 80;
+    server_name gaboot-server.rena.my.id;
+
+    # Define location for forwarding requests to your C++ application
+    location / {
+        proxy_pass http://localhost:5000;  # Adjust the port based on your >
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Additional configuration if needed
+}

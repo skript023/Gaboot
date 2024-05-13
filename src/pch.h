@@ -30,6 +30,7 @@
 #endif
 
 #include <fmt/format.h>
+#include <fmt/chrono.h>
 #include <drogon/drogon.h>
 #include <nlohmann/json.hpp>
 #include <nlohmann/json-schema.hpp>

@@ -19,8 +19,8 @@ namespace gaboot
 		Mapper<MasterProducts> db() { return Mapper<MasterProducts>(DATABASE_CLIENT); }
 		Mapper<ProductImages> db_images() { return Mapper<ProductImages>(DATABASE_CLIENT); }
 	public:
-		explicit product_service();
-		~product_service();
+		explicit product_service() = default;
+		~product_service() noexcept = default;
 
 		product_service(product_service const& that) = delete;
 		product_service& operator=(product_service const& that) = delete;

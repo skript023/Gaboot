@@ -5,14 +5,6 @@
 
 namespace gaboot
 {
-	category_service::category_service()
-	{
-		this->load_cache();
-	}
-	category_service::~category_service()
-	{
-		m_cache_category.clear();
-	}
 	HttpResponsePtr category_service::create(HttpRequestPtr const& req)
     {
 		TRY_CLAUSE
@@ -72,9 +64,7 @@ namespace gaboot
 			const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
 			const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
-			this->load_cache();
-
-			const auto categories = m_cache_category.limit(limit).offset(page * limit).find_all();
+			const auto categories = db().limit(limit).offset(page * limit).findAll();
 
 			if (categories.empty())
 			{
@@ -108,9 +98,7 @@ namespace gaboot
 
 			this->load_cache();
 
-			auto category = m_cache_category.find(id);
-
-			if (!category) throw NotFoundException("Unable retrieve category detail");
+			auto category = db().findByPrimaryKey(id);
 
 			m_response.m_message = "Success retrieve category data";
 			m_response.m_success = true;
@@ -124,8 +112,6 @@ namespace gaboot
 		TRY_CLAUSE
 		{
 			MultiPartParser multipart;
-
-			this->load_cache();
 
 			if (id.empty())
 			{
@@ -166,10 +152,7 @@ namespace gaboot
 				category->setThumbnailPath(upload.get_thumbnail_path());
 			}
 
-			if (!m_cache_category.update(id, *category))
-				throw CustomException<k500InternalServerError>("Unable to update non-existing cache");
-
-			if (!db().updateFuture(*category).get())
+			if (!db().update(*category))
 				throw CustomException<k500InternalServerError>("Unable to update non-existing data");
 
 			if (multipart.getFiles().size() > 0 && util::allowed_image(file.getFileExtension().data()))
@@ -194,18 +177,14 @@ namespace gaboot
 				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
-			this->load_cache();
-
-			const auto record = db().deleteFutureByPrimaryKey(id).get();
-
-			if (!record)
+			if (!db().deleteByPrimaryKey(id))
 			{
 				throw NotFoundException("Unable to delete non-existing data");
 			}
 
 			m_cache_category.remove(id);
 
-			m_response.m_message = fmt::format("Delete category on {} successfully", record);
+			m_response.m_message = fmt::format("Delete category successfully");
 			m_response.m_success = true;
 
 			return HttpResponse::newHttpJsonResponse(m_response.to_json());
@@ -215,8 +194,6 @@ namespace gaboot
 	{
 		TRY_CLAUSE
 		{
-			Categories category;
-
 			if (id.empty())
 			{
 				LOG(WARNING) << "ID is empty or ID is not numeric";
@@ -224,38 +201,30 @@ namespace gaboot
 				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
-			this->load_cache();
+			Categories category = db().findByPrimaryKey(id);
 
-			if (!m_cache_category.find(id, &category))
+			std::filesystem::path file(*category.getImagePath());
+
+			if (!std::filesystem::exists(file))
 			{
-				std::filesystem::path file(*category.getImagePath());
+				LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
 
-				if (!std::filesystem::exists(file))
-				{
-					LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
+				m_response.m_message = "Unable to retreive category picture, please upload your category picture";
+				m_response.m_success = false;
 
-					m_response.m_message = "Unable to retreive category picture, please upload your category picture";
-					m_response.m_success = false;
+				auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+				response->setStatusCode(k404NotFound);
 
-					auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-					response->setStatusCode(k404NotFound);
-
-					return response;
-				}
-
-				if (auto image = category.getImagePath(); image && !image->empty())
-					return HttpResponse::newFileResponse(*category.getImagePath());
+				return response;
 			}
 
-			throw NotFoundException("Unable to retreive category image");
+			return HttpResponse::newFileResponse(*category.getImagePath());
 		} EXCEPT_CLAUSE
 	}
 	HttpResponsePtr category_service::getThumbnail(HttpRequestPtr const& req, std::string&& id)
 	{
 		TRY_CLAUSE
 		{
-			Categories category;
-
 			if (id.empty())
 			{
 				LOG(WARNING) << "ID is empty or ID is not numeric";
@@ -263,30 +232,24 @@ namespace gaboot
 				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
-			this->load_cache();
+			Categories category = db().findByPrimaryKey(id);
 
-			if (m_cache_category.find(id, &category))
+			std::filesystem::path file(*category.getThumbnailPath());
+
+			if (!std::filesystem::exists(file))
 			{
-				std::filesystem::path file(*category.getThumbnailPath());
+				LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
 
-				if (!std::filesystem::exists(file))
-				{
-					LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
+				m_response.m_message = "Unable to retreive category picture, please upload your category picture";
+				m_response.m_success = false;
 
-					m_response.m_message = "Unable to retreive category picture, please upload your category picture";
-					m_response.m_success = false;
+				auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+				response->setStatusCode(k404NotFound);
 
-					auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-					response->setStatusCode(k404NotFound);
-
-					return response;
-				}
-
-				if (auto image = category.getImagePath(); image && !image->empty())
-					return HttpResponse::newFileResponse(*category.getThumbnailPath());
+				return response;
 			}
 
-			throw NotFoundException("Unable to retreive category image");
+			return HttpResponse::newFileResponse(*category.getThumbnailPath());
 		} EXCEPT_CLAUSE
 	}
 }

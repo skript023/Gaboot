@@ -224,11 +224,15 @@ namespace gaboot::util
             return false;
         }
     }
-#ifdef _WIN32
     inline std::string current_datetime()
     {
+#ifdef _WIN32
         auto const time = std::chrono::current_zone()->to_local(std::chrono::system_clock::now());
         return std::format("{:%Y-%m-%d %X}", time);
+#elif __linux__
+        std::time_t t = std::time(nullptr);
+        return fmt::format("{:%Y-%m-%d %H:%M:%S}", fmt::localtime(t));
+#endif
     }
 
     inline std::string current_datetime_plus_24_hours() {
@@ -242,9 +246,14 @@ namespace gaboot::util
         auto time = std::chrono::current_zone()->to_local(in_24_hours);
 
         // Format the time
+#ifdef _WIN32
         std::ostringstream oss;
         oss << std::format("{:%Y-%m-%d %X}", time);
+#elif __linux__
+        std::ostringstream oss;
+
+        oss << fmt::format("{:%Y-%m-%d %H:%M:%S}", fmt::localtime(time));
+#endif
         return oss.str();
     }
-#endif
 }

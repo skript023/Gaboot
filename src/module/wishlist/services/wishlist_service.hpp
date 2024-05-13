@@ -19,8 +19,8 @@ namespace gaboot
 	{
 		Mapper<Wishlists> db() { return Mapper<Wishlists>(DATABASE_CLIENT); }
 	public:
-		explicit wishlist_service();
-		~wishlist_service();
+		explicit wishlist_service() = default;
+		~wishlist_service() noexcept = default;
 
 		wishlist_service(wishlist_service const& that) = delete;
 		wishlist_service& operator=(wishlist_service const& that) = delete;

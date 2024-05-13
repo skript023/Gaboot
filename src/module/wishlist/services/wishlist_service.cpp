@@ -3,14 +3,6 @@
 
 namespace gaboot
 {
-	wishlist_service::wishlist_service()
-	{
-		this->load_cache();
-	}
-	wishlist_service::~wishlist_service()
-	{
-		m_cache_wishlist.clear();
-	}
 	HttpResponsePtr wishlist_service::create(HttpRequestPtr const& req)
 	{
 		TRY_CLAUSE
@@ -35,8 +27,6 @@ namespace gaboot
 
 			db().insert(wishlist);
 
-			m_cache_wishlist.clear();
-
 			m_response.m_message = "Create wishlist success";
 			m_response.m_success = true;
 
@@ -56,9 +46,7 @@ namespace gaboot
 			const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
 			const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
-			this->load_cache();
-
-			const auto wishlists = m_cache_wishlist.limit(limit).offset(page * limit).find_all();
+			const auto wishlists = db().limit(limit).offset(page * limit).findAll();
 
 			if (wishlists.empty())
 			{
@@ -87,11 +75,7 @@ namespace gaboot
 				throw BadRequestException("Requirement doesn't match");
 			}
 
-			this->load_cache();
-
-			auto wishlist = m_cache_wishlist.find(id);
-
-			// if (!wishlist) throw NotFoundException("Unable retrieve wishlist detail");
+			auto wishlist = db().findByPrimaryKey(id);
 
 			m_response.m_message = "Success retrieve wishlist data";
 			m_response.m_success = true;
@@ -113,15 +97,13 @@ namespace gaboot
 				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
-			const auto wishlist = m_cache_wishlist.find(id);
+			auto wishlist = db().findByPrimaryKey(id);
 
-			wishlist->updateByJson(*json);
-			wishlist->setId(id);
-			wishlist->setUpdatedAt(trantor::Date::now());
+			wishlist.updateByJson(*json);
+			wishlist.setId(id);
+			wishlist.setUpdatedAt(trantor::Date::now());
 
-			this->load_cache();
-
-			if (!m_cache_wishlist.update(id, *wishlist) || !db().updateFuture(*wishlist).get())
+			if (!db().updateFuture(wishlist).get())
 				throw BadRequestException("Unable to update non-existing record");
 			
 			m_response.m_data = wishlist;
@@ -140,11 +122,6 @@ namespace gaboot
 			{
 				throw BadRequestException("Parameters requirement doesn't match");
 			}
-
-			this->load_cache();
-
-			if (m_cache_wishlist.remove(id))
-				throw NotFoundException("Unable to delete non-existing record");
 
 			if (auto record = db().deleteByPrimaryKey(id); !record)
 				throw NotFoundException("Unable to delete non-existing record");

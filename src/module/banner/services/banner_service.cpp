@@ -7,11 +7,11 @@ namespace gaboot
 {
 	banner_service::banner_service()
 	{
-		this->load_cache();
+
 	}
 	banner_service::~banner_service()
 	{
-		m_cache_banner.clear();
+
 	}
 	HttpResponsePtr banner_service::findAll(HttpRequestPtr const& req)
 	{
@@ -23,9 +23,7 @@ namespace gaboot
 			const size_t limit = limitParam.empty() && !util::is_numeric(limitParam) ? 10 : stoull(limitParam);
 			const size_t page = pageParam.empty() && !util::is_numeric(pageParam) ? 0 : stoull(pageParam) - 1;
 
-			this->load_cache();
-
-			const auto banners = m_cache_banner.limit(limit).offset(page * limit).find_all();
+			const auto banners = db().orderBy(Banners::Cols::_name).limit(limit).offset(page * limit).findAll();
 
 			if (banners.empty())
 			{
@@ -57,11 +55,7 @@ namespace gaboot
 				throw BadRequestException("Requirement doesn't match");
 			}
 
-			this->load_cache();
-
-			auto banner = m_cache_banner.find(id);
-
-			if (!banner) throw NotFoundException("Unable retrieve banner detail");
+			auto banner = db().findByPrimaryKey(id);
 
 			m_response.m_message = "Success retrieve banner data";
 			m_response.m_success = true;
@@ -74,8 +68,6 @@ namespace gaboot
 	{
 		TRY_CLAUSE
 		{
-			Banners banner;
-
 			if (id.empty())
 			{
 				LOG(WARNING) << "ID is empty or ID is not numeric";
@@ -83,38 +75,30 @@ namespace gaboot
 				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
-			this->load_cache();
+			Banners banner = db().findByPrimaryKey(id);
 
-			if (!m_cache_banner.find(id, &banner))
+			std::filesystem::path file(*banner.getImagePath());
+
+			if (!std::filesystem::exists(file))
 			{
-				std::filesystem::path file(*banner.getImagePath());
+				LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
 
-				if (!std::filesystem::exists(file))
-				{
-					LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
+				m_response.m_message = "Unable to retreive banner picture, please upload your banner picture";
+				m_response.m_success = false;
 
-					m_response.m_message = "Unable to retreive banner picture, please upload your banner picture";
-					m_response.m_success = false;
+				auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+				response->setStatusCode(k404NotFound);
 
-					auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-					response->setStatusCode(k404NotFound);
-
-					return response;
-				}
-
-				if (auto image = banner.getImagePath(); image && !image->empty())
-					return HttpResponse::newFileResponse(*banner.getImagePath());
+				return response;
 			}
 
-			throw NotFoundException("Unable to retreive banner image");
+			return HttpResponse::newFileResponse(*banner.getImagePath());
 		} EXCEPT_CLAUSE
 	}
 	HttpResponsePtr banner_service::getThumbnail(HttpRequestPtr const& req, std::string&& id)
 	{
 		TRY_CLAUSE
 		{
-			Banners banner;
-
 			if (id.empty())
 			{
 				LOG(WARNING) << "ID is empty or ID is not numeric";
@@ -122,30 +106,24 @@ namespace gaboot
 				throw BadRequestException("Parameters requirement doesn't match");
 			}
 
-			this->load_cache();
+			Banners banner = db().findByPrimaryKey(id);
 
-			if (m_cache_banner.find(id, &banner))
+			std::filesystem::path file(*banner.getThumbnailPath());
+
+			if (!std::filesystem::exists(file))
 			{
-				std::filesystem::path file(*banner.getThumbnailPath());
+				LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
 
-				if (!std::filesystem::exists(file))
-				{
-					LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
+				m_response.m_message = "Unable to retreive banner picture, please upload your banner picture";
+				m_response.m_success = false;
 
-					m_response.m_message = "Unable to retreive banner picture, please upload your banner picture";
-					m_response.m_success = false;
+				auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
+				response->setStatusCode(k404NotFound);
 
-					auto response = HttpResponse::newHttpJsonResponse(m_response.to_json());
-					response->setStatusCode(k404NotFound);
-
-					return response;
-				}
-
-				if (auto image = banner.getImagePath(); image && !image->empty())
-					return HttpResponse::newFileResponse(*banner.getThumbnailPath());
+				return response;
 			}
 
-			throw NotFoundException("Unable to retreive banner image");
+			return HttpResponse::newFileResponse(*banner.getThumbnailPath());
 		} EXCEPT_CLAUSE
 	}
 }
