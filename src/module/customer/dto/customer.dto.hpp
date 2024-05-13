@@ -27,6 +27,29 @@ namespace gaboot
 		std::string updatedAt;
 		std::vector<CustomerResponse> m_vector;
 
+		void clear()
+		{
+			id.clear();
+			firstname.clear();
+			lastname.clear();
+			username.clear();
+			email.clear();
+			phoneNumber.clear();
+			addressDetail.clear();
+			latitude = 0.0;
+			longitude = 0.0;
+			password.clear();
+			token.clear();
+			isActive = false;
+			imagePath.clear();
+			thumbnailPath.clear();
+			createdAt.clear();
+			thumbnailPath.clear();
+			createdAt.clear();
+			updatedAt.clear();
+			m_vector.clear();
+		}
+
 		bool empty()
 		{
 			return id.empty() && firstname.empty() && lastname.empty() && username.empty() &&

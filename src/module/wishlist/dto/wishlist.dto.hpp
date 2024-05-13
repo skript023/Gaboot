@@ -17,6 +17,16 @@ namespace gaboot
 		std::string updatedAt;
 		std::vector<WishlistResponse> m_vector;
 
+		void clear()
+		{
+			id.clear();
+			productId.clear();
+			category.clear();
+			createdAt.clear();
+			updatedAt.clear();
+			m_vector.clear();
+		}
+
 		bool empty()
 		{
 			return id.empty() && productId.empty() && category.empty() && createdAt.empty() && updatedAt.empty();

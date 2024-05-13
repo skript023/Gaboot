@@ -46,6 +46,23 @@ namespace gaboot
 		std::vector<OrderDetail> detail;
 		std::vector<OrderResponse> m_vector;
 
+		void clear()
+		{
+			id.clear();
+			name.clear();
+			customerId.clear();
+			totalPrice = 0.0;
+			discount = 0.0;
+			grandTotal = 0.0;
+			totalItem = 0;
+			status.clear();
+			expired.clear();
+			createdAt.clear();
+			updatedAt.clear();
+			detail.clear();
+			m_vector.clear();
+		}
+
 		bool empty()
 		{
 			return id.empty();

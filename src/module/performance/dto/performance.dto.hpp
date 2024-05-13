@@ -12,6 +12,13 @@ namespace gaboot
 		std::string cpu_usage;
 		std::string memory_usage;
 
+		void clear()
+		{
+			total_core = 0;
+			cpu_usage.clear();
+			memory_usage.clear();
+		}
+
 		bool empty()
 		{
 			return total_core == 0 && cpu_usage.empty() && memory_usage.empty();

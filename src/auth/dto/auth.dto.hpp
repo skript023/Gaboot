@@ -8,6 +8,13 @@ namespace gaboot
 		std::string message;
 		std::string token;
 
+		void clear()
+		{
+			success.clear();
+			message.clear();
+			token.clear();
+		}
+
 		bool empty()
 		{
 			return success.empty() && message.empty() && token.empty();

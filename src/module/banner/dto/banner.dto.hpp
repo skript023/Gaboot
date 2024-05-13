@@ -18,6 +18,17 @@ namespace gaboot
 		std::string updatedAt;
 		std::vector<BannerResponse> m_vector;
 
+		void clear()
+		{
+			id.clear();
+			name.clear();
+			imagePath.clear();
+			thumbnailPath.clear();
+			createdAt.clear();
+			updatedAt.clear();
+			m_vector.clear();
+		}
+
 		bool empty()
 		{
 			return id.empty() && name.empty() && imagePath.empty() &&

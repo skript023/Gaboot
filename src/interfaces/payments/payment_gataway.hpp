@@ -42,6 +42,25 @@ namespace gaboot
 		std::vector<bank_response> va_numbers;
 		payment_status m_status;
 
+		void clear()
+		{
+			id.clear();
+			status_code = 0;
+			status_message.clear();
+			order_id.clear();
+			gross_amount.clear();
+			currency.clear();
+			expiry_time.clear();
+			merchant_id.clear();
+			payment_type.clear();
+			transaction_id.clear();
+			transaction_id.clear();
+			transaction_status.clear();
+			transaction_time.clear();
+			fraud_status.clear();
+			va_numbers.clear();
+		}
+
 		bool empty()
 		{
 			return id.empty() && status_code == 0 && status_message.empty() &&

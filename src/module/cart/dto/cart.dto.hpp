@@ -19,6 +19,18 @@ namespace gaboot
 		std::string updatedAt;
 		std::vector<CartsResponse> m_vector;
 
+		void clear()
+		{
+			id.clear();
+			customerId.clear();
+			productId.clear();
+			price = 0.0;
+			quantity = 0;
+			createdAt.clear();
+			updatedAt.clear();
+			m_vector.clear();
+		}
+
 		bool empty()
 		{
 			return id.empty() && customerId.empty() && productId.empty() &&

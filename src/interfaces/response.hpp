@@ -32,6 +32,7 @@ namespace gaboot
 
         void clear()
         {
+            m_data.clear();
             m_message.clear();
             m_success = false;
             m_last_page = 0;

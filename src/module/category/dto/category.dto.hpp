@@ -19,6 +19,18 @@ namespace gaboot
 		std::string updatedAt;
 		std::vector<CategoryResponse> m_vector;
 
+		void clear()
+		{
+			id.clear();
+			name.clear();
+			description.clear();
+			imagePath.clear();
+			thumbnailPath.clear();
+			createdAt.clear();
+			updatedAt.clear();
+			m_vector.clear();
+		}
+
 		bool empty()
 		{
 			return id.empty() && name.empty() && description.empty() &&

@@ -88,6 +88,25 @@ namespace gaboot
 		std::vector<ProductImageResponse> images;
 		std::vector<ProductResponse> m_vector;
 
+		void clear()
+		{
+			id.clear();
+			name.clear();
+			description.clear();
+			price = 0.0;
+			stock = 0;
+			dimension.clear();
+			weight = 0.0;
+			weightUnit.clear();
+			categoryId.clear();
+			totalSales = 0;
+			isActive = false;
+			createdAt.clear();
+			updatedAt.clear();
+			images.clear();
+			m_vector.clear();
+		}
+
 		bool empty()
 		{
 			return id.empty() && name.empty() && description.empty() && price == 0.0 &&
