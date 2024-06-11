@@ -16,10 +16,9 @@ namespace gaboot
 {
 	class cart_service
 	{
-		Mapper<Carts> db() { return Mapper<Carts>(DATABASE_CLIENT); }
 	public:
-		explicit cart_service() = default;
-		~cart_service() noexcept = default;
+		cart_service();
+		~cart_service() noexcept;
 
 		cart_service(cart_service const& that) = delete;
 		cart_service& operator=(cart_service const& that) = delete;
@@ -37,7 +36,7 @@ namespace gaboot
 		{
 			if (m_cache_cart.empty() || m_cache_cart.expired())
 			{
-				auto carts = db().orderBy(Carts::Cols::_id).findAll();
+				auto carts = m_database->orderBy(Carts::Cols::_id).findAll();
 				m_cache_cart.cache_duration(5min);
 
 				std::ranges::for_each(carts.begin(), carts.end(), [this](Carts cart) {
@@ -47,6 +46,7 @@ namespace gaboot
 		}
 	private:
 		cache_handler<Carts> m_cache_cart;
-		response_data<CartsResponse> m_response;
+		std::unique_ptr<response_data<CartsResponse>> m_response;
+		std::unique_ptr<Mapper<Carts>> m_database;
 	};
 }

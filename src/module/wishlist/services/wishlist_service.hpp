@@ -17,10 +17,9 @@ namespace gaboot
 {
 	class wishlist_service
 	{
-		Mapper<Wishlists> db() { return Mapper<Wishlists>(DATABASE_CLIENT); }
 	public:
-		explicit wishlist_service() = default;
-		~wishlist_service() noexcept = default;
+		explicit wishlist_service();
+		~wishlist_service() noexcept;
 
 		wishlist_service(wishlist_service const& that) = delete;
 		wishlist_service& operator=(wishlist_service const& that) = delete;
@@ -38,7 +37,7 @@ namespace gaboot
 		{
 			if (m_cache_wishlist.empty() || m_cache_wishlist.expired())
 			{
-				auto categories = db().orderBy(Wishlists::Cols::_category).findFutureAll().get();
+				auto categories = m_database->orderBy(Wishlists::Cols::_category).findFutureAll().get();
 				m_cache_wishlist.cache_duration(5min);
 
 				std::ranges::for_each(categories.begin(), categories.end(), [this](Wishlists wishlist) {
@@ -47,8 +46,9 @@ namespace gaboot
 			}
 		}
 	private:
+		std::unique_ptr<response_data<WishlistResponse>> m_response;
+		std::unique_ptr<Mapper<Wishlists>> m_database;
 		cache_handler<Wishlists> m_cache_wishlist;
-		response_data<WishlistResponse> m_response;
 		std::string m_error;
 	};
 }

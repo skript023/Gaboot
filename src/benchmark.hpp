@@ -23,8 +23,24 @@ namespace gaboot
 		{
 			m_start = high_resolution_clock::now();
 		}
+
+		static void execute(std::function<void()> cb)
+		{
+			benchmark bench;
+			cb();
+			bench.get_runtime();
+			bench.reset();
+		}
 	private:
 		high_resolution_clock::time_point m_start;
 		std::string m_name;
 	};
 }
+
+#define BENCHMARK(name, code)\
+    {\
+        gaboot::benchmark bench(name);\
+        code;\
+        bench.get_runtime(); \
+        bench.reset(); \
+    }

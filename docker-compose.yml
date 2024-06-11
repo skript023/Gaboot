@@ -5,7 +5,7 @@ services:
             context: .
             dockerfile: Dockerfile
         container_name: gaboot-shop-server
-        restart: on-failure
+        restart: unless-stopped
         init: true
         ports:
             - 5000:8080
@@ -13,11 +13,11 @@ services:
           - path: .env
             required: true
         networks:
-            - gaboot
+            - database_gaboot
         volumes:
             - ./container/uploads:/home/skript023/gbt-backend/Linux/uploads/
             - ./container/DrogonLog:/home/skript023/gbt-backend/Linux/DrogonLog/
             - ./container/Service:/var/log/
 networks:
-   gaboot:
-    driver: bridge
+   database_gaboot:
+      external: true

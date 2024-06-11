@@ -16,7 +16,6 @@ namespace gaboot
 {
 	class banner_service
 	{
-		Mapper<Banners> db() { return Mapper<Banners>(DATABASE_CLIENT); }
 	public:
 		explicit banner_service();
 		~banner_service() noexcept;
@@ -36,18 +35,17 @@ namespace gaboot
 		{
 			if (m_cache_banner.empty() || m_cache_banner.expired())
 			{
-				auto banners = db().orderBy(Banners::Cols::_name).findFutureAll().get();
+				auto banners = m_database->orderBy(Banners::Cols::_name).findFutureAll().get();
 				m_cache_banner.cache_duration(5min);
 
 				std::ranges::for_each(banners.begin(), banners.end(), [this](Banners category) {
 					m_cache_banner.insert(*category.getId(), &category);
-					});
+				});
 			}
 		}
 	private:
-		response_data<BannerResponse> m_response;
-		std::string m_error;
-		Json::Value m_data;
+		std::unique_ptr<response_data<BannerResponse>> m_response;
 		cache_handler<Banners> m_cache_banner;
+		std::unique_ptr<Mapper<Banners>> m_database;
 	};
 }

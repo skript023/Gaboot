@@ -104,14 +104,24 @@ namespace gaboot
 		virtual ~InternalServerErrorException() noexcept = default;
 	};
 
-#define TRY_CLAUSE \
+#define TRY_CLAUSE_OLD \
 	benchmark bench; \
 	try {
-#define EXCEPT_CLAUSE \
+#define EXCEPT_CLAUSE_OLD \
 	bench.get_runtime(); \
 	bench.reset(); \
 	} \
 	catch (GabootException const& ex) { return ex.response(); } \
 	catch(DrogonDbException const& ex) { return CustomException<k500InternalServerError>(fmt::format("error caught on {}", ex.base().what())).response(); } \
 	catch(std::exception const& ex) { return CustomException<k500InternalServerError>(fmt::format("error caught on {}", ex.what())).response(); }
+#define TRY_CLAUSE \
+    try { \
+        benchmark::execute([&]{
+
+#define EXCEPT_CLAUSE \
+        }); \
+    } \
+    catch (GabootException const& ex) { return callback(ex.response()); } \
+    catch(DrogonDbException const& ex) { return callback(CustomException<k500InternalServerError>(fmt::format("error caught on {}", ex.base().what())).response()); } \
+    catch(std::exception const& ex) { return callback(CustomException<k500InternalServerError>(fmt::format("error caught on {}", ex.what())).response()); }
 }

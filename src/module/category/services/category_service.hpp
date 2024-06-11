@@ -17,10 +17,9 @@ namespace gaboot
 {
 	class category_service
 	{
-		Mapper<Categories> db() { return Mapper<Categories>(DATABASE_CLIENT); }
 	public:
-		explicit category_service() = default;
-		~category_service() noexcept = default;
+		explicit category_service();
+		~category_service() noexcept;
 
 		category_service(category_service const& that) = delete;
 		category_service& operator=(category_service const& that) = delete;
@@ -40,7 +39,7 @@ namespace gaboot
 		{
 			if (m_cache_category.empty() || m_cache_category.expired())
 			{
-				auto categories = db().orderBy(Categories::Cols::_name).findFutureAll().get();
+				auto categories = m_database->orderBy(Categories::Cols::_name).findFutureAll().get();
 				m_cache_category.cache_duration(5min);
 
 				std::ranges::for_each(categories.begin(), categories.end(), [this](Categories category) {
@@ -49,9 +48,10 @@ namespace gaboot
 			}
 		}
 	private:
-		response_data<CategoryResponse> m_response;
 		std::string m_error;
 		Json::Value m_data;
+		std::unique_ptr<response_data<CategoryResponse>> m_response;
+		std::unique_ptr<Mapper<Categories>> m_database;
 		cache_handler<Categories> m_cache_category;
 	};
 }

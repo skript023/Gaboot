@@ -15,10 +15,9 @@ namespace gaboot
 {
     class payment_service
     {
-        Mapper<Payments> db() { return Mapper<Payments>(DATABASE_CLIENT); }
     public:
-        payment_service() = default;
-        ~payment_service() noexcept = default;
+        explicit payment_service();
+        ~payment_service() noexcept;
 
         payment_service(payment_service const&) = delete;
         payment_service& operator=(payment_service const&) = delete;
@@ -30,9 +29,10 @@ namespace gaboot
         HttpResponsePtr findOne(HttpRequestPtr const&, std::string&& transactionId);
         HttpResponsePtr callback(HttpRequestPtr const&);
     private:
-        Json::Value m_data;
-        response_data<payment_gateway> m_response;
-        item_detail m_items;
+        std::unique_ptr<response_data<payment_gateway>> m_response;
+        std::unique_ptr<Mapper<Payments>> m_database;
         customer_detail m_customer;
+        Json::Value m_data;
+        item_detail m_items;
     };
 }

@@ -58,6 +58,7 @@
 #define SERVER_RUN drogon::app().run()
 #define UPLOAD_PATH drogon::app().getUploadPath()
 #define DATABASE_CLIENT drogon::app().getDbClient()
+#define REGISTER_SERVICE(name, T, ...) name = std::make_unique<T>(__VA_ARGS__).get()
 
 #define SECRET std::getenv("SECRET")
 #define SERVER_KEY std::getenv("SERVER_KEY")

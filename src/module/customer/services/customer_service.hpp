@@ -15,13 +15,9 @@ namespace gaboot
 {
 	class customer_service
 	{
-		Mapper<MasterCustomers> db()
-		{
-			return Mapper<MasterCustomers>(DATABASE_CLIENT);
-		}
 	public:
-		explicit customer_service() = default;
-		virtual ~customer_service() = default;
+		explicit customer_service();
+		~customer_service() noexcept;
 
 		customer_service(customer_service const& that) = delete;
 		customer_service& operator=(customer_service const& that) = delete;
@@ -39,7 +35,8 @@ namespace gaboot
 		HttpResponsePtr getImage(HttpRequestPtr const&, std::string&&);
 		HttpResponsePtr getThumbnail(HttpRequestPtr const&, std::string&&);
 	private:
-		response_data<CustomerResponse> m_response;
+		std::unique_ptr<response_data<CustomerResponse>> m_response;
+		std::unique_ptr<Mapper<MasterCustomers>> m_database;
 		std::string m_error;
 		Json::Value m_data;
 	};
