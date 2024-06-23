@@ -102,51 +102,51 @@ namespace gaboot
 
 		auto args = Criteria(Payments::Cols::_transaction_id, CompareOperator::EQ, payment->transaction_id);
 
-		switch (jenkins::hash(payment->transaction_status))
+		switch (fnv1a_32(payment->transaction_status))
 		{
-		case JENKINS_HASH("settlement"):
+		case "settlement"_hash:
 			if (auto record = m_database->updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
-				throw InternalServerErrorException("Failed update transaction, transaction doesn't exist");
+				throw NotFoundException("Failed update transaction, transaction doesn't exist");
 
 			m_response->m_message = "Payment status updated as paid";
 			m_response->m_success = true;
 
 			return HttpResponse::newHttpJsonResponse(m_response->to_json());
-		case JENKINS_HASH("capture"):
+		case "capture"_hash:
 			if (auto record = m_database->updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
-				throw InternalServerErrorException("Failed update transaction, transaction doesn't exist");
+				throw NotFoundException("Failed update transaction, transaction doesn't exist");
 
 			m_response->m_message = "Payment status updated as capture";
 			m_response->m_success = true;
 
 			return HttpResponse::newHttpJsonResponse(m_response->to_json());
-		case JENKINS_HASH("cancel"):
+		case "cancel"_hash:
 			if (auto record = m_database->updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
-				throw InternalServerErrorException("Failed update transaction, transaction doesn't exist");
+				throw NotFoundException("Failed update transaction, transaction doesn't exist");
 
 			m_response->m_message = "Payment status updated as cancel";
 			m_response->m_success = true;
 
 			return HttpResponse::newHttpJsonResponse(m_response->to_json());
-		case JENKINS_HASH("deny"):
+		case "deny"_hash:
 			if (auto record = m_database->updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
-				throw InternalServerErrorException("Failed update transaction, transaction doesn't exist");
+				throw NotFoundException("Failed update transaction, transaction doesn't exist");
 
 			m_response->m_message = "Payment status updated as deny, because fraud detected";
 			m_response->m_success = true;
 
 			return HttpResponse::newHttpJsonResponse(m_response->to_json());
-		case JENKINS_HASH("failure"):
+		case "failure"_hash:
 			if (auto record = m_database->updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
-				throw InternalServerErrorException("Failed update transaction, transaction doesn't exist");
+				throw NotFoundException("Failed update transaction, transaction doesn't exist");
 
 			m_response->m_message = "Payment status updated as failure";
 			m_response->m_success = true;
 
 			return HttpResponse::newHttpJsonResponse(m_response->to_json());
-		case JENKINS_HASH("expired"):
+		case "expired"_hash:
 			if (auto record = m_database->updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
-				throw InternalServerErrorException("Failed update transaction, transaction doesn't exist");
+				throw NotFoundException("Failed update transaction, transaction doesn't exist");
 
 			m_response->m_message = "Payment status updated as expired";
 			m_response->m_success = true;

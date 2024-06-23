@@ -93,3 +93,32 @@ using response_t = std::function<void(drogon::HttpResponsePtr const&)>;
 using Multer = drogon::HttpFile;
 
 using namespace std::chrono_literals;
+
+inline constexpr uint32_t fnv1a_32(char const* s, std::size_t count)
+{
+    constexpr uint32_t prime = 0x01000193;
+    constexpr uint32_t seed = 0x811C9DC5;
+    uint32_t hash = seed;
+    for (std::size_t i = 0; i < count; ++i) {
+        hash ^= static_cast<uint32_t>(s[i]);
+        hash *= prime;
+    }
+    return hash;
+}
+
+inline constexpr uint32_t fnv1a_32(std::string_view s)
+{
+    constexpr uint32_t prime = 0x01000193;
+    constexpr uint32_t seed = 0x811C9DC5;
+    uint32_t hash = seed;
+    for (char c : s) {
+        hash ^= static_cast<uint32_t>(c);
+        hash *= prime;
+    }
+    return hash;
+}
+
+inline constexpr uint32_t operator"" _hash(char const* s, std::size_t count)
+{
+    return fnv1a_32(s, count);
+}
