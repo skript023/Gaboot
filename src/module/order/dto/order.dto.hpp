@@ -63,7 +63,7 @@ namespace gaboot
 			m_vector.clear();
 		}
 
-		bool empty()
+		bool empty() const
 		{
 			return id.empty();
 		}
