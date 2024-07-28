@@ -57,10 +57,7 @@ namespace gaboot
 		m_response->m_message = "Create category success";
 		m_response->m_success = true;
 
-		auto response = HttpResponse::newHttpJsonResponse(m_response->to_json());
-		response->setStatusCode(k201Created);
-
-		return response;
+		return m_response->status(k201Created)->json();
     }
     HttpResponsePtr category_service::findAll(HttpRequestPtr const& req)
     {
@@ -77,7 +74,7 @@ namespace gaboot
 			m_response->m_message = "0 category found";
 			m_response->m_success = true;
 
-			return HttpResponse::newHttpJsonResponse(m_response->to_json());
+			return m_response->json();
 		}
 
 		Json::Value data(Json::arrayValue);
@@ -90,7 +87,7 @@ namespace gaboot
 		m_response->m_success = true;
 		m_response->m_last_page = lastPage;
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->json();
     }
 	HttpResponsePtr category_service::findOne(HttpRequestPtr const& req, std::string&& id)
 	{
@@ -107,7 +104,7 @@ namespace gaboot
 		m_response->m_success = true;
 		m_response->m_data = category;
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->json();
 	}
 	HttpResponsePtr category_service::update(HttpRequestPtr const& req, std::string&& id)
 	{
@@ -165,7 +162,7 @@ namespace gaboot
 		m_response->m_message = "Success update category data.";
 		m_response->m_success = true;
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->json();
 	}
 	HttpResponsePtr category_service::remove(HttpRequestPtr const& req, std::string&& id)
 	{
@@ -184,7 +181,7 @@ namespace gaboot
 		m_response->m_message = fmt::format("Delete category successfully");
 		m_response->m_success = true;
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->json();
 	}
 	HttpResponsePtr category_service::getImage(HttpRequestPtr const& req, std::string&& id)
 	{
@@ -203,13 +200,7 @@ namespace gaboot
 		{
 			LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
 
-			m_response->m_message = "Unable to retreive category picture, please upload your category picture";
-			m_response->m_success = false;
-
-			auto response = HttpResponse::newHttpJsonResponse(m_response->to_json());
-			response->setStatusCode(k404NotFound);
-
-			return response;
+			throw NotFoundException("Unable to retreive category picture, please upload your category picture");
 		}
 
 		return HttpResponse::newFileResponse(*category.getImagePath());
@@ -231,13 +222,7 @@ namespace gaboot
 		{
 			LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
 
-			m_response->m_message = "Unable to retreive category picture, please upload your category picture";
-			m_response->m_success = false;
-
-			auto response = HttpResponse::newHttpJsonResponse(m_response->to_json());
-			response->setStatusCode(k404NotFound);
-
-			return response;
+			throw NotFoundException("Unable to retreive category picture, please upload your category picture");
 		}
 
 		return HttpResponse::newFileResponse(*category.getThumbnailPath());

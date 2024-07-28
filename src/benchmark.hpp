@@ -37,10 +37,4 @@ namespace gaboot
 	};
 }
 
-#define BENCHMARK(name, code)\
-    {\
-        gaboot::benchmark bench(name);\
-        code;\
-        bench.get_runtime(); \
-        bench.reset(); \
-    }
+#define BENCHMARK(name, code) { gaboot::benchmark bench(name); code; bench.get_runtime();  bench.reset(); }

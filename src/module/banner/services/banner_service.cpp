@@ -31,7 +31,7 @@ namespace gaboot
 			m_response->m_message = "0 banner found";
 			m_response->m_success = true;
 
-			return HttpResponse::newHttpJsonResponse(m_response->to_json());
+			return m_response->json();
 		}
 
 		Json::Value data(Json::arrayValue);
@@ -44,7 +44,7 @@ namespace gaboot
 		m_response->m_success = true;
 		m_response->m_last_page = lastPage;
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->json();
 	}
 	HttpResponsePtr banner_service::findOne(HttpRequestPtr const& req, std::string&& id)
 	{
@@ -59,7 +59,7 @@ namespace gaboot
 		m_response->m_success = true;
 		m_response->m_data = banner;
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->json();
 	}
 	HttpResponsePtr banner_service::getImage(HttpRequestPtr const& req, std::string&& id)
 	{
@@ -78,13 +78,7 @@ namespace gaboot
 		{
 			LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
 
-			m_response->m_message = "Unable to retreive banner picture, please upload your banner picture";
-			m_response->m_success = false;
-
-			auto response = HttpResponse::newHttpJsonResponse(m_response->to_json());
-			response->setStatusCode(k404NotFound);
-
-			return response;
+			throw NotFoundException("Unable to retreive banner picture, please upload your banner picture");
 		}
 
 		return HttpResponse::newFileResponse(*banner.getImagePath());
@@ -106,13 +100,7 @@ namespace gaboot
 		{
 			LOG(WARNING) << "File at " << file.lexically_normal() << " doesn't exist in server";
 
-			m_response->m_message = "Unable to retreive banner picture, please upload your banner picture";
-			m_response->m_success = false;
-
-			auto response = HttpResponse::newHttpJsonResponse(m_response->to_json());
-			response->setStatusCode(k404NotFound);
-
-			return response;
+			throw NotFoundException("Unable to retreive banner picture, please upload your banner picture");
 		}
 
 		return HttpResponse::newFileResponse(*banner.getThumbnailPath());

@@ -36,7 +36,7 @@ namespace gaboot
 		m_response->m_message = "Success create order";
 		m_response->m_success = true;
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->status(k201Created)->json();
 	}
 	HttpResponsePtr order_service::findAll(HttpRequestPtr const& req)
 	{
@@ -55,7 +55,7 @@ namespace gaboot
 			m_response->m_message = "Orders data is empty 0 data found";
 			m_response->m_success = true;
 
-			return HttpResponse::newHttpJsonResponse(m_response->to_json());
+			return m_response->json();
 		}
 
 		m_response->m_data = orders;
@@ -64,7 +64,7 @@ namespace gaboot
 		m_response->m_success = true;
 
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->json();
 	}
 	HttpResponsePtr order_service::findOne(HttpRequestPtr const&, std::string&& id)
 	{
@@ -79,7 +79,7 @@ namespace gaboot
 		m_response->m_success = true;
 		m_response->m_data = order;
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->json();
 	}
 	HttpResponsePtr order_service::update(HttpRequestPtr const& req, std::string&& id)
 	{
@@ -97,7 +97,7 @@ namespace gaboot
 		m_response->m_message = "Success update order data.";
 		m_response->m_success = true;
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->json();
 	}
 	HttpResponsePtr order_service::remove(HttpRequestPtr const& req, std::string&& id)
 	{
@@ -109,6 +109,6 @@ namespace gaboot
 		m_response->m_message = "Success update order data.";
 		m_response->m_success = true;
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->json();
 	}
 }

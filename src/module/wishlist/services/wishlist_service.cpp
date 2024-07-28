@@ -39,10 +39,7 @@ namespace gaboot
 		m_response->m_message = "Create wishlist success";
 		m_response->m_success = true;
 
-		auto response = HttpResponse::newHttpJsonResponse(m_response->to_json());
-		response->setStatusCode(k201Created);
-
-		return response;
+		return m_response->status(k201Created)->json();
 	}
     HttpResponsePtr wishlist_service::findAll(HttpRequestPtr const& req)
     {
@@ -59,7 +56,7 @@ namespace gaboot
 			m_response->m_message = "Wishlist is empty";
 			m_response->m_success = true;
 
-			return HttpResponse::newHttpJsonResponse(m_response->to_json());
+			return m_response->json();
 		}
 
 		const size_t lastPage = (wishlists.size() / (limit + (wishlists.size() % limit))) == 0 ? 0 : 1;
@@ -69,7 +66,7 @@ namespace gaboot
 		m_response->m_success = true;
 		m_response->m_last_page = lastPage;
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->json();
     }
 	HttpResponsePtr wishlist_service::findOne(HttpRequestPtr const& req, std::string&& id)
 	{
@@ -84,7 +81,7 @@ namespace gaboot
 		m_response->m_success = true;
 		m_response->m_data = wishlist;
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->json();
 	}
 	HttpResponsePtr wishlist_service::update(HttpRequestPtr const& req, std::string&& id)
 	{
@@ -110,7 +107,7 @@ namespace gaboot
 		m_response->m_message = "Success update wishlist data.";
 		m_response->m_success = true;
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->json();
 	}
 	HttpResponsePtr wishlist_service::remove(HttpRequestPtr const& req, std::string&& id)
 	{
@@ -126,6 +123,6 @@ namespace gaboot
 		m_response->m_message = "Delete wishlist successfully";
 		m_response->m_success = true;
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->json();
 	}
 }

@@ -19,8 +19,8 @@ namespace gaboot
 		Mapper<MasterProducts> db() { return Mapper<MasterProducts>(DATABASE_CLIENT); }
 		Mapper<ProductImages> db_images() { return Mapper<ProductImages>(DATABASE_CLIENT); }
 	public:
-		explicit product_service() = default;
-		~product_service() noexcept = default;
+		explicit product_service();
+		~product_service() noexcept;
 
 		product_service(product_service const& that) = delete;
 		product_service& operator=(product_service const& that) = delete;
@@ -40,17 +40,19 @@ namespace gaboot
 		{
 			if (m_cache_product.empty() || m_cache_product.expired())
 			{
-				auto categories = db().orderBy(MasterProducts::Cols::_name).findFutureAll().get();
+				/*auto categories = db().orderBy(MasterProducts::Cols::_name).findFutureAll().get();
 				m_cache_product.cache_duration(5min);
 
 				std::ranges::for_each(categories.begin(), categories.end(), [this](MasterProducts wishlist) {
 					m_cache_product.insert(*wishlist.getId(), &wishlist);
-				});
+				});*/
 			}
 		}
 	private:
+		std::unique_ptr<response_data<ProductResponse>> m_response;
+		std::unique_ptr<Mapper<MasterProducts>> m_product;
+		std::unique_ptr<Mapper<ProductImages>> m_product_image;
 		cache_handler<MasterProducts> m_cache_product;
-		response_data<ProductResponse> m_response;
 		std::string m_error;
 		Json::Value m_data;
 		Json::Value m_data_image;

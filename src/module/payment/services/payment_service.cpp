@@ -88,7 +88,7 @@ namespace gaboot
 		m_response->m_success = true;
 		m_response->m_data = transaction;
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->json();
     }
     HttpResponsePtr payment_service::callback(HttpRequestPtr const &req)
     {
@@ -111,7 +111,7 @@ namespace gaboot
 			m_response->m_message = "Payment status updated as paid";
 			m_response->m_success = true;
 
-			return HttpResponse::newHttpJsonResponse(m_response->to_json());
+			return m_response->json();
 		case "capture"_hash:
 			if (auto record = m_database->updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
 				throw NotFoundException("Failed update transaction, transaction doesn't exist");
@@ -119,7 +119,7 @@ namespace gaboot
 			m_response->m_message = "Payment status updated as capture";
 			m_response->m_success = true;
 
-			return HttpResponse::newHttpJsonResponse(m_response->to_json());
+			return m_response->json();
 		case "cancel"_hash:
 			if (auto record = m_database->updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
 				throw NotFoundException("Failed update transaction, transaction doesn't exist");
@@ -127,7 +127,7 @@ namespace gaboot
 			m_response->m_message = "Payment status updated as cancel";
 			m_response->m_success = true;
 
-			return HttpResponse::newHttpJsonResponse(m_response->to_json());
+			return m_response->json();
 		case "deny"_hash:
 			if (auto record = m_database->updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
 				throw NotFoundException("Failed update transaction, transaction doesn't exist");
@@ -135,7 +135,7 @@ namespace gaboot
 			m_response->m_message = "Payment status updated as deny, because fraud detected";
 			m_response->m_success = true;
 
-			return HttpResponse::newHttpJsonResponse(m_response->to_json());
+			return m_response->json();
 		case "failure"_hash:
 			if (auto record = m_database->updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
 				throw NotFoundException("Failed update transaction, transaction doesn't exist");
@@ -143,7 +143,7 @@ namespace gaboot
 			m_response->m_message = "Payment status updated as failure";
 			m_response->m_success = true;
 
-			return HttpResponse::newHttpJsonResponse(m_response->to_json());
+			return m_response->json();
 		case "expired"_hash:
 			if (auto record = m_database->updateBy({ Payments::Cols::_transaction_status }, args, payment->transaction_status); !record)
 				throw NotFoundException("Failed update transaction, transaction doesn't exist");
@@ -151,13 +151,13 @@ namespace gaboot
 			m_response->m_message = "Payment status updated as expired";
 			m_response->m_success = true;
 
-			return HttpResponse::newHttpJsonResponse(m_response->to_json());
+			return m_response->json();
 		}
 
 		m_response->m_message = "Payment callback called successfully, but nothing to be updated";
 		m_response->m_success = true;
 		m_response->m_data = *payment;
 
-		return HttpResponse::newHttpJsonResponse(m_response->to_json());
+		return m_response->json();
 	}
 }

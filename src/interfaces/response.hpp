@@ -5,6 +5,8 @@
 
 namespace gaboot
 {
+    using namespace drogon;
+
     template<typename T>
 	class response_data
 	{
@@ -30,6 +32,21 @@ namespace gaboot
             return json;
         }
 
+        response_data* status(HttpStatusCode status)
+        {
+            this->m_status = status;
+
+            return this;
+        }
+
+        HttpResponsePtr json()
+        {
+            HttpResponsePtr response = HttpResponse::newHttpJsonResponse(this->to_json());
+            response->setStatusCode(m_status);
+
+            return response;
+        }
+
         void clear()
         {
             m_data.clear();
@@ -38,5 +55,8 @@ namespace gaboot
             m_last_page = 0;
             m_last_page = 0;
         }
+
+    private:
+        HttpStatusCode m_status = k200OK;
 	};
 }

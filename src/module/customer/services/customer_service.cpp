@@ -35,7 +35,7 @@ namespace gaboot
             m_response->m_message = "Customer empty";
             m_response->m_success = true;
 
-            return HttpResponse::newHttpJsonResponse(m_response->to_json());
+            return m_response->json();
         }
 
         const size_t lastPage = customers.size() / limit + (customers.size() % limit) == 0 ? 0 : 1;
@@ -45,7 +45,7 @@ namespace gaboot
         m_response->m_success = true;
         m_response->m_last_page = lastPage;
 
-        return HttpResponse::newHttpJsonResponse(m_response->to_json());
+        return m_response->json();
 	}
     HttpResponsePtr customer_service::create(HttpRequestPtr const& req)
     {
@@ -94,10 +94,7 @@ namespace gaboot
         m_response->m_message = "Create customer success";
         m_response->m_success = true;
 
-        auto response = HttpResponse::newHttpJsonResponse(m_response->to_json());
-        response->setStatusCode(k201Created);
-
-        return response;
+        return m_response->status(k201Created)->json();
     }
     HttpResponsePtr customer_service::findOne(HttpRequestPtr const& req, std::string&& id)
     {
@@ -114,7 +111,7 @@ namespace gaboot
         m_response->m_success = true;
         m_response->m_data = user;
 
-        return HttpResponse::newHttpJsonResponse(m_response->to_json());
+        return m_response->json();
     }
     HttpResponsePtr customer_service::update(HttpRequestPtr const& req, std::string&& id) //bugged when upload file
     {
@@ -152,7 +149,7 @@ namespace gaboot
         m_response->m_message = "Success update customer data.";
         m_response->m_success = true;
 
-        return HttpResponse::newHttpJsonResponse(m_response->to_json());
+        return m_response->json();
     }
     HttpResponsePtr customer_service::remove(HttpRequestPtr const& req, std::string&& id)
     {
@@ -171,7 +168,7 @@ namespace gaboot
         m_response->m_message = fmt::format("Delete customers on {} successfully", id);
         m_response->m_success = true;
 
-        return HttpResponse::newHttpJsonResponse(m_response->to_json());
+        return m_response->json();
     }
     HttpResponsePtr customer_service::updateImage(HttpRequestPtr const& req, std::string&& id)
     {
@@ -204,7 +201,7 @@ namespace gaboot
         m_response->m_message = "Success update customer data.";
         m_response->m_success = true;
 
-        return HttpResponse::newHttpJsonResponse(m_response->to_json());
+        return m_response->json();
     }
     HttpResponsePtr customer_service::getProfile(HttpRequestPtr const& req, std::string&& id)
     {
@@ -232,7 +229,7 @@ namespace gaboot
         m_response->m_message = "Success retreive customers profile";
         m_response->m_success = true;
 
-        return HttpResponse::newHttpJsonResponse(m_response->to_json());
+        return m_response->json();
     }
     HttpResponsePtr customer_service::getImage(HttpRequestPtr const& req, std::string&& id)
     {
