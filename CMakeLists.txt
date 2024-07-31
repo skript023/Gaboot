@@ -27,13 +27,14 @@ find_package(OpenCV CONFIG REQUIRED)
 include(scripts/git.cmake)
 
 #include external dependencies
-message("\nFetching modules")
+message("\nFetching modules")   
 include(scripts/bcrypt.cmake)
 include(scripts/jwt.cmake)
 include(scripts/cpr.cmake)
 include(scripts/g3log.cmake)
 include(scripts/fmtlib.cmake)
 include(scripts/jsonvalidator.cmake)
+include(scripts/dotenv.cmake)
 
 # Gaboot
 message(STATUS "Gaboot")
@@ -124,11 +125,13 @@ target_include_directories(Gaboot PRIVATE
   "${SRC_DIR}/interfaces/payments"
   ${DROGON_INCLUDE_DIRS}
   ${openssl_INCLUDE_DIRS}
+  "${dotenv_SOURCE_DIR}/include/laserpants/dotenv"
   "${fmtlib_SOURCE_DIR}/include"
   "${jwt_SOURCE_DIR}/include"
   "${nlohmann_json_SOURCE_DIR}/single_include"
   "${bcrypt_SOURCE_DIR}/include"
   "${jsonvalidator_SOURCE_DIR}/src"
+
   "${SRC_DIR}/module/cart/models"
   "${SRC_DIR}/module/category/models"
   "${SRC_DIR}/module/customer/models"

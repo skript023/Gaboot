@@ -45,6 +45,7 @@ jobs:
             "build/Gaboot.exe",
             "./Dockerfile"
             "./docker-compose.yml"
+            "config/config.json"
           )
           Compress-Archive -Path $paths -DestinationPath build/Gaboot-windows-x64.zip
 

@@ -16,6 +16,8 @@ int main()
 {
     using namespace gaboot;
     //Set base directory to file manager
+    dotenv::init();
+
     auto logger_instance = std::make_unique<logger>("Gaboot Logger");
 
     LOG(RAW_GREEN_TO_CONSOLE) << R"kek(

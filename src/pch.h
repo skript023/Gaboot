@@ -47,6 +47,7 @@
 #include <gaboot.hpp>
 #include <logger.hpp>
 #include <validator/validator.hpp>
+#include <dotenv.h>
 
 //drogon::app().getLoop()->runEvery(std::chrono::milliseconds(1), [] { LOG(INFO) << "Looped"; });
 
