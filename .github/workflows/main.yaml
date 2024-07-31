@@ -4,8 +4,10 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: windows-2022
     name: build
+    runs-on: windows-2022
+    permissions: write-all
+
     steps:
       - uses: actions/checkout@v3
 
